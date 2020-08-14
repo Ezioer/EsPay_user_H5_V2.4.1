@@ -1,0 +1,42 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="15dp" >
+
+    <Button
+        android:id="@+id/parse_userinfo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="获取SDK用户信息" />
+
+    <Button
+        android:id="@+id/parse_usercert"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="实名认证" />
+
+    <Button
+        android:id="@+id/parse_changeaccount"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="切换账号" />
+    
+    <Button
+        android:id="@+id/parse_port"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="调用支付" />
+
+    <Button
+        android:id="@+id/login_game"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="进入游戏" />
+
+</LinearLayout>
