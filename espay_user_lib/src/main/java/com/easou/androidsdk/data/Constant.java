@@ -12,8 +12,10 @@ public class Constant {
 
 	public static Context context;
 
-	/** SDK版本号 */
-	public static final String SDK_VERSION = "2.4.4";
+	/**
+	 * SDK版本号
+	 */
+	public static final String SDK_VERSION = "2.4.5";
 	public static final String SDK_PHONEOS = "Android";
 	
 	public static final String API_SOURCE = "30";

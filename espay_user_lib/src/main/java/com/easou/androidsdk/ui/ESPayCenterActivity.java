@@ -700,8 +700,8 @@ public class ESPayCenterActivity extends BaseActivity {
     public void ylPay() {
         Map<String, String> map = setupPayMap(true);
         map.put(Constant.TRADEMODE, Constant.MODULE);
-//        map.put(Constant.PAYCHANNEL, Constant.UNIONPAY);
-        map.put(Constant.PAYCHANNEL, "ZKXUNIONPAY2");
+        map.put(Constant.PAYCHANNEL, Constant.UNIONPAY);
+//        map.put(Constant.PAYCHANNEL, "ZKXUNIONPAY2");
 
         HttpAsyncTaskImp ylTask = new HttpAsyncTaskImp(mActivity, map, easoutgc, key, FeeType.UNIONPAY);
         ylTask.setDataFinishListener(new HttpAsyncTaskImp.DataFinishListener() {
