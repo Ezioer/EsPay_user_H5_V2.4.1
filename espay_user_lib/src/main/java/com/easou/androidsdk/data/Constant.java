@@ -30,11 +30,17 @@ public class Constant {
 	public static boolean IS_LOGINED;
 	/** 记录是否进入用户中心webview */
 	public static boolean IS_ENTERED_SDK;
-	/** 记录设备号 */
+	/**
+	 * 记录设备号
+	 */
 	public static String IMEI = "0";
-	/** 记录外网ip */
-	public static String NET_IP = "0";
-	/** 记录oaid */
+	/**
+	 * 记录外网ip
+	 */
+	public static String NET_IP = "";
+	/**
+	 * 记录oaid
+	 */
 	public static String OAID = "0";
 	/** 记录是否为模拟器 0为真机，1为模拟器*/
 	public static int IS_SIMULATOR = 0;
@@ -46,45 +52,63 @@ public class Constant {
 	public static boolean GDT_SDK;
 	/** 记录是否启用快手SDK */
 	public static boolean KS_SDK;
-	/** 记录是否启用爱奇艺SDK */
+	/**
+	 * 记录是否启用爱奇艺SDK
+	 */
 	public static boolean AQY_SDK;
-	/** 保存支付限制信息 */
+	/**
+	 * 保存支付限制信息
+	 */
 	public static Map<String, String> PAY_LIMIT_INFO_MAP;
-    /** 收款方 0 默认宜搜，1为大华通，2为易游,3为ZKX，4为WZ支付*/
-    public static int PAY_CHANNEl = 0;
+	/**
+	 * 收款方 0 默认宜搜，1为大华通，2为易游,3为ZKX，4为WZ支付
+	 */
+	public static int PAY_CHANNEl = 0;
 
-	/** URL 信息 */
+	/**
+	 * URL 信息
+	 */
 	public static String HOST_NAME = "";
 	public static String HOST_NAME_DEFAULT = "mtianshitong.com";
-	
-//	public static final String DOMAIN = "http://lab.pay.appeasou.com";
-	public static final String DOMAIN = "https://service.pay.";
-	
-	public static final String [] DOMAIN_HOST = {"domain.game.eayou.com",
-												 "domain.game.love778.com",
-												 "domain.game.74mo.com"};
 
-	/** 热云日志URL */
+	public static final String DOMAIN = "http://lab.pay.appeasou.com";
+//	public static final String DOMAIN = "https://service.pay.";
+
+	public static final String[] DOMAIN_HOST = {"domain.game.eayou.com",
+			"domain.game.love778.com",
+			"domain.game.74mo.com"};
+
+	/**
+	 * 热云日志URL
+	 */
 	public static final String MAIN_URL = "https://reyun.game.";
 
-	/** 上传日志URL */
-	public static final String APP_LOAD_URL=  "/androidGameLog/addStepLog.e";
-	public static final String GAME_LOGIN_URL= "/androidGameLog/addGameLoginLog.e";
-	public static final String GAME_ORDER_URL= "/androidGaQmeLog/addOrderLog.e";
-	public static final String SDK_LOGIN_URL= "/androidGameLog/addLoginLog.e";
+	/**
+	 * 上传日志URL
+	 */
+	public static final String APP_LOAD_URL = "/androidGameLog/addStepLog.e";
+	public static final String GAME_LOGIN_URL = "/androidGameLog/addGameLoginLog.e";
+	public static final String GAME_ORDER_URL = "/androidGameLog/addOrderLog.e";
+	public static final String SDK_LOGIN_URL = "/androidGameLog/addLoginLog.e";
 
-	/** H5 SDK url */
-//	public static final String SSO_URL = "http://lab.pay.appeasou.com:7500/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&payHostName=http://lab.pay.appeasou.com&ssoHostName=http://lab.sso.mtianshitong.com";
-	public static final String SSO_URL = "https://h5.pay.mtianshitong.com/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
+	/**
+	 * H5 SDK url
+	 */
+	public static final String SSO_URL = "http://lab.pay.appeasou.com:7500/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&payHostName=http://lab.pay.appeasou.com&ssoHostName=http://lab.sso.mtianshitong.com";
+//	public static final String SSO_URL = "https://h5.pay.mtianshitong.com/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
 
-	/** 支付 url */
-	public static final String SERVER_URL= "/basePay/charge.e";
-	public static final String CHANNELCONFIG_URL= "/basePay/channelConfig.e";
-	public static final String WEB_SERVER_URL= "/basePay/chargePage.e?";
-	public static final String UNIPAY_PAYECO_ENVIRONMENT="01";
+	/**
+	 * 支付 url
+	 */
+	public static final String SERVER_URL = "/basePay/charge.e";
+	public static final String CHANNELCONFIG_URL = "/basePay/channelConfig.e";
+	public static final String WEB_SERVER_URL = "/basePay/chargePage.e?";
+	public static final String UNIPAY_PAYECO_ENVIRONMENT = "01";
 	public static final String INCLUDECHANNELS_ALL = "WFTQQWALLET,ALIPAY2,UNIONPAY2,CARD_PHONE,CARD_GAME,CARD_QQCARD,WECHAT,WFTESWECHAT,ZWXESWECHAT";
 
-	/** 查询用户当月总消费金额接口 */
+	/**
+	 * 查询用户当月总消费金额接口
+	 */
 	public static final String MONTH_TOTOL_PAY_URL = "/basePay/monthPayResult.e";
 
 	/** @notice 网络连接失败，请检查网络 */

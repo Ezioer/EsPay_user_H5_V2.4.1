@@ -10,6 +10,7 @@ import com.easou.androidsdk.callback.ESdkCallback;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.plugin.StartESPayPlugin;
 import com.easou.androidsdk.plugin.StartESUserPlugin;
+import com.easou.androidsdk.plugin.StartLogPlugin;
 import com.easou.androidsdk.plugin.StartOtherPlugin;
 
 import java.util.Map;
@@ -215,4 +216,5 @@ public class Starter {
     public void logAQYActionPageDestory(){
         StartOtherPlugin.destoryAQY();
     }
+
 }

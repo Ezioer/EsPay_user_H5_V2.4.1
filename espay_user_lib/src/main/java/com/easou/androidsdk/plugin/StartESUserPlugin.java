@@ -192,7 +192,8 @@ public class StartESUserPlugin {
 				+ "&userToken=" + token
 				+ "&isSimulator=" + Constant.IS_SIMULATOR
 				+ "&netMode=" + NetworkUtils.getNetworkState(Starter.mActivity)
-				+ "&telecom=" + NetworkUtils.getOperator(Starter.mActivity);
+				+ "&telecom=" + NetworkUtils.getOperator(Starter.mActivity)
+				+ "&sdkType=fhzj";
 
 		ESdkLog.d("上传的oaid：" + Constant.OAID);
 		System.out.println("param：" + param);

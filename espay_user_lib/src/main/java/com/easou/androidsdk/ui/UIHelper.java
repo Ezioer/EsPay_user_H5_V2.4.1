@@ -38,6 +38,7 @@ import android.widget.Toast;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.data.ESConstant;
 import com.easou.androidsdk.data.PayItem;
+import com.easou.androidsdk.util.ESdkLog;
 import com.easou.androidsdk.util.UnitUtils;
 
 import java.util.HashMap;
@@ -608,6 +609,8 @@ public class UIHelper {
                 context.getResources().getIdentifier("easou_id_webChannelid", "id", context.getPackageName()));
         moreImageViewid = (ImageView) convertView.findViewById(
                 context.getResources().getIdentifier("easou_id_moreChannelid", "id", context.getPackageName()));
+        jfImageViewId = (ImageView) convertView.findViewById(
+                context.getResources().getIdentifier("easou_id_jfChannelid", "id", context.getPackageName()));
         wxLayout.setVisibility(View.GONE);
         wxImageViewid.setVisibility(View.GONE);
         ylLayout.setVisibility(View.GONE);
@@ -737,11 +740,13 @@ public class UIHelper {
                 context.getResources().getIdentifier("easou_id_tittleAmt", "id", context.getPackageName()));
         tittleAmt.setText("￥" + money);
 
+        ESdkLog.d("支付的金额---->" + money);
         String[] strs = money.split("\\.");
         int payMoney = 0;
         try {
             payMoney = Integer.parseInt(strs[0]);
             if (payMoney == 6) {
+                ESdkLog.d("支付的金额符合要求,显示移动积分兑换");
                 jfLayout.setVisibility(View.VISIBLE);
                 jfImageViewId.setVisibility(View.VISIBLE);
             }
