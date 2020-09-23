@@ -220,11 +220,40 @@ public class EAPayImp {
 
 		return result_list;
 	}
-	
-	/** 查询游戏卡支付结果 */
-	public static String[] tradeResult(String token,String invoice) {
+
+	/**
+	 * 处理支付宝计费
+	 *
+	 * @return
+	 */
+	public static String[] chargeAlipayTest() {
+		String result = HttpGroupUtils.sendGet("http://lab.pay.appeasou.com/basePay/charge.e?appId=2604&cpTradeDesc=%E5%BE%AE%E5%8D%B7%E5%85%85%E5%80%BC0.01%E5%85%83&cpTradeName=%E5%BE%AE%E5%8D%B7%E5%85%85%E5%80%BC0.01%E5%85%83&money=0.01&notifyUrl=http://www.baidu.com&partnerId=1000100010001028&payChannel=BY_GF_ALIPAY&qn=ysap2027_10045_003&redirectUrl=http://www.appeasou.com&tradeId=1509603958659&tradeMode=WEB&sign=93867441768c60b414ebb4266c46fd5e", null, "");
+		ESPayLog.d(TAG, "aresult:" + result);
+		String[] result_list = new String[2];
+		try {
+			JSONObject jsonObject = new JSONObject(result);
+			String status = jsonObject.getString("status");
+			if (status.equals(Constant.FLAG_TRADE_RESULT_SUC)) {
+				JSONObject jsonData = jsonObject.getJSONObject("data");
+				result_list[0] = jsonData.getString("orderStr");
+				result_list[1] = status;
+			} else {
+				result_list[0] = jsonObject.getString("msg");
+				result_list[1] = status;
+			}
+		} catch (Exception e) {
+			ESPayLog.d(e.toString());
+		}
+
+		return result_list;
+	}
+
+	/**
+	 * 查询游戏卡支付结果
+	 */
+	public static String[] tradeResult(String token, String invoice) {
 		String url = "/ecenter/tradeResult.e";
-		String params = "ti=" + System.currentTimeMillis() + "&invoice="+invoice;
+		String params = "ti=" + System.currentTimeMillis() + "&invoice=" + invoice;
 		String[] result_arr = new String[2];
 		String result = EsPayNetGetPost.sendGet(domain + url,params,token);
 		try{

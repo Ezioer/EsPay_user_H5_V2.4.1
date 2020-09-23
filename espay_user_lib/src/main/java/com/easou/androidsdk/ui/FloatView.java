@@ -23,6 +23,7 @@ public class FloatView extends View {
 
 	private DisplayMetrics displayMetrics;
 	private Drawable drawable;
+	private Drawable fhzjDrawable;
 	private int firstX, firstY, lastX, lastY;
 	private View floatViewLayout;
 	private ImageView imageview;
@@ -110,12 +111,19 @@ public class FloatView extends View {
 
 		drawable = activity.getResources().getDrawable(activity.getApplication().getResources()
 				.getIdentifier("es_floaticon", "drawable", activity.getApplication().getPackageName()));
-
-		mWMParams = new WindowManager.LayoutParams();
-		if (Build.VERSION.SDK_INT>=26) {//8.0新特性
-			mWMParams.type= 2038;
+		fhzjDrawable = activity.getResources().getDrawable(activity.getApplication().getResources()
+				.getIdentifier("es_floaticon_fhzj", "drawable", activity.getApplication().getPackageName()));
+		if (activity.getPackageName().contains("fhzj")) {
+			//绯红之境改用新图标
+			imageview.setImageDrawable(fhzjDrawable);
 		} else {
-			mWMParams.type= 2003;
+			imageview.setImageDrawable(drawable);
+		}
+		mWMParams = new WindowManager.LayoutParams();
+		if (Build.VERSION.SDK_INT >= 26) {//8.0新特性
+			mWMParams.type = 2038;
+		} else {
+			mWMParams.type = 2003;
 		}
 		mWMParams.flags = 40;
 		mWMParams.width = LayoutParams.WRAP_CONTENT;

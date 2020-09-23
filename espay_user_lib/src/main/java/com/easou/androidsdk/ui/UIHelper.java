@@ -741,7 +741,7 @@ public class UIHelper {
         tittleAmt.setText("￥" + money);
 
         ESdkLog.d("支付的金额---->" + money);
-        String[] strs = money.split("\\.");
+      /*  String[] strs = money.split("\\.");
         int payMoney = 0;
         try {
             payMoney = Integer.parseInt(strs[0]);
@@ -752,7 +752,7 @@ public class UIHelper {
             }
         } catch (Exception e){
 
-		}
+		}*/
         return convertView;
     }
 

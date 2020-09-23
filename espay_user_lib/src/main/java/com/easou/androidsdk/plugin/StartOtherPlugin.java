@@ -365,7 +365,7 @@ public class StartOtherPlugin {
     public static void logGDTActionSetOAID(String oaid) {
         if (Constant.GDT_SDK) {
             try {
-                com.qq.gdt.action.f.a().b(oaid);
+//                com.qq.gdt.action.f.a().b(oaid);
             } catch (Exception e) {
             }
         }

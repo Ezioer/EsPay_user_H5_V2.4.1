@@ -212,7 +212,7 @@ public class Tools {
 
         } catch (Exception e) {
             // TODO Auto-generated catch block
-            ESdkLog.d("deviceiderror"+e.toString());
+            ESdkLog.d("deviceiderror" + e.toString());
             e.printStackTrace();
         }
         return imei;

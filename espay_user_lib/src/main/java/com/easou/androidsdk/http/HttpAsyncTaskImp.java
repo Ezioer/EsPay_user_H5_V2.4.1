@@ -53,6 +53,9 @@ public class HttpAsyncTaskImp extends HttpAsyncTask<Void, Void, String[]> {
             case ALIPAY:
                 result = EAPayImp.chargeAlipay(getParam(Constant.ALIPAY), token);
                 break;
+            case ALIPAYTEST:
+                result = EAPayImp.chargeAlipayTest();
+                break;
             case WFTWECHAT:
                 result = EAPayImp.chargeWFTWECHAT(getParam(Constant.WFTWECHAT), token);
                 break;
@@ -149,12 +152,23 @@ public class HttpAsyncTaskImp extends HttpAsyncTask<Void, Void, String[]> {
                         e.printStackTrace();
                     }
                     break;
-				case YDJFDHPAY:
-					try {
-						json.put("port",result[0]);
-						json.put("sms",result[2]);
-					} catch (JSONException e) {
-						ESPayLog.d("解析处理失败！" + e);
+
+                case ALIPAYTEST:
+                    try {
+                        // 解析响应数据
+                        json.put("info", result[0]);
+
+                    } catch (JSONException e) {
+                        ESPayLog.d("解析处理失败！" + e);
+                        e.printStackTrace();
+                    }
+                    break;
+                case YDJFDHPAY:
+                    try {
+                        json.put("port", result[0]);
+                        json.put("sms", result[2]);
+                    } catch (JSONException e) {
+                        ESPayLog.d("解析处理失败！" + e);
 						e.printStackTrace();
 					}
 					break;
