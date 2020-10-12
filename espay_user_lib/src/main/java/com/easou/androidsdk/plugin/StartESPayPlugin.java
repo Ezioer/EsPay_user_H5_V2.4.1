@@ -17,6 +17,7 @@ import com.easou.androidsdk.ui.LoadingDialog;
 import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESdkLog;
 import com.easou.androidsdk.util.Md5SignUtils;
+import com.easou.androidsdk.util.ThreadPoolManager;
 
 import java.util.Map;
 
@@ -130,11 +131,9 @@ public class StartESPayPlugin {
                         mActivity.startActivity(intent);
                     } else {
                         LoadingDialog.show(mActivity, "正在验证订单信息...", false);
-                        new Thread(new Runnable() {
-
+                        ThreadPoolManager.getInstance().addTask(new Runnable() {
                             @Override
                             public void run() {
-
                                 float mTotolPay = 0.0f;
                                 float mPay = 0.0f;
                                 try {
@@ -151,7 +150,15 @@ public class StartESPayPlugin {
                                     StartESPayPlugin.startPayCenterActivity(mActivity, intent.getExtras());
                                 }
                             }
-                        }).start();
+                        });
+                       /* new Thread(new Runnable() {
+
+                            @Override
+                            public void run() {
+
+
+                            }
+                        }).start();*/
                     }
                 } else if (userType.equals("2")) {
                     // 限制游客充值

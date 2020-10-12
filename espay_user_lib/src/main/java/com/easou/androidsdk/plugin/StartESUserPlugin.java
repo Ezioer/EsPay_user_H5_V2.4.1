@@ -17,6 +17,7 @@ import com.easou.androidsdk.util.ESdkLog;
 import com.easou.androidsdk.util.FileHelper;
 import com.easou.androidsdk.util.HostRequestUtils;
 import com.easou.androidsdk.util.NetworkUtils;
+import com.easou.androidsdk.util.ThreadPoolManager;
 import com.easou.androidsdk.util.Tools;
 
 import java.util.Map;
@@ -48,21 +49,27 @@ public class StartESUserPlugin {
 		}*/
 
 
-		new Thread(new Runnable() {
-			
+		ThreadPoolManager.getInstance().addTask(new Runnable() {
 			@Override
 			public void run() {
-
 				Looper.prepare();
-				
+
 				if (!Constant.IS_LOGINED) {
 					startH5Login();
 					startRequestHost(Starter.mActivity);
 				}
-				
+
 				Looper.loop();
 			}
-		}).start();
+		});
+		/*new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+
+
+			}
+		}).start();*/
 	}
 	
 	/**

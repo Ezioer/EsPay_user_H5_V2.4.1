@@ -40,7 +40,7 @@ public class SimulatorUtils {
             throw new IllegalArgumentException("context must not be null");
 
 
-        new Thread(new Runnable() {
+        ThreadPoolManager.getInstance().addTask(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -83,7 +83,13 @@ public class SimulatorUtils {
                     }
                 }
             }
-        }).start();
+        });
+        /*new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        }).start();*/
 
     }
 

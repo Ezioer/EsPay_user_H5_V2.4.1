@@ -50,6 +50,7 @@ import com.easou.androidsdk.plugin.StartOtherPlugin;
 import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.DialogerUtils;
 import com.easou.androidsdk.util.ESPayLog;
+import com.easou.androidsdk.util.ThreadPoolManager;
 import com.easou.androidsdk.util.Tools;
 import com.easou.espay_user_lib.R;
 import com.heepay.plugin.api.HPlugin;
@@ -171,18 +172,24 @@ public class ESPayCenterActivity extends BaseActivity {
         final Map<String, String> map = setupPayMap(false);
 
         LoadingDialog.show(mContext, "正在验证订单信息...", false);
-        new Thread(new Runnable() {
-
+        ThreadPoolManager.getInstance().addTask(new Runnable() {
             @Override
             public void run() {
-
                 try {
                     channelConfig = EAPayImp.getWechatPayment(map, easoutgc);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-        }).start();
+        });
+        /*new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+
+
+            }
+        }).start();*/
     }
 
 
@@ -575,18 +582,24 @@ public class ESPayCenterActivity extends BaseActivity {
     private void sendOrderLog() {
 
 
-        new Thread(new Runnable() {
-
+        ThreadPoolManager.getInstance().addTask(new Runnable() {
             @Override
             public void run() {
-
                 StartOtherPlugin.logTTActionOrder(money, productName);
                 StartOtherPlugin.logGismActionOrder(money, productName);
                 StartOtherPlugin.logGDTActionOrder(money);
                 StartOtherPlugin.orderAqyAction(money);
                 StartOtherPlugin.logKSActionOrderSubmit(money);
             }
-        }).start();
+        });
+        /*new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+
+
+            }
+        }).start();*/
 
 
         StartLogPlugin.startGameOrderLog(money);

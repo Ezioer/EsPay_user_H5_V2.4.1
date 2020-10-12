@@ -71,8 +71,8 @@ public class Constant {
 	public static String HOST_NAME = "";
 	public static String HOST_NAME_DEFAULT = "mtianshitong.com";
 
-	public static final String DOMAIN = "http://lab.pay.appeasou.com";
-//	public static final String DOMAIN = "https://service.pay.";
+//	public static final String DOMAIN = "http://lab.pay.appeasou.com";
+public static final String DOMAIN = "https://service.pay.";
 
 	public static final String[] DOMAIN_HOST = {"domain.game.eayou.com",
 			"domain.game.love778.com",
@@ -94,8 +94,8 @@ public class Constant {
 	/**
 	 * H5 SDK url
 	 */
-	public static final String SSO_URL = "http://lab.pay.appeasou.com:7500/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&payHostName=http://lab.pay.appeasou.com&ssoHostName=http://lab.sso.mtianshitong.com";
-//	public static final String SSO_URL = "https://h5.pay.mtianshitong.com/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
+//	public static final String SSO_URL = "http://lab.pay.appeasou.com:7500/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&payHostName=http://lab.pay.appeasou.com&ssoHostName=http://lab.sso.mtianshitong.com";
+	public static final String SSO_URL = "https://h5.pay.mtianshitong.com/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
 
 	/**
 	 * 支付 url
