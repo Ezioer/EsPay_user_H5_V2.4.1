@@ -18,9 +18,6 @@ public class EsApplication extends Application {
 
 		/** 快手SDK初始化 */
 		Starter.getInstance().initKSSDK(this);
-
-		/** 爱奇艺SDK初始化 */
-		Starter.getInstance().initAQY(this);
 	}
 
 	@Override

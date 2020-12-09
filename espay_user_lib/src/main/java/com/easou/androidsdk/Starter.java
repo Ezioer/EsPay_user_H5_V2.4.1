@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
+import android.support.annotation.NonNull;
 
+import com.baidu.mobads.action.BaiduAction;
 import com.easou.androidsdk.callback.AppTimeWatcher;
 import com.easou.androidsdk.callback.ESdkCallback;
 import com.easou.androidsdk.data.Constant;
@@ -12,6 +15,7 @@ import com.easou.androidsdk.plugin.StartESPayPlugin;
 import com.easou.androidsdk.plugin.StartESUserPlugin;
 import com.easou.androidsdk.plugin.StartLogPlugin;
 import com.easou.androidsdk.plugin.StartOtherPlugin;
+import com.easou.androidsdk.util.ESdkLog;
 
 import java.util.Map;
 
@@ -62,6 +66,16 @@ public class Starter {
     public void login(final Activity activity, ESdkCallback mCallback) {
         Starter.mCallback = mCallback;
         Starter.mActivity = activity;
+        StartOtherPlugin.onLaunchApp();
+        StartOtherPlugin.initKSSDK(activity);
+        StartOtherPlugin.initTTSDK(activity);
+        new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ESdkLog.d("快手sdk激活");
+                StartOtherPlugin.logKSActionAppActive();
+            }
+        }, 3000);
         StartESUserPlugin.loginSdk();
     }
 
@@ -114,7 +128,7 @@ public class Starter {
      * 初始化今日头条SDK
      */
     public void initTTSDK(Context context) {
-        StartOtherPlugin.initTTSDK(context);
+//        StartOtherPlugin.initTTSDK(context);
     }
 
     /**
@@ -179,14 +193,29 @@ public class Starter {
      * 快手SDK初始化
      */
     public void initKSSDK(Context mContext) {
-        StartOtherPlugin.initKSSDK(mContext);
+        StartOtherPlugin.initBD(mContext);
+//        StartOtherPlugin.initKSSDK(mContext);
     }
 
     /**
      * 快手SDK活跃事件，进入app首页时调用
      */
     public void logKSActionAppActive() {
-        StartOtherPlugin.logKSActionAppActive();
+//        StartOtherPlugin.logKSActionAppActive();
+    }
+
+    /**
+     * 头条进入页面统计
+     */
+    public void logTTPageResume(Activity context) {
+//        StartOtherPlugin.onTTResume(context);
+    }
+
+    /**
+     * 头条离开页面统计
+     */
+    public void logTTPagePause(Activity context) {
+//        StartOtherPlugin.onTTPause(context);
     }
 
     /**
@@ -213,8 +242,27 @@ public class Starter {
     /**
      * 爱奇艺SDK退出游戏界面
      */
-    public void logAQYActionPageDestory(){
+    public void logAQYActionPageDestory() {
         StartOtherPlugin.destoryAQY();
+    }
+
+    /**
+     * baidu进入页面统计
+     */
+    public void logBDPageResume() {
+        StartOtherPlugin.logBDPage();
+    }
+
+    /**
+     * 处理百度sdk的权限回调
+     *
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
+    public void handleBDPermissions(int requestCode,
+                                    @NonNull String permissions[], @NonNull int[] grantResults) {
+        BaiduAction.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
 }

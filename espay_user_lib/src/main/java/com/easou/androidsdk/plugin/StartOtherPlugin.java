@@ -5,12 +5,15 @@ import android.app.Application;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.baidu.mobads.action.BaiduAction;
+import com.baidu.mobads.action.PrivacyStatus;
 import com.bun.miitmdid.core.JLibrary;
 import com.bytedance.applog.AppLog;
 import com.bytedance.applog.GameReportHelper;
 import com.bytedance.applog.InitConfig;
 import com.bytedance.applog.util.UriConfig;
 import com.easou.androidsdk.data.Constant;
+import com.easou.androidsdk.http.EAPayInter;
 import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESdkLog;
 import com.easou.androidsdk.util.MiitHelper;
@@ -19,9 +22,9 @@ import com.easou.androidsdk.util.Tools;
 import com.gism.sdk.GismConfig;
 import com.gism.sdk.GismEventBuilder;
 import com.gism.sdk.GismSDK;
-import com.iqiyi.qilin.trans.QiLinTrans;
-import com.iqiyi.qilin.trans.TransParam;
-import com.iqiyi.qilin.trans.TransType;
+//import com.iqiyi.qilin.trans.QiLinTrans;
+//import com.iqiyi.qilin.trans.TransParam;
+//import com.iqiyi.qilin.trans.TransType;
 import com.kwai.monitor.log.OAIDProxy;
 import com.kwai.monitor.log.TurboAgent;
 import com.kwai.monitor.log.TurboConfig;
@@ -31,6 +34,8 @@ import com.qq.gdt.action.GDTAction;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import static com.baidu.mobads.action.ActionParam.Key.PURCHASE_MONEY;
 
 public class StartOtherPlugin {
 
@@ -125,8 +130,8 @@ public class StartOtherPlugin {
     /**
      * 头条SDK上报购买
      */
-    public static void logTTActionPurchase(String money, String productName, String payType,
-                                           boolean status) {
+    public static void logTTActionPurchase(final String money, final String productName, final String payType,
+                                           final boolean status, final String appId, final String userId) {
 
         if (Constant.TOUTIAO_SDK) {
             if (money != null) {
@@ -138,9 +143,34 @@ public class StartOtherPlugin {
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
-
-                GameReportHelper.onEventPurchase("", productName, "", 1,
-                        payType, "¥", status, payMoney);
+                final int mMoney = payMoney;
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        int count = 0;
+                        while (count < 3) {
+                            int result = EAPayInter.isUploadPay(userId, appId);
+                            if (result != -1) {
+                                //1上传头条付费日志，0不上传
+                                if (result == 1) {
+                                    ESdkLog.d("上传头条付费日志");
+                                    GameReportHelper.onEventPurchase("", productName, "", 1,
+                                            payType, "¥", status, mMoney);
+                                }
+                                //请求成功停止轮询请求
+                                break;
+                            } else {
+                                //-1为接口请求出错，暂停100毫秒轮询三次
+                                count++;
+                                try {
+                                    Thread.sleep(100);
+                                } catch (InterruptedException e) {
+                                    ESdkLog.d(e.toString());
+                                }
+                            }
+                        }
+                    }
+                }).start();
             }
         }
     }
@@ -226,6 +256,15 @@ public class StartOtherPlugin {
     }
 
     /**
+     * GISM SDK上报启动游戏
+     */
+    public static void onLaunchApp() {
+        if (Constant.GISM_SDK) {
+            GismSDK.onLaunchApp();
+        }
+    }
+
+    /**
      * GISM SDK上报注册
      */
     public static void logGismActionRegister() {
@@ -257,9 +296,9 @@ public class StartOtherPlugin {
     public static void logGismActionLogout() {
 
         if (Constant.GISM_SDK) {
-            GismSDK.onEvent(GismEventBuilder.onCustomEvent()
+           /* GismSDK.onEvent(GismEventBuilder.onCustomEvent()
                     .action("logout")
-                    .build());
+                    .build());*/
         }
     }
 
@@ -457,12 +496,12 @@ public class StartOtherPlugin {
                     .setAppId(CommonUtils.readPropertiesValue(mContext, "KS_appid"))
                     .setAppName(CommonUtils.readPropertiesValue(mContext, "KS_appName"))
                     .setAppChannel(CommonUtils.readPropertiesValue(mContext, "qn"))
-                    .setOAIDProxy(new OAIDProxy() { // 设置获取oaid的接口
+                    /*.setOAIDProxy(new OAIDProxy() { // 设置获取oaid的接口
                         @Override
                         public String getOAID() {
                             return Constant.OAID;// 返回设备标识oaid
                         }
-                    })
+                    })*/
                     .setEnableDebug(true)
                     .build());
         }
@@ -552,67 +591,67 @@ public class StartOtherPlugin {
      * @param mContext
      */
     public static void initAQY(Context mContext) {
-        if (TextUtils.equals(CommonUtils.readPropertiesValue(mContext, "use_AQY"), "0")) {
+       /* if (TextUtils.equals(CommonUtils.readPropertiesValue(mContext, "use_AQY"), "0")) {
             Constant.AQY_SDK = true;
             ESdkLog.d("调用了爱奇艺sdk初始化");
             QiLinTrans.setDebug(TransParam.LogLevel.LOG_DEBUG, false, "");
             QiLinTrans.init(mContext, CommonUtils.readPropertiesValue(mContext, "aiqiyi_appid"),
                     CommonUtils.readPropertiesValue(mContext, "qn"), Constant.OAID);
-        }
+        }*/
     }
 
     /**
      * 爱奇艺进入游戏界面
      */
     public static void resumeAQY() {
-        if (Constant.AQY_SDK){
+       /* if (Constant.AQY_SDK){
             ESdkLog.d("爱奇艺进入游戏界面");
             QiLinTrans.onResume();
-        }
+        }*/
     }
 
     /**
      * 爱奇艺退出游戏界面
      */
     public static void destoryAQY() {
-        if (Constant.AQY_SDK){
+       /* if (Constant.AQY_SDK){
             ESdkLog.d("爱奇艺退出游戏界面");
             QiLinTrans.onDestroy();
-        }
+        }*/
     }
 
     /**
      * 爱奇艺SDK上报注册
      */
     public static void registerAqyAction() {
-        if (Constant.AQY_SDK){
+       /* if (Constant.AQY_SDK){
             QiLinTrans.uploadTrans(TransType.QL_REGISTER);
-        }
+        }*/
     }
 
     /**
      * 爱奇艺SDK上报登录
      */
     public static void loginAqyAction() {
-        if (Constant.AQY_SDK){
+      /*  if (Constant.AQY_SDK){
             QiLinTrans.uploadTrans(TransType.QL_LOGIN);
-        }
+        }*/
     }
 
     /**
      * 爱奇艺SDK上报登出
      */
     public static void logoutAqyAction() {
-        if (Constant.AQY_SDK){
+       /* if (Constant.AQY_SDK){
             QiLinTrans.uploadTrans(TransType.QL_LOGOUT);
-        }
+        }*/
     }
 
     /**
      * 爱奇艺SDK上报创建角色
      */
     public static void createRoleAqyAction(String name) {
-        if (Constant.AQY_SDK){
+       /* if (Constant.AQY_SDK){
             try {
                 JSONObject actionParam = new JSONObject();
                 actionParam.put("role_name", name);
@@ -620,14 +659,14 @@ public class StartOtherPlugin {
             }catch (JSONException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
     /**
      * 爱奇艺SDK上报下单
      */
     public static void orderAqyAction(String money) {
-        if (Constant.AQY_SDK){
+       /* if (Constant.AQY_SDK){
             try {
                 JSONObject actionParam = new JSONObject();
                 actionParam.put("money", Double.valueOf(money) * 100);
@@ -635,14 +674,14 @@ public class StartOtherPlugin {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
     /**
      * 爱奇艺SDK上报购买
      */
     public static void purchaseAqyAction(String money) {
-        if (Constant.AQY_SDK){
+      /*  if (Constant.AQY_SDK){
             if (money != null) {
 
                 String[] strs = money.split("\\.");
@@ -659,6 +698,92 @@ public class StartOtherPlugin {
                     }
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
+                }
+            }
+        }*/
+    }
+
+    /* ================================== 百度sdk ================================== */
+
+    /**
+     * baidu sdk初始化
+     *
+     * @param mContext
+     */
+    public static void initBD(Context mContext) {
+        if (TextUtils.equals(CommonUtils.readPropertiesValue(mContext, "use_BD"), "0")) {
+            ESdkLog.d("初始化百度sdk");
+            Constant.BD_SDK = true;
+            BaiduAction.init(mContext, Long.valueOf(CommonUtils.readPropertiesValue(mContext, "BD_appid")),
+                    CommonUtils.readPropertiesValue(mContext, "BD_appSecret"));
+            // 设置应用激活的间隔（默认30天）
+            BaiduAction.setPrintLog(true);
+            BaiduAction.setActivateInterval(mContext, 30);
+            BaiduAction.setPrivacyStatus(PrivacyStatus.AGREE);
+        }
+    }
+
+    /**
+     * baidu SDK付费成功事件
+     */
+    public static void logBDActionPerchase(String money) {
+        if (Constant.BD_SDK) {
+            if (money != null) {
+                String[] strs = money.split("\\.");
+                int payMoney = 0;
+                try {
+                    payMoney = Integer.parseInt(strs[0]) * 100;
+                    JSONObject actionParam = new JSONObject();
+                    actionParam.put(PURCHASE_MONEY, payMoney);
+                    BaiduAction.logAction(com.baidu.mobads.action.ActionType.PURCHASE, actionParam);
+                } catch (Exception e) {
+                    ESdkLog.d(e.getMessage());
+                }
+            }
+        }
+    }
+
+    /**
+     * baidu sdk注册事件
+     */
+    public static void logBDRegister() {
+        if (Constant.BD_SDK) {
+            BaiduAction.logAction(com.baidu.mobads.action.ActionType.REGISTER);
+        }
+    }
+
+    /**
+     * baidu sdk登陆事件
+     */
+    public static void logBDLogin() {
+        if (Constant.BD_SDK) {
+            BaiduAction.logAction(com.baidu.mobads.action.ActionType.LOGIN);
+        }
+    }
+
+    /**
+     * baidu sdk页面浏览事件
+     */
+    public static void logBDPage() {
+        if (Constant.BD_SDK) {
+            BaiduAction.logAction(com.baidu.mobads.action.ActionType.PAGE_VIEW);
+        }
+    }
+
+    /**
+     * baidu SDK下单成功事件
+     */
+    public static void logBDActionOrder(String money) {
+        if (Constant.BD_SDK) {
+            if (money != null) {
+                String[] strs = money.split("\\.");
+                int payMoney = 0;
+                try {
+                    payMoney = Integer.parseInt(strs[0]) * 100;
+                    JSONObject actionParam = new JSONObject();
+                    actionParam.put(PURCHASE_MONEY, payMoney);
+                    BaiduAction.logAction(com.baidu.mobads.action.ActionType.COMPLETE_ORDER, actionParam);
+                } catch (Exception e) {
                 }
             }
         }

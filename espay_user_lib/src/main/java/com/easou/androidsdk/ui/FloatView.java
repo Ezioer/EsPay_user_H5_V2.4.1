@@ -17,7 +17,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.easou.androidsdk.plugin.StartESUserPlugin;
-import com.easou.androidsdk.util.ESdkLog;
 
 public class FloatView extends View {
 
@@ -119,7 +118,8 @@ public class FloatView extends View {
 		} else {
 			imageview.setImageDrawable(drawable);
 		}
-		mWMParams = new WindowManager.LayoutParams();
+
+        mWMParams = new WindowManager.LayoutParams();
 		if (Build.VERSION.SDK_INT >= 26) {//8.0新特性
 			mWMParams.type = 2038;
 		} else {

@@ -65,6 +65,7 @@ public class ESPlatform {
         StartOtherPlugin.logGismActionLogin(user_ID);
         StartOtherPlugin.logGDTActionSetID(user_ID);
         StartOtherPlugin.loginAqyAction();
+        StartOtherPlugin.logBDLogin();
         StartOtherPlugin.createRoleAqyAction(userName);
         Constant.IS_LOGINED = true;
         Constant.ESDK_USERID = userId;
@@ -164,7 +165,7 @@ public class ESPlatform {
         StartOtherPlugin.logTTActionRegister();
         StartOtherPlugin.logGismActionRegister();
         StartOtherPlugin.logKSActionRegister();
-
+        StartOtherPlugin.logBDRegister();
         StartOtherPlugin.logGDTActionRegister();
         StartOtherPlugin.registerAqyAction();
         String userId = "";

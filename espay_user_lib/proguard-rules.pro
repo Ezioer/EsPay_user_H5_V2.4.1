@@ -203,3 +203,6 @@ native <methods>;
 }
 -dontwarn com.iqiyi.qilin.trans.**
 -keep class com.iqiyi.qilin.trans.** {*;}
+
+-dontwarn com.baidu.mobads.action.**
+-keep class com.baidu.mobads.action.** {*;}

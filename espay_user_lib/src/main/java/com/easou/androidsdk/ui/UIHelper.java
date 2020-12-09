@@ -528,7 +528,7 @@ public class UIHelper {
         });
 
         //积分兑换
-        jfLayout = convertView.findViewById(
+       /* jfLayout = convertView.findViewById(
                 context.getResources().getIdentifier("easou_id_jfChannelLayout", "id", context.getPackageName()));
         jfLayout.setOnClickListener(new OnClickListener() {
             @Override
@@ -542,7 +542,7 @@ public class UIHelper {
                 msg.sendToTarget();
                 isClicked = true;
             }
-        });
+        });*/
 
         // 银联
         ylLayout = convertView.findViewById(

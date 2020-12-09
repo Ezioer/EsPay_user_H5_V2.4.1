@@ -21,11 +21,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.baidu.mobads.action.BaiduAction;
 import com.easou.androidsdk.Starter;
 import com.easou.androidsdk.callback.ESdkCallback;
 import com.easou.androidsdk.data.ESConstant;
 import com.easou.androidsdk.util.ESdkLog;
-import com.iqiyi.qilin.trans.QiLinTrans;
 
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
@@ -129,6 +129,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                            @NonNull String permissions[], @NonNull int[] grantResults) {
         //PERMISSIONCODE为申请权限时的请求码
         boolean isAllGet = true;
+        //百度权限回调
+        Starter.getInstance().handleBDPermissions(requestCode, permissions, grantResults);
         if (PERMISSIONCODE == requestCode) {
             // 从数组中取出返回结果，遍历判断多组权限
             for (int result : grantResults) {
@@ -332,8 +334,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Starter.getInstance().logGDTAction();
         /** 快手SDK进入游戏界面 */
         Starter.getInstance().logKSActionPageResume(MainActivity.this);
-        /** 爱奇艺SDK进入游戏界面 */
-        Starter.getInstance().logAQYActionPageResume();
+        /** 百度浏览页面 */
+        Starter.getInstance().logBDPageResume();
     }
 
     @Override
@@ -341,8 +343,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onPause();
         /** 快手SDK退出游戏界面 */
         Starter.getInstance().logKSActionPagePause(MainActivity.this);
-        /**  爱奇艺退出游戏时调用 */
-        Starter.getInstance().logAQYActionPageDestory();
     }
 
     @Override

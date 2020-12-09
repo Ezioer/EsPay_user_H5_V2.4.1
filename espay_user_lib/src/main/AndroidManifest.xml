@@ -147,6 +147,37 @@
             android:theme="@style/easou_translucent_notitle"
             android:launchMode="singleInstance"
             android:screenOrientation="behind" />
+
+        <activity
+            android:name="com.baidu.xenv.XenvActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="standard"
+            android:theme="@android:style/Theme.Translucent">
+            <intent-filter>
+                <action android:name="com.baidu.action.Xenv.VIEW" />
+
+                <category android:name="com.baidu.category.xenv" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name="com.baidu.xenv.XenvService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.baidu.action.Xenv.VIEW" />
+
+                <category android:name="com.baidu.category.xenv" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
+        <provider
+            android:name="com.baidu.xenv.XenvProvider"
+            android:authorities="${applicationId}.xenv.ac.provider"
+            android:exported="false"
+            tools:replace="android:authorities" />
     </application>
 
 </manifest>

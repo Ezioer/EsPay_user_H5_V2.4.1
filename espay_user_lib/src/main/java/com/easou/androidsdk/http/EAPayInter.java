@@ -3,6 +3,7 @@ package com.easou.androidsdk.http;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.data.PayItem;
 import com.easou.androidsdk.util.ESPayLog;
+import com.easou.androidsdk.util.ESdkLog;
 import com.easou.androidsdk.util.Tools;
 import com.google.gson.Gson;
 
@@ -204,15 +205,35 @@ public class EAPayInter {
 				if (hasNext == false) {
 					users[0].setHasNext(false);
 				}
-				for (int i=0;i<users.length;i++) {		
-					list.add(users[i]);
-				}
-				return list;
-			} 
-			
-		}catch(Exception e){
-		}
-		return null;
-	}
-	
+                for (int i = 0; i < users.length; i++) {
+                    list.add(users[i]);
+                }
+                return list;
+            }
+
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    public static int isUploadPay(String userId, String appId) {
+        try {
+            String url = "https://listener.eayou.com/sa/todayUser.do?accountid=" + userId + "&appid=" + appId + "&t=" + System.currentTimeMillis();
+            String result = EsPayNetGetPost.sendGet(url, null, "");
+            //数据为null，有可能是请求出错
+            if (result == null) {
+                return -1;
+            }
+
+            //不上传头条付费日志
+            if (result.equals("0")) {
+                return 0;
+            }
+            //上传头条付费日志
+            return 1;
+        } catch (Exception e) {
+            ESdkLog.d(e.toString());
+            return -1;
+        }
+    }
 }
