@@ -206,3 +206,8 @@ native <methods>;
 
 -dontwarn com.baidu.mobads.action.**
 -keep class com.baidu.mobads.action.** {*;}
+
+-keep class com.bytedance.applog.picker.DomSender { public *; }
+
+-keep class com.bytedance.dr.VivoIdentifier {*;}
+-keep class com.bytedance.dr.VivoIdentifier$* {*;}

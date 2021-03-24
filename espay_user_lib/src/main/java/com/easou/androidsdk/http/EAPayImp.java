@@ -22,15 +22,15 @@ public class EAPayImp {
 	 */
 	public static String[] chargeWinXin(String param, String token) {
 		//TODO
-		String result = HttpGroupUtils.sendGet(domain, param, token);
+		String result = HttpGroupUtils.sendPost(domain, param, token);
 		String[] result_arr = new String[13];
 		try {
 
 			JSONObject jsonObject = new JSONObject(result);
 			String status = jsonObject.getString("status");
-			
+
 			if (status.equals(Constant.FLAG_TRADE_RESULT_SUC)) {
-				
+
 				JSONObject data = jsonObject.getJSONObject("data");
 				
 				result_arr[0] = jsonObject.getString("msg");
@@ -58,13 +58,13 @@ public class EAPayImp {
 	 */
 	public static String[] chargeWFTWECHAT(String param, String token) {
 		//TODO
-		String result = HttpGroupUtils.sendGet(domain, param, token);
+		String result = HttpGroupUtils.sendPost(domain, param, token);
 		String[] result_arr = new String[13];
 		try {
 
 			JSONObject jsonObject = new JSONObject(result);
 			String status = jsonObject.getString("status");
-			
+
 			if (status.equals(Constant.FLAG_TRADE_RESULT_SUC)) {
 				JSONObject data = jsonObject.getJSONObject("data");
 				result_arr[0] = jsonObject.getString("msg");
@@ -94,13 +94,13 @@ public class EAPayImp {
 	 */
 	public static String[] chargeZWXWECHAT(String param, String token) {
 		//TODO
-		String result = HttpGroupUtils.sendGet(domain, param, token);
+		String result = HttpGroupUtils.sendPost(domain, param, token);
 		String[] result_arr = new String[13];
 		try {
 
 			JSONObject jsonObject = new JSONObject(result);
 			String status = jsonObject.getString("status");
-			
+
 			if (status.equals(Constant.FLAG_TRADE_RESULT_SUC)) {
 				JSONObject data = jsonObject.getJSONObject("data");
 				result_arr[0] = jsonObject.getString("msg");
@@ -130,15 +130,15 @@ public class EAPayImp {
 	 * @return
 	 */
 	public static String[] cardChargeYinLian(String param, String token) {
-		String result = HttpGroupUtils.sendGet(domain, param, token);
+		String result = HttpGroupUtils.sendPost(domain, param, token);
 		String[] result_arr = new String[13];
 		try {
 
 			JSONObject jsonObject = new JSONObject(result);
 			String status = jsonObject.getString("status");
-			
+
 			if (status.equals(Constant.FLAG_TRADE_RESULT_SUC)) {
-				
+
 				JSONObject data = jsonObject.getJSONObject("data");
 				result_arr[0] = jsonObject.getString("msg");
 				result_arr[1] = status;
@@ -174,9 +174,9 @@ public class EAPayImp {
 	 * @return
 	 */
 	public static String[] cardCharge(String params, String token) {
-		ESPayLog.d(TAG , "卡类请求参数是：" + params);
-		String result = HttpGroupUtils.sendGet(domain, params, token);
-		ESPayLog.d(TAG , "请求的数据是：" + result);
+		ESPayLog.d(TAG, "卡类请求参数是：" + params);
+		String result = HttpGroupUtils.sendPost(domain, params, token);
+		ESPayLog.d(TAG, "请求的数据是：" + result);
 		String[] result_arr = new String[2];
 		try {
 			JSONObject jsonObject = new JSONObject(result);
@@ -200,8 +200,8 @@ public class EAPayImp {
 	 * @return
 	 */
 	public static String[] chargeAlipay(String params, String token) {
-		String result = HttpGroupUtils.sendGet(domain, params, token);
-		ESPayLog.d(TAG , "aresult:"+result);
+		String result = HttpGroupUtils.sendPost(domain, params, token);
+		ESPayLog.d(TAG, "aresult:" + result);
 		String[] result_list = new String[2];
 		try {
 			JSONObject jsonObject = new JSONObject(result);
@@ -227,7 +227,7 @@ public class EAPayImp {
 	 * @return
 	 */
 	public static String[] chargeAlipayTest() {
-		String result = HttpGroupUtils.sendGet("http://lab.pay.appeasou.com/basePay/charge.e?appId=2604&cpTradeDesc=%E5%BE%AE%E5%8D%B7%E5%85%85%E5%80%BC0.01%E5%85%83&cpTradeName=%E5%BE%AE%E5%8D%B7%E5%85%85%E5%80%BC0.01%E5%85%83&money=0.01&notifyUrl=http://www.baidu.com&partnerId=1000100010001028&payChannel=BY_GF_ALIPAY&qn=ysap2027_10045_003&redirectUrl=http://www.appeasou.com&tradeId=1509603958659&tradeMode=WEB&sign=93867441768c60b414ebb4266c46fd5e", null, "");
+		String result = HttpGroupUtils.sendPost("http://lab.pay.appeasou.com/basePay/charge.e?appId=2604&cpTradeDesc=%E5%BE%AE%E5%8D%B7%E5%85%85%E5%80%BC0.01%E5%85%83&cpTradeName=%E5%BE%AE%E5%8D%B7%E5%85%85%E5%80%BC0.01%E5%85%83&money=0.01&notifyUrl=http://www.baidu.com&partnerId=1000100010001028&payChannel=BY_GF_ALIPAY&qn=ysap2027_10045_003&redirectUrl=http://www.appeasou.com&tradeId=1509603958659&tradeMode=WEB&sign=93867441768c60b414ebb4266c46fd5e", null, "");
 		ESPayLog.d(TAG, "aresult:" + result);
 		String[] result_list = new String[2];
 		try {

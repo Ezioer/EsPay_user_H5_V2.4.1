@@ -271,9 +271,12 @@ public class StartESPayPlugin {
             param = param + "&channelMark="+Constant.CHANNEL_MARK_YY;
         } else if(Constant.PAY_CHANNEl == 3) {
             param = param + "&channelMark="+Constant.CHANNEL_MARK_ZKX;
-        } else if (Constant.PAY_CHANNEl == 4){
-            param = param + "&channelMark="+Constant.CHANNEL_MARK_WZYY;
+        } else if (Constant.PAY_CHANNEl == 4) {
+            param = param + "&channelMark=" + Constant.CHANNEL_MARK_WZYY;
+        } else {
+            param = param + "&channelMark=" + Constant.CHANNEL_MARK_ZKX;
         }
+
         return param;
     }
 

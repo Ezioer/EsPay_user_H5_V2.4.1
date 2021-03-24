@@ -18,7 +18,11 @@ public class ThreadPoolManager {
 
     public static ThreadPoolManager getInstance() {
         if (manager == null) {
-            manager = new ThreadPoolManager();
+            synchronized (ThreadPoolManager.class) {
+                if (manager == null) {
+                    manager = new ThreadPoolManager();
+                }
+            }
         }
         return manager;
     }

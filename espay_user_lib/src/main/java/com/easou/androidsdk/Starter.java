@@ -15,6 +15,8 @@ import com.easou.androidsdk.plugin.StartESPayPlugin;
 import com.easou.androidsdk.plugin.StartESUserPlugin;
 import com.easou.androidsdk.plugin.StartLogPlugin;
 import com.easou.androidsdk.plugin.StartOtherPlugin;
+import com.easou.androidsdk.romutils.RomHelper;
+import com.easou.androidsdk.romutils.RomUtils;
 import com.easou.androidsdk.util.ESdkLog;
 
 import java.util.Map;
@@ -72,7 +74,7 @@ public class Starter {
         new Handler(Looper.myLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                ESdkLog.d("快手sdk激活");
+//                ESdkLog.d("快手sdk激活");
                 StartOtherPlugin.logKSActionAppActive();
             }
         }, 3000);
@@ -104,7 +106,13 @@ public class Starter {
      * 显示SDK悬浮窗
      */
     public void showFloatView() {
-        StartESUserPlugin.showFloatView();
+        if (RomUtils.checkIsVivo()) {
+            if (mActivity != null && RomHelper.checkPermission(mActivity)) {
+                StartESUserPlugin.showFloatView();
+            }
+        } else {
+            StartESUserPlugin.showFloatView();
+        }
     }
 
     /**
@@ -127,6 +135,7 @@ public class Starter {
     /**
      * 初始化今日头条SDK
      */
+    @Deprecated
     public void initTTSDK(Context context) {
 //        StartOtherPlugin.initTTSDK(context);
     }
@@ -134,7 +143,7 @@ public class Starter {
     /**
      * 初始化爱奇艺SDK
      */
-    public void initAQY(Context mContext){
+    public void initAQY(Context mContext) {
         StartOtherPlugin.initAQY(mContext);
     }
 
@@ -158,6 +167,7 @@ public class Starter {
     /**
      * 初始化GISM SDK
      */
+//    @Deprecated
     public void initGismSDK(Context context, boolean debug) {
         StartOtherPlugin.initGism(context, debug);
     }
@@ -175,14 +185,16 @@ public class Starter {
      *
      * @param mContext 上下文对象
      */
+//    @Deprecated
     public void initGDTAction(Context mContext) {
         StartOtherPlugin.initGDTAction(mContext);
-        AppTimeWatcher.getInstance().registerWatcher((Application)mContext);
+        AppTimeWatcher.getInstance().registerWatcher((Application) mContext);
     }
 
     /**
      * 广点通SDK上报app启动
      */
+//    @Deprecated
     public void logGDTAction() {
         if (Constant.IS_LOGINED) {
             StartOtherPlugin.logGDTAction();
@@ -192,6 +204,7 @@ public class Starter {
     /**
      * 快手SDK初始化
      */
+//    @Deprecated
     public void initKSSDK(Context mContext) {
         StartOtherPlugin.initBD(mContext);
 //        StartOtherPlugin.initKSSDK(mContext);
@@ -200,6 +213,7 @@ public class Starter {
     /**
      * 快手SDK活跃事件，进入app首页时调用
      */
+    @Deprecated
     public void logKSActionAppActive() {
 //        StartOtherPlugin.logKSActionAppActive();
     }
@@ -208,19 +222,20 @@ public class Starter {
      * 头条进入页面统计
      */
     public void logTTPageResume(Activity context) {
-//        StartOtherPlugin.onTTResume(context);
+        StartOtherPlugin.onTTResume(context);
     }
 
     /**
      * 头条离开页面统计
      */
     public void logTTPagePause(Activity context) {
-//        StartOtherPlugin.onTTPause(context);
+        StartOtherPlugin.onTTPause(context);
     }
 
     /**
      * 快手SDK进入游戏界面
      */
+//    @Deprecated
     public void logKSActionPageResume(Activity activity) {
         StartOtherPlugin.logKSActionPageResume(activity);
     }
@@ -235,7 +250,7 @@ public class Starter {
     /**
      * 爱奇艺SDK进入游戏界面
      */
-    public void logAQYActionPageResume(){
+    public void logAQYActionPageResume() {
         StartOtherPlugin.resumeAQY();
     }
 
@@ -249,6 +264,7 @@ public class Starter {
     /**
      * baidu进入页面统计
      */
+//    @Deprecated
     public void logBDPageResume() {
         StartOtherPlugin.logBDPage();
     }
@@ -263,6 +279,32 @@ public class Starter {
     public void handleBDPermissions(int requestCode,
                                     @NonNull String permissions[], @NonNull int[] grantResults) {
         BaiduAction.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    /**
+     * 统一为数据初始化接口
+     *
+     * @param mContext
+     */
+    public void dataCollectInit(Context mContext) {
+        /** 初始化汇川广告GISM SDK */
+        StartOtherPlugin.initGism(mContext, false);
+        /** 广点通SDK初始化 */
+        StartOtherPlugin.initGDTAction(mContext);
+        AppTimeWatcher.getInstance().registerWatcher((Application) mContext);
+        /** 百度初始化 */
+        StartOtherPlugin.initBD(mContext);
+    }
+
+    public void pageResume(Activity activity) {
+        //广点通上报启动
+        if (Constant.IS_LOGINED) {
+            StartOtherPlugin.logGDTAction();
+        }
+        //快手sdk进入游戏界面
+        StartOtherPlugin.logKSActionPageResume(activity);
+        //百度浏览页面
+        StartOtherPlugin.logBDPage();
     }
 
 }

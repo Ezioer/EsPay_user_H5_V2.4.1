@@ -614,8 +614,6 @@ public class ESPayCenterActivity extends BaseActivity {
     public void aliPay() {
         Map<String, String> map = setupPayMap(true);
         map.put(Constant.TRADEMODE, Constant.MODULE);
-        map.put(Constant.PAYCHANNEL, Constant.ALIPAY);
-
 	/*	if (Constant.USE_DHT) {
 			map.put(Constant.PAYCHANNEL, Constant.ALIPAY_DHT);
 		}*/
@@ -624,6 +622,8 @@ public class ESPayCenterActivity extends BaseActivity {
         } else if (Constant.PAY_CHANNEl == 2) {
             map.put(Constant.PAYCHANNEL, Constant.ALIPAY_YY);
         } else if (Constant.PAY_CHANNEl == 3) {
+            map.put(Constant.PAYCHANNEL, Constant.ZKXHGALIPAY);
+        } else {
             map.put(Constant.PAYCHANNEL, Constant.ZKXHGALIPAY);
         }
 
@@ -694,7 +694,10 @@ public class ESPayCenterActivity extends BaseActivity {
             inputMap.put(Constant.CHANNEL_MARK, Constant.CHANNEL_MARK_ZKX);
         } else if (Constant.PAY_CHANNEl == 4) {
             inputMap.put(Constant.CHANNEL_MARK, Constant.CHANNEL_MARK_WZYY);
+        } else {
+            inputMap.put(Constant.CHANNEL_MARK, Constant.CHANNEL_MARK_ZKX);
         }
+
 
         String room_view_url = Constant.DOMAIN + Tools.getHostName() + Constant.WEB_SERVER_URL
                 + StartESPayPlugin.getParam(inputMap, key);
@@ -714,8 +717,8 @@ public class ESPayCenterActivity extends BaseActivity {
     public void ylPay() {
         Map<String, String> map = setupPayMap(true);
         map.put(Constant.TRADEMODE, Constant.MODULE);
-        map.put(Constant.PAYCHANNEL, Constant.UNIONPAY);
-//        map.put(Constant.PAYCHANNEL, "ZKXUNIONPAY2");
+//        map.put(Constant.PAYCHANNEL, Constant.UNIONPAY);
+        map.put(Constant.PAYCHANNEL, Constant.ZKXUNIONPAY2);
 
         HttpAsyncTaskImp ylTask = new HttpAsyncTaskImp(mActivity, map, easoutgc, key, FeeType.UNIONPAY);
         ylTask.setDataFinishListener(new HttpAsyncTaskImp.DataFinishListener() {
@@ -744,8 +747,6 @@ public class ESPayCenterActivity extends BaseActivity {
     public void wxPay() {
         Map<String, String> map = setupPayMap(true);
         map.put(Constant.TRADEMODE, Constant.MODULE);
-        map.put(Constant.PAYCHANNEL, Constant.WECHAT);
-
        /* if (Constant.USE_DHT) {
             map.put(Constant.PAYCHANNEL, Constant.WECHAT_DHT);
         }*/
@@ -755,6 +756,8 @@ public class ESPayCenterActivity extends BaseActivity {
         } else if (Constant.PAY_CHANNEl == 2) {
             map.put(Constant.PAYCHANNEL, Constant.WECHAT_YY);
         } else if (Constant.PAY_CHANNEl == 3) {
+            map.put(Constant.PAYCHANNEL, Constant.WECHAT_ZKX);
+        } else {
             map.put(Constant.PAYCHANNEL, Constant.WECHAT_ZKX);
         }
 

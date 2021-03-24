@@ -174,6 +174,7 @@ public class FloatView extends View {
 		try {
 			if (floatView == null) {
 				floatView = getInstance(activity);
+				isClosed = false;
 			} else {
 				isClosed = false;
 			}
@@ -194,6 +195,8 @@ public class FloatView extends View {
 				}
 			}
 		} catch (Exception e) {
+			mWManager.updateViewLayout(floatViewLayout, mWMParams);
+			isViewadded = true;
 			e.printStackTrace();
 		}
 	}

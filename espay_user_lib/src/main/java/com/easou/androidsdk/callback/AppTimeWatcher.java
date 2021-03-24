@@ -51,7 +51,7 @@ public class AppTimeWatcher {
                 //每隔5分钟向服务器请求一次
                 ESdkLog.d("计时进行中.......");
                 if (!isCancel && mBeginWork) {
-                    ESdkLog.d("发送网络请求");
+//                    ESdkLog.d("发送网络请求");
                     StartESUserPlugin.postTime();
                 }
                 mHasTime = 0;
@@ -65,7 +65,7 @@ public class AppTimeWatcher {
         ESdkLog.d("app is in background");
         mHasTime = System.currentTimeMillis() - mCurrentTime;
         isCancel = true;
-        ESdkLog.d("time:" + mHasTime);
+//        ESdkLog.d("time:" + mHasTime);
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
             mHandler = null;

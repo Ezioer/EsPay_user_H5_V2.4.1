@@ -82,14 +82,18 @@ public class RomUtils {
         return !TextUtils.isEmpty(getSystemProperty("ro.miui.ui.version.name"));
     }
 
+    public static boolean checkIsVivo() {
+        return !TextUtils.isEmpty(getSystemProperty("ro.vivo.os.version"));
+    }
+
     public static boolean checkIsMeizuRom() {
         //return Build.MANUFACTURER.contains("Meizu");
-        String meizuFlymeOSFlag  = getSystemProperty("ro.build.display.id");
-        if (TextUtils.isEmpty(meizuFlymeOSFlag)){
+        String meizuFlymeOSFlag = getSystemProperty("ro.build.display.id");
+        if (TextUtils.isEmpty(meizuFlymeOSFlag)) {
             return false;
-        }else if (meizuFlymeOSFlag.contains("flyme") || meizuFlymeOSFlag.toLowerCase().contains("flyme")){
-            return  true;
-        }else {
+        } else if (meizuFlymeOSFlag.contains("flyme") || meizuFlymeOSFlag.toLowerCase().contains("flyme")) {
+            return true;
+        } else {
             return false;
         }
     }

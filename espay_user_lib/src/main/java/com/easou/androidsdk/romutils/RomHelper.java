@@ -29,18 +29,18 @@ public class RomHelper {
 		if (checkPermission(context)) {
 			return true;
 		} else {
-			if (CommonUtils.getSettings(context).getBoolean(
-					Constant.KEY_NEED_SHOW_DIALOG, true)) {
-				if (RomHelper.normalDialog == null) {
-					showNormalDialog(context);
-				}
-			}
-			return false;
-		}
-	}
+            if (CommonUtils.getSettings(context).getBoolean(
+                    Constant.KEY_NEED_SHOW_DIALOG, true)) {
+                if (RomHelper.normalDialog == null) {
+                    showNormalDialog(context);
+                }
+            }
+            return false;
+        }
+    }
 
-	private static boolean checkPermission(Context context) {
-		 //6.0 版本之后由于 google 增加了对悬浮窗权限的管理，所以方式就统一了
+    public static boolean checkPermission(Context context) {
+        //6.0 版本之后由于 google 增加了对悬浮窗权限的管理，所以方式就统一了
         if (Build.VERSION.SDK_INT < 23) {
             if (RomUtils.checkIsMiuiRom()) {
                 return miuiPermissionCheck(context);

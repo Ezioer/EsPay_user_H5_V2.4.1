@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background_light_dark">#fff0f0f0</color>
+    <color name="black">@color/w1</color>
+    <color name="colorAccent">#79A7D3</color>
+    <color name="colorControlActivated">#b8b8b8</color>
+    <color name="colorPrimaryDark">@color/black</color>
+    <color name="colorSplashBackground">@color/white</color>
+    <color name="colorToolbarText">@color/white</color>
+    <color name="colorTransparent">#00000000</color>
+    <color name="defaultDivisionLine">@color/w3</color>
+    <color name="defaultHintText">@color/w3</color>
+    <color name="defaultLinkText">#79A7D3</color>
+    <color name="defaultMainText">@color/black</color>
+    <color name="switch_blue">#3370ff</color>
+    <color name="w1">#1f2022</color>
+    <color name="w2">#8f8f90</color>
+    <color name="w3">#cbcbcf</color>
+    <color name="w4">#cd7c08</color>
+    <color name="w5">#ffffff</color>
+    <color name="white">@color/w5</color>
+    <dimen name="mohist_utility_large_pad_min_height">700dp</dimen>
+    <dimen name="mohist_utility_large_pad_min_width">540dp</dimen>
+    <string name="hours_ago">%d小时前</string>
+    <string name="just_now">刚刚</string>
+    <string name="minutes_ago">%d分钟前</string>
+</resources>

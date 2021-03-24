@@ -110,6 +110,7 @@ public class ESPlatform {
         StartOtherPlugin.logGismActionLogout();
         StartOtherPlugin.logGDTActionSetID("");
         StartOtherPlugin.logoutAqyAction();
+        StartOtherPlugin.logOutTT();
         Constant.ESDK_USERID = "";
         Constant.ESDK_TOKEN = "";
         Constant.IS_LOGINED = false;

@@ -18,12 +18,15 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baidu.mobads.action.BaiduAction;
 import com.easou.androidsdk.Starter;
 import com.easou.androidsdk.callback.ESdkCallback;
+import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.data.ESConstant;
 import com.easou.androidsdk.util.ESdkLog;
 
@@ -37,6 +40,8 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button btnBuyPort, btnChangeAccount, btnGetUserInfo, btnUserCert, btnLogin;
+    private Switch mSwitch;
+    private EditText mPlayId;
 
     /**
      * 特别说明！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
@@ -84,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        mPlayId = (EditText) findViewById(R.id.tv_player_id);
         getSupportActionBar().hide();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 //		hideBottomUIMenu();
@@ -163,12 +168,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnChangeAccount = (Button) this.findViewById(R.id.parse_changeaccount);
         btnUserCert = (Button) this.findViewById(R.id.parse_usercert);
         btnLogin = (Button) this.findViewById(R.id.login_game);
-
+        mSwitch = (Switch) this.findViewById(R.id.switch_env);
         btnGetUserInfo.setOnClickListener(this);
         btnBuyPort.setOnClickListener(this);
         btnChangeAccount.setOnClickListener(this);
         btnUserCert.setOnClickListener(this);
         btnLogin.setOnClickListener(this);
+
+        mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    mSwitch.setText("线上环境");
+                    Constant.DOMAIN = Constant.domain_release;
+                    Constant.SSO_URL = Constant.sso_release;
+                } else {
+                    mSwitch.setText("测试环境");
+                    Constant.DOMAIN = Constant.domain_test;
+                    Constant.SSO_URL = Constant.sso_test;
+                }
+            }
+        });
     }
 
     public void sdkLogin() {
@@ -302,10 +322,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                  * 用于数据统计，在游戏登录成功（非sdk登录成功，玩家登录成功且经过选区服及创建角色或选择角色，完全进入游戏后）后调用
                  */
                 Map<String, String> playerInfo = new HashMap<String, String>();
-                playerInfo.put(ESConstant.PLAYER_NAME, "角色名字"); // 游戏角色名称
-                playerInfo.put(ESConstant.PLAYER_LEVEL, "50"); // 游戏角色等级
-                playerInfo.put(ESConstant.PLAYER_ID, "123456"); // 游戏角色id
-                playerInfo.put(ESConstant.PLAYER_SERVER_ID, "10"); // 游戏区服id
+                playerInfo.put(ESConstant.PLAYER_NAME, "哈哈哈哈哈哈"); // 游戏角色名称
+                playerInfo.put(ESConstant.PLAYER_LEVEL, "9"); // 游戏角色等级
+                playerInfo.put(ESConstant.PLAYER_ID, mPlayId.getText().toString()); // 游戏角色id
+                playerInfo.put(ESConstant.PLAYER_SERVER_ID, "1"); // 游戏区服id
                 Starter.getInstance().startGameLoginLog(playerInfo);
 
                 // demo演示代码
@@ -330,12 +350,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         /** 显示悬浮窗 */
         Starter.getInstance().showFloatView();
+        /** 为方便及准确的接入第三方数据统计服务，现更改为页面数据浏览接口，统一处理，
+         * 之前的接口仍保留，但调用了此接口后无需再调用下面三个接口，不要重复调用*/
+//        Starter.getInstance().pageResume(MainActivity.this);
         /** 广点通SDK上报App启动 */
         Starter.getInstance().logGDTAction();
         /** 快手SDK进入游戏界面 */
         Starter.getInstance().logKSActionPageResume(MainActivity.this);
         /** 百度浏览页面 */
         Starter.getInstance().logBDPageResume();
+        /** 头条进入游戏页面 */
+        Starter.getInstance().logTTPageResume(MainActivity.this);
     }
 
     @Override
@@ -343,6 +368,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onPause();
         /** 快手SDK退出游戏界面 */
         Starter.getInstance().logKSActionPagePause(MainActivity.this);
+        /** 头条退出游戏页面 */
+        Starter.getInstance().logTTPagePause(MainActivity.this);
     }
 
     @Override
@@ -379,6 +406,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     DecimalFormat df = new DecimalFormat("##");
                     String tradeName = df.format(Float.parseFloat(mPayAmount) * 100) + "金币";
 
+                  /*  tradeId = "eyJvaWQiOjM3OCwib3JkZXJfdGltZSI6MTU4ODY4NTIwOH00000193c124800011fULK3fsX3bGSj0rzQPEwO3CqpmlwHcXvwjUaesywkI";
+                    tradeName = "60钻石";
+                    mPayAmount = "6";*/
                     // 设置调用支付接口所需的Map参数
                     payInfo = new HashMap<String, String>();
                     payInfo.put(ESConstant.MONEY, mPayAmount); // 支付金额

@@ -13,9 +13,9 @@ public class Constant {
     public static Context context;
 
     /**
-     * SDK版本号
+     * SDK版本号，更新版本记得改版本号
      */
-    public static final String SDK_VERSION = "2.4.7";
+    public static final String SDK_VERSION = "2.4.9";
     public static final String SDK_PHONEOS = "Android";
 
     public static final String API_SOURCE = "30";
@@ -90,8 +90,8 @@ public class Constant {
     public static String HOST_NAME = "";
     public static String HOST_NAME_DEFAULT = "mtianshitong.com";
 
-    //	public static final String DOMAIN = "http://lab.pay.appeasou.com";
-    public static final String DOMAIN = "https://service.pay.";
+    public static String DOMAIN = "http://lab.pay.appeasou.com";
+//    public static String DOMAIN = "https://service.pay.";
 
     public static final String[] DOMAIN_HOST = {"domain.game.eayou.com",
             "domain.game.love778.com",
@@ -113,9 +113,14 @@ public class Constant {
     /**
      * H5 SDK url
      */
-//	public static final String SSO_URL = "http://lab.pay.appeasou.com:7500/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&payHostName=http://lab.pay.appeasou.com&ssoHostName=http://lab.sso.mtianshitong.com";
-    public static final String SSO_URL = "https://h5.pay.mtianshitong.com/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
+    public static String SSO_URL = "http://lab.pay.appeasou.com:7500/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&payHostName=http://lab.pay.appeasou.com&ssoHostName=http://lab.sso.mtianshitong.com";
+//    public static String SSO_URL = "https://h5.pay.mtianshitong.com/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
 
+    public static String sso_release = "https://h5.pay.mtianshitong.com/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
+    public static String sso_test = "http://lab.pay.appeasou.com:7500/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&payHostName=http://lab.pay.appeasou.com&ssoHostName=http://lab.sso.mtianshitong.com";
+
+    public static String domain_release = "https://service.pay.";
+    public static String domain_test = "http://lab.pay.appeasou.com";
     /**
      * 支付 url
      */
@@ -193,11 +198,12 @@ public class Constant {
     public static final int YSTOJS_GET_OAID = 28;
     public static final int YSTOJS_GET_PAY_LIMIT_INFO = 29;
     public static final int YSTOJS_UPLOAD_TIME = 30;
+    public static final int YSTOJS_GAME_LOGIN_DATA = 31;
 
     public static final String WECHAT = "WECHAT";
     public static final String WECHAT_DHT = "WECHAT_DHT";
     public static final String WECHAT_YY = "WECHAT_YY";
-    //正式展科新
+    //正式展科鑫
 //	public static final String WECHAT_ZKX = "WECHAT_ZKX";
     //正式赛恒达通
     public static final String WECHAT_ZKX = "WECHAT_SHDT";
@@ -208,8 +214,8 @@ public class Constant {
     //正式北京海默
 //	public static final String WECHAT_ZKX = "WECHAT_BJHM";
 
-    public static final String WECHAT_ZKX_GZH = "WECHAT_ZKX_GZH";
-    //正式展科新
+    //    public static final String WECHAT_ZKX_GZH = "WECHAT_ZKX_GZH";
+    //正式展科鑫
 //	public static final String ZKXHGALIPAY="ZKXHGALIPAY";
     //正式赛恒达通
     public static final String ZKXHGALIPAY = "SHDTALIPAY";
@@ -219,6 +225,10 @@ public class Constant {
 //	public static final String ZKXHGALIPAY="JHHYALIPAY";
     //正式北京海默
 //	public static final String ZKXHGALIPAY="BJHMALIPAY";
+
+    //易联2.0展科鑫
+    public static final String ZKXUNIONPAY2 = "ZKXUNIONPAY2";
+
 
     public static final String UNIONPAY = "UNIONPAY2";
     public static final String ALIPAY = "ALIPAY2";
@@ -271,8 +281,10 @@ public class Constant {
     public static final String CHANNEL_MARK_DHT = "DHT";
     public static final String CHANNEL_MARK_YY = "YY";
     public static final String CHANNEL_MARK_WZYY = "WZYY";
-    //正式展科新
+    //正式展科鑫
 //    public static final String CHANNEL_MARK_ZKX= "HYWZKX";
+    //test
+//    public static final String CHANNEL_MARK_ZKX= "WECHAT_ZM";
     //正式赛恒达通
     public static final String CHANNEL_MARK_ZKX = "HYWSHDT";
     //正式中智时代
@@ -282,7 +294,8 @@ public class Constant {
     //正式北京海默
 //    public static final String CHANNEL_MARK_ZKX= "HYWBJHM";
 
-    public static final String CHANNEL_MARK_ZFBZKX = "ZFBZKX";
+    //支付宝展科鑫网页版
+//    public static final String CHANNEL_MARK_ZFBZKX = "ZFBZKX";
 
     public static class SdcardPath {
         /**

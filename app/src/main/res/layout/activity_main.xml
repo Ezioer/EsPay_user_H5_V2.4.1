@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:text="切换账号" />
-    
+
     <Button
         android:id="@+id/parse_port"
         android:layout_width="fill_parent"
@@ -33,10 +33,23 @@
         android:visibility="gone"
         android:text="调用支付" />
 
+    <Switch
+        android:id="@+id/switch_env"
+        android:text="测试环境"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <Button
         android:id="@+id/login_game"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="进入游戏" />
 
+    <EditText
+        android:id="@+id/tv_player_id"
+        android:hint="请输入角色id"
+        android:inputType="number"
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
 </LinearLayout>

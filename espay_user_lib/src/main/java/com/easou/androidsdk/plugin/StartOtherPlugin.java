@@ -10,8 +10,9 @@ import com.baidu.mobads.action.PrivacyStatus;
 import com.bun.miitmdid.core.JLibrary;
 import com.bytedance.applog.AppLog;
 import com.bytedance.applog.GameReportHelper;
+import com.bytedance.applog.ILogger;
 import com.bytedance.applog.InitConfig;
-import com.bytedance.applog.util.UriConfig;
+import com.bytedance.applog.util.UriConstants;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.http.EAPayInter;
 import com.easou.androidsdk.util.CommonUtils;
@@ -37,6 +38,7 @@ import org.json.JSONObject;
 
 import static com.baidu.mobads.action.ActionParam.Key.PURCHASE_MONEY;
 
+
 public class StartOtherPlugin {
 
     /* ================================== 头条SDK ================================== */
@@ -57,10 +59,20 @@ public class StartOtherPlugin {
             String qn = CommonUtils.readPropertiesValue(context, "qn");
 
             final InitConfig config = new InitConfig(aid, qn);
-            config.setUriConfig(UriConfig.DEFAULT);
+            config.setUriConfig(UriConstants.DEFAULT);
+            config.setLogger(new ILogger() {
+                @Override
+                public void log(String s, Throwable throwable) {
+                    ESdkLog.d(s);
+                    if (throwable != null) {
+                        throwable.printStackTrace();
+                    }
+                }
+            });
             config.setEnablePlay(true);
+            config.setAutoStart(true);
             config.setProcess(true);
-            AppLog.setEnableLog(true);
+            config.setAbEnable(true);
             AppLog.init(context, config);
         }
     }
@@ -70,7 +82,7 @@ public class StartOtherPlugin {
      */
     public static void onTTResume(Activity activity) {
         if (Constant.TOUTIAO_SDK) {
-//			TeaAgent.onResume(activity);
+            AppLog.onResume(activity);
         }
     }
 
@@ -79,7 +91,7 @@ public class StartOtherPlugin {
      */
     public static void onTTPause(Activity activity) {
         if (Constant.TOUTIAO_SDK) {
-//			TeaAgent.onPause(activity);
+            AppLog.onPause(activity);
         }
     }
 
@@ -114,6 +126,12 @@ public class StartOtherPlugin {
                 AppLog.setUserUniqueID(uid);
             }
             GameReportHelper.onEventLogin("H5SDK", true);
+        }
+    }
+
+    public static void logOutTT() {
+        if (Constant.TOUTIAO_SDK) {
+            AppLog.setUserUniqueID(null);
         }
     }
 
@@ -363,7 +381,6 @@ public class StartOtherPlugin {
         if (Constant.GISM_SDK) {
             ESdkLog.d("调用了汇川SDK退出游戏回调接口");
             GismSDK.onExitApp();
-            ;
         }
     }
 
@@ -414,8 +431,9 @@ public class StartOtherPlugin {
      * 广点通SDK设置用户软ID
      */
     public static void logGDTActionSetID(String uid) {
-        if (Constant.GDT_SDK)
+        if (Constant.GDT_SDK) {
             GDTAction.setUserUniqueId(uid);
+        }
     }
 
     /**
@@ -435,18 +453,11 @@ public class StartOtherPlugin {
     }
 
     /**
-     * 广点通SDK上报启动
+     * 广点通SDK上报注册
      */
     public static void logGDTActionRegister() {
-
         if (Constant.GDT_SDK) {
-            JSONObject actionParam = new JSONObject();
-            try {
-                actionParam.put(ActionParam.Key.OUTER_ACTION_ID, "ESREGISTER");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            GDTAction.logAction(ActionType.REGISTER, actionParam);
+            GDTAction.logAction(ActionType.REGISTER);
         }
     }
 
