@@ -111,11 +111,24 @@ public class CommonUtils {
         editor.commit();
     }
 
+    public static String getUserId(Context mContext) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        String userid = settings.getString("esuserid", "");
+        return userid;
+    }
+
+    public static void saveUserId(Context mContext, String id) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("esuserid", id);
+        editor.commit();
+    }
+
     /**
      * 检测某个应用是否安装
      *
      * @param context
-     * @param pkgName
+     * @param packageName
      * @return
      */
     public static boolean isAppInstalled(Context context, String packageName) {
@@ -230,7 +243,6 @@ public class CommonUtils {
     /**
      * 根据字段名得到QN参数
      *
-     * @param type
      * @param context
      * @return
      */
@@ -688,6 +700,16 @@ public class CommonUtils {
             sb.append(base.charAt(number));
         }
         return sb.toString();
+    }
+
+    public static boolean isNotNullOrEmpty(String string) {
+        if (string == null) {
+            return false;
+        }
+        if (string.isEmpty() || string.length() == 0) {
+            return false;
+        }
+        return true;
     }
 
 }

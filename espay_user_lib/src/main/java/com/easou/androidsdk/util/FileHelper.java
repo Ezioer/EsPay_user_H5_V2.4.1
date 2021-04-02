@@ -42,21 +42,8 @@ public class FileHelper {
 	}
 
 	/**
-	 * seperate the file content by special divider
-	 * 
-	 * @param file
-	 * @param divider
-	 * @return the sections of the file
-	 */
-	public static String[] seperate(File file, String divider) {
-		String data = readFile(file);
-		return data.split(divider);
-	}
-
-	/**
 	 * convert input stream to string by the special encode.
 	 * 
-	 * @param InputStream
 	 * @return String
 	 */
 	public static String inputStream2String(InputStream is) {
@@ -106,20 +93,6 @@ public class FileHelper {
 	}
 
 	/**
-	 * delete the specify file
-	 * 
-	 * @param file
-	 * @return success return true otherwise false
-	 */
-	public static void delFiles(File... files) {
-		for (File file : files) {
-			if (file != null && file.exists()) {
-				file.delete();
-			}
-		}
-	}
-
-	/**
 	 * init file if the file is not exists
 	 * 
 	 * @param file
@@ -152,124 +125,6 @@ public class FileHelper {
 			}
 		}
 		return true;
-	}
-
-	/**
-	 * Store the state if success return true else return false
-	 * 
-	 * @return void
-	 */
-	public static void writeObject(Object obj, ObjectOutputStream oos) {
-		try {
-			oos.writeObject(obj);
-			oos.flush();
-		} catch (IOException e) {
-		} finally {
-			try {
-				if (oos != null)
-					oos.close();
-			} catch (IOException ioe) {
-			}
-
-		}
-	}
-
-	/**
-	 * Restore the state if success return true else return false
-	 * 
-	 * @return Object
-	 */
-	public static Object readObject(ObjectInputStream ois) {
-		Object obj = null;
-		try {
-			obj = ois.readObject();
-		} catch (IOException e) {
-		} catch (ClassNotFoundException e) {
-		} finally {
-			try {
-				if (ois != null)
-					ois.close();
-			} catch (IOException ioe) {
-			}
-		}
-		return obj;
-	}
-	
-	/**
-	 * write obj to the special file
-	 * @param obj
-	 * @param file
-	 */
-	public static void writeObject(Object obj, File file) {
-		if(file == null || obj == null)
-			return ;
-		FileOutputStream fos = null;
-		try {
-			fos = new FileOutputStream(file);
-			ObjectOutputStream oos = new ObjectOutputStream(fos);
-			writeObject(obj, oos);
-		} catch (FileNotFoundException e) {
-		} catch (IOException e) {
-		}finally{
-			try {
-				if (fos != null)
-					fos.close();
-			} catch (IOException e) {
-			}
-		}
-		
-	}
-
-		
-	/**
-	 * read object from special File
-	 * @param file
-	 * @return if the file or the obj not exists then return null
-	 */
-	public static Object readObject(File file) {
-		Object object = null;
-		if (file == null)
-			return null;
-		FileInputStream fis = null;
-		try {
-			fis = new FileInputStream(file);
-			ObjectInputStream ois = new ObjectInputStream(fis);
-			object = readObject(ois);
-		} catch (IOException e) {
-		} finally {
-			try {
-				if (fis != null)
-					fis.close();
-			} catch (IOException e) {
-			}
-		}
-		return object;
-	}
-
-	/**
-	 * delete the file or directory by file name equal to "rm -f"
-	 * 
-	 * @param String
-	 *            fileName
-	 * @return boolean
-	 */
-	public static boolean delFile(String fileName) {
-		File tempFile = new File(fileName);
-		boolean isDel = false;
-		if (tempFile.isFile()) {
-			if (tempFile.exists()) {
-				isDel = tempFile.delete();
-			}
-		} else if (tempFile.isDirectory()) {
-			if (tempFile.exists()) {
-				File[] dirs = tempFile.listFiles();
-				for (File file : dirs) {
-					file.delete();
-				}
-				isDel = tempFile.delete();
-			}
-		}
-		return isDel;
 	}
 
 }

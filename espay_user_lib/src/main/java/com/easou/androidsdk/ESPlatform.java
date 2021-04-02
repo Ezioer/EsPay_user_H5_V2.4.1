@@ -61,6 +61,7 @@ public class ESPlatform {
         CommonUtils.saveH5Token(Starter.mActivity, token);
         CommonUtils.saveH5TokenToCard(token,CommonUtils.readPropertiesValue(Starter.mActivity, Constant.APP_ID));
         final String user_ID = userId;
+        CommonUtils.saveUserId(Starter.mActivity, userId);
         StartOtherPlugin.logTTActionLogin(user_ID);
         StartOtherPlugin.logGismActionLogin(user_ID);
         StartOtherPlugin.logGDTActionSetID(user_ID);
@@ -112,6 +113,7 @@ public class ESPlatform {
         StartOtherPlugin.logoutAqyAction();
         StartOtherPlugin.logOutTT();
         Constant.ESDK_USERID = "";
+        CommonUtils.saveUserId(Starter.mActivity, "");
         Constant.ESDK_TOKEN = "";
         Constant.IS_LOGINED = false;
         isShowWebView = false;
@@ -175,6 +177,7 @@ public class ESPlatform {
         try {
             JSONObject jsonObj = new JSONObject(param);
             userId = jsonObj.getString(ESConstant.SDK_USER_ID);
+            CommonUtils.saveUserId(Starter.mActivity, userId);
             userName = jsonObj.getString(ESConstant.SDK_USER_NAME);
 
         } catch (JSONException e) {

@@ -200,6 +200,17 @@ public class ESUserWebActivity extends Activity implements ReWebChomeClient.Open
 
     public static void clientToJS(int type, final Map<String, String> params) {
         switch (type) {
+            case Constant.YSTOJS_GAME_LOGINOROUTLOG:
+                final String bt = "bt:" + "'" + params.get("bt") + "'";
+                final String deviceId = "deviceId:" + "'" + params.get("deviceId") + "'";
+                final String userId = "userId:" + "'" + params.get("userId") + "'";
+                mWebView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mWebView.loadUrl("javascript:EsSdkShell.esIdentity2LoginOutLog({" + bt + ", " + deviceId + ", " + userId + "})");
+                    }
+                });
+                break;
             case Constant.YSTOJS_GAME_LOGIN_DATA:
                 final String pName = "playerName:" + "'" + params.get(ESConstant.PLAYER_NAME) + "'";
                 final String pId = "playerId:" + params.get(ESConstant.PLAYER_ID);

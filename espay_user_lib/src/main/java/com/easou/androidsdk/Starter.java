@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 
-import com.baidu.mobads.action.BaiduAction;
+//import com.baidu.mobads.action.BaiduAction;
 import com.easou.androidsdk.callback.AppTimeWatcher;
 import com.easou.androidsdk.callback.ESdkCallback;
 import com.easou.androidsdk.data.Constant;
@@ -17,8 +17,12 @@ import com.easou.androidsdk.plugin.StartLogPlugin;
 import com.easou.androidsdk.plugin.StartOtherPlugin;
 import com.easou.androidsdk.romutils.RomHelper;
 import com.easou.androidsdk.romutils.RomUtils;
+import com.easou.androidsdk.ui.ESUserWebActivity;
+import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESdkLog;
+import com.easou.androidsdk.util.Tools;
 
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -129,6 +133,24 @@ public class Starter {
      */
     public void startGameLoginLog(Map<String, String> playerInfo) {
         StartESUserPlugin.startGameLoginLog(playerInfo);
+        //游戏角色上线日志上传
+        Map info = new HashMap();
+        info.put("bt", "1");
+        info.put("deviceId", Tools.getDeviceImei(Starter.mActivity));
+        info.put("userId", CommonUtils.getUserId(Starter.mActivity));
+        ESUserWebActivity.clientToJS(Constant.YSTOJS_GAME_LOGINOROUTLOG, info);
+    }
+
+    /**
+     * 上传游戏下线日志
+     */
+    public void startGameLogoutLog() {
+        //游戏角色下线日志上传
+        Map info = new HashMap();
+        info.put("bt", "0");
+        info.put("deviceId", Tools.getDeviceImei(Starter.mActivity));
+        info.put("userId", CommonUtils.getUserId(Starter.mActivity));
+        ESUserWebActivity.clientToJS(Constant.YSTOJS_GAME_LOGINOROUTLOG, info);
     }
 
 
@@ -278,7 +300,7 @@ public class Starter {
      */
     public void handleBDPermissions(int requestCode,
                                     @NonNull String permissions[], @NonNull int[] grantResults) {
-        BaiduAction.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        BaiduAction.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     /**

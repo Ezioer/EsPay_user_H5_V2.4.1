@@ -148,7 +148,7 @@
             android:launchMode="singleInstance"
             android:screenOrientation="behind" />
 
-        <activity
+       <!-- <activity
             android:name="com.baidu.xenv.XenvActivity"
             android:excludeFromRecents="true"
             android:exported="false"
@@ -177,7 +177,7 @@
             android:name="com.baidu.xenv.XenvProvider"
             android:authorities="${applicationId}.xenv.ac.provider"
             android:exported="false"
-            tools:replace="android:authorities" />
+            tools:replace="android:authorities" />-->
     </application>
 
 </manifest>

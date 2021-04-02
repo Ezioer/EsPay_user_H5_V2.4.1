@@ -1,6 +1,7 @@
 
 -dontoptimize
--optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
+-optimizations !field/removal/writeonly,!field/marking/private,!class/merging/*,!code/allocation/variable
+#-optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
 -optimizationpasses 2
 -dontusemixedcaseclassnames
 -verbose
