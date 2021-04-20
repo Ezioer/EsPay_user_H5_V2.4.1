@@ -11,9 +11,10 @@ import com.bun.miitmdid.core.JLibrary;
 import com.bytedance.applog.AppLog;
 import com.bytedance.applog.GameReportHelper;
 //import com.bytedance.applog.ILogger;
+import com.bytedance.applog.ILogger;
 import com.bytedance.applog.InitConfig;
 //import com.bytedance.applog.util.UriConstants;
-import com.bytedance.applog.util.UriConfig;
+import com.bytedance.applog.util.UriConstants;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.http.EAPayInter;
 import com.easou.androidsdk.util.CommonUtils;
@@ -60,8 +61,8 @@ public class StartOtherPlugin {
             String qn = CommonUtils.readPropertiesValue(context, "qn");
 
             final InitConfig config = new InitConfig(aid, qn);
-            config.setUriConfig(UriConfig.DEFAULT);
-           /* config.setLogger(new ILogger() {
+            config.setUriConfig(UriConstants.DEFAULT);
+            config.setLogger(new ILogger() {
                 @Override
                 public void log(String s, Throwable throwable) {
                     ESdkLog.d(s);
@@ -69,12 +70,11 @@ public class StartOtherPlugin {
                         throwable.printStackTrace();
                     }
                 }
-            });*/
+            });
             config.setEnablePlay(true);
-//            config.setAutoStart(true);
+            config.setAutoStart(true);
             config.setProcess(true);
-//            config.setAbEnable(true);
-            AppLog.setEnableLog(true);
+            config.setAbEnable(true);
             AppLog.init(context, config);
         }
     }
@@ -84,7 +84,7 @@ public class StartOtherPlugin {
      */
     public static void onTTResume(Activity activity) {
         if (Constant.TOUTIAO_SDK) {
-//            AppLog.onResume(activity);
+            AppLog.onResume(activity);
         }
     }
 
@@ -93,7 +93,7 @@ public class StartOtherPlugin {
      */
     public static void onTTPause(Activity activity) {
         if (Constant.TOUTIAO_SDK) {
-//            AppLog.onPause(activity);
+            AppLog.onPause(activity);
         }
     }
 
@@ -209,6 +209,8 @@ public class StartOtherPlugin {
 
         try {
             JLibrary.InitEntry(mContext);
+            //直接在此处调用即获取oaid，应该会更快
+//            getOaid(mContext);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

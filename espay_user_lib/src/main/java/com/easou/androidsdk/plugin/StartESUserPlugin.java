@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import com.easou.androidsdk.Starter;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.sso.AuthBean;
+import com.easou.androidsdk.ui.ESToast;
 import com.easou.androidsdk.ui.ESUserWebActivity;
 import com.easou.androidsdk.ui.FloatView;
 import com.easou.androidsdk.util.AES;
@@ -19,6 +20,9 @@ import com.easou.androidsdk.util.HostRequestUtils;
 import com.easou.androidsdk.util.NetworkUtils;
 import com.easou.androidsdk.util.ThreadPoolManager;
 import com.easou.androidsdk.util.Tools;
+//import com.tencent.mm.opensdk.modelmsg.SendAuth;
+//import com.tencent.mm.opensdk.openapi.IWXAPI;
+//import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import java.util.Map;
 
@@ -101,6 +105,19 @@ public class StartESUserPlugin {
         Starter.mActivity.startActivity(intent);
     }
 
+    //调用微信sdk登录功能获取openid
+   /* public static void loginWX(){
+        IWXAPI api = WXAPIFactory.createWXAPI(Starter.mActivity, "", false);
+        api.registerApp("");
+        if (!api.isWXAppInstalled()) {
+            ESToast.getInstance().ToastShow(Starter.mActivity,"您还未安装微信客户端！");
+            return;
+        }
+        SendAuth.Req req =new SendAuth.Req();
+        req.scope = "snsapi_userinfo";
+        req.state = "wechat_sdk_demo_test";
+        api.sendReq(req);
+    }*/
 
     /**
      * 获取SDK用户信息
