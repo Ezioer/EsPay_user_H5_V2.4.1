@@ -298,6 +298,10 @@ public class Constant {
     //支付宝展科鑫网页版
 //    public static final String CHANNEL_MARK_ZFBZKX = "ZFBZKX";
 
+
+    public static final String WXAPPID = "wx5303fe302200dc98";
+    public static final String WXAPPKEY = "6c3a59ea1e2c8582c9968a9bb992fd42";
+
     public static class SdcardPath {
         /**
          * Easou根目录

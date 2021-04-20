@@ -1,4 +1,4 @@
-package com.easou.espay_user_h5;
+package com.tencent.tmgp.dahuatongdg.dwsj;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -21,20 +21,18 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.easou.androidsdk.Starter;
 import com.easou.androidsdk.callback.ESdkCallback;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.data.ESConstant;
+import com.easou.androidsdk.plugin.StartESUserPlugin;
 import com.easou.androidsdk.util.ESdkLog;
 
-import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -299,6 +297,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.parse_userinfo:
                 /** 获取SDK用户信息 */
                 Starter.getInstance().getUserInfo();
+                StartESUserPlugin.loginWX();
                 break;
 
             case R.id.parse_usercert:
@@ -327,7 +326,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 playerInfo.put(ESConstant.PLAYER_ID, mPlayId.getText().toString()); // 游戏角色id
                 playerInfo.put(ESConstant.PLAYER_SERVER_ID, "1"); // 游戏区服id
                 Starter.getInstance().startGameLoginLog(playerInfo);
-
                 // demo演示代码
                 enterGame(View.VISIBLE);
                 break;
