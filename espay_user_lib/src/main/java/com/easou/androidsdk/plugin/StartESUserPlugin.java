@@ -13,6 +13,7 @@ import com.easou.androidsdk.ui.ESToast;
 import com.easou.androidsdk.ui.ESUserWebActivity;
 import com.easou.androidsdk.ui.FloatView;
 import com.easou.androidsdk.util.AES;
+import com.easou.androidsdk.util.Base64;
 import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESdkLog;
 import com.easou.androidsdk.util.FileHelper;
@@ -27,6 +28,7 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 //import com.tencent.mm.opensdk.openapi.IWXAPI;
 //import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 public class StartESUserPlugin {
