@@ -1,4 +1,4 @@
-package com.tencent.tmgp.dahuatongdg.dwsj.wxapi;
+package com.easou.espay_user_h5.wxapi;
 
 
 import com.easou.androidsdk.wx.WXCallBackActivity;

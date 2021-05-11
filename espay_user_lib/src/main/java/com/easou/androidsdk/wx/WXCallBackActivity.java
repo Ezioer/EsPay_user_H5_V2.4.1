@@ -86,6 +86,7 @@ public class WXCallBackActivity extends Activity implements IWXAPIEventHandler {
 
     @Override
     public void onResp(BaseResp baseResp) {
+        SendAuth.Resp result = (SendAuth.Resp) baseResp;
         if (baseResp.getType() == ConstantsAPI.COMMAND_SENDAUTH) {
             SendAuth.Resp authResp = (SendAuth.Resp) baseResp;
             final String code = authResp.code;

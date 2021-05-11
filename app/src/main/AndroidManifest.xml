@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tencent.tmgp.dahuatongdg.dwsj">
+    package="com.easou.espay_user_h5">
 
     <application
-        android:name="com.tencent.tmgp.dahuatongdg.dwsj.EsApplication"
+        android:name="com.easou.espay_user_h5.EsApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.tencent.tmgp.dahuatongdg.dwsj.MainActivity">
+        <activity android:name="com.easou.espay_user_h5.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,7 +19,7 @@
         </activity>
 
         <activity
-            android:name="com.tencent.tmgp.dahuatongdg.dwsj.wxapi.WXEntryActivity"
+            android:name="com.easou.espay_user_h5.wxapi.WXEntryActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:exported="true"
