@@ -205,25 +205,25 @@ public class Constant {
     public static final String WECHAT_DHT = "WECHAT_DHT";
     public static final String WECHAT_YY = "WECHAT_YY";
     //正式展科鑫
-    public static final String WECHAT_ZKX = "WECHAT_ZKX";
+//    public static final String WECHAT_ZKX = "WECHAT_ZKX";
     //正式赛恒达通
 //    public static final String WECHAT_ZKX = "WECHAT_SHDT";
     //正式中智时代
 //	public static final String WECHAT_ZKX = "WECHAT_ZZSD";
     //正式聚合互娱
-//	public static final String WECHAT_ZKX = "WECHAT_JHHY";
+    public static final String WECHAT_ZKX = "WECHAT_JHHY";
     //正式北京海默
 //	public static final String WECHAT_ZKX = "WECHAT_BJHM";
 
     //    public static final String WECHAT_ZKX_GZH = "WECHAT_ZKX_GZH";
     //正式展科鑫
-    public static final String ZKXHGALIPAY = "ZKXHGALIPAY";
+//    public static final String ZKXHGALIPAY = "ZKXHGALIPAY";
     //正式赛恒达通
 //    public static final String ZKXHGALIPAY = "SHDTALIPAY";
     //正式中智时代
 //	public static final String ZKXHGALIPAY="ZZSDALIPAY";
     //正式聚合互娱
-//	public static final String ZKXHGALIPAY="JHHYALIPAY";
+    public static final String ZKXHGALIPAY = "JHHYALIPAY";
     //正式北京海默
 //	public static final String ZKXHGALIPAY="BJHMALIPAY";
 
@@ -283,7 +283,7 @@ public class Constant {
     public static final String CHANNEL_MARK_YY = "YY";
     public static final String CHANNEL_MARK_WZYY = "WZYY";
     //正式展科鑫
-    public static final String CHANNEL_MARK_ZKX = "HYWZKX";
+//    public static final String CHANNEL_MARK_ZKX = "HYWZKX";
     //test
 //    public static final String CHANNEL_MARK_ZKX= "WECHAT_ZM";
     //正式赛恒达通
@@ -291,7 +291,7 @@ public class Constant {
     //正式中智时代
 //    public static final String CHANNEL_MARK_ZKX= "HYWZZSD";
     //正式聚合互娱
-//    public static final String CHANNEL_MARK_ZKX= "HYWJHHY";
+    public static final String CHANNEL_MARK_ZKX = "HYWJHHY";
     //正式北京海默
 //    public static final String CHANNEL_MARK_ZKX= "HYWBJHM";
 

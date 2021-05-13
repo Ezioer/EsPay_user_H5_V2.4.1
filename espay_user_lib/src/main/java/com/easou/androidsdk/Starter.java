@@ -189,7 +189,7 @@ public class Starter {
     /**
      * 初始化GISM SDK
      */
-//    @Deprecated
+    @Deprecated
     public void initGismSDK(Context context, boolean debug) {
         StartOtherPlugin.initGism(context, debug);
     }
@@ -207,7 +207,7 @@ public class Starter {
      *
      * @param mContext 上下文对象
      */
-//    @Deprecated
+    @Deprecated
     public void initGDTAction(Context mContext) {
         StartOtherPlugin.initGDTAction(mContext);
         AppTimeWatcher.getInstance().registerWatcher((Application) mContext);
@@ -216,7 +216,7 @@ public class Starter {
     /**
      * 广点通SDK上报app启动
      */
-//    @Deprecated
+    @Deprecated
     public void logGDTAction() {
         if (Constant.IS_LOGINED) {
             StartOtherPlugin.logGDTAction();
@@ -226,7 +226,7 @@ public class Starter {
     /**
      * 快手SDK初始化
      */
-//    @Deprecated
+    @Deprecated
     public void initKSSDK(Context mContext) {
         StartOtherPlugin.initBD(mContext);
 //        StartOtherPlugin.initKSSDK(mContext);
@@ -243,6 +243,7 @@ public class Starter {
     /**
      * 头条进入页面统计
      */
+    @Deprecated
     public void logTTPageResume(Activity context) {
         StartOtherPlugin.onTTResume(context);
     }
@@ -250,6 +251,7 @@ public class Starter {
     /**
      * 头条离开页面统计
      */
+    @Deprecated
     public void logTTPagePause(Activity context) {
         StartOtherPlugin.onTTPause(context);
     }
@@ -257,7 +259,7 @@ public class Starter {
     /**
      * 快手SDK进入游戏界面
      */
-//    @Deprecated
+    @Deprecated
     public void logKSActionPageResume(Activity activity) {
         StartOtherPlugin.logKSActionPageResume(activity);
     }
@@ -265,6 +267,7 @@ public class Starter {
     /**
      * 快手SDK退出游戏界面
      */
+    @Deprecated
     public void logKSActionPagePause(Activity activity) {
         StartOtherPlugin.logKSActionPagePause(activity);
     }
@@ -286,7 +289,7 @@ public class Starter {
     /**
      * baidu进入页面统计
      */
-//    @Deprecated
+    @Deprecated
     public void logBDPageResume() {
         StartOtherPlugin.logBDPage();
     }
@@ -327,6 +330,12 @@ public class Starter {
         StartOtherPlugin.logKSActionPageResume(activity);
         //百度浏览页面
         StartOtherPlugin.logBDPage();
+        StartOtherPlugin.onTTResume(activity);
+    }
+
+    public void pagePause(Activity activity) {
+        StartOtherPlugin.logKSActionPagePause(activity);
+        StartOtherPlugin.onTTPause(activity);
     }
 
 }

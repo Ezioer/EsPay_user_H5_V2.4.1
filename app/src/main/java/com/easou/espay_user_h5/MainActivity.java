@@ -94,10 +94,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 //		hideBottomUIMenu();
         /** 初始化头条SDK */
-        Starter.getInstance().initTTSDK(MainActivity.this);
+//        Starter.getInstance().initTTSDK(MainActivity.this);
 
         /** 快手SDK活跃事件，进入app首页时调用 */
-        Starter.getInstance().logKSActionAppActive();
+//        Starter.getInstance().logKSActionAppActive();
 
         // 初始化demo演示UI
         initUI();
@@ -351,25 +351,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         /** 显示悬浮窗 */
         Starter.getInstance().showFloatView();
         /** 为方便及准确的接入第三方数据统计服务，现更改为页面数据浏览接口，统一处理，
-         * 之前的接口仍保留，但调用了此接口后无需再调用下面三个接口，不要重复调用*/
-//        Starter.getInstance().pageResume(MainActivity.this);
+         * 之前的接口仍保留，但调用了此接口后无需再调用额外接口，不要重复调用*/
+        Starter.getInstance().pageResume(MainActivity.this);
         /** 广点通SDK上报App启动 */
-        Starter.getInstance().logGDTAction();
+//        Starter.getInstance().logGDTAction();
         /** 快手SDK进入游戏界面 */
-        Starter.getInstance().logKSActionPageResume(MainActivity.this);
+//        Starter.getInstance().logKSActionPageResume(MainActivity.this);
         /** 百度浏览页面 */
-        Starter.getInstance().logBDPageResume();
+//        Starter.getInstance().logBDPageResume();
         /** 头条进入游戏页面 */
-        Starter.getInstance().logTTPageResume(MainActivity.this);
+//        Starter.getInstance().logTTPageResume(MainActivity.this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        /** 为方便及准确的接入第三方数据统计服务，现更改为页面数据浏览接口，统一处理，
+         * 之前的接口仍保留，但调用了此接口后无需再调用额外接口，不要重复调用*/
+        Starter.getInstance().pagePause(MainActivity.this);
         /** 快手SDK退出游戏界面 */
-        Starter.getInstance().logKSActionPagePause(MainActivity.this);
+//        Starter.getInstance().logKSActionPagePause(MainActivity.this);
         /** 头条退出游戏页面 */
-        Starter.getInstance().logTTPagePause(MainActivity.this);
+//        Starter.getInstance().logTTPagePause(MainActivity.this);
     }
 
     @Override
