@@ -221,7 +221,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onLogout() {
 
                 System.out.println("退出登录");
-                Starter.getInstance().getUserInfo();
                 // demo演示代码
                 enterGame(View.GONE);
             }

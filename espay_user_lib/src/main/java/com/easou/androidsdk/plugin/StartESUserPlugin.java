@@ -12,6 +12,7 @@ import com.easou.androidsdk.sso.AuthBean;
 import com.easou.androidsdk.ui.ESToast;
 import com.easou.androidsdk.ui.ESUserWebActivity;
 import com.easou.androidsdk.ui.FloatView;
+import com.easou.androidsdk.ui.UserCenterDialogFragment;
 import com.easou.androidsdk.util.AES;
 import com.easou.androidsdk.util.Base64;
 import com.easou.androidsdk.util.CommonUtils;
@@ -103,13 +104,22 @@ public class StartESUserPlugin {
     /**
      * 进入H5 SDK页面
      */
+    public static UserCenterDialogFragment dialogFragment;
     public static void enterH5View() {
 
-        Intent intent = new Intent();
+        /*Intent intent = new Intent();
         intent.putExtra("params", getNewParam());
         intent.setClass(Starter.mActivity, ESUserWebActivity.class);
-//        intent.putExtra("taskid", Starter.mActivity.getTaskId());
-        Starter.mActivity.startActivity(intent);
+        Starter.mActivity.startActivity(intent);*/
+        if (dialogFragment == null) {
+            dialogFragment = UserCenterDialogFragment.newInstance(getNewParam());
+        }
+        if (dialogFragment.getTag() != null) {
+            dialogFragment.getDialog().show();
+        } else {
+            dialogFragment.show(Starter.mActivity.getFragmentManager(), "usercenter");
+        }
+
     }
 
     //调用微信sdk登录功能获取openid
@@ -165,8 +175,8 @@ public class StartESUserPlugin {
      */
     public static void showSdkView() {
 
-        ESUserWebActivity.clientToJS(Constant.YSTOJS_CLICK_FLOATVIEW, null);
         enterH5View();
+        UserCenterDialogFragment.clientToJS(Constant.YSTOJS_CLICK_FLOATVIEW, null);
     }
 
 
@@ -177,7 +187,7 @@ public class StartESUserPlugin {
 
         StartLogPlugin.startGameLoginLog(playerInfo);
         //传送游戏角色数据给h5
-        ESUserWebActivity.clientToJS(Constant.YSTOJS_GAME_LOGIN_DATA, playerInfo);
+        UserCenterDialogFragment.clientToJS(Constant.YSTOJS_GAME_LOGIN_DATA, playerInfo);
         //传游戏角色给h5
 //		ESUserWebActivity.clientToJS(Constant.YSTOJS_GAME_LOGIN_LOG, playerInfo);
     }

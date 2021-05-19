@@ -93,11 +93,14 @@ public class ESPlatform {
 
         Starter.mCallback.onLogin(result);
         AppTimeWatcher.getInstance().startTimer();
-        mActivity.clientToJS(Constant.YSTOJS_GET_PAY_LIMIT_INFO, null);
+//        mActivity.clientToJS(Constant.YSTOJS_GET_PAY_LIMIT_INFO, null);
 
         new Handler().postDelayed(new Runnable() {
             public void run() {
-                mActivity.moveTaskToBack(false);
+//                mActivity.moveTaskToBack(false);
+                if (StartESUserPlugin.dialogFragment != null) {
+                    StartESUserPlugin.dialogFragment.getDialog().dismiss();
+                }
                 RomHelper.checkFloatWindowPermission(Starter.mActivity);
                 Starter.getInstance().showFloatView();
             }
@@ -218,8 +221,11 @@ public class ESPlatform {
         }
 
         if (!status.equals(ESConstant.SDK_STATUS)) {
-            mActivity.moveTaskToBack(false);
+//            mActivity.moveTaskToBack(false);
             isShowWebView = false;
+            if (StartESUserPlugin.dialogFragment != null) {
+                StartESUserPlugin.dialogFragment.dismiss();
+            }
         } else {
             isShowWebView = true;
         }
@@ -243,8 +249,10 @@ public class ESPlatform {
 
         if (isIdentityUser.equals(ESConstant.SDK_STATUS)) {
 
-            mActivity.moveTaskToBack(false);
-
+//            mActivity.moveTaskToBack(false);
+            if (StartESUserPlugin.dialogFragment != null) {
+                StartESUserPlugin.dialogFragment.dismiss();
+            }
             Map<String, String> result = new HashMap<String, String>();
             result.put(ESConstant.SDK_IS_IDENTITY_USER, isIdentityUser);
 
