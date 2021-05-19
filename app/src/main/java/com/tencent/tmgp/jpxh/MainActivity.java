@@ -1,7 +1,8 @@
-package com.easou.espay_user_h5;
+package com.tencent.tmgp.jpxh;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -341,6 +342,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onStop();
         /** 隐藏悬浮窗 */
         Starter.getInstance().hideFloatView();
+        DialogFragment dialogFragment = new DialogFragment();
+        dialogFragment.dismiss();
+        dialogFragment.show(getFragmentManager(), "tag");
     }
 
     @Override

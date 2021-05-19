@@ -1,4 +1,4 @@
-package com.easou.espay_user_h5.wxapi;
+package com.tencent.tmgp.jpxh.wxapi;
 
 
 import com.easou.androidsdk.wx.WXCallBackActivity;
