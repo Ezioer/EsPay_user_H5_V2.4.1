@@ -342,9 +342,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onStop();
         /** 隐藏悬浮窗 */
         Starter.getInstance().hideFloatView();
-        DialogFragment dialogFragment = new DialogFragment();
-        dialogFragment.dismiss();
-        dialogFragment.show(getFragmentManager(), "tag");
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.easou.androidsdk;
 
-import android.content.Intent;
 import android.os.Handler;
 import android.webkit.JavascriptInterface;
 
@@ -11,7 +10,6 @@ import com.easou.androidsdk.plugin.StartESUserPlugin;
 import com.easou.androidsdk.plugin.StartOtherPlugin;
 import com.easou.androidsdk.romutils.RomHelper;
 import com.easou.androidsdk.ui.ESUserWebActivity;
-import com.easou.androidsdk.ui.UserCenterDialogFragment;
 import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESdkLog;
 
@@ -25,18 +23,10 @@ public class ESPlatform {
 
     private boolean isShowWebView = false;
     private static ESUserWebActivity mActivity;
-    //实验性质
-    private static UserCenterDialogFragment mDialog;
 
     @JavascriptInterface
     public static void init(ESUserWebActivity activity) {
         mActivity = activity;
-    }
-
-    //实验性质
-    @JavascriptInterface
-    public static void init(UserCenterDialogFragment activity) {
-        mDialog = activity;
     }
 
     /**
