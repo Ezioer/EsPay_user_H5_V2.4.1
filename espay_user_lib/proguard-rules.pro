@@ -244,3 +244,15 @@ native <methods>;
 -dontwarn com.alipay.security.**
 
 -dontwarn android.net.SSLCertificateSocketFactory
+
+-keep class com.tencent.mm.opensdk.** {
+    *;
+}
+
+-keep class com.tencent.wxop.** {
+    *;
+}
+
+-keep class com.tencent.mm.sdk.** {
+    *;
+}

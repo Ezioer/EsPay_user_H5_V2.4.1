@@ -5,6 +5,8 @@ import android.app.Application;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.easou.androidsdk.ESPlatform;
+import com.easou.androidsdk.Starter;
 import com.easou.androidsdk.plugin.StartESUserPlugin;
 import com.easou.androidsdk.util.ESdkLog;
 

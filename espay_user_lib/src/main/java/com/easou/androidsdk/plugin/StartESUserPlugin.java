@@ -13,6 +13,7 @@ import com.easou.androidsdk.ui.ESToast;
 import com.easou.androidsdk.ui.ESUserWebActivity;
 import com.easou.androidsdk.ui.FloatView;
 import com.easou.androidsdk.util.AES;
+import com.easou.androidsdk.util.Base64;
 import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESdkLog;
 import com.easou.androidsdk.util.FileHelper;
@@ -20,10 +21,15 @@ import com.easou.androidsdk.util.HostRequestUtils;
 import com.easou.androidsdk.util.NetworkUtils;
 import com.easou.androidsdk.util.ThreadPoolManager;
 import com.easou.androidsdk.util.Tools;
+import com.tencent.mm.opensdk.modelbiz.SubscribeMessage;
+import com.tencent.mm.opensdk.modelmsg.SendAuth;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 //import com.tencent.mm.opensdk.modelmsg.SendAuth;
 //import com.tencent.mm.opensdk.openapi.IWXAPI;
 //import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 public class StartESUserPlugin {
@@ -102,22 +108,24 @@ public class StartESUserPlugin {
         Intent intent = new Intent();
         intent.putExtra("params", getNewParam());
         intent.setClass(Starter.mActivity, ESUserWebActivity.class);
+//        intent.putExtra("taskid", Starter.mActivity.getTaskId());
         Starter.mActivity.startActivity(intent);
     }
 
     //调用微信sdk登录功能获取openid
-   /* public static void loginWX(){
-        IWXAPI api = WXAPIFactory.createWXAPI(Starter.mActivity, "", false);
-        api.registerApp("");
+    public static void loginWX() {
+        IWXAPI api = WXAPIFactory.createWXAPI(Starter.mActivity, Constant.WXAPPID, true);
+        api.registerApp(Constant.WXAPPID);
         if (!api.isWXAppInstalled()) {
-            ESToast.getInstance().ToastShow(Starter.mActivity,"您还未安装微信客户端！");
+            ESToast.getInstance().ToastShow(Starter.mActivity, "您还未安装微信客户端！");
             return;
         }
-        SendAuth.Req req =new SendAuth.Req();
-        req.scope = "snsapi_userinfo";
-        req.state = "wechat_sdk_demo_test";
+        SubscribeMessage.Req req = new SubscribeMessage.Req();
+        req.scene = 100;
+        req.templateID = Constant.WXAPPKEY;
+        req.reserved = "reserved";
         api.sendReq(req);
-    }*/
+    }
 
     /**
      * 获取SDK用户信息

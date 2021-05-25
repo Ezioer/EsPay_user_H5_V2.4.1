@@ -2,8 +2,10 @@ package com.easou.androidsdk.ui;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -30,6 +32,7 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.easou.androidsdk.ESPlatform;
+import com.easou.androidsdk.callback.AppTimeWatcher;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.data.ESConstant;
 import com.easou.androidsdk.util.ESdkLog;
@@ -102,10 +105,10 @@ public class ESUserWebActivity extends Activity implements ReWebChomeClient.Open
 
         Intent intent = getIntent();
         String params = intent.getStringExtra("params");
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-			mWebView.setWebContentsDebuggingEnabled(true);
-		}
-		mWebView.getSettings().setDefaultTextEncodingName("utf-8");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            mWebView.setWebContentsDebuggingEnabled(true);
+        }
+        mWebView.getSettings().setDefaultTextEncodingName("utf-8");
         mWebView.getSettings().setSupportZoom(true);
         mWebView.getSettings().setJavaScriptEnabled(true);// webview必须设置支持Javascript
         mWebView.getSettings().setUseWideViewPort(true);
@@ -368,6 +371,25 @@ public class ESUserWebActivity extends Activity implements ReWebChomeClient.Open
         }
     }
 
+    /*@Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        if (AppTimeWatcher.isBack && AppTimeWatcher.isFore) {
+            ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+            assert manager != null;
+            int taskId = getIntent().getIntExtra("taskid", Integer.MIN_VALUE);
+            if (taskId > 0) {
+                manager.moveTaskToFront(taskId, 0);
+            }
+            AppTimeWatcher.isFore = false;
+            AppTimeWatcher.isBack = false;
+        }
+        super.onResume();
+    }*/
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -376,7 +398,6 @@ public class ESUserWebActivity extends Activity implements ReWebChomeClient.Open
         }
         return super.onKeyDown(keyCode, event);
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

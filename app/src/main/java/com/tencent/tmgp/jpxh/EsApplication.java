@@ -1,4 +1,4 @@
-package com.easou.espay_user_h5;
+package com.tencent.tmgp.jpxh;
 
 import android.app.Application;
 import android.content.Context;

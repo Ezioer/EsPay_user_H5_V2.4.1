@@ -4,7 +4,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
     defaultConfig {
-        applicationId "com.dw.mq.ysou"
+        applicationId "com.tencent.tmgp.jpxh"
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
@@ -17,6 +17,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    signingConfigs {
+        debug {
+            keyAlias 'king'//库中对应的签名文件
+            keyPassword 'king123'//签名密码
+            storeFile file('./dmkey.keystore')//签名库文件路径和名称，强烈建议存在项目目录里
+            storePassword '123456'//签名库密码
+        }
+    }
+
     configurations.all {
         resolutionStrategy.eachDependency { DependencyResolveDetails details ->
             def requested = details.requested
