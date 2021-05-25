@@ -312,6 +312,7 @@ public class Starter {
      * @param mContext
      */
     public void dataCollectInit(Context mContext) {
+        ESdkLog.d("初始化媒体接口");
         /** 初始化汇川广告GISM SDK */
         StartOtherPlugin.initGism(mContext, false);
         /** 广点通SDK初始化 */
@@ -322,6 +323,7 @@ public class Starter {
     }
 
     public void pageResume(Activity activity) {
+        ESdkLog.d("进入游戏界面接口");
         //广点通上报启动
         if (Constant.IS_LOGINED) {
             StartOtherPlugin.logGDTAction();
@@ -334,6 +336,7 @@ public class Starter {
     }
 
     public void pagePause(Activity activity) {
+        ESdkLog.d("离开游戏界面接口");
         StartOtherPlugin.logKSActionPagePause(activity);
         StartOtherPlugin.onTTPause(activity);
     }
