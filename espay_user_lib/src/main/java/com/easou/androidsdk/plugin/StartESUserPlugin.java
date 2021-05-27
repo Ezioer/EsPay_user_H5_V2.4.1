@@ -217,6 +217,7 @@ public class StartESUserPlugin {
                 + "&phoneVersion=" + Tools.getSystemVersion()
                 + "&userToken=" + token
                 + "&isSimulator=" + Constant.IS_SIMULATOR
+                + "&headSource=HYZ"
                 + "&netMode=" + NetworkUtils.getNetworkState(Starter.mActivity)
                 + "&telecom=" + NetworkUtils.getOperator(Starter.mActivity);
 

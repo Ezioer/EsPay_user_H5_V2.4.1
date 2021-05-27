@@ -244,3 +244,11 @@ native <methods>;
 -dontwarn com.alipay.security.**
 
 -dontwarn android.net.SSLCertificateSocketFactory
+
+-keep public class android.net.http.SslError
+
+-dontwarn android.webkit.WebView
+
+-dontwarn android.net.http.SslError
+
+-dontwarn Android.webkit.WebViewClient
