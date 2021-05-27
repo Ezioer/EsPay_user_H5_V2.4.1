@@ -13,6 +13,7 @@ import com.easou.androidsdk.util.NetworkUtil;
 import com.tencent.mm.opensdk.constants.ConstantsAPI;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
+import com.tencent.mm.opensdk.modelbiz.SubscribeMessage;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
@@ -86,7 +87,11 @@ public class WXCallBackActivity extends Activity implements IWXAPIEventHandler {
 
     @Override
     public void onResp(BaseResp baseResp) {
-        SendAuth.Resp result = (SendAuth.Resp) baseResp;
+        if (baseResp.getType() == ConstantsAPI.COMMAND_SUBSCRIBE_MESSAGE) {
+            SubscribeMessage.Resp result = (SubscribeMessage.Resp) baseResp;
+            //获取用户的openid
+            String openid = result.openId;
+        }
         if (baseResp.getType() == ConstantsAPI.COMMAND_SENDAUTH) {
             SendAuth.Resp authResp = (SendAuth.Resp) baseResp;
             final String code = authResp.code;
