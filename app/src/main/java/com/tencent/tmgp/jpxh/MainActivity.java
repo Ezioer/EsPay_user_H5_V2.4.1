@@ -330,7 +330,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 playerInfo.put(ESConstant.PLAYER_SERVER_ID, "1"); // 游戏区服id
                 playerInfo.put(ESConstant.LEVEL_NICK_NAME, "hahaha");
                 playerInfo.put(ESConstant.SERVER_NAME, "hahaha");
-                playerInfo.put(ESConstant.PROJECTMARK, "ka");
+                playerInfo.put(ESConstant.PROJECTMARK, "jj");
                 playerInfo.put("field1", "2");
                 playerInfo.put("field2", "2");
                 playerInfo.put("field3", "2");
