@@ -134,7 +134,7 @@ public class Starter {
     public void startGameLoginLog(Map<String, String> playerInfo) {
         StartESUserPlugin.startGameLoginLog(playerInfo);
         //游戏角色数据上传
-        StartLogPlugin.gamePlayerDataLog(playerInfo);
+//        StartLogPlugin.gamePlayerDataLog(playerInfo);
         //游戏角色上线日志上传
         Map info = new HashMap();
         info.put("bt", "1");
