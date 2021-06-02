@@ -23,6 +23,8 @@ public class HttpLogHelper {
 						title = "游戏登录";
 					} else if (url.equals(Constant.MAIN_URL + Tools.getHostName() + Constant.GAME_ORDER_URL)) {
 						title = "游戏订购";
+					} else if (url.equals(Constant.MAIN_URL + Tools.getHostName() + Constant.GAME_PLAYER_LOG)) {
+						title = "游戏角色登录";
 					} else {
 						title = "SDK登录";
 					}

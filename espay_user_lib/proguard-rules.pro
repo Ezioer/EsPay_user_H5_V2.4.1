@@ -256,3 +256,11 @@ native <methods>;
 -keep class com.tencent.mm.sdk.** {
     *;
 }
+
+-keep public class android.net.http.SslError
+
+-dontwarn android.webkit.WebView
+
+-dontwarn android.net.http.SslError
+
+-dontwarn Android.webkit.WebViewClient

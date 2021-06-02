@@ -9,6 +9,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -134,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //PERMISSIONCODE为申请权限时的请求码
         boolean isAllGet = true;
         //百度权限回调
-        Starter.getInstance().handleBDPermissions(requestCode, permissions, grantResults);
+//        Starter.getInstance().handleBDPermissions(requestCode, permissions, grantResults);
         if (PERMISSIONCODE == requestCode) {
             // 从数组中取出返回结果，遍历判断多组权限
             for (int result : grantResults) {
@@ -326,6 +328,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 playerInfo.put(ESConstant.PLAYER_LEVEL, "9"); // 游戏角色等级
                 playerInfo.put(ESConstant.PLAYER_ID, mPlayId.getText().toString()); // 游戏角色id
                 playerInfo.put(ESConstant.PLAYER_SERVER_ID, "1"); // 游戏区服id
+                playerInfo.put(ESConstant.LEVEL_NICK_NAME, "hahaha");
+                playerInfo.put(ESConstant.SERVER_NAME, "hahaha");
+                playerInfo.put(ESConstant.PROJECTMARK, "ka");
+                playerInfo.put("field1", "2");
+                playerInfo.put("field2", "2");
+                playerInfo.put("field3", "2");
+                playerInfo.put("field4", "2");
+                playerInfo.put("field5", "1");
+                playerInfo.put("field6", "test");
+                playerInfo.put("field7", "test");
+                playerInfo.put("field8", "test");
+                playerInfo.put("field9", "test");
+                playerInfo.put("field10", "test");
+                playerInfo.put(ESConstant.CREATEDTIME, String.valueOf(System.currentTimeMillis()));
                 Starter.getInstance().startGameLoginLog(playerInfo);
                 // demo演示代码
                 enterGame(View.VISIBLE);
