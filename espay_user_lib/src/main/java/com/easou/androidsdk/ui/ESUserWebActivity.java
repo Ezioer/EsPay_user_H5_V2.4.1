@@ -35,7 +35,10 @@ import com.easou.androidsdk.ESPlatform;
 import com.easou.androidsdk.callback.AppTimeWatcher;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.data.ESConstant;
+import com.easou.androidsdk.plugin.StartESUserPlugin;
 import com.easou.androidsdk.util.ESdkLog;
+import com.easou.androidsdk.util.ReplaceCallBack;
+import com.easou.androidsdk.util.ThreadPoolManager;
 import com.easou.androidsdk.webviewutils.ImageUtil;
 import com.easou.androidsdk.webviewutils.JSAndroid;
 import com.easou.androidsdk.webviewutils.PermissionUtil;
@@ -104,7 +107,7 @@ public class ESUserWebActivity extends Activity implements ReWebChomeClient.Open
                 getApplication().getPackageName()));
 
         Intent intent = getIntent();
-        String params = intent.getStringExtra("params");
+        final String params = intent.getStringExtra("params");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             mWebView.setWebContentsDebuggingEnabled(true);
         }
@@ -131,8 +134,31 @@ public class ESUserWebActivity extends Activity implements ReWebChomeClient.Open
         mWebChromeClient = new WebChromeClient() {
 
             @Override
-            public void onReceivedTitle(WebView view, String title) {
+            public void onReceivedTitle(final WebView view, String title) {
                 super.onReceivedTitle(view, title);
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                    if (title.contains("404") || title.contains("500") || title.contains("Error")
+                            || title.contains("找不到网页") || title.contains("网页无法打开")) {
+                        ThreadPoolManager.getInstance().addTask(new Runnable() {
+                            @Override
+                            public void run() {
+                                StartESUserPlugin.startRequestHost(mActivity, true, new ReplaceCallBack() {
+                                    @Override
+                                    public void replaceSuccess() {
+                                        view.loadUrl(Constant.SSO_URL + params);
+                                    }
+
+                                    @Override
+                                    public void replaceFail() {
+                                        ViewParent webParentView = (ViewParent) mWebView.getParent();
+                                        ((ViewGroup) webParentView).removeAllViews();
+                                        showAlert();
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }
             }
 
             @Override
@@ -177,12 +203,26 @@ public class ESUserWebActivity extends Activity implements ReWebChomeClient.Open
             }
 
             @Override
-            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+            public void onReceivedError(final WebView view, int errorCode, String description, String failingUrl) {
                 super.onReceivedError(view, errorCode, description, failingUrl);
+                ThreadPoolManager.getInstance().addTask(new Runnable() {
+                    @Override
+                    public void run() {
+                        StartESUserPlugin.startRequestHost(mActivity, true, new ReplaceCallBack() {
+                            @Override
+                            public void replaceSuccess() {
+                                view.loadUrl(Constant.SSO_URL + params);
+                            }
 
-                ViewParent webParentView = (ViewParent) mWebView.getParent();
-                ((ViewGroup) webParentView).removeAllViews();
-                showAlert();
+                            @Override
+                            public void replaceFail() {
+                                ViewParent webParentView = (ViewParent) mWebView.getParent();
+                                ((ViewGroup) webParentView).removeAllViews();
+                                showAlert();
+                            }
+                        });
+                    }
+                });
             }
 
             @Override

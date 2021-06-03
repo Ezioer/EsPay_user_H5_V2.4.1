@@ -19,6 +19,7 @@ import com.easou.androidsdk.util.ESdkLog;
 import com.easou.androidsdk.util.FileHelper;
 import com.easou.androidsdk.util.HostRequestUtils;
 import com.easou.androidsdk.util.NetworkUtils;
+import com.easou.androidsdk.util.ReplaceCallBack;
 import com.easou.androidsdk.util.ThreadPoolManager;
 import com.easou.androidsdk.util.Tools;
 import com.tencent.mm.opensdk.modelbiz.SubscribeMessage;
@@ -66,7 +67,7 @@ public class StartESUserPlugin {
 
                 if (!Constant.IS_LOGINED) {
                     startH5Login();
-                    startRequestHost(Starter.mActivity);
+                    startRequestHost(Starter.mActivity, false, null);
                 }
 
                 Looper.loop();
@@ -262,7 +263,7 @@ public class StartESUserPlugin {
     /**
      * 请求host信息
      */
-    public static void startRequestHost(final Activity activity) {
+    public static void startRequestHost(final Activity activity, boolean isReplaceSso, ReplaceCallBack callBack) {
 
         try {
             // 读取存储的host信息
@@ -272,9 +273,9 @@ public class StartESUserPlugin {
             }
 
             if (jsonData == null || jsonData.equals("")) {
-                HostRequestUtils.requestHostInfo(activity, false);
+                HostRequestUtils.requestHostInfo(activity, false, isReplaceSso, callBack);
             } else {
-                HostRequestUtils.requestHostInfo(activity, true);
+                HostRequestUtils.requestHostInfo(activity, true, isReplaceSso, callBack);
             }
         } catch (Exception e) {
             e.printStackTrace();
