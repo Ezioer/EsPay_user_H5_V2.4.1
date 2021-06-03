@@ -36,6 +36,7 @@ import com.easou.androidsdk.callback.AppTimeWatcher;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.data.ESConstant;
 import com.easou.androidsdk.plugin.StartESUserPlugin;
+import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESdkLog;
 import com.easou.androidsdk.util.ReplaceCallBack;
 import com.easou.androidsdk.util.ThreadPoolManager;
@@ -237,7 +238,10 @@ public class ESUserWebActivity extends Activity implements ReWebChomeClient.Open
         mWebView.setWebChromeClient(mWebChromeClient);
         mWebView.setWebViewClient(mWebViewClient);
         mWebView.setWebChromeClient(new ReWebChomeClient(this));
-
+        String url_backup = CommonUtils.getIsReplaceSso(mActivity);
+        if (!TextUtils.isEmpty(CommonUtils.getIsReplaceSso(mActivity))) {
+            Constant.URL_BACKUP = url_backup;
+        }
         mWebView.loadUrl(Constant.SSO_URL + params);
     }
 

@@ -34,8 +34,12 @@ public class HostRequestUtils {
 
                     Constant.HOST_NAME = tempInfo[3];
                     if (isReplaceSso) {
+                        //是否需要替换个人中心的域名
                         Constant.URL_BACKUP = tempInfo[3];
+                        //更换成功后记录有效的域名，下次直接使用新域名
+                        CommonUtils.saveReplaceSso(activity, tempInfo[3]);
                         if (callBack != null) {
+                            //替换域名后需要重新加载个人中心页面
                             activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -49,6 +53,7 @@ public class HostRequestUtils {
                     FileHelper.writeFile(Constant.getSDHostInfoFile(), gsonStr);
                 } else {
                     if (callBack != null) {
+                        //替换失败需要给出页面提示
                         activity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {

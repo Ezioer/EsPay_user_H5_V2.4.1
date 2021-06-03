@@ -109,7 +109,6 @@ public class StartESUserPlugin {
         Intent intent = new Intent();
         intent.putExtra("params", getNewParam());
         intent.setClass(Starter.mActivity, ESUserWebActivity.class);
-//        intent.putExtra("taskid", Starter.mActivity.getTaskId());
         Starter.mActivity.startActivity(intent);
     }
 

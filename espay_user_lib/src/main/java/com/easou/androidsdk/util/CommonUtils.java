@@ -124,6 +124,19 @@ public class CommonUtils {
         editor.commit();
     }
 
+    public static String getIsReplaceSso(Context mContext) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        String sso = settings.getString("replacesso", "");
+        return sso;
+    }
+
+    public static void saveReplaceSso(Context mContext, String sso) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("replacesso", sso);
+        editor.commit();
+    }
+
     /**
      * 检测某个应用是否安装
      *
@@ -688,7 +701,6 @@ public class CommonUtils {
     /**
      * 产生一个随机的字符串
      *
-     * @param 字符串长度
      * @return
      */
     public static String getRandomString(int length) {
