@@ -617,7 +617,7 @@ public class ESPayCenterActivity extends BaseActivity {
 	/*	if (Constant.USE_DHT) {
 			map.put(Constant.PAYCHANNEL, Constant.ALIPAY_DHT);
 		}*/
-        if (Constant.PAY_CHANNEl == 1) {
+       /* if (Constant.PAY_CHANNEl == 1) {
             map.put(Constant.PAYCHANNEL, Constant.ALIPAY_DHT);
         } else if (Constant.PAY_CHANNEl == 2) {
             map.put(Constant.PAYCHANNEL, Constant.ALIPAY_YY);
@@ -625,7 +625,9 @@ public class ESPayCenterActivity extends BaseActivity {
             map.put(Constant.PAYCHANNEL, Constant.ZKXHGALIPAY);
         } else {
             map.put(Constant.PAYCHANNEL, Constant.ZKXHGALIPAY);
-        }
+        }*/
+
+        map.put(Constant.PAYCHANNEL, CommonUtils.getPayAliObject(mActivity));
 
         HttpAsyncTaskImp aliTask = new HttpAsyncTaskImp(mActivity, map, easoutgc, key, FeeType.ALIPAY);
         aliTask.setDataFinishListener(new HttpAsyncTaskImp.DataFinishListener() {
@@ -686,7 +688,7 @@ public class ESPayCenterActivity extends BaseActivity {
             inputMap.put(Constant.CHANNEL_MARK, Constant.CHANNEL_MARK_DHT);
         }*/
 
-        if (Constant.PAY_CHANNEl == 1) {
+       /* if (Constant.PAY_CHANNEl == 1) {
             inputMap.put(Constant.CHANNEL_MARK, Constant.CHANNEL_MARK_DHT);
         } else if (Constant.PAY_CHANNEl == 2) {
             inputMap.put(Constant.CHANNEL_MARK, Constant.CHANNEL_MARK_YY);
@@ -696,11 +698,13 @@ public class ESPayCenterActivity extends BaseActivity {
             inputMap.put(Constant.CHANNEL_MARK, Constant.CHANNEL_MARK_WZYY);
         } else {
             inputMap.put(Constant.CHANNEL_MARK, Constant.CHANNEL_MARK_ZKX);
-        }
+        }*/
+
+        inputMap.put(Constant.CHANNEL_MARK, CommonUtils.getPayMarkObject(mActivity));
 
 
         String room_view_url = Constant.DOMAIN + Tools.getHostName() + Constant.WEB_SERVER_URL
-                + StartESPayPlugin.getParam(inputMap, key);
+                + StartESPayPlugin.getParam(mActivity, inputMap, key);
         String back_url = returnUrl;
         Intent intent = new Intent();
         intent.putExtra("room_url", room_view_url);//
@@ -751,7 +755,7 @@ public class ESPayCenterActivity extends BaseActivity {
             map.put(Constant.PAYCHANNEL, Constant.WECHAT_DHT);
         }*/
 
-        if (Constant.PAY_CHANNEl == 1) {
+      /*  if (Constant.PAY_CHANNEl == 1) {
             map.put(Constant.PAYCHANNEL, Constant.WECHAT_DHT);
         } else if (Constant.PAY_CHANNEl == 2) {
             map.put(Constant.PAYCHANNEL, Constant.WECHAT_YY);
@@ -759,7 +763,8 @@ public class ESPayCenterActivity extends BaseActivity {
             map.put(Constant.PAYCHANNEL, Constant.WECHAT_ZKX);
         } else {
             map.put(Constant.PAYCHANNEL, Constant.WECHAT_ZKX);
-        }
+        }*/
+        map.put(Constant.PAYCHANNEL, CommonUtils.getPayWxObject(mActivity));
 
         HttpAsyncTaskImp wxTask = new HttpAsyncTaskImp(mActivity, map, easoutgc, key, FeeType.WECHAT);
 

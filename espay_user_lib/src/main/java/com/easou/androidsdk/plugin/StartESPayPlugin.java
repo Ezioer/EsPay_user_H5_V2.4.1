@@ -244,7 +244,7 @@ public class StartESPayPlugin {
     /**
      * 获取网页计费参数
      */
-    public static String getParam(Map<String, String> inputMap, String key) {
+    public static String getParam(Activity mActivity, Map<String, String> inputMap, String key) {
 
         String sign = Md5SignUtils.sign(inputMap, key);
         String param = "appId=" + inputMap.get(Constant.APP_ID)
@@ -265,7 +265,9 @@ public class StartESPayPlugin {
 			param = param + "&channelMark=DHT";
 		}*/
 
-        if (Constant.PAY_CHANNEl == 1) {
+        String pay = CommonUtils.getPayMarkObject(mActivity);
+        param = param + "&channelMark=" + pay;
+       /* if (Constant.PAY_CHANNEl == 1) {
             param = param + "&channelMark="+Constant.CHANNEL_MARK_DHT;
         } else if (Constant.PAY_CHANNEl == 2) {
             param = param + "&channelMark="+Constant.CHANNEL_MARK_YY;
@@ -275,7 +277,7 @@ public class StartESPayPlugin {
             param = param + "&channelMark=" + Constant.CHANNEL_MARK_WZYY;
         } else {
             param = param + "&channelMark=" + Constant.CHANNEL_MARK_ZKX;
-        }
+        }*/
 
         return param;
     }

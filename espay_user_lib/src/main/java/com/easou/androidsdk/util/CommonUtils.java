@@ -1,5 +1,6 @@
 package com.easou.androidsdk.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
@@ -122,6 +123,45 @@ public class CommonUtils {
         SharedPreferences.Editor editor = settings.edit();
         editor.putString("esuserid", id);
         editor.commit();
+    }
+
+    public static void savePayMarkObject(Context mContext, String pay) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("paymark", pay);
+        editor.commit();
+    }
+
+    public static String getPayMarkObject(Context mContext) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        String userid = settings.getString("paymark", "HYWZKX");
+        return userid;
+    }
+
+    public static void savePayWxObject(Context mContext, String pay) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("paywx", pay);
+        editor.commit();
+    }
+
+    public static String getPayWxObject(Context mContext) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        String userid = settings.getString("paywx", "WECHAT_ZKX");
+        return userid;
+    }
+
+    public static void savePayAliObject(Context mContext, String pay) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("payalipay", pay);
+        editor.commit();
+    }
+
+    public static String getPayAliObject(Context mContext) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        String userid = settings.getString("payalipay", "ZKXHGALIPAY");
+        return userid;
     }
 
     /**
@@ -688,7 +728,6 @@ public class CommonUtils {
     /**
      * 产生一个随机的字符串
      *
-     * @param 字符串长度
      * @return
      */
     public static String getRandomString(int length) {

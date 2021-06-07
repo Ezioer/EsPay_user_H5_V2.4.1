@@ -30,17 +30,53 @@ public class StartESUserPlugin {
         StartOtherPlugin.getOaid(Starter.mActivity);
 
         String channel = CommonUtils.readPropertiesValue(Starter.mActivity, Constant.CHANNEL_MARK);
+        String payMark = "";
+        String payWx = "";
+        String payAlipay = "";
         if (channel.equals("DHT")) {
+            payMark = "DHT";
+            payWx = "WECHAT_DHT";
+            payAlipay = "YXDHTALIPAY";
             Constant.PAY_CHANNEl = 1;
         } else if (channel.equals("YY")) {
+            payMark = "YY";
+            payWx = "WECHAT_YY";
+            payAlipay = "YYXZALIPAY";
             Constant.PAY_CHANNEl = 2;
         } else if (channel.equals("ZKX")) {
+            payMark = "HYWZKX";
+            payWx = "WECHAT_ZKX";
+            payAlipay = "ZKXHGALIPAY";
             Constant.PAY_CHANNEl = 3;
-        } else if (channel.equals("WZYY")) {
+        } else if (channel.equals("JHHY")) {
+            payMark = "HYWJHHY";
+            payWx = "WECHAT_JHHY";
+            payAlipay = "JHHYALIPAY";
             Constant.PAY_CHANNEl = 4;
+        } else if (channel.equals("ZZSD")) {
+            payMark = "HYWZZSD";
+            payWx = "WECHAT_ZZSD";
+            payAlipay = "ZZSDALIPAY";
+            Constant.PAY_CHANNEl = 5;
+        } else if (channel.equals("SHDT")) {
+            payMark = "HYWSHDT";
+            payWx = "WECHAT_SHDT";
+            payAlipay = "SHDTALIPAY";
+            Constant.PAY_CHANNEl = 6;
+        } else if (channel.equals("BJHM")) {
+            payMark = "HYWBJHM";
+            payWx = "WECHAT_BJHM";
+            payAlipay = "BJHMALIPAY";
+            Constant.PAY_CHANNEl = 7;
         } else {
-            Constant.PAY_CHANNEl = 3;
+            payMark = "HYWZKX";
+            payWx = "WECHAT_ZKX";
+            payAlipay = "ZKXHGALIPAY";
+            Constant.PAY_CHANNEl = 0;
         }
+        CommonUtils.savePayMarkObject(Starter.mActivity, payMark);
+        CommonUtils.savePayWxObject(Starter.mActivity, payWx);
+        CommonUtils.savePayAliObject(Starter.mActivity, payAlipay);
 
         ThreadPoolManager.getInstance().addTask(new Runnable() {
             @Override
