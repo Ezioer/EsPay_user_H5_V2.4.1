@@ -146,7 +146,7 @@ public class ESUserWebActivity extends Activity implements ReWebChomeClient.Open
                                 StartESUserPlugin.startRequestHost(mActivity, true, new ReplaceCallBack() {
                                     @Override
                                     public void replaceSuccess() {
-                                        view.loadUrl(Constant.SSO_URL + params);
+                                        view.loadUrl(Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + params);
                                     }
 
                                     @Override
@@ -212,7 +212,7 @@ public class ESUserWebActivity extends Activity implements ReWebChomeClient.Open
                         StartESUserPlugin.startRequestHost(mActivity, true, new ReplaceCallBack() {
                             @Override
                             public void replaceSuccess() {
-                                view.loadUrl(Constant.SSO_URL + params);
+                                view.loadUrl(Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + params);
                             }
 
                             @Override
@@ -242,7 +242,7 @@ public class ESUserWebActivity extends Activity implements ReWebChomeClient.Open
         if (!TextUtils.isEmpty(CommonUtils.getIsReplaceSso(mActivity))) {
             Constant.URL_BACKUP = url_backup;
         }
-        mWebView.loadUrl(Constant.SSO_URL + params);
+        mWebView.loadUrl(Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + params);
     }
 
     public static void clientToJS(int type, final Map<String, String> params) {
