@@ -4,12 +4,26 @@ import android.provider.Settings;
 
 import java.util.HashMap;
 
-public class javaTest {
+public class javaTest extends Thread implements Runnable {
+    @Override
+    public void run() {
+        super.run();
+    }
+
+    private int i;
 
     public static void main(String[] args) {
+        String s11 = "hello";
+        String s22 = "hello";
+        System.out.println(s11 == s22);
+        Thread e = new Thread(new javaTest());
+        e.start();
         long starttime = System.currentTimeMillis();
         solution();
-//        solution1();
+        String s = "11";
+        String s1 = "\'a\'";
+        System.out.println(s1.length());
+        //        solution1();
         long endtime = System.currentTimeMillis();
         long time = endtime - starttime;
         System.out.println("time:" + time + "");
