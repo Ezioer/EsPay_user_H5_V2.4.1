@@ -3,6 +3,7 @@ package com.tencent.tmgp.jpxh;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DialogFragment;
+import android.app.IntentService;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
