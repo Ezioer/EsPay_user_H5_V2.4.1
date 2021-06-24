@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //PERMISSIONCODE为申请权限时的请求码
         boolean isAllGet = true;
         //百度权限回调
-//        Starter.getInstance().handleBDPermissions(requestCode, permissions, grantResults);
+        Starter.getInstance().handleBDPermissions(requestCode, permissions, grantResults);
         if (PERMISSIONCODE == requestCode) {
             // 从数组中取出返回结果，遍历判断多组权限
             for (int result : grantResults) {

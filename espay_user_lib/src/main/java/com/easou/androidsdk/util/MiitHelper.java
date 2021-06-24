@@ -7,8 +7,10 @@ import android.util.Log;
 
 import com.bun.miitmdid.core.ErrorCode;
 import com.bun.miitmdid.core.MdidSdkHelper;
-import com.bun.supplier.IIdentifierListener;
-import com.bun.supplier.IdSupplier;
+//import com.bun.supplier.IIdentifierListener;
+//import com.bun.supplier.IdSupplier;
+import com.bun.miitmdid.interfaces.IIdentifierListener;
+import com.bun.miitmdid.interfaces.IdSupplier;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.plugin.StartOtherPlugin;
 

@@ -8,6 +8,7 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 
 //import com.baidu.mobads.action.BaiduAction;
+import com.baidu.mobads.action.BaiduAction;
 import com.easou.androidsdk.callback.AppTimeWatcher;
 import com.easou.androidsdk.callback.ESdkCallback;
 import com.easou.androidsdk.data.Constant;
@@ -305,7 +306,7 @@ public class Starter {
      */
     public void handleBDPermissions(int requestCode,
                                     @NonNull String permissions[], @NonNull int[] grantResults) {
-//        BaiduAction.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        BaiduAction.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     /**
