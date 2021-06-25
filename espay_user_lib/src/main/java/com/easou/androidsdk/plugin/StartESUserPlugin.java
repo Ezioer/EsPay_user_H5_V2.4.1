@@ -18,6 +18,7 @@ import com.easou.androidsdk.util.HostRequestUtils;
 import com.easou.androidsdk.util.NetworkUtils;
 import com.easou.androidsdk.util.ThreadPoolManager;
 import com.easou.androidsdk.util.Tools;
+
 import java.util.Map;
 
 public class StartESUserPlugin {
@@ -226,6 +227,8 @@ public class StartESUserPlugin {
         if (Starter.mActivity.getPackageName().contains("fhzj")) {
             param = param + "&sdkType=fhzj";
         }
+        //1为保存用户登录状态，0为不保存用户登录状态
+//        param += "&isSaveStatus=1";
         ESdkLog.d("上传的oaid：" + Constant.OAID);
         System.out.println("param：" + param);
 

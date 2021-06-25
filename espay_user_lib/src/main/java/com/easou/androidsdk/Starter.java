@@ -1,5 +1,6 @@
 package com.easou.androidsdk;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
@@ -306,7 +307,14 @@ public class Starter {
      */
     public void handleBDPermissions(int requestCode,
                                     @NonNull String permissions[], @NonNull int[] grantResults) {
-        BaiduAction.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        for (int i = 0; i < permissions.length; i++) {
+            String temp = permissions[i];
+            if (temp.equals(Manifest.permission.READ_PHONE_STATE)) {
+                // 授权结果回传
+                BaiduAction.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                break;
+            }
+        }
     }
 
     /**
