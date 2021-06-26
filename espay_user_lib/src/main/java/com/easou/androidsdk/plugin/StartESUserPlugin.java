@@ -228,7 +228,7 @@ public class StartESUserPlugin {
             param = param + "&sdkType=fhzj";
         }
         //1为保存用户登录状态，0为不保存用户登录状态
-//        param += "&isSaveStatus=1";
+        param += "&isSaveStatus=0";
         ESdkLog.d("上传的oaid：" + Constant.OAID);
         System.out.println("param：" + param);
 

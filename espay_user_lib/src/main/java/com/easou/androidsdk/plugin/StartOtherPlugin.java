@@ -321,7 +321,7 @@ public class StartOtherPlugin {
     public static void logGismActionLogout() {
 
         if (Constant.GISM_SDK) {
-           /* GismSDK.onEvent(GismEventBuilder.onCustomEvent()
+          /*  GismSDK.onEvent(GismEventBuilder.onCustomEvent()
                     .action("logout")
                     .build());*/
         }
