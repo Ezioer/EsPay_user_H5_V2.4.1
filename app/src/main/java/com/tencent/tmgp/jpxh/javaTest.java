@@ -3,21 +3,54 @@ package com.tencent.tmgp.jpxh;
 import android.provider.Settings;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
-public class javaTest extends Thread implements Runnable {
-    @Override
-    public void run() {
-        super.run();
-    }
+public class javaTest {
 
     private int i;
 
     public static void main(String[] args) {
-        String s11 = "hello";
+       /* javaTest test = new MyClass();
+        test.test1();*/
+       /* String string = "apple water  rice balana apple  water rice rice rice";
+        countString(string);*/
+       /* int i, j;
+        char c = '*';
+        for (i = 0; i < 5; i++) {
+            for (j = 0; j <= i; j++)
+                System.out.print("* ");
+            System.out.println();
+        }*/
+
+//        int i=123; long j=456;
+//        j = i;
+//        j=(long)i;
+//        i=(int)j;
+     /*   int x = 1;
+        int y = 2;
+        int z = 3;
+        y += z--/++x;
+        System.out.println(y);*/
+        /*float z = 1.234f ;
+        double w = 1.23;
+        System.out.println(z>w);
+        String a = "Programming";
+        String b = new String("Programming");
+        String c = "Program" + "ming";
+        System.out.println(a == b);
+        System.out.println(a == c);
+        System.out.println(a.equals(b));
+        System.out.println(a.equals(c));*/
+
+       /* Integer i=new Integer(0);
+        add2(i);
+        System.out.println(i.intValue());
+*/
+       /* String s11 = "hello";
         String s22 = "hello";
         System.out.println(s11 == s22);
-        Thread e = new Thread(new javaTest());
-        e.start();
+
         long starttime = System.currentTimeMillis();
         solution();
         String s = "11";
@@ -26,7 +59,7 @@ public class javaTest extends Thread implements Runnable {
         //        solution1();
         long endtime = System.currentTimeMillis();
         long time = endtime - starttime;
-        System.out.println("time:" + time + "");
+        System.out.println("time:" + time + "");*/
        /* boolean isa = (0x00600000 & 0x00400000) == 0x00400000;
         boolean isa1 = (0x00600000 & 0x00400000) == 0x00400000;
         int ii2 = 0x00400000;
@@ -79,10 +112,52 @@ public class javaTest extends Thread implements Runnable {
             map.put(nums[i], i);
         }
     }
+
+    public static void add2(Integer i) {
+        int val = i.intValue();
+        val += 3;
+        i = new Integer(val);
+    }
+
+    public static void countString(String str) {
+        String[] s = str.split(" ");
+        Map<String, Integer> map = new HashMap<>();
+        int num = 0;
+        for (int i = 0; i < s.length; i++) {
+            if (!s[i].isEmpty()) {
+                if (map.containsKey(s[i])) {
+                    int value = map.get(s[i]);
+                    map.put(s[i], ++value);
+                } else {
+                    map.put(s[i], 1);
+                }
+                num++;
+            }
+        }
+        Set<Map.Entry<String, Integer>> entries = map.entrySet();
+        for (Map.Entry<String, Integer> entry : entries) {
+            System.out.println(entry.getKey() + "出现" + entry.getValue() + "次");
+        }
+        System.out.println("共有单词数" + num);
+    }
+
+    void test1() {
+        test2();
+    }
+
+    void test2() {
+        System.out.println("father2");
+    }
+
 }
 
-class MyClass {
-    void changeValue(StringBuffer buffer) {
-        buffer.append("11");
+class MyClass extends javaTest {
+    void test2() {
+        System.out.println("son2");
+    }
+
+    public static void main(String[] args) {
+        javaTest test = new MyClass();
+        test.test1();
     }
 }
