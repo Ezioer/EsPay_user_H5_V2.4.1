@@ -19,6 +19,7 @@ import com.easou.androidsdk.plugin.StartLogPlugin;
 import com.easou.androidsdk.plugin.StartOtherPlugin;
 import com.easou.androidsdk.romutils.RomHelper;
 import com.easou.androidsdk.romutils.RomUtils;
+import com.easou.androidsdk.ui.ESToast;
 import com.easou.androidsdk.ui.ESUserWebActivity;
 import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESdkLog;
@@ -62,9 +63,11 @@ public class Starter {
      * @param map      参数
      */
     public void pay(Activity mActivity, Map<String, String> map, Handler mHandler) {
-        Starter.map = map;
+
+        ESToast.getInstance().ToastShow(mActivity, "该功能暂未开放!");
+       /* Starter.map = map;
         Starter.mHandler = mHandler;
-        StartESPayPlugin.setPayParams(mActivity, map);
+        StartESPayPlugin.setPayParams(mActivity, map);*/
     }
 
 
