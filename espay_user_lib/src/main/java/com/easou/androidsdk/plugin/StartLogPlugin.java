@@ -35,7 +35,8 @@ public class StartLogPlugin {
     }
 
     private static String getPlayerDataParams(Map<String, String> playerInfo) {
-        String param = "projectMark=" + playerInfo.get(ESConstant.PROJECTMARK) +
+        String qn = CommonUtils.readPropertiesValue(Starter.mActivity, Constant.QN);
+        String param = "projectMark=" + qn.substring(0, 2) +
                 "&playerId=" + playerInfo.get(ESConstant.PLAYER_ID) +
                 "&serverId=" + playerInfo.get(ESConstant.PLAYER_SERVER_ID) +
                 "&esAppId=" + CommonUtils.readPropertiesValue(Starter.mActivity, Constant.APP_ID) +

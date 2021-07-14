@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -115,6 +116,20 @@ public class CommonUtils {
     public static String getUserId(Context mContext) {
         SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
         String userid = settings.getString("esuserid", "");
+        return userid;
+    }
+
+    public static void saveIsAutoCount(Context mContext, String isCount) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("isautocount", isCount);
+        editor.commit();
+    }
+
+    //1为成年人，不进行自动计时
+    public static String getIsAutoCount(Context mContext) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        String userid = settings.getString("isautocount", "0");
         return userid;
     }
 
@@ -751,4 +766,14 @@ public class CommonUtils {
         return true;
     }
 
+    public static int getAge(String birthDay) {
+        try {
+            String year = birthDay.substring(0, 4);
+            Calendar date = Calendar.getInstance();
+            String currentYear = String.valueOf(date.get(Calendar.YEAR));
+            return Integer.valueOf(currentYear) - Integer.valueOf(year);
+        } catch (Exception e) {
+            return 0;
+        }
+    }
 }

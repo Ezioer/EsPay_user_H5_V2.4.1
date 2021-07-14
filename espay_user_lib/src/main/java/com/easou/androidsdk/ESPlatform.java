@@ -58,8 +58,9 @@ public class ESPlatform {
             e.printStackTrace();
         }
 
+        CommonUtils.saveIsAutoCount(Starter.mActivity, isAdult);
         CommonUtils.saveH5Token(Starter.mActivity, token);
-        CommonUtils.saveH5TokenToCard(token,CommonUtils.readPropertiesValue(Starter.mActivity, Constant.APP_ID));
+        CommonUtils.saveH5TokenToCard(token, CommonUtils.readPropertiesValue(Starter.mActivity, Constant.APP_ID));
         final String user_ID = userId;
         CommonUtils.saveUserId(Starter.mActivity, userId);
         StartOtherPlugin.logTTActionLogin(user_ID);
@@ -263,6 +264,8 @@ public class ESPlatform {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        CommonUtils.saveIsAutoCount(Starter.mActivity, CommonUtils.getAge(userBirthdate) >= 18 ? "1" : "0");
 
         mActivity.clientToJS(Constant.YSTOJS_GET_PAY_LIMIT_INFO, null);
 

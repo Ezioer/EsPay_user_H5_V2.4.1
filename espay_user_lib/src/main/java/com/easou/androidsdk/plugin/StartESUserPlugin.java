@@ -126,7 +126,7 @@ public class StartESUserPlugin {
 
         StartLogPlugin.startGameLoginLog(playerInfo);
         //传送游戏角色数据给h5
-//        ESUserWebActivity.clientToJS(Constant.YSTOJS_GAME_LOGIN_DATA, playerInfo);
+        ESUserWebActivity.clientToJS(Constant.YSTOJS_GAME_LOGIN_DATA, playerInfo);
         //传游戏角色给h5
 //		ESUserWebActivity.clientToJS(Constant.YSTOJS_GAME_LOGIN_LOG, playerInfo);
     }
@@ -180,6 +180,7 @@ public class StartESUserPlugin {
         if (Starter.mActivity.getPackageName().contains("fhzj")) {
             param = param + "&sdkType=fhzj";
         }
+//        param = param + "&sdkVersion=hongbao";
         ESdkLog.d("上传的oaid：" + Constant.OAID);
         System.out.println("param：" + param);
 

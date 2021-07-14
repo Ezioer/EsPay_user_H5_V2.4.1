@@ -5,7 +5,9 @@ import android.app.Application;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.easou.androidsdk.Starter;
 import com.easou.androidsdk.plugin.StartESUserPlugin;
+import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESdkLog;
 
 /**
@@ -50,7 +52,8 @@ public class AppTimeWatcher {
             public void run() {
                 //每隔5分钟向服务器请求一次
                 ESdkLog.d("计时进行中.......");
-                if (!isCancel && mBeginWork) {
+                //成年人不统计游玩时长
+                if (!isCancel && mBeginWork && CommonUtils.getIsAutoCount(Starter.mActivity).equals("0")) {
 //                    ESdkLog.d("发送网络请求");
                     StartESUserPlugin.postTime();
                 }
