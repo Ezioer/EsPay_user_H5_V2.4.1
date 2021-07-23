@@ -115,6 +115,7 @@ public class ESPlatform {
         StartOtherPlugin.logOutTT();
         Constant.ESDK_USERID = "";
         CommonUtils.saveUserId(Starter.mActivity, "");
+        CommonUtils.saveIsAutoCount(Starter.mActivity, "0");
         Constant.ESDK_TOKEN = "";
         Constant.IS_LOGINED = false;
         isShowWebView = false;
@@ -180,11 +181,12 @@ public class ESPlatform {
             userId = jsonObj.getString(ESConstant.SDK_USER_ID);
             CommonUtils.saveUserId(Starter.mActivity, userId);
             userName = jsonObj.getString(ESConstant.SDK_USER_NAME);
-
+            CommonUtils.saveIsAutoCount(Starter.mActivity, "0");
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
+        CommonUtils.saveIsAutoCount(Starter.mActivity, "0");
         Map<String, String> result = new HashMap<String, String>();
         result.put(ESConstant.SDK_USER_ID, userId);
         result.put(ESConstant.SDK_USER_NAME, userName);

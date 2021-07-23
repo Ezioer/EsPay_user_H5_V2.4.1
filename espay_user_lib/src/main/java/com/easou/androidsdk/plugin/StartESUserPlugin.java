@@ -180,6 +180,7 @@ public class StartESUserPlugin {
         if (Starter.mActivity.getPackageName().contains("fhzj")) {
             param = param + "&sdkType=fhzj";
         }
+        //红包版本需要加红包，非红包版本注释掉就可以
 //        param = param + "&sdkVersion=hongbao";
         ESdkLog.d("上传的oaid：" + Constant.OAID);
         System.out.println("param：" + param);

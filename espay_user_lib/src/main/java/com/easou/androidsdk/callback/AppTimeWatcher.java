@@ -7,6 +7,7 @@ import android.os.Handler;
 
 import com.easou.androidsdk.Starter;
 import com.easou.androidsdk.plugin.StartESUserPlugin;
+import com.easou.androidsdk.ui.ESToast;
 import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESdkLog;
 
@@ -34,7 +35,7 @@ public class AppTimeWatcher {
 
     private Handler mHandler;
 
-    private static long TIME = 300 * 1000;
+    private static long TIME = 5 * 60 * 1000;
     private long mCurrentTime;
     private long mHasTime = 0;
     private boolean isCancel = false;
