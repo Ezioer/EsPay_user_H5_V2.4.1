@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 
 //import com.baidu.mobads.action.BaiduAction;
 import com.baidu.mobads.action.BaiduAction;
-import com.bytedance.hume.readapk.HumeSDK;
 import com.easou.androidsdk.callback.AppTimeWatcher;
 import com.easou.androidsdk.callback.ESdkCallback;
 import com.easou.androidsdk.data.Constant;
@@ -332,8 +331,6 @@ public class Starter {
         AppTimeWatcher.getInstance().registerWatcher((Application) mContext);
         /** 百度初始化 */
         StartOtherPlugin.initBD(mContext);
-
-        Constant.qnChannel = HumeSDK.getChannel(mContext);
     }
 
     public void pageResume(Activity activity) {

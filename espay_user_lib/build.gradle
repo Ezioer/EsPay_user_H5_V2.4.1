@@ -51,5 +51,4 @@ dependencies {
     compile files('libs/GDTActionSDK.min.1.7.1.jar')
     compile files('libs/monitorsdk-1.0.8.jar')
     compile files('libs/Baidu_ocpc_action_2.4.jar')
-    compile files('libs/humesdk-1.0.0.jar')
 }
