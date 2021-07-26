@@ -119,6 +119,19 @@ public class CommonUtils {
         return userid;
     }
 
+    public static String getIsReplaceSso(Context mContext) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        String sso = settings.getString("replacesso", "");
+        return sso;
+    }
+
+    public static void saveReplaceSso(Context mContext, String sso) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("replacesso", sso);
+        editor.commit();
+    }
+
     public static void saveIsAutoCount(Context mContext, String isCount) {
         SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
         SharedPreferences.Editor editor = settings.edit();
