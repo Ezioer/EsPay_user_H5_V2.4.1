@@ -22,6 +22,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +32,10 @@ import com.easou.androidsdk.callback.ESdkCallback;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.data.ESConstant;
 import com.easou.androidsdk.plugin.StartOtherPlugin;
+import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESdkLog;
+import com.easou.androidsdk.util.NetworkUtils;
+import com.easou.androidsdk.util.Tools;
 
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
@@ -165,6 +169,59 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initUI() {
+
+        RadioButton money = (RadioButton) this.findViewById(R.id.radio_money);
+        RadioButton normal = (RadioButton) this.findViewById(R.id.radio_normal);
+        if (CommonUtils.getTestMoney(MainActivity.this) == 1) {
+            money.setChecked(true);
+        } else {
+            normal.setChecked(true);
+        }
+        money.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    CommonUtils.saveTestMoney(MainActivity.this, 1);
+                }
+            }
+        });
+
+        normal.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    CommonUtils.saveTestMoney(MainActivity.this, 0);
+                }
+            }
+        });
+
+        Button btnInfo = (Button) this.findViewById(R.id.btn_info);
+        final TextView mInfo = (TextView) this.findViewById(R.id.tv_info);
+        btnInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String param = "appId=" + CommonUtils.readPropertiesValue(Starter.mActivity, Constant.APP_ID)
+                        + "\nqn=" + CommonUtils.readPropertiesValue(Starter.mActivity, Constant.QN)
+                        + "\npartnerId=" + CommonUtils.readPropertiesValue(Starter.mActivity, Constant.PARTENER_ID)
+                        + "\noaId=" + Constant.OAID
+                        + "\nphoneOs=" + Constant.SDK_PHONEOS
+                        + "\nphoneBrand=" + Tools.getDeviceBrand()
+                        + "\nphoneModel=" + Tools.getSystemModel()
+                        + "\nphoneVersion=" + Tools.getSystemVersion();
+                if (Starter.mActivity.getPackageName().contains("fhzj")) {
+                    param = param + "\nsdkType=fhzj";
+                }
+                if (CommonUtils.getTestMoney(Starter.mActivity) == 1) {
+                    param = param + "\nsdkVersion=hongbao";
+                }
+                if (Constant.SSO_URL.startsWith("https")) {
+                    param = param + "\n环境=线上";
+                } else {
+                    param = param + "\n环境=测试";
+                }
+                mInfo.setText(param);
+            }
+        });
 
         btnGetUserInfo = (Button) this.findViewById(R.id.parse_userinfo);
         btnBuyPort = (Button) this.findViewById(R.id.parse_port);

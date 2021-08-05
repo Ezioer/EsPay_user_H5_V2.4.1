@@ -52,4 +52,34 @@
         android:inputType="number"
         android:layout_width="match_parent"
         android:layout_height="40dp" />
+
+    <RadioGroup
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:text="红包版本"
+            android:id="@+id/radio_money"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <RadioButton
+            android:text="非红包版本"
+            android:id="@+id/radio_normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btn_info"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="包体信息" />
+
+    <TextView
+        android:id="@+id/tv_info"
+        android:text=""
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </LinearLayout>

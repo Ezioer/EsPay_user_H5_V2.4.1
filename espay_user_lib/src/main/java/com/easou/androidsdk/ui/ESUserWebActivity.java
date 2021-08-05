@@ -143,7 +143,11 @@ public class ESUserWebActivity extends Activity implements ReWebChomeClient.Open
                                 StartESUserPlugin.startRequestHost(mActivity, true, new ReplaceCallBack() {
                                     @Override
                                     public void replaceSuccess() {
-                                        view.loadUrl(Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + params);
+                                        if (Constant.SSO_URL.startsWith("https")) {
+                                            view.loadUrl(Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + params);
+                                        } else {
+                                            view.loadUrl(Constant.SSO_URL + params);
+                                        }
                                     }
 
                                     @Override
@@ -209,7 +213,11 @@ public class ESUserWebActivity extends Activity implements ReWebChomeClient.Open
                         StartESUserPlugin.startRequestHost(mActivity, true, new ReplaceCallBack() {
                             @Override
                             public void replaceSuccess() {
-                                view.loadUrl(Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + params);
+                                if (Constant.SSO_URL.startsWith("https")) {
+                                    view.loadUrl(Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + params);
+                                } else {
+                                    view.loadUrl(Constant.SSO_URL + params);
+                                }
                             }
 
                             @Override
@@ -239,7 +247,11 @@ public class ESUserWebActivity extends Activity implements ReWebChomeClient.Open
         if (!TextUtils.isEmpty(CommonUtils.getIsReplaceSso(mActivity))) {
             Constant.URL_BACKUP = url_backup;
         }
-        mWebView.loadUrl(Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + params);
+        if (Constant.SSO_URL.startsWith("https")) {
+            mWebView.loadUrl(Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + params);
+        } else {
+            mWebView.loadUrl(Constant.SSO_URL + params);
+        }
     }
 
     public static void clientToJS(int type, final Map<String, String> params) {
