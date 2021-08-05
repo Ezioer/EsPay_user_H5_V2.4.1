@@ -15,7 +15,7 @@ public class Constant {
     /**
      * SDK版本号，更新版本记得改版本号
      */
-    public static final String SDK_VERSION = "2.5.3";
+    public static final String SDK_VERSION = "2.5.4";
     public static final String SDK_PHONEOS = "Android";
 
     public static final String API_SOURCE = "30";
@@ -90,8 +90,8 @@ public class Constant {
     public static String HOST_NAME = "";
     public static String HOST_NAME_DEFAULT = "eayou.com";
 
-    public static String DOMAIN = "http://lab.pay.appeasou.com";
-//    public static String DOMAIN = "https://service.pay.";
+    //    public static String DOMAIN = "http://lab.pay.appeasou.com";
+    public static String DOMAIN = "https://service.pay.";
 
     public static final String[] DOMAIN_HOST = {"domain.game.eayou.com",
             "domain.game.mtianshitong.com",

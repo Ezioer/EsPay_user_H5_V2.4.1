@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 
-//import com.baidu.mobads.action.BaiduAction;
 import com.baidu.mobads.action.BaiduAction;
 import com.easou.androidsdk.callback.AppTimeWatcher;
 import com.easou.androidsdk.callback.ESdkCallback;
@@ -77,6 +76,7 @@ public class Starter {
         StartOtherPlugin.onLaunchApp();
         StartOtherPlugin.initKSSDK(activity);
         StartOtherPlugin.initTTSDK(activity);
+        StartOtherPlugin.initAQY(activity);
         new Handler(Looper.myLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -169,6 +169,7 @@ public class Starter {
     /**
      * 初始化爱奇艺SDK
      */
+    @Deprecated
     public void initAQY(Context mContext) {
         StartOtherPlugin.initAQY(mContext);
     }
@@ -279,6 +280,7 @@ public class Starter {
     /**
      * 爱奇艺SDK进入游戏界面
      */
+    @Deprecated
     public void logAQYActionPageResume() {
         StartOtherPlugin.resumeAQY();
     }
@@ -286,6 +288,7 @@ public class Starter {
     /**
      * 爱奇艺SDK退出游戏界面
      */
+    @Deprecated
     public void logAQYActionPageDestory() {
         StartOtherPlugin.destoryAQY();
     }
@@ -344,12 +347,18 @@ public class Starter {
         //百度浏览页面
         StartOtherPlugin.logBDPage();
         StartOtherPlugin.onTTResume(activity);
+        StartOtherPlugin.resumeAQY();
     }
 
     public void pagePause(Activity activity) {
         ESdkLog.d("离开游戏界面接口");
         StartOtherPlugin.logKSActionPagePause(activity);
         StartOtherPlugin.onTTPause(activity);
+    }
+
+    public void pageDestory() {
+        ESdkLog.d("退出游戏");
+        StartOtherPlugin.destoryAQY();
     }
 
 }

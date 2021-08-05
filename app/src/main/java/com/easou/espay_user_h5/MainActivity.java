@@ -30,6 +30,7 @@ import com.easou.androidsdk.Starter;
 import com.easou.androidsdk.callback.ESdkCallback;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.data.ESConstant;
+import com.easou.androidsdk.plugin.StartOtherPlugin;
 import com.easou.androidsdk.util.ESdkLog;
 
 import java.lang.reflect.Method;
@@ -389,6 +390,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        Starter.getInstance().logKSActionPagePause(MainActivity.this);
         /** 头条退出游戏页面 */
 //        Starter.getInstance().logTTPagePause(MainActivity.this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Starter.getInstance().pageDestory();
     }
 
     @Override

@@ -50,5 +50,6 @@ dependencies {
     compile files('libs/sdk_gism-1.3.2.jar')
     compile files('libs/GDTActionSDK.min.1.7.1.jar')
     compile files('libs/monitorsdk-1.0.8.jar')
-    compile files('libs/Baidu_ocpc_action_2.4.jar')
+    compile files('libs/Baidu_ocpc_2.4.jar')
+    compile files('libs/qilintrans.jar')
 }
