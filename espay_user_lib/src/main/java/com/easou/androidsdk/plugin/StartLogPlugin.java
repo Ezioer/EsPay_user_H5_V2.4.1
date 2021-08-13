@@ -30,8 +30,11 @@ public class StartLogPlugin {
 
     //上传游戏角色数据日志
     public static void gamePlayerDataLog(Map<String, String> info) {
-        HttpLogHelper.sendHttpRequest(Constant.MAIN_URL + Tools.getHostName() + Constant.GAME_PLAYER_LOG,
-                getPlayerDataParams(info));
+        try {
+            HttpLogHelper.sendHttpRequest(Constant.MAIN_URL + Tools.getHostName() + Constant.GAME_PLAYER_LOG,
+                    getPlayerDataParams(info));
+        } catch (Exception e) {
+        }
     }
 
     private static String getPlayerDataParams(Map<String, String> playerInfo) {

@@ -360,5 +360,4 @@ public class Starter {
         ESdkLog.d("退出游戏");
         StartOtherPlugin.destoryAQY();
     }
-
 }
