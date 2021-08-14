@@ -6,6 +6,7 @@ import com.easou.androidsdk.Starter;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.data.ESConstant;
 import com.easou.androidsdk.util.CommonUtils;
+import com.easou.androidsdk.util.ESdkLog;
 import com.easou.androidsdk.util.HttpLogHelper;
 import com.easou.androidsdk.util.Tools;
 
@@ -30,8 +31,12 @@ public class StartLogPlugin {
 
     //上传游戏角色数据日志
     public static void gamePlayerDataLog(Map<String, String> info) {
-        HttpLogHelper.sendHttpRequest(Constant.MAIN_URL + Tools.getHostName() + Constant.GAME_PLAYER_LOG,
-                getPlayerDataParams(info));
+        try {
+            HttpLogHelper.sendHttpRequest(Constant.MAIN_URL + Tools.getHostName() + Constant.GAME_PLAYER_LOG,
+                    getPlayerDataParams(info));
+        } catch (Exception e) {
+            ESdkLog.d("上传角色数据出错");
+        }
     }
 
     private static String getPlayerDataParams(Map<String, String> playerInfo) {
