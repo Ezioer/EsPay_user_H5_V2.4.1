@@ -95,11 +95,22 @@ public class ESPlatform {
         }, 300);
     }
 
+    //js打开webview
     @JavascriptInterface
     public void showWebView(final String param) {
         ESdkLog.d("showebview");
         if (!isShowWebView) {
             Starter.getInstance().showUserCenter();
+        }
+    }
+
+    //js隐藏或显示悬浮图标，1为显示，0为隐藏
+    @JavascriptInterface
+    public void showFloatIcon(final String show) {
+        if (show.equals("1")) {
+            Starter.getInstance().showFloatView();
+        } else {
+            Starter.getInstance().hideFloatView();
         }
     }
 

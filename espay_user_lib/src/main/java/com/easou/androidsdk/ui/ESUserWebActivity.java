@@ -327,6 +327,15 @@ public class ESUserWebActivity extends Activity implements ReWebChomeClient.Open
                 });
                 break;
 
+            case Constant.YSTOJS_GAME_INTOFOREGROUND:
+                mWebView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mWebView.loadUrl("javascript:EsSdkShell.esUserIntoForeground()");
+                    }
+                });
+                break;
+
             /** 调用服务端用户是否已实名认证接口 */
             case Constant.YSTOJS_IS_CERTUSER:
                 mWebView.post(new Runnable() {

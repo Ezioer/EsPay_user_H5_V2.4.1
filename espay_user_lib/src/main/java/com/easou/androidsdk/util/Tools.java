@@ -210,7 +210,8 @@ public class Tools {
 
             if (!TextUtils.isEmpty(deviceImei)) {
 
-                if (!deviceImei.contains("000000000000000")) {
+                if (!deviceImei.contains("000000000000000") && deviceImei.length() <= 18
+                        && deviceImei.length() <= 10) {
                     imei = deviceImei;
                 }
             }

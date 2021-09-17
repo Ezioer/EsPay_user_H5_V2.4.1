@@ -89,7 +89,7 @@ public class StartESUserPlugin {
      * 每隔5分钟去请求服务器更新用户游玩时长
      */
     public static void postTime() {
-        ESUserWebActivity.clientToJS(Constant.YSTOJS_UPLOAD_TIME, null);
+        ESUserWebActivity.clientToJS(Constant.YSTOJS_GAME_INTOFOREGROUND, null);
     }
 
     /**

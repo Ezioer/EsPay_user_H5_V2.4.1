@@ -43,6 +43,7 @@ public class AppTimeWatcher {
 
     public void onEnterForeground() {
         ESdkLog.d("app is in foreground");
+        StartESUserPlugin.postTime();
         if (mHandler == null) {
             mHandler = new Handler();
         }
@@ -52,11 +53,11 @@ public class AppTimeWatcher {
             @Override
             public void run() {
                 //每隔5分钟向服务器请求一次
-                ESdkLog.d("计时进行中.......");
+//                ESdkLog.d("计时进行中.......");
                 //成年人不统计游玩时长
                 if (!isCancel && mBeginWork && CommonUtils.getIsAutoCount(Starter.mActivity).equals("0")) {
 //                    ESdkLog.d("发送网络请求");
-                    StartESUserPlugin.postTime();
+//                    StartESUserPlugin.postTime();
                 }
                 mHasTime = 0;
                 mCurrentTime = System.currentTimeMillis();
