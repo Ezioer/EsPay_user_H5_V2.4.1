@@ -332,7 +332,7 @@ public class Starter {
     public void dataCollectInit(Context mContext) {
         ESdkLog.d("初始化媒体接口");
         /** 初始化汇川广告GISM SDK */
-        StartOtherPlugin.initGism(mContext, false);
+//        StartOtherPlugin.initGism(mContext, false);
         AppTimeWatcher.getInstance().registerWatcher((Application) mContext);
     }
 

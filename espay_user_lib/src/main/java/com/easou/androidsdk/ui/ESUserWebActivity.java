@@ -109,6 +109,7 @@ public class ESUserWebActivity extends Activity implements ReWebChomeClient.Open
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             mWebView.setWebContentsDebuggingEnabled(true);
         }
+        mWebView.getSettings().setAllowFileAccess(true);
         mWebView.getSettings().setDefaultTextEncodingName("utf-8");
         mWebView.getSettings().setSupportZoom(true);
         mWebView.getSettings().setJavaScriptEnabled(true);// webview必须设置支持Javascript

@@ -139,6 +139,7 @@
         <activity
             android:name="com.easou.androidsdk.ui.ESUserWebActivity"
             android:launchMode="singleInstance"
+            android:taskAffinity="com.easou.usersdk"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:excludeFromRecents="true"
             android:theme="@style/easou_translucent_notitle"
