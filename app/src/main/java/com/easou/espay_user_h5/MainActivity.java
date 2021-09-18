@@ -129,10 +129,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         PERMISSIONCODE);
             } else {
                 //有相关权限,则启动sdk登录接口
-//                sdkLogin();
+                sdkLogin();
             }
         } else {
-//            sdkLogin();
+            sdkLogin();
         }
     }
 
@@ -152,10 +152,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             if (isAllGet) {
                 //用户给了相应的权限,初始化sdk登录逻辑
-//                sdkLogin();
+                sdkLogin();
             } else {
                 //用户拒绝了权限，可以登录，也可以选择再次申请
-//                sdkLogin();
+                sdkLogin();
             }
         }
     }

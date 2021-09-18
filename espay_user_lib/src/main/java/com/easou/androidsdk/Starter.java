@@ -77,6 +77,10 @@ public class Starter {
         StartOtherPlugin.initKSSDK(activity);
         StartOtherPlugin.initTTSDK(activity);
         StartOtherPlugin.initAQY(activity);
+        /** 广点通SDK初始化 */
+        StartOtherPlugin.initGDTAction(activity);
+        /** 百度初始化 */
+        StartOtherPlugin.initBD(activity);
         new Handler(Looper.myLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -196,7 +200,7 @@ public class Starter {
      */
     @Deprecated
     public void initGismSDK(Context context, boolean debug) {
-        StartOtherPlugin.initGism(context, debug);
+//        StartOtherPlugin.initGism(context, debug);
     }
 
     /**
@@ -329,11 +333,7 @@ public class Starter {
         ESdkLog.d("初始化媒体接口");
         /** 初始化汇川广告GISM SDK */
         StartOtherPlugin.initGism(mContext, false);
-        /** 广点通SDK初始化 */
-        StartOtherPlugin.initGDTAction(mContext);
         AppTimeWatcher.getInstance().registerWatcher((Application) mContext);
-        /** 百度初始化 */
-        StartOtherPlugin.initBD(mContext);
     }
 
     public void pageResume(Activity activity) {

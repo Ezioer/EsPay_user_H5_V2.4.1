@@ -13,7 +13,7 @@ public class EsApplication extends Application {
 
         /** 为方便及准确的接入第三方数据统计服务，现更改为数据上报初始化接口，统一处理，
          * 之前的接口仍保留，但调用了此接口后无需再调用额外接口，不要重复调用*/
-//        Starter.getInstance().dataCollectInit(this);
+        Starter.getInstance().dataCollectInit(this);
         /** 初始化汇川广告GISM SDK */
 //        Starter.getInstance().initGismSDK(this, false);
 
