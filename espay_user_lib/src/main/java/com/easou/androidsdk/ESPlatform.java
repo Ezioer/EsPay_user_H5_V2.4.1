@@ -21,6 +21,7 @@ import java.util.Map;
 
 public class ESPlatform {
 
+    public static boolean isBackground = false;
     private boolean isShowWebView = false;
     private static ESUserWebActivity mActivity;
 
@@ -73,6 +74,7 @@ public class ESPlatform {
         Constant.ESDK_USERID = userId;
         Constant.ESDK_TOKEN = token;
         isShowWebView = false;
+        AppTimeWatcher.isLogOut = false;
         Map<String, String> result = new HashMap<String, String>();
         result.put(ESConstant.SDK_USER_ID, userId);
         result.put(ESConstant.SDK_USER_NAME, userName);
@@ -95,11 +97,28 @@ public class ESPlatform {
         }, 300);
     }
 
+    //js打开webview
     @JavascriptInterface
     public void showWebView(final String param) {
-        ESdkLog.d("showebview");
         if (!isShowWebView) {
-            Starter.getInstance().showUserCenter();
+            if (!isBackground) {
+                ESdkLog.d("showwebview" + param);
+                Starter.getInstance().showUserCenter();
+            }
+        }
+    }
+
+    //js隐藏或显示悬浮图标，1为显示，0为隐藏
+    @JavascriptInterface
+    public void showFloatIcon(final String param) {
+        ESdkLog.d("showFloatIcon" + param);
+        if (isBackground) {
+            AppTimeWatcher.isLogOut = true;
+        }
+        if (param.equals("1")) {
+            Starter.getInstance().showFloatView();
+        } else {
+            Starter.getInstance().hideFloatView();
         }
     }
 
@@ -108,6 +127,7 @@ public class ESPlatform {
      */
     @JavascriptInterface
     public void esLogout(final String param) {
+        AppTimeWatcher.isLogOut = false;
         StartOtherPlugin.logTTActionLogin("");
         StartOtherPlugin.logGismActionLogout();
         StartOtherPlugin.logGDTActionSetID("");
@@ -166,6 +186,7 @@ public class ESPlatform {
      */
     @JavascriptInterface
     public void esRegister(final String param) {
+        AppTimeWatcher.isLogOut = false;
         StartOtherPlugin.logGDTAction();
         StartOtherPlugin.logTTActionRegister();
         StartOtherPlugin.logGismActionRegister();
@@ -199,7 +220,7 @@ public class ESPlatform {
      */
     @JavascriptInterface
     public void esShowSdk(final String param) {
-
+        ESdkLog.d("esShowSdk" + param);
         String status = "";
 
         try {
@@ -210,10 +231,13 @@ public class ESPlatform {
             e.printStackTrace();
         }
 
+        //打开 false，隐藏 true
         if (!status.equals(ESConstant.SDK_STATUS)) {
             mActivity.moveTaskToBack(false);
+            ESdkLog.d("esShowSdk isShowWebView false");
             isShowWebView = false;
         } else {
+            ESdkLog.d("esShowSdk isShowWebView true");
             isShowWebView = true;
         }
     }

@@ -5,6 +5,7 @@ import android.app.Application;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.easou.androidsdk.ESPlatform;
 import com.easou.androidsdk.Starter;
 import com.easou.androidsdk.plugin.StartESUserPlugin;
 import com.easou.androidsdk.ui.ESToast;
@@ -40,9 +41,11 @@ public class AppTimeWatcher {
     private long mHasTime = 0;
     private boolean isCancel = false;
     private boolean mBeginWork = false;
+    public static boolean isLogOut = false;
 
     public void onEnterForeground() {
         ESdkLog.d("app is in foreground");
+
         if (mHandler == null) {
             mHandler = new Handler();
         }
@@ -52,17 +55,22 @@ public class AppTimeWatcher {
             @Override
             public void run() {
                 //每隔5分钟向服务器请求一次
-                ESdkLog.d("计时进行中.......");
+//                ESdkLog.d("计时进行中.......");
                 //成年人不统计游玩时长
                 if (!isCancel && mBeginWork && CommonUtils.getIsAutoCount(Starter.mActivity).equals("0")) {
 //                    ESdkLog.d("发送网络请求");
-                    StartESUserPlugin.postTime();
+//                    StartESUserPlugin.postTime();
                 }
+                if (isLogOut) {
+                    Starter.getInstance().showUserCenter();
+                    Starter.getInstance().hideFloatView();
+                }
+//                StartESUserPlugin.postTime();
                 mHasTime = 0;
                 mCurrentTime = System.currentTimeMillis();
-                mHandler.postDelayed(this, TIME);
+//                mHandler.postDelayed(this, TIME);
             }
-        }, TIME - mHasTime);
+        }, 1000);
     }
 
     public void onEnterBackground() {
@@ -116,6 +124,7 @@ public class AppTimeWatcher {
             mActivityCount++;
             ESdkLog.d("start----->activitycount=" + mActivityCount);
             if (mActivityCount == 1) {
+                ESPlatform.isBackground = false;
                 onEnterForeground();
             }
         }
@@ -135,6 +144,7 @@ public class AppTimeWatcher {
             mActivityCount--;
             ESdkLog.d("stop----->activitycount=" + mActivityCount);
             if (mActivityCount == 0) {
+                ESPlatform.isBackground = true;
                 onEnterBackground();
             }
         }
