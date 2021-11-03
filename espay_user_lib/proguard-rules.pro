@@ -7,7 +7,7 @@
 -verbose
 -dontwarn com.payeco.android.plugin.**,com.**,com.google.gson.**,com.heepay.plugin.**,com.baidu.location.**,com.switfpass.pay.**,org.apache.http.entity.mime.**
 -ignorewarnings
-
+-dontshrink
 -keep public class * extends android.app.Activity
 
 -keep public class * extends android.app.Application
@@ -120,7 +120,7 @@ native <methods>;
 }
 
 -dontwarn com.gism.**
--keep class com.gism.** {*;}
+#-keep class com.gism.** {*;}
 -keep class com.kwai.monitor.** {*;}
 
 -dontwarn com.qq.gdt.action.**
@@ -134,7 +134,6 @@ native <methods>;
 
 -keep class com.google.gson.** {*;}
 
--keep class com.bun.miitmdid.core.** {*;}
 -keep class org.apache.**{*;}
 -keep class com.heepay.plugin.** {*;}
 -keep class com.snail.antifake.** {*;}
@@ -313,16 +312,17 @@ native <methods>;
 
 #oaid
 -keep class XI.CA.XI.**{*;}
-    -keep class XI.K0.XI.**{*;}
-    -keep class XI.XI.K0.**{*;}
-    -keep class XI.xo.XI.XI.**{*;}
-    -keep class com.asus.msa.SupplementaryDID.**{*;}
-    -keep class com.asus.msa.sdid.**{*;}
-    -keep class com.bun.lib.**{*;}
-    -keep class com.bun.miitmdid.**{*;}
-    -keep class com.huawei.hms.ads.identifier.**{*;}
-    -keep class com.samsung.android.deviceidservice.**{*;}
-    -keep class com.zui.opendeviceidlibrary.**{*;}
-    -keep class org.json.**{*;}
-    -keep public class com.netease.nis.sdkwrapper.Utils {public
-<methods>;}
+-keep class XI.K0.XI.**{*;}
+-keep class XI.XI.K0.**{*;}
+-keep class XI.xo.XI.XI.**{*;}
+-keep class com.asus.msa.SupplementaryDID.**{*;}
+-keep class com.asus.msa.sdid.**{*;}
+-keep class com.bun.lib.**{*;}
+-keep class com.bun.miitmdid.**{*;}
+-keep class com.huawei.hms.ads.identifier.**{*;}
+-keep class com.samsung.android.deviceidservice.**{*;}
+-keep class com.zui.opendeviceidlibrary.**{*;}
+-keep class org.json.**{*;}
+-keep public class com.netease.nis.sdkwrapper.Utils {
+  public <methods>;
+}

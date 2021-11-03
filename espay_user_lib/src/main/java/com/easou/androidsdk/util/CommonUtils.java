@@ -175,7 +175,7 @@ public class CommonUtils {
 
     public static String getPayMarkObject(Context mContext) {
         SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
-        String userid = settings.getString("paymark", "HYWZKX");
+        String userid = settings.getString("paymark", "HYWZZQ");
         return userid;
     }
 
@@ -188,7 +188,7 @@ public class CommonUtils {
 
     public static String getPayWxObject(Context mContext) {
         SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
-        String userid = settings.getString("paywx", "WECHAT_ZKX");
+        String userid = settings.getString("paywx", "WECHAT_ZZQ");
         return userid;
     }
 
@@ -201,7 +201,7 @@ public class CommonUtils {
 
     public static String getPayAliObject(Context mContext) {
         SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
-        String userid = settings.getString("payalipay", "ZKXHGALIPAY");
+        String userid = settings.getString("payalipay", "ZZQALIPAY");
         return userid;
     }
 

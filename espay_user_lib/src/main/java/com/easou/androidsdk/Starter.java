@@ -71,12 +71,15 @@ public class Starter {
      * 宜搜SDK登陆接口
      */
     public void login(final Activity activity, ESdkCallback mCallback) {
+        StartOtherPlugin.getOaid(activity);
         Starter.mCallback = mCallback;
         Starter.mActivity = activity;
         StartOtherPlugin.onLaunchApp();
         StartOtherPlugin.initKSSDK(activity);
         StartOtherPlugin.initTTSDK(activity);
         StartOtherPlugin.initAQY(activity);
+        /** 初始化汇川广告GISM SDK */
+        StartOtherPlugin.initGism(activity, false);
         /** 广点通SDK初始化 */
         StartOtherPlugin.initGDTAction(activity);
         /** 百度初始化 */
@@ -331,8 +334,6 @@ public class Starter {
      */
     public void dataCollectInit(Context mContext) {
         ESdkLog.d("初始化媒体接口");
-        /** 初始化汇川广告GISM SDK */
-//        StartOtherPlugin.initGism(mContext, false);
         AppTimeWatcher.getInstance().registerWatcher((Application) mContext);
     }
 

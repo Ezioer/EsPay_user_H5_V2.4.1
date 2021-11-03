@@ -257,14 +257,14 @@ public class StartOtherPlugin {
     /**
      * 初始化GISM
      */
-    public static void initGism(Context mContext, boolean debug) {
+    public static void initGism(Activity mContext, boolean debug) {
 
         if (TextUtils.equals(CommonUtils.readPropertiesValue(mContext, "use_GISM"), "0")) {
 
             ESdkLog.d("调用了汇川SDK初始化接口");
 
             Constant.GISM_SDK = true;
-            GismSDK.init(GismConfig.newBuilder((Application) mContext)
+            GismSDK.init(GismConfig.newBuilder(mContext.getApplication())
                     .appID(CommonUtils.readPropertiesValue(mContext, "GISM_appid"))
                     .appName(CommonUtils.readPropertiesValue(mContext, "GISM_appName"))
                     .appChannel(CommonUtils.readPropertiesValue(mContext, "qn"))

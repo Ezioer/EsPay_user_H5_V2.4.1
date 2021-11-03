@@ -29,7 +29,6 @@ public class StartESUserPlugin {
      */
     public static void loginSdk() {
 
-        StartOtherPlugin.getOaid(Starter.mActivity);
         //设置支付渠道
         setPayChannel();
 
@@ -286,6 +285,11 @@ public class StartESUserPlugin {
             payWx = "WECHAT_BJHM";
             payAlipay = "BJHMALIPAY";
             Constant.PAY_CHANNEl = 7;
+        } else if (channel.equals("ZZQ")) {
+            payMark = "HYWZZQ";
+            payWx = "WECHAT_ZZQ";
+            payAlipay = "ZZQALIPAY";
+            Constant.PAY_CHANNEl = 8;
         } else {
             payMark = "HYWZKX";
             payWx = "WECHAT_ZKX";
