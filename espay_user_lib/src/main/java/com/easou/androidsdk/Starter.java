@@ -11,7 +11,9 @@ import android.support.annotation.NonNull;
 import com.baidu.mobads.action.BaiduAction;
 import com.easou.androidsdk.callback.AppTimeWatcher;
 import com.easou.androidsdk.callback.ESdkCallback;
+import com.easou.androidsdk.callback.GameUserDataCallback;
 import com.easou.androidsdk.data.Constant;
+import com.easou.androidsdk.http.EAPayImp;
 import com.easou.androidsdk.plugin.StartESPayPlugin;
 import com.easou.androidsdk.plugin.StartESUserPlugin;
 import com.easou.androidsdk.plugin.StartLogPlugin;
@@ -21,6 +23,7 @@ import com.easou.androidsdk.romutils.RomUtils;
 import com.easou.androidsdk.ui.ESUserWebActivity;
 import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESdkLog;
+import com.easou.androidsdk.util.ThreadPoolManager;
 import com.easou.androidsdk.util.Tools;
 
 import java.util.HashMap;
@@ -119,7 +122,8 @@ public class Starter {
      * 显示SDK悬浮窗
      */
     public void showFloatView() {
-        if (RomUtils.checkIsVivo()) {
+        //oppo和vivo不给权限都能显示出来，所以每次显示时都得校验是否开启悬浮窗权限
+        if (RomUtils.checkIsVivo() || RomUtils.checkIsOppoRom()) {
             if (mActivity != null && RomHelper.checkPermission(mActivity)) {
                 StartESUserPlugin.showFloatView();
             }
@@ -306,6 +310,31 @@ public class Starter {
     @Deprecated
     public void logBDPageResume() {
         StartOtherPlugin.logBDPage();
+    }
+
+    //上传用户配置文件
+    public void saveUserGameData(final String content) {
+        ThreadPoolManager.getInstance().addTask(new Runnable() {
+            @Override
+            public void run() {
+                EAPayImp.uploadTxt(content);
+            }
+        });
+    }
+
+    //下载用户配置文件
+    public void getUserGameData(final GameUserDataCallback callback) {
+        try {
+            ThreadPoolManager.getInstance().addTask(new Runnable() {
+                @Override
+                public void run() {
+                    String result = EAPayImp.downloadTxt();
+                    callback.onSuccessResult(result);
+                }
+            });
+        } catch (Exception e) {
+            callback.onErrorResult();
+        }
     }
 
     /**

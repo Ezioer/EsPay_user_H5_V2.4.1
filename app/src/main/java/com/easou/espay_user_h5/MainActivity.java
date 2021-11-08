@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.easou.androidsdk.Starter;
 import com.easou.androidsdk.callback.ESdkCallback;
+import com.easou.androidsdk.callback.GameUserDataCallback;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.data.ESConstant;
 import com.easou.androidsdk.plugin.StartOtherPlugin;
@@ -155,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 sdkLogin();
             } else {
                 //用户拒绝了权限，可以登录，也可以选择再次申请
-                sdkLogin();
+//                sdkLogin();
             }
         }
     }
@@ -252,6 +253,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void sdkLogin() {
+        Starter.getInstance().saveUserGameData("");
+        Starter.getInstance().getUserGameData(new GameUserDataCallback() {
+            @Override
+            public void onSuccessResult(String loginResult) {
+
+            }
+
+            @Override
+            public void onErrorResult() {
+
+            }
+        });
         /**
          * SDK登录接口
          * Activity：当前activitty
