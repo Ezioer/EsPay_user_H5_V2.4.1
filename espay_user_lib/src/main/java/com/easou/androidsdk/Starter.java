@@ -328,8 +328,15 @@ public class Starter {
             ThreadPoolManager.getInstance().addTask(new Runnable() {
                 @Override
                 public void run() {
-                    String result = EAPayImp.downloadTxt();
-                    callback.onSuccessResult(result);
+                    final String result = EAPayImp.downloadTxt();
+                    if (mActivity != null) {
+                        mActivity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                callback.onSuccessResult(result);
+                            }
+                        });
+                    }
                 }
             });
         } catch (Exception e) {

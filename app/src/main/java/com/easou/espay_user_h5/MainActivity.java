@@ -253,18 +253,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void sdkLogin() {
-        Starter.getInstance().saveUserGameData("");
-        Starter.getInstance().getUserGameData(new GameUserDataCallback() {
-            @Override
-            public void onSuccessResult(String loginResult) {
-
-            }
-
-            @Override
-            public void onErrorResult() {
-
-            }
-        });
         /**
          * SDK登录接口
          * Activity：当前activitty

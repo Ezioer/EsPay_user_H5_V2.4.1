@@ -325,14 +325,13 @@ public class EAPayImp {
     public static String uploadTxt(String content) {
         try {
             long t = System.currentTimeMillis();
-            String sign = Md5SignUtils.digest(t + "config.txt" + "key888");
-            String filePath = Environment.getExternalStorageDirectory().getPath() + "/GAMECONFIG/config.txt";
+            String sign = Md5SignUtils.digest(t + Constant.ESDK_USERID + ".txt" + "key888");
+            String filePath = Environment.getExternalStorageDirectory().getPath() + "/GAMECONFIG/" + Constant.ESDK_USERID + ".txt";
             File file = new File(filePath);
             if (file.exists()) {
                 file.delete();
             }
-            FileUtil.writeTxtToFile(content, Environment.getExternalStorageDirectory().getPath() + "/GAMECONFIG/", "config.txt");
-
+            FileUtil.writeTxtToFile(content, Environment.getExternalStorageDirectory().getPath() + "/GAMECONFIG/", Constant.ESDK_USERID + ".txt");
             String result = HttpGroupUtils.upload("http://jdrs.szhdtkj.com:8398/uf", filePath, String.valueOf(t), sign);
             return result;
         } catch (Exception e) {
@@ -342,7 +341,7 @@ public class EAPayImp {
     }
 
     public static String downloadTxt() {
-        String result = HttpGroupUtils.sendGet("http://jdrs.szhdtkj.com:8398/df?file=config.txt", "", null);
+        String result = HttpGroupUtils.sendGet("http://jdrs.szhdtkj.com/jdfile/" + Constant.ESDK_USERID + ".txt", "", null);
         return result;
     }
 
