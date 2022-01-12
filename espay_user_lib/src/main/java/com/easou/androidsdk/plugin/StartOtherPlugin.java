@@ -244,8 +244,9 @@ public class StartOtherPlugin {
                 return;
             }
 
-            ESdkLog.d("调用了是否为模拟器接口");
-            SimulatorUtils.checkSimulator(mContext);
+            //临时关掉检查模拟器接口，后期是否加上看情况
+//            ESdkLog.d("调用了是否为模拟器接口");
+//            SimulatorUtils.checkSimulator(mContext);
         } catch (Exception e) {
             e.printStackTrace();
         }

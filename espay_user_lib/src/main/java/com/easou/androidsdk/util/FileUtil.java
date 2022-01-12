@@ -1,5 +1,10 @@
 package com.easou.androidsdk.util;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.MediaStore;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -91,4 +96,55 @@ public class FileUtil {
         }
         return content;
     }
+
+
+    public static Intent startPhotoZoom(Uri uri, Uri mImagePath, int size) {
+
+        return startPhotoZoom(uri, mImagePath, size, size);
+    }
+
+    public static Intent startPhotoZoom(Uri uri, String mImagePath, int size) {
+
+        return startPhotoZoom(uri, Uri.fromFile(new File(mImagePath)), size, size);
+    }
+
+
+    public static Intent startPhotoZoom(Uri uri, Uri mImagePath, int sizeX, int sizeY) {
+
+        Intent intent = new Intent("com.android.camera.action.CROP");
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+
+            //添加这一句表示对目标应用临时授权该Uri所代表的文件
+
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, mImagePath);
+
+            intent.setDataAndType(uri, "image/*");
+
+            intent.putExtra("crop", "true");
+
+//        intent.putExtra("circleCrop", "true");
+
+            intent.putExtra("aspectX", 9998);//2019/5/8 修复华为手机默认为圆角裁剪的问题
+
+            intent.putExtra("aspectY", 9999);//
+
+            intent.putExtra("outputX", sizeX);
+
+            intent.putExtra("outputY", sizeY);
+
+            intent.putExtra("scale", true);
+
+            intent.putExtra("scaleUpIfNeeded", true);
+
+            intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+
+            intent.putExtra("return-data", false);
+        }
+        return intent;
+    }
+
 }

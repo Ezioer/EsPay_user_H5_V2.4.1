@@ -90,8 +90,8 @@ public class Constant {
     public static String HOST_NAME = "";
     public static String HOST_NAME_DEFAULT = "mtianshitong.com";
 
-    //        public static String DOMAIN = "http://lab.pay.appeasou.com";
-    public static String DOMAIN = "https://service.pay.";
+    public static String DOMAIN = "http://lab.pay.appeasou.com";
+//    public static String DOMAIN = "https://service.pay.";
 
     public static final String[] DOMAIN_HOST = {"domain.game.mtianshitong.com",
             "domain.game.eayou.com",
@@ -100,8 +100,8 @@ public class Constant {
     /**
      * 热云日志URL
      */
-    public static final String MAIN_URL = "https://reyun.game.";
-//    public static final String MAIN_URL = "https://lab.reyun.game.";
+//    public static final String MAIN_URL = "https://reyun.game.";
+    public static final String MAIN_URL = "https://lab.reyun.game.";
 
     /**
      * 上传日志URL
@@ -118,8 +118,8 @@ public class Constant {
      * H5 SDK url
      */
     public static String URL_BACKUP = "mtianshitong.com";
-    //        public static String SSO_URL = "http://lab.h5.appeasou.com/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&payHostName=http://lab.pay.appeasou.com&ssoHostName=http://lab.sso.mtianshitong.com";
-    public static String SSO_URL = "https://h5pay.";
+    public static String SSO_URL = "http://lab.h5.tjqzqkj.com/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&payHostName=http://lab.pay.appeasou.com&ssoHostName=http://lab.sso.mtianshitong.com";
+    //    public static String SSO_URL = "https://h5pay.";
     public static String SSO_REST = "/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
 
     public static String sso_release = "https://h5.pay.mtianshitong.com/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
