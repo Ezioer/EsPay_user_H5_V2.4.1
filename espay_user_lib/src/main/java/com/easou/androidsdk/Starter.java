@@ -9,6 +9,7 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 
 import com.baidu.mobads.action.BaiduAction;
+import com.baidu.mobads.action.PrivacyStatus;
 import com.easou.androidsdk.callback.AppTimeWatcher;
 import com.easou.androidsdk.callback.ESdkCallback;
 import com.easou.androidsdk.data.Constant;
@@ -82,8 +83,7 @@ public class Starter {
         StartOtherPlugin.initGism(activity, false);
         /** 广点通SDK初始化 */
         StartOtherPlugin.initGDTAction(activity);
-        /** 百度初始化 */
-        StartOtherPlugin.initBD(activity);
+        BaiduAction.setPrivacyStatus(PrivacyStatus.AGREE);
         new Handler(Looper.myLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -317,14 +317,22 @@ public class Starter {
      */
     public void handleBDPermissions(int requestCode,
                                     @NonNull String permissions[], @NonNull int[] grantResults) {
+        ESdkLog.d("调用百度授权回调接口");
+        boolean isGet = false;
         for (int i = 0; i < permissions.length; i++) {
             String temp = permissions[i];
             if (temp.equals(Manifest.permission.READ_PHONE_STATE)) {
                 // 授权结果回传
+                isGet = true;
                 BaiduAction.onRequestPermissionsResult(requestCode, permissions, grantResults);
                 break;
             }
         }
+       /* if (!isGet) {
+            BaiduAction.setPrivacyStatus(PrivacyStatus.DISAGREE);
+        } else {
+            BaiduAction.setPrivacyStatus(PrivacyStatus.AGREE);
+        }*/
     }
 
     /**
@@ -334,6 +342,8 @@ public class Starter {
      */
     public void dataCollectInit(Context mContext) {
         ESdkLog.d("初始化媒体接口");
+        /** 百度初始化 */
+        StartOtherPlugin.initBD(mContext);
         AppTimeWatcher.getInstance().registerWatcher((Application) mContext);
     }
 

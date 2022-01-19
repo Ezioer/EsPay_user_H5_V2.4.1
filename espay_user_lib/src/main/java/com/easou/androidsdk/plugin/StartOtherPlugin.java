@@ -733,7 +733,6 @@ public class StartOtherPlugin {
             // 设置应用激活的间隔（默认30天）
             BaiduAction.setPrintLog(true);
             BaiduAction.setActivateInterval(mContext, 30);
-            BaiduAction.setPrivacyStatus(PrivacyStatus.AGREE);
         }
     }
 
