@@ -31,9 +31,11 @@ import java.net.NetworkInterface;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.security.MessageDigest;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -327,44 +329,107 @@ public class Tools {
      * @return
      */
     public static String getOnlyId() {
-        String oaid = Constant.OAID;
-        if (oaid.equals("0") || oaid.equals("1")) {
-            String androidId = "";
-            String serNum = "";
-            if (getAndroidId() != null) {
-                androidId = getAndroidId();
-            }
-            if (getSerNum() != null) {
-                serNum = getSerNum();
-            }
-            String code = androidId + serNum + getUuid(Starter.mActivity);
-            return code;
+
+        StringBuilder deviceId = new StringBuilder();
+        String imei = getImei();
+        String androidId = getAndroidId();
+        String serial = getSerNum();
+        String uuid = getUuid().replace("-", "");
+        if (imei != null && imei.length() > 0) {
+            deviceId.append(imei);
+            deviceId.append("|");
         }
-        return Constant.OAID;
+        if (androidId != null && androidId.length() > 0) {
+            deviceId.append(androidId);
+            deviceId.append("|");
+        }
+        if (serial != null && serial.length() > 0) {
+            deviceId.append(serial);
+            deviceId.append("|");
+        }
+        if (uuid != null && uuid.length() > 0) {
+            deviceId.append(uuid);
+            deviceId.append("|");
+        }
+        if (deviceId.length() > 0) {
+            try {
+                byte[] hash = getHashByString(deviceId.toString());
+                String sha1 = byteToHex(hash);
+                if (sha1 != null && sha1.length() > 0) {
+                    return sha1;
+                }
+            } catch (Exception e) {
+            }
+        }
+        return "";
+    }
+
+    private static String byteToHex(byte[] hash) {
+        StringBuilder builder = new StringBuilder();
+        String temp;
+        for (int i = 0; i < hash.length; i++) {
+            temp = (Integer.toHexString(hash[i] & 0xFF));
+            if (temp.length() == 1) {
+                builder.append("0");
+            }
+            builder.append(temp);
+        }
+        return builder.toString().toUpperCase(Locale.CHINA);
+    }
+
+    private static byte[] getHashByString(String data) {
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA1");
+            messageDigest.reset();
+            messageDigest.update(data.getBytes("UTF-8"));
+            return messageDigest.digest();
+        } catch (Exception e) {
+            return "".getBytes();
+        }
     }
 
     public static String getAndroidId() {
-        return Settings.System.getString(Starter.mActivity.getContentResolver(), Settings.Secure.ANDROID_ID);
+        try {
+            return Settings.System.getString(Starter.mActivity.getContentResolver(), Settings.Secure.ANDROID_ID);
+        } catch (Exception e) {
+
+        }
+        return "";
     }
 
     public static String getSerNum() {
-        return Build.SERIAL;
+        try {
+            return Build.SERIAL;
+        } catch (Exception e) {
+        }
+        return "";
     }
 
-    public static String getUuid(Context context) {
-        // UUID 键
-        String key = "key_uuid";
-        // 获取 SharedPreferences
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        // 获取 UUID
-        String uuid = preferences.getString(key, "");
-        // UUID 为空值
-        if (!CommonUtils.isNotNullOrEmpty(uuid)) {
-            // 创建新的 UUID
-            uuid = UUID.randomUUID().toString();
-            // 保存
-            preferences.edit().putString(key, uuid).apply();
+    public static String getImei() {
+        try {
+            TelephonyManager manager = (TelephonyManager) Starter.mActivity.getApplicationContext().
+                    getSystemService(Starter.mActivity.getApplicationContext().TELEPHONY_SERVICE);
+            return manager.getDeviceId();
+        } catch (Exception e) {
+
         }
-        return uuid;
+        return "";
+    }
+
+    public static String getUuid() {
+        try {
+            //获取硬件信息级uuid，根据硬件来生成，保证唯一
+            String dev = "112358" + Build.BOARD.length() % 10 +
+                    Build.BRAND.length() % 10 +
+                    Build.DEVICE.length() % 10 +
+                    Build.HARDWARE.length() % 10 +
+                    Build.ID.length() % 10 +
+                    Build.MODEL.length() % 10 +
+                    Build.PRODUCT.length() % 10 +
+                    Build.SERIAL.length() % 10;
+            return new UUID(dev.hashCode(), Build.SERIAL.hashCode()).toString();
+        } catch (Exception e) {
+            return "";
+        }
     }
 }

@@ -21,7 +21,6 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-
     }
 
     configurations.all {
@@ -53,8 +52,8 @@ dependencies {
     compile files('libs/oaid_sdk_1.0.25.jar')
     compile files('libs/RangersAppLog-Lite-cn-5.3.0.jar')
     compile files('libs/gism_1.3.3.jar')
-    compile files('libs/GDTActionSDK.min.1.7.1.jar')
-    compile files('libs/monitorsdk-1.0.8.jar')
+    compile files('libs/GDTActionSDK.min.1.8.1.jar')
+    compile files('libs/monitorsdk-1.0.9.jar')
     compile files('libs/Baidu_ocpc_2.4.jar')
     compile files('libs/qilintrans.jar')
 }

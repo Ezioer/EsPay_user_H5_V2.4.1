@@ -4,8 +4,10 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 
 import com.baidu.mobads.action.BaiduAction;
@@ -342,6 +344,11 @@ public class Starter {
      */
     public void dataCollectInit(Context mContext) {
         ESdkLog.d("初始化媒体接口");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            builder.detectFileUriExposure();
+            StrictMode.setVmPolicy(builder.build());
+        }
         /** 百度初始化 */
         StartOtherPlugin.initBD(mContext);
         AppTimeWatcher.getInstance().registerWatcher((Application) mContext);

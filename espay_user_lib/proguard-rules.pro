@@ -125,6 +125,7 @@ native <methods>;
 
 -dontwarn com.qq.gdt.action.**
 -keep class com.qq.gdt.action.** {*;}
+-keep public class com.tencent.turingfd.sdk.**
 
 -keepclasseswithmembers class * {
 native <methods>;
