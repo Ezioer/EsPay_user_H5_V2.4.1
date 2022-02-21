@@ -461,7 +461,6 @@ public class ESUserWebActivity extends Activity {
                                 if (photoFile != null) {
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                         mImageUri = FileProvider.getUriForFile(ESUserWebActivity.this, ESUserWebActivity.this.getPackageName() + ".fileprovider", photoFile);
-//                                        mImageUri = FileProvider.getUriForFile(ESUserWebActivity.this, "", photoFile);
                                     } else {
                                         mImageUri = getDesUri();
                                     }

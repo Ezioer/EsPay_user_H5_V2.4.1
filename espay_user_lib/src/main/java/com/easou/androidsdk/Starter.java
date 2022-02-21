@@ -319,6 +319,9 @@ public class Starter {
      */
     public void handleBDPermissions(int requestCode,
                                     @NonNull String permissions[], @NonNull int[] grantResults) {
+        if (!Constant.BD_SDK) {
+            return;
+        }
         ESdkLog.d("调用百度授权回调接口");
         boolean isGet = false;
         for (int i = 0; i < permissions.length; i++) {
