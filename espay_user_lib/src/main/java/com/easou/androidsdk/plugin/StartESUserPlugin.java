@@ -289,9 +289,9 @@ public class StartESUserPlugin {
             payAlipay = "ZZQALIPAY";
             Constant.PAY_CHANNEl = 8;
         } else {
-            payMark = "HYWZKX";
-            payWx = "WECHAT_ZKX";
-            payAlipay = "ZKXHGALIPAY";
+            payMark = "";
+            payWx = "WECHAT";
+            payAlipay = "ALIPAY2";
             Constant.PAY_CHANNEl = 0;
         }
         CommonUtils.savePayMarkObject(Starter.mActivity, payMark);
