@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.StrictMode;
-import android.support.annotation.NonNull;
 
 import com.baidu.mobads.action.BaiduAction;
 import com.baidu.mobads.action.PrivacyStatus;
@@ -318,7 +317,7 @@ public class Starter {
      * @param grantResults
      */
     public void handleBDPermissions(int requestCode,
-                                    @NonNull String permissions[], @NonNull int[] grantResults) {
+                                    String permissions[], int[] grantResults) {
         if (!Constant.BD_SDK) {
             return;
         }

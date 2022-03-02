@@ -15,7 +15,7 @@ public class Constant {
     /**
      * SDK版本号，更新版本记得改版本号
      */
-    public static final String SDK_VERSION = "2.6.1";
+    public static final String SDK_VERSION = "2.6.2";
     public static final String SDK_PHONEOS = "Android";
 
     public static final String API_SOURCE = "30";
