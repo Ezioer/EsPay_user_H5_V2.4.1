@@ -29,6 +29,9 @@ import com.gism.sdk.GismSDK;
 //import com.iqiyi.qilin.trans.QiLinTrans;
 //import com.iqiyi.qilin.trans.TransParam;
 //import com.iqiyi.qilin.trans.TransType;
+import com.iqiyi.qilin.trans.QiLinTrans;
+import com.iqiyi.qilin.trans.TransParam;
+import com.iqiyi.qilin.trans.TransType;
 import com.kwai.monitor.log.OAIDProxy;
 import com.kwai.monitor.log.TurboAgent;
 import com.kwai.monitor.log.TurboConfig;
@@ -261,14 +264,14 @@ public class StartOtherPlugin {
     /**
      * 初始化GISM
      */
-    public static void initGism(Context mContext, boolean debug) {
+    public static void initGism(Activity mContext, boolean debug) {
 
         if (TextUtils.equals(CommonUtils.readPropertiesValue(mContext, "use_GISM"), "0")) {
 
             ESdkLog.d("调用了汇川SDK初始化接口");
 
             Constant.GISM_SDK = true;
-            GismSDK.init(GismConfig.newBuilder((Application) mContext)
+            GismSDK.init(GismConfig.newBuilder(mContext.getApplication())
                     .appID(CommonUtils.readPropertiesValue(mContext, "GISM_appid"))
                     .appName(CommonUtils.readPropertiesValue(mContext, "GISM_appName"))
                     .appChannel(CommonUtils.readPropertiesValue(mContext, "qn"))
@@ -609,82 +612,82 @@ public class StartOtherPlugin {
      * @param mContext
      */
     public static void initAQY(Context mContext) {
-       /* if (TextUtils.equals(CommonUtils.readPropertiesValue(mContext, "use_AQY"), "0")) {
+        if (TextUtils.equals(CommonUtils.readPropertiesValue(mContext, "use_AQY"), "0")) {
             Constant.AQY_SDK = true;
             ESdkLog.d("调用了爱奇艺sdk初始化");
             QiLinTrans.setDebug(TransParam.LogLevel.LOG_DEBUG, false, "");
             QiLinTrans.init(mContext, CommonUtils.readPropertiesValue(mContext, "aiqiyi_appid"),
                     CommonUtils.readPropertiesValue(mContext, "qn"), Constant.OAID);
-        }*/
+        }
     }
 
     /**
      * 爱奇艺进入游戏界面
      */
     public static void resumeAQY() {
-       /* if (Constant.AQY_SDK){
+        if (Constant.AQY_SDK) {
             ESdkLog.d("爱奇艺进入游戏界面");
             QiLinTrans.onResume();
-        }*/
+        }
     }
 
     /**
      * 爱奇艺退出游戏界面
      */
     public static void destoryAQY() {
-       /* if (Constant.AQY_SDK){
+        if (Constant.AQY_SDK) {
             ESdkLog.d("爱奇艺退出游戏界面");
             QiLinTrans.onDestroy();
-        }*/
+        }
     }
 
     /**
      * 爱奇艺SDK上报注册
      */
     public static void registerAqyAction() {
-       /* if (Constant.AQY_SDK){
+        if (Constant.AQY_SDK) {
             QiLinTrans.uploadTrans(TransType.QL_REGISTER);
-        }*/
+        }
     }
 
     /**
      * 爱奇艺SDK上报登录
      */
     public static void loginAqyAction() {
-      /*  if (Constant.AQY_SDK){
+        if (Constant.AQY_SDK) {
             QiLinTrans.uploadTrans(TransType.QL_LOGIN);
-        }*/
+        }
     }
 
     /**
      * 爱奇艺SDK上报登出
      */
     public static void logoutAqyAction() {
-       /* if (Constant.AQY_SDK){
+        if (Constant.AQY_SDK) {
             QiLinTrans.uploadTrans(TransType.QL_LOGOUT);
-        }*/
+        }
     }
 
     /**
      * 爱奇艺SDK上报创建角色
      */
     public static void createRoleAqyAction(String name) {
-       /* if (Constant.AQY_SDK){
+        if (Constant.AQY_SDK) {
             try {
                 JSONObject actionParam = new JSONObject();
                 actionParam.put("role_name", name);
-                QiLinTrans.uploadTrans(TransType.QL_CREATE_ROLE,actionParam);
-            }catch (JSONException e) {
+                QiLinTrans.uploadTrans(TransType.QL_CREATE_ROLE, actionParam);
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }*/
+        }
     }
 
     /**
      * 爱奇艺SDK上报下单
      */
     public static void orderAqyAction(String money) {
-       /* if (Constant.AQY_SDK){
+        if (Constant.AQY_SDK) {
             try {
                 JSONObject actionParam = new JSONObject();
                 actionParam.put("money", Double.valueOf(money) * 100);
@@ -692,14 +695,14 @@ public class StartOtherPlugin {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }*/
+        }
     }
 
     /**
      * 爱奇艺SDK上报购买
      */
     public static void purchaseAqyAction(String money) {
-      /*  if (Constant.AQY_SDK){
+        if (Constant.AQY_SDK) {
             if (money != null) {
 
                 String[] strs = money.split("\\.");
@@ -718,7 +721,7 @@ public class StartOtherPlugin {
                     e.printStackTrace();
                 }
             }
-        }*/
+        }
     }
 
     /* ================================== 百度sdk ================================== */
@@ -737,7 +740,6 @@ public class StartOtherPlugin {
             // 设置应用激活的间隔（默认30天）
             BaiduAction.setPrintLog(true);
             BaiduAction.setActivateInterval(mContext, 30);
-            BaiduAction.setPrivacyStatus(PrivacyStatus.AGREE);
         }
     }
 

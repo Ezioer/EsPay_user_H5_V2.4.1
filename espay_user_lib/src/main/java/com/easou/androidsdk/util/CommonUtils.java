@@ -120,6 +120,19 @@ public class CommonUtils {
         return userid;
     }
 
+    public static String getIsReplaceSso(Context mContext) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        String sso = settings.getString("replacesso", "");
+        return sso;
+    }
+
+    public static void saveReplaceSso(Context mContext, String sso) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("replacesso", sso);
+        editor.commit();
+    }
+
     public static void saveIsAutoCount(Context mContext, String isCount) {
         SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
         SharedPreferences.Editor editor = settings.edit();
@@ -131,6 +144,19 @@ public class CommonUtils {
     public static String getIsAutoCount(Context mContext) {
         SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
         String userid = settings.getString("isautocount", "0");
+        return userid;
+    }
+
+    public static void saveTestMoney(Context mContext, int isCount) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt("isTestMoney", isCount);
+        editor.commit();
+    }
+
+    public static int getTestMoney(Context mContext) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        int userid = settings.getInt("isTestMoney", 0);
         return userid;
     }
 

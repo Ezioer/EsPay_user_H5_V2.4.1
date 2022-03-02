@@ -1,9 +1,11 @@
 package com.easou.androidsdk.ui;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,18 +14,23 @@ import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.Window;
 import android.view.WindowManager;
-import android.webkit.ConsoleMessage;
 import android.webkit.JsResult;
 import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -32,20 +39,24 @@ import android.widget.Toast;
 import com.easou.androidsdk.ESPlatform;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.data.ESConstant;
+import com.easou.androidsdk.plugin.StartESUserPlugin;
+import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESdkLog;
+import com.easou.androidsdk.util.ReplaceCallBack;
+import com.easou.androidsdk.util.ThreadPoolManager;
 import com.easou.androidsdk.webviewutils.ImageUtil;
 import com.easou.androidsdk.webviewutils.JSAndroid;
 import com.easou.androidsdk.webviewutils.PermissionUtil;
-import com.easou.androidsdk.webviewutils.ReWebChomeClient;
-import com.easou.androidsdk.webviewutils.ReWebViewClient;
 import com.easou.espay_user_lib.R;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class ESUserWebActivity extends Activity implements ReWebChomeClient.OpenFileChooserCallBack {
+public class ESUserWebActivity extends Activity {
 
     /**
      * 网页加载提示
@@ -56,21 +67,17 @@ public class ESUserWebActivity extends Activity implements ReWebChomeClient.Open
      */
     public static WebView mWebView;
     /**
-     * 使用的浏览器对象
-     */
-    private static WebChromeClient mWebChromeClient;
-    /**
      * js跳转控制
      */
     private static WebViewClient mWebViewClient;
     private static ESUserWebActivity mActivity;
 
-    private static final int REQUEST_CODE_PICK_IMAGE = 0;
-    private static final int REQUEST_CODE_IMAGE_CAPTURE = 1;
-    private Intent mSourceIntent;
-    public ValueCallback<Uri[]> mUploadMsgForAndroid5;
-    private ValueCallback<Uri> mUploadMsg;
+    private static final int REQUEST_CODE_PICK_IMAGE = 11;
+    private static final int REQUEST_CODE_IMAGE_CAPTURE = 99;
     private static final int P_CODE_PERMISSIONS = 101;
+    private Uri mImageUri;
+    private Uri mCropUri;
+    private String mParams;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,16 +106,17 @@ public class ESUserWebActivity extends Activity implements ReWebChomeClient.Open
 
         mWebView = (WebView) findViewById(getApplication().getResources().getIdentifier("easou_id_WebView_user", "id",
                 getApplication().getPackageName()));
-
         Intent intent = getIntent();
-        String params = intent.getStringExtra("params");
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-			mWebView.setWebContentsDebuggingEnabled(true);
-		}
-		mWebView.getSettings().setDefaultTextEncodingName("utf-8");
+        mParams = intent.getStringExtra("params");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            mWebView.setWebContentsDebuggingEnabled(true);
+        }
+        mWebView.getSettings().setAllowFileAccess(true);
+        mWebView.getSettings().setDefaultTextEncodingName("utf-8");
         mWebView.getSettings().setSupportZoom(true);
         mWebView.getSettings().setJavaScriptEnabled(true);// webview必须设置支持Javascript
         mWebView.getSettings().setUseWideViewPort(true);
+        mWebView.getSettings().setBlockNetworkImage(false);
         mWebView.setInitialScale(30);
         mWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);// WebView启用Javascript脚本执行
         mWebView.setVerticalScrollBarEnabled(true);// 取消VerticalScrollBar显示
@@ -120,36 +128,9 @@ public class ESUserWebActivity extends Activity implements ReWebChomeClient.Open
         mWebView.getBackground().setAlpha(0); // 设置填充透明度 范围：0-255
 
         fixDirPath();
-        mWebView.setWebViewClient(new ReWebViewClient());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mWebView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
-
-        mWebChromeClient = new WebChromeClient() {
-
-            @Override
-            public void onReceivedTitle(WebView view, String title) {
-                super.onReceivedTitle(view, title);
-            }
-
-            @Override
-            public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
-
-                AlertDialog.Builder b2 = new AlertDialog.Builder(mActivity, AlertDialog.THEME_HOLO_LIGHT)
-                        .setTitle("温馨提示").setMessage(message)
-                        .setPositiveButton("确 定", new AlertDialog.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                result.confirm();
-                            }
-                        });
-
-                b2.setCancelable(false);
-                b2.create();
-                b2.show();
-
-                return true;
-            }
-        };
 
         mWebView.requestFocus();
         mWebView.requestFocusFromTouch();
@@ -174,28 +155,60 @@ public class ESUserWebActivity extends Activity implements ReWebChomeClient.Open
             }
 
             @Override
-            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+            public void onReceivedError(final WebView view, int errorCode, String description, String failingUrl) {
                 super.onReceivedError(view, errorCode, description, failingUrl);
+                ThreadPoolManager.getInstance().addTask(new Runnable() {
+                    @Override
+                    public void run() {
+                        StartESUserPlugin.startRequestHost(mActivity, true, new ReplaceCallBack() {
+                            @Override
+                            public void replaceSuccess() {
+                                if (Constant.SSO_URL.startsWith("https")) {
+                                    view.loadUrl(Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + mParams);
+                                } else {
+                                    view.loadUrl(Constant.SSO_URL + mParams);
+                                }
+                            }
 
-                ViewParent webParentView = (ViewParent) mWebView.getParent();
-                ((ViewGroup) webParentView).removeAllViews();
-                showAlert();
+                            @Override
+                            public void replaceFail() {
+                                ViewParent webParentView = (ViewParent) mWebView.getParent();
+                                ((ViewGroup) webParentView).removeAllViews();
+                                showAlert();
+                            }
+                        });
+                    }
+                });
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                view.loadUrl(request.getUrl().toString());
+                return true;
             }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                    view.loadUrl(url);
+                    return true;
+                }
                 return super.shouldOverrideUrlLoading(view, url);
             }
-
-
         };
 
-        mWebView.setWebChromeClient(mWebChromeClient);
         mWebView.setWebViewClient(mWebViewClient);
-        mWebView.setWebChromeClient(new ReWebChomeClient(this));
-
-        mWebView.loadUrl(Constant.SSO_URL + params);
+        mWebView.setWebChromeClient(new MyWebChromClient());
+        String url_backup = CommonUtils.getIsReplaceSso(mActivity);
+        if (!TextUtils.isEmpty(CommonUtils.getIsReplaceSso(mActivity))) {
+            Constant.URL_BACKUP = url_backup;
+        }
+        if (Constant.SSO_URL.startsWith("https")) {
+            mWebView.loadUrl(Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + mParams);
+        } else {
+            mWebView.loadUrl(Constant.SSO_URL + mParams);
+        }
     }
 
     public static void clientToJS(int type, final Map<String, String> params) {
@@ -271,6 +284,16 @@ public class ESUserWebActivity extends Activity implements ReWebChomeClient.Open
                 });
                 break;
 
+            case Constant.YSTOJS_GAME_INTOFOREGROUND:
+                if (mWebView != null) {
+                    mWebView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mWebView.loadUrl("javascript:EsSdkShell.esUserIntoForeground()");
+                        }
+                    });
+                }
+                break;
             /** 调用服务端用户是否已实名认证接口 */
             case Constant.YSTOJS_IS_CERTUSER:
                 mWebView.post(new Runnable() {
@@ -314,12 +337,14 @@ public class ESUserWebActivity extends Activity implements ReWebChomeClient.Open
                 break;
 
             case Constant.YSTOJS_UPLOAD_TIME:
-                mWebView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mWebView.loadUrl("javascript:EsSdkShell.esUserOnlineTimer()");
-                    }
-                });
+                if (mWebView != null) {
+                    mWebView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mWebView.loadUrl("javascript:EsSdkShell.esUserOnlineTimer()");
+                        }
+                    });
+                }
                 break;
             default:
                 break;
@@ -377,60 +402,6 @@ public class ESUserWebActivity extends Activity implements ReWebChomeClient.Open
         return super.onKeyDown(keyCode, event);
     }
 
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode != Activity.RESULT_OK) {
-            if (mUploadMsg != null) {
-                mUploadMsg.onReceiveValue(null);
-            }
-
-            if (mUploadMsgForAndroid5 != null) {         // for android 5.0+
-                mUploadMsgForAndroid5.onReceiveValue(null);
-            }
-            return;
-        }
-        switch (requestCode) {
-            case REQUEST_CODE_IMAGE_CAPTURE:
-            case REQUEST_CODE_PICK_IMAGE: {
-                try {
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                        if (mUploadMsg == null) {
-                            return;
-                        }
-
-                        String sourcePath = ImageUtil.retrievePath(this, mSourceIntent, data);
-
-                        if (TextUtils.isEmpty(sourcePath) || !new File(sourcePath).exists()) {
-
-                            break;
-                        }
-                        Uri uri = Uri.fromFile(new File(sourcePath));
-                        mUploadMsg.onReceiveValue(uri);
-
-                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        if (mUploadMsgForAndroid5 == null) {        // for android 5.0+
-                            return;
-                        }
-
-                        String sourcePath = ImageUtil.retrievePath(this, mSourceIntent, data);
-
-                        if (TextUtils.isEmpty(sourcePath) || !new File(sourcePath).exists()) {
-
-                            break;
-                        }
-                        Uri uri = Uri.fromFile(new File(sourcePath));
-                        mUploadMsgForAndroid5.onReceiveValue(new Uri[]{uri});
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
-            }
-        }
-    }
-
-
     public void showOptions() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
         alertDialog.setOnCancelListener(new DialogOnCancelListener());
@@ -450,11 +421,9 @@ public class ESUserWebActivity extends Activity implements ReWebChomeClient.Open
                                     requestPermissionsAndroidM();
                                     return;
                                 }
-
                             }
-
                             try {
-                                mSourceIntent = ImageUtil.choosePicture();
+                                Intent mSourceIntent = ImageUtil.choosePicture();
                                 startActivityForResult(mSourceIntent, REQUEST_CODE_PICK_IMAGE);
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -488,9 +457,20 @@ public class ESUserWebActivity extends Activity implements ReWebChomeClient.Open
                             }
 
                             try {
-                                mSourceIntent = ImageUtil.takeBigPicture();
-                                startActivityForResult(mSourceIntent, REQUEST_CODE_IMAGE_CAPTURE);
-
+                                File photoFile = saveFileName();
+                                if (photoFile != null) {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                        mImageUri = FileProvider.getUriForFile(ESUserWebActivity.this, ESUserWebActivity.this.getPackageName() + ".fileprovider", photoFile);
+                                    } else {
+                                        mImageUri = getDesUri();
+                                    }
+                                    mCropUri = Uri.fromFile(saveFileName());
+                                    Log.d("takephoto", "imageuri-->" + mImageUri);
+                                    Intent mSourceIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                    mSourceIntent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+                                    mSourceIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+                                    startActivityForResult(mSourceIntent, REQUEST_CODE_IMAGE_CAPTURE);
+                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 Toast.makeText(mActivity,
@@ -505,6 +485,24 @@ public class ESUserWebActivity extends Activity implements ReWebChomeClient.Open
         ).show();
     }
 
+    private String filePath = "";
+
+    private File saveFileName() {
+        String folder = this.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath() + File.separator;
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+        Date date = new Date(System.currentTimeMillis());
+        String name = format.format(date) + ".jpg";
+        File file = null;
+        try {
+            file = new File(folder + name);
+            file.createNewFile();
+            filePath = file.getAbsolutePath();
+        } catch (Exception e) {
+
+        }
+        return file;
+    }
+
     private void fixDirPath() {
         String path = ImageUtil.getDirPath();
         File file = new File(path);
@@ -513,38 +511,22 @@ public class ESUserWebActivity extends Activity implements ReWebChomeClient.Open
         }
     }
 
-    @Override
-    public void openFileChooserCallBack(ValueCallback<Uri> uploadMsg, String acceptType) {
-        mUploadMsg = uploadMsg;
-
-        showOptions();
-    }
-
-
-    @Override
-    public boolean openFileChooserCallBackAndroid5(WebView webView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams) {
-        mUploadMsgForAndroid5 = filePathCallback;
-
-        showOptions();
-        return true;
-    }
-
-
     private class DialogOnCancelListener implements DialogInterface.OnCancelListener {
         @Override
         public void onCancel(DialogInterface dialogInterface) {
+
             restoreUploadMsg();
         }
     }
 
     private void restoreUploadMsg() {
-        if (mUploadMsg != null) {
-            mUploadMsg.onReceiveValue(null);
-            mUploadMsg = null;
+        if (mUploadMessage != null) {
+            mUploadMessage.onReceiveValue(null);
+            mUploadMessage = null;
 
-        } else if (mUploadMsgForAndroid5 != null) {
-            mUploadMsgForAndroid5.onReceiveValue(null);
-            mUploadMsgForAndroid5 = null;
+        } else if (uploadMessageAboveL != null) {
+            uploadMessageAboveL.onReceiveValue(null);
+            uploadMessageAboveL = null;
         }
     }
 
@@ -611,7 +593,171 @@ public class ESUserWebActivity extends Activity implements ReWebChomeClient.Open
             Toast.makeText(mActivity, strMessage, Toast.LENGTH_SHORT).show();
 
         } else {
-            return;
+            showOptions();
         }
+    }
+
+
+    private ValueCallback<Uri> mUploadMessage;
+    private ValueCallback<Uri[]> uploadMessageAboveL;
+
+    private class MyWebChromClient extends WebChromeClient {
+        @Override
+        public void onProgressChanged(WebView view, int newProgress) {
+            super.onProgressChanged(view, newProgress);
+        }
+
+        // For Android 3.0+
+        public void openFileChooser(ValueCallback<Uri> uploadMsg) {
+            mUploadMessage = uploadMsg;
+            openImageChooserActivity();
+        }
+
+        // For Android 3.0+
+        public void openFileChooser(ValueCallback uploadMsg, String acceptType) {
+            mUploadMessage = uploadMsg;
+            openImageChooserActivity();
+        }
+
+        // For Android 4.1
+        public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
+            mUploadMessage = uploadMsg;
+            openImageChooserActivity();
+        }
+
+        // For Android >= 5.0
+        @Override
+        public boolean onShowFileChooser(WebView webView,
+                                         ValueCallback<Uri[]> filePathCallback,
+                                         WebChromeClient.FileChooserParams fileChooserParams) {
+            uploadMessageAboveL = filePathCallback;
+            openImageChooserActivity();
+            return true;
+        }
+
+        @Override
+        public void onReceivedTitle(final WebView view, String title) {
+            super.onReceivedTitle(view, title);
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                if (title.contains("404") || title.contains("500") || title.contains("Error")
+                        || title.contains("找不到网页") || title.contains("网页无法打开")) {
+                    ThreadPoolManager.getInstance().addTask(new Runnable() {
+                        @Override
+                        public void run() {
+                            StartESUserPlugin.startRequestHost(mActivity, true, new ReplaceCallBack() {
+                                @Override
+                                public void replaceSuccess() {
+                                    if (Constant.SSO_URL.startsWith("https")) {
+                                        view.loadUrl(Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + mParams);
+                                    } else {
+                                        view.loadUrl(Constant.SSO_URL + mParams);
+                                    }
+                                }
+
+                                @Override
+                                public void replaceFail() {
+                                    ViewParent webParentView = (ViewParent) mWebView.getParent();
+                                    ((ViewGroup) webParentView).removeAllViews();
+                                    showAlert();
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+        }
+
+        @Override
+        public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
+
+            AlertDialog.Builder b2 = new AlertDialog.Builder(mActivity, AlertDialog.THEME_HOLO_LIGHT)
+                    .setTitle("温馨提示").setMessage(message)
+                    .setPositiveButton("确 定", new AlertDialog.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            result.confirm();
+                        }
+                    });
+
+            b2.setCancelable(false);
+            b2.create();
+            b2.show();
+
+            return true;
+        }
+    }
+
+    /**
+     * 打开本地相册
+     */
+    private void openImageChooserActivity() {
+        Constant.IS_LOGINED = true;
+        showOptions();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_PICK_IMAGE) {
+            //从相册选取图片
+            if (null == mUploadMessage && null == uploadMessageAboveL) return;
+            Uri result = data == null || resultCode != RESULT_OK ? null : data.getData();
+            if (uploadMessageAboveL != null) {
+                onActivityResultAboveL(requestCode, resultCode, data);
+            } else if (mUploadMessage != null) {
+                mUploadMessage.onReceiveValue(result);
+                mUploadMessage = null;
+            }
+        } else if (requestCode == REQUEST_CODE_IMAGE_CAPTURE) {
+           /* Log.d("takephoto", "resultdata--->" + data);
+            if (resultCode == RESULT_OK) {
+                //拍照上传先裁剪
+                Intent intent1;
+                if (Build.VERSION.SDK_INT >= 29) {
+                    intent1 = FileUtil.startPhotoZoom(mImageUri, mCropUri, 40);
+                } else {
+                    intent1 = FileUtil.startPhotoZoom(mImageUri, filePath, 40);
+                }
+                startActivityForResult(intent1, 10);
+            }*/
+            if (mImageUri != null && mCropUri != null && resultCode == Activity.RESULT_OK) {
+                if (Build.VERSION.SDK_INT >= 30) {
+                    uploadMessageAboveL.onReceiveValue(new Uri[]{mCropUri});
+                    uploadMessageAboveL = null;
+                } else {
+                    uploadMessageAboveL.onReceiveValue(new Uri[]{mImageUri});
+                    uploadMessageAboveL = null;
+                }
+            }
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void onActivityResultAboveL(int requestCode, int resultCode, Intent intent) {
+        if ((requestCode == REQUEST_CODE_PICK_IMAGE || requestCode == REQUEST_CODE_IMAGE_CAPTURE) && uploadMessageAboveL != null) {
+            Uri[] results = null;
+            if (resultCode == Activity.RESULT_OK) {
+                if (intent != null) {
+                    String dataString = intent.getDataString();
+                    ClipData clipData = intent.getClipData();
+                    if (clipData != null) {
+                        results = new Uri[clipData.getItemCount()];
+                        for (int i = 0; i < clipData.getItemCount(); i++) {
+                            ClipData.Item item = clipData.getItemAt(i);
+                            results[i] = item.getUri();
+                        }
+                    }
+                    if (dataString != null)
+                        results = new Uri[]{Uri.parse(dataString)};
+                }
+            }
+            uploadMessageAboveL.onReceiveValue(results);
+            uploadMessageAboveL = null;
+        }
+    }
+
+    private Uri getDesUri() {
+        String fileName = System.currentTimeMillis() + ".jpg";
+        File file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
+        return Uri.fromFile(file);
     }
 }

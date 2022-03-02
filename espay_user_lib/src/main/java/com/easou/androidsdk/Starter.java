@@ -4,12 +4,15 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 
 //import com.baidu.mobads.action.BaiduAction;
 import com.baidu.mobads.action.BaiduAction;
+import com.baidu.mobads.action.PrivacyStatus;
 import com.bytedance.hume.readapk.HumeSDK;
 import com.easou.androidsdk.callback.AppTimeWatcher;
 import com.easou.androidsdk.callback.ESdkCallback;
@@ -73,15 +76,19 @@ public class Starter {
      * 宜搜SDK登陆接口
      */
     public void login(final Activity activity, ESdkCallback mCallback) {
+        StartOtherPlugin.getOaid(activity);
         Starter.mCallback = mCallback;
         Starter.mActivity = activity;
         StartOtherPlugin.onLaunchApp();
         StartOtherPlugin.initKSSDK(activity);
         StartOtherPlugin.initTTSDK(activity);
+        StartOtherPlugin.initAQY(activity);
+        /** 初始化汇川广告GISM SDK */
+        StartOtherPlugin.initGism(activity, false);
         /** 广点通SDK初始化 */
         StartOtherPlugin.initGDTAction(activity);
         /** 百度初始化 */
-        StartOtherPlugin.initBD(activity);
+        BaiduAction.setPrivacyStatus(PrivacyStatus.AGREE);
         Constant.qnChannel = HumeSDK.getChannel(activity);
         new Handler(Looper.myLooper()).postDelayed(new Runnable() {
             @Override
@@ -175,6 +182,7 @@ public class Starter {
     /**
      * 初始化爱奇艺SDK
      */
+    @Deprecated
     public void initAQY(Context mContext) {
         StartOtherPlugin.initAQY(mContext);
     }
@@ -201,7 +209,7 @@ public class Starter {
      */
     @Deprecated
     public void initGismSDK(Context context, boolean debug) {
-        StartOtherPlugin.initGism(context, debug);
+//        StartOtherPlugin.initGism(context, debug);
     }
 
     /**
@@ -285,6 +293,7 @@ public class Starter {
     /**
      * 爱奇艺SDK进入游戏界面
      */
+    @Deprecated
     public void logAQYActionPageResume() {
         StartOtherPlugin.resumeAQY();
     }
@@ -292,6 +301,7 @@ public class Starter {
     /**
      * 爱奇艺SDK退出游戏界面
      */
+    @Deprecated
     public void logAQYActionPageDestory() {
         StartOtherPlugin.destoryAQY();
     }
@@ -313,14 +323,25 @@ public class Starter {
      */
     public void handleBDPermissions(int requestCode,
                                     @NonNull String permissions[], @NonNull int[] grantResults) {
+        if (!Constant.BD_SDK) {
+            return;
+        }
+        ESdkLog.d("调用百度授权回调接口");
+        boolean isGet = false;
         for (int i = 0; i < permissions.length; i++) {
             String temp = permissions[i];
             if (temp.equals(Manifest.permission.READ_PHONE_STATE)) {
                 // 授权结果回传
+                isGet = true;
                 BaiduAction.onRequestPermissionsResult(requestCode, permissions, grantResults);
                 break;
             }
         }
+       /* if (!isGet) {
+            BaiduAction.setPrivacyStatus(PrivacyStatus.DISAGREE);
+        } else {
+            BaiduAction.setPrivacyStatus(PrivacyStatus.AGREE);
+        }*/
     }
 
     /**
@@ -330,8 +351,13 @@ public class Starter {
      */
     public void dataCollectInit(Context mContext) {
         ESdkLog.d("初始化媒体接口");
-        /** 初始化汇川广告GISM SDK */
-//        StartOtherPlugin.initGism(mContext, false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            builder.detectFileUriExposure();
+            StrictMode.setVmPolicy(builder.build());
+        }
+        /** 百度初始化 */
+        StartOtherPlugin.initBD(mContext);
         AppTimeWatcher.getInstance().registerWatcher((Application) mContext);
     }
 
@@ -346,6 +372,7 @@ public class Starter {
         //百度浏览页面
         StartOtherPlugin.logBDPage();
         StartOtherPlugin.onTTResume(activity);
+        StartOtherPlugin.resumeAQY();
     }
 
     public void pagePause(Activity activity) {
@@ -354,4 +381,8 @@ public class Starter {
         StartOtherPlugin.onTTPause(activity);
     }
 
+    public void pageDestory() {
+        ESdkLog.d("退出游戏");
+        StartOtherPlugin.destoryAQY();
+    }
 }
