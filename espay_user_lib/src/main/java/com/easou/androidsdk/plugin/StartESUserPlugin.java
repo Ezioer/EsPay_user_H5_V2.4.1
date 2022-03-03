@@ -28,7 +28,6 @@ public class StartESUserPlugin {
      * 登陆接口
      */
     public static void loginSdk() {
-
         //设置支付渠道
         setPayChannel();
 
