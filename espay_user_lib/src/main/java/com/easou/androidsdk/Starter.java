@@ -76,7 +76,6 @@ public class Starter {
      * 宜搜SDK登陆接口
      */
     public void login(final Activity activity, ESdkCallback mCallback) {
-        StartOtherPlugin.getOaid(activity);
         Starter.mCallback = mCallback;
         Starter.mActivity = activity;
         StartOtherPlugin.onLaunchApp();
@@ -97,6 +96,7 @@ public class Starter {
                 StartOtherPlugin.logKSActionAppActive();
             }
         }, 3000);
+        StartOtherPlugin.getOaid(activity);
         StartESUserPlugin.loginSdk();
     }
 
