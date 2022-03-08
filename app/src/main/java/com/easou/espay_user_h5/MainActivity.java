@@ -31,6 +31,9 @@ import com.easou.androidsdk.callback.ESdkCallback;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.data.ESConstant;
 import com.easou.androidsdk.util.ESdkLog;
+import com.easou.androidsdk.util.Tools;
+
+import org.json.JSONException;
 
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
@@ -102,6 +105,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        Starter.getInstance().logKSActionAppActive();
 
         // 初始化demo演示UI
+        try {
+            Tools.getOnlyId();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         initUI();
         checkRunTimePermission();
     }

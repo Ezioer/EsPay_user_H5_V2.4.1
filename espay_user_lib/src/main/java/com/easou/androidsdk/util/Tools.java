@@ -1,12 +1,9 @@
 package com.easou.androidsdk.util;
 
 import android.app.ActivityManager;
-import android.app.Application;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -328,13 +325,26 @@ public class Tools {
      *
      * @return
      */
-    public static String getOnlyId() {
-
+    public static String getOnlyId() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
         StringBuilder deviceId = new StringBuilder();
         String imei = getImei();
         String androidId = getAndroidId();
         String serial = getSerNum();
         String uuid = getUuid().replace("-", "");
+
+        jsonObject.put("imei", imei);
+        jsonObject.put("androidId", androidId);
+        jsonObject.put("serial", serial);
+        jsonObject.put("uuid", uuid);
+        jsonObject.put("board", Build.BOARD);
+        jsonObject.put("brand", Build.BRAND);
+        jsonObject.put("device", Build.DEVICE);
+        jsonObject.put("hardware", Build.HARDWARE);
+        jsonObject.put("id", Build.ID);
+        jsonObject.put("model", Build.MODEL);
+        jsonObject.put("product", Build.PRODUCT);
+        String json = jsonObject.toString();
         if (imei != null && imei.length() > 0) {
             deviceId.append(imei);
             deviceId.append("|");
