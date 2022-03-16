@@ -541,6 +541,15 @@ public class StartOtherPlugin {
     }
 
     /**
+     * 快手次日留存事件
+     */
+    public static void logStayNextDay() {
+        if (Constant.KS_SDK) {
+            TurboAgent.onNextDayStay();
+        }
+    }
+
+    /**
      * 快手SDK付费成功事件
      */
     public static void logKSActionPerchase(String money) {
@@ -728,10 +737,15 @@ public class StartOtherPlugin {
         if (TextUtils.equals(CommonUtils.readPropertiesValue(mContext, "use_BD"), "0")) {
             ESdkLog.d("初始化百度sdk");
             Constant.BD_SDK = true;
-            BaiduAction.init(mContext, Long.valueOf(CommonUtils.readPropertiesValue(mContext, "BD_appid")),
-                    CommonUtils.readPropertiesValue(mContext, "BD_appSecret"));
-            // 设置应用激活的间隔（默认30天）
+//            System.loadLibrary("msaoaidsec");
             BaiduAction.setPrintLog(true);
+            try {
+                BaiduAction.init(mContext, Long.valueOf(CommonUtils.readPropertiesValue(mContext, "BD_appid")),
+                        CommonUtils.readPropertiesValue(mContext, "BD_appSecret"));
+            } catch (Exception e) {
+                String s = "1";
+            }
+            // 设置应用激活的间隔（默认30天）
             BaiduAction.setActivateInterval(mContext, 30);
         }
     }
