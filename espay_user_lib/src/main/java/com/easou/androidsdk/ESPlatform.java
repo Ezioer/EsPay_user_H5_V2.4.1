@@ -312,6 +312,15 @@ public class ESPlatform {
     }
 
     /**
+     * 获取自定义设备号
+     */
+    @JavascriptInterface
+    public void esGetCustomDeviceId(final String param) {
+
+        mActivity.clientToJS(Constant.YSTOJS_GET_CUSTOMDEVICE, null);
+    }
+
+    /**
      * 获取支付限制信息
      */
     @JavascriptInterface

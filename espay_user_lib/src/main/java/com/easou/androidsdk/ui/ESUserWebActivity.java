@@ -44,6 +44,7 @@ import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESdkLog;
 import com.easou.androidsdk.util.ReplaceCallBack;
 import com.easou.androidsdk.util.ThreadPoolManager;
+import com.easou.androidsdk.util.Tools;
 import com.easou.androidsdk.webviewutils.ImageUtil;
 import com.easou.androidsdk.webviewutils.JSAndroid;
 import com.easou.androidsdk.webviewutils.PermissionUtil;
@@ -325,7 +326,19 @@ public class ESUserWebActivity extends Activity {
                     }
                 });
                 break;
+            case Constant.YSTOJS_GET_CUSTOMDEVICE:
 
+                final String customDeviceId = "customDeviceId:" + "'" + Constant.CUSTOMDEVICES + "'";
+                final String customJson = "customJson:" + Tools.getOnlyId().toString();
+
+                mWebView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ESdkLog.d("获取customid：" + Constant.CUSTOMDEVICES + Tools.getOnlyId().toString());
+                        mWebView.loadUrl("javascript:EsSdkShell.esSetCustomId({" + customDeviceId + ", " + customJson + "})");
+                    }
+                });
+                break;
             /** 调用服务端获取充值限制信息接口 */
             case Constant.YSTOJS_GET_PAY_LIMIT_INFO:
                 mWebView.post(new Runnable() {

@@ -15,7 +15,7 @@ public class Constant {
     /**
      * SDK版本号，更新版本记得改版本号
      */
-    public static final String SDK_VERSION = "2.6.2";
+    public static final String SDK_VERSION = "2.6.3";
     public static final String SDK_PHONEOS = "Android";
 
     public static final String API_SOURCE = "30";
@@ -202,6 +202,7 @@ public class Constant {
     public static final int YSTOJS_IS_CERTUSER = 26;
     public static final int YSTOJS_USERCERT = 27;
     public static final int YSTOJS_GET_OAID = 28;
+    public static final int YSTOJS_GET_CUSTOMDEVICE = 34;
     public static final int YSTOJS_GET_PAY_LIMIT_INFO = 29;
     public static final int YSTOJS_UPLOAD_TIME = 30;
     public static final int YSTOJS_GAME_LOGIN_DATA = 31;
@@ -304,6 +305,8 @@ public class Constant {
 
     //支付宝展科鑫网页版
 //    public static final String CHANNEL_MARK_ZFBZKX = "ZFBZKX";
+
+    public static String CUSTOMDEVICES = "";
 
     public static class SdcardPath {
         /**

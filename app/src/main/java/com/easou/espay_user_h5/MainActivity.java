@@ -105,11 +105,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        Starter.getInstance().logKSActionAppActive();
 
         // 初始化demo演示UI
-        try {
-            Tools.getOnlyId();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
         initUI();
         checkRunTimePermission();
     }

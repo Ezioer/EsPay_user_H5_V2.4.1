@@ -1,9 +1,12 @@
 package com.easou.androidsdk.util;
 
 import android.app.ActivityManager;
+import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -18,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
@@ -27,6 +31,7 @@ import java.net.MalformedURLException;
 import java.net.NetworkInterface;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.util.Enumeration;
@@ -325,27 +330,35 @@ public class Tools {
      *
      * @return
      */
-    public static String getOnlyId() throws JSONException {
-        JSONObject jsonObject = new JSONObject();
-        StringBuilder deviceId = new StringBuilder();
+    public static JSONObject getOnlyId() {
+//        StringBuilder deviceId = new StringBuilder();
         String imei = getImei();
+        if (imei == null) {
+            imei = "";
+        }
         String androidId = getAndroidId();
         String serial = getSerNum();
         String uuid = getUuid().replace("-", "");
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("imei", imei);
+            jsonObject.put("androidId", androidId);
+            jsonObject.put("serial", serial);
+            jsonObject.put("uuid", uuid);
+            jsonObject.put("board", Build.BOARD);
+            jsonObject.put("brand", Build.BRAND);
+            jsonObject.put("device", Build.DEVICE);
+            jsonObject.put("hardware", Build.HARDWARE);
+            jsonObject.put("id", Build.ID);
+            jsonObject.put("model", Build.MODEL);
+            jsonObject.put("product", Build.PRODUCT);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-        jsonObject.put("imei", imei);
-        jsonObject.put("androidId", androidId);
-        jsonObject.put("serial", serial);
-        jsonObject.put("uuid", uuid);
-        jsonObject.put("board", Build.BOARD);
-        jsonObject.put("brand", Build.BRAND);
-        jsonObject.put("device", Build.DEVICE);
-        jsonObject.put("hardware", Build.HARDWARE);
-        jsonObject.put("id", Build.ID);
-        jsonObject.put("model", Build.MODEL);
-        jsonObject.put("product", Build.PRODUCT);
-        String json = jsonObject.toString();
-        if (imei != null && imei.length() > 0) {
+        return jsonObject;
+
+        /*if (imei != null && imei.length() > 0) {
             deviceId.append(imei);
             deviceId.append("|");
         }
@@ -371,7 +384,7 @@ public class Tools {
             } catch (Exception e) {
             }
         }
-        return "";
+        return "";*/
     }
 
     private static String byteToHex(byte[] hash) {

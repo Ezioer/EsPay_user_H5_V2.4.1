@@ -4,13 +4,17 @@ import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.data.PayItem;
 import com.easou.androidsdk.util.ESPayLog;
 import com.easou.androidsdk.util.ESdkLog;
+import com.easou.androidsdk.util.GsonUtil;
 import com.easou.androidsdk.util.Tools;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class EAPayInter {
 
@@ -226,14 +230,55 @@ public class EAPayInter {
             }
 
             //不上传头条付费日志
-            if (result.equals("0")) {
-                return 0;
-            }
-            //上传头条付费日志
-            return 1;
-        } catch (Exception e) {
-            ESdkLog.d(e.toString());
-            return -1;
-        }
-    }
+			if (result.equals("0")) {
+				return 0;
+			}
+			//上传头条付费日志
+			return 1;
+		} catch (Exception e) {
+			ESdkLog.d(e.toString());
+			return -1;
+		}
+	}
+
+	public static void getOnlyDeviceId() {
+		try {
+			String url = "https://egamec.eayou.com/deviceInfo/getCustomDeviceId";
+			JSONObject map = Tools.getOnlyId();
+			JSONObject object = new JSONObject();
+			object.put("deviceInfo", map);
+			object.put("isCustom", 1);
+			BaseResponse result = getBaseResponse(url, object);
+			if (result.getCode() == 1 && result.getData() != null) {
+//                DevicesInfo info = GsonUtil.fromJson(result.getData().toString(), DevicesInfo.class);
+				JSONObject custom = new JSONObject(result.getData().toString());
+				Constant.CUSTOMDEVICES = custom.getString("customDeviceId");
+			}
+		} catch (Exception e) {
+		}
+	}
+
+	private static BaseResponse getBaseResponse(String url, JSONObject map) {
+		String result = EucHttpClient.httpPost(url, map);
+		if (result == null || "".equals(result)) {
+			return null;
+		}
+		BaseResponse bean = new BaseResponse();
+		try {
+			JSONObject object = new JSONObject(result);
+			int code = object.optInt("code");
+			String info = object.optString("msg");
+			if (object.opt("data") != null) {
+				bean.setData(object.opt("data").toString());
+			}
+			bean.setMsg(info);
+			bean.setCode(code);
+			if (code != 1) {
+				return null;
+			}
+		} catch (JSONException e) {
+			return null;
+		}
+		return bean;
+	}
 }

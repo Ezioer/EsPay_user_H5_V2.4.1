@@ -548,6 +548,15 @@ public class StartOtherPlugin {
     }
 
     /**
+     * 快手次日留存事件
+     */
+    public static void logStayNextDay() {
+        if (Constant.KS_SDK) {
+            TurboAgent.onNextDayStay();
+        }
+    }
+
+    /**
      * 快手SDK付费成功事件
      */
     public static void logKSActionPerchase(String money) {

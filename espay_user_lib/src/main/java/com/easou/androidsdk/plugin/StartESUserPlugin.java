@@ -8,6 +8,7 @@ import android.text.TextUtils;
 
 import com.easou.androidsdk.Starter;
 import com.easou.androidsdk.data.Constant;
+import com.easou.androidsdk.http.EAPayInter;
 import com.easou.androidsdk.ui.ESUserWebActivity;
 import com.easou.androidsdk.ui.FloatView;
 import com.easou.androidsdk.util.AES;
@@ -20,6 +21,8 @@ import com.easou.androidsdk.util.ReplaceCallBack;
 import com.easou.androidsdk.util.ThreadPoolManager;
 import com.easou.androidsdk.util.Tools;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Map;
 
 public class StartESUserPlugin {
@@ -37,7 +40,7 @@ public class StartESUserPlugin {
             @Override
             public void run() {
                 Looper.prepare();
-
+                EAPayInter.getOnlyDeviceId();
                 if (!Constant.IS_LOGINED) {
                     startH5Login();
                     startRequestHost(Starter.mActivity, false, null);
@@ -163,6 +166,7 @@ public class StartESUserPlugin {
             }
         }
 
+        String json = URLEncoder.encode(Tools.getOnlyId().toString());
         String param = "&appId=" + appid
                 + "&qn=" + CommonUtils.readPropertiesValue(Starter.mActivity, Constant.QN)
                 + "&partnerId=" + CommonUtils.readPropertiesValue(Starter.mActivity, Constant.PARTENER_ID)
@@ -175,6 +179,8 @@ public class StartESUserPlugin {
                 + "&phoneModel=" + Tools.getSystemModel()
                 + "&phoneVersion=" + Tools.getSystemVersion()
                 + "&userToken=" + token
+                + "&customDeviceId=" + Constant.CUSTOMDEVICES
+                + "&customJson=" + json
                 + "&isSimulator=" + Constant.IS_SIMULATOR
                 + "&netMode=" + NetworkUtils.getNetworkState(Starter.mActivity)
                 + "&telecom=" + NetworkUtils.getOperator(Starter.mActivity);
