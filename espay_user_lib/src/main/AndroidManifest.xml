@@ -137,7 +137,7 @@
             android:name="com.heepay.plugin.activity.HyNotityActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="behind"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@style/HyHeepaySDKTheme" />
 
         <activity
             android:name="com.easou.androidsdk.ui.ESAccountCenterActivity"
