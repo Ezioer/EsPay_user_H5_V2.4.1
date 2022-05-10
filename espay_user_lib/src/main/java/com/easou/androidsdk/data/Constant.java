@@ -98,10 +98,21 @@ public class Constant {
             "domain.game.eayou.com",
             "domain.game.szzkxkj.com"};
 
+
+    //记录游戏角色信息
+    public static String playerId = "";
+    public static String playerLevel = "";
+    public static String playerName = "";
+    public static String serverId = "";
+    public static String ua = "";
+    public static int isTurnExt = 0;
+    public static int isTurnExtUser = 0;
     /**
      * 热云日志URL
      */
-    public static final String MAIN_URL = "https://reyun.game.";
+//    public static final String MAIN_URL = "https://reyun.game.";
+    public static final String MAIN_URL = "http://lab.reyun.tjqzqkj.com";
+//    public static final String MAIN_URL = "http://192.168.1.139:8083";
 
     /**
      * 上传日志URL
@@ -110,6 +121,14 @@ public class Constant {
     public static final String GAME_LOGIN_URL = "/androidGameLog/addGameLoginLog.e";
     public static final String GAME_ORDER_URL = "/androidGameLog/addOrderLog.e";
     public static final String SDK_LOGIN_URL = "/androidGameLog/addLoginLog.e";
+
+    //转端热云日志
+    //创建角色
+    public static final String REYUN_ADD_PLAYER_LOG = "/turnExt/addPlayerLog.e";
+    //支付
+    public static final String REYUN_ADD_PAY_LOG = "/turnExt/addPayLog.e";
+    //游戏登录
+    public static final String REYUN_ADD_LOGIN_LOG = "/turnExt/addGameLoginLog.e";
 
     //游戏角色数据上传日志
     public static final String GAME_PLAYER_LOG = "/gameLog/addPlayerLog.e";
@@ -208,6 +227,7 @@ public class Constant {
     public static final int YSTOJS_GAME_LOGIN_DATA = 31;
     public static final int YSTOJS_GAME_LOGINOROUTLOG = 32;
     public static final int YSTOJS_GAME_INTOFOREGROUND = 33;
+    public static final int YSTOJS_GAME_LOGOUT = 35;
 
     public static final String WECHAT = "WECHAT";
     public static final String WECHAT_DHT = "WECHAT_DHT";

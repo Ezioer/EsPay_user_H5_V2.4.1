@@ -327,3 +327,60 @@ native <methods>;
 -keep public class com.netease.nis.sdkwrapper.Utils {
   public <methods>;
 }
+
+
+-dontusemixedcaseclassnames
+-dontskipnonpubliclibraryclasses
+-dontpreverify
+-dontoptimize
+-renamesourcefileattribute SourceFile
+-keepattributes InnerClasses
+
+-keep class com.baidu.mobads.action.ActionType {
+    public protected *;
+}
+-keep class com.baidu.mobads.action.ActionParam {
+    public protected *;
+}
+-keep class com.baidu.mobads.action.ActionParam$* {
+    public protected *;
+}
+-keep class com.baidu.mobads.action.BaiduAction {
+    public protected *;
+}
+-keep class com.baidu.mobads.action.PrivacyStatus {
+    public *;
+}
+# oaid sdk
+-keep, includedescriptorclasses class com.asus.msa.SupplementaryDID.** { *; }
+-keepclasseswithmembernames class com.asus.msa.SupplementaryDID.** { *; }
+-keep, includedescriptorclasses class com.asus.msa.sdid.** { *; }
+-keepclasseswithmembernames class com.asus.msa.sdid.** { *; }
+-keep public class com.netease.nis.sdkwrapper.Utils {public <methods>;}
+-keep class com.bun.miitmdid.**{*;}
+-keep class com.bun.lib.**{*;}
+-keep class com.samsung.android.deviceidservice.**{*;}
+-keep class a.**{*;}
+
+# 安全SDK
+-keepattributes *JavascriptInterface*
+-ignorewarnings
+
+-keep class com.baidu.xenv.ac.** {*;}
+-keepclasseswithmembers class com.baidu.xenv.jni.Asc {
+    native <methods>;
+}
+-keepclasseswithmembers class com.baidu.xenv.ac.F {*;}
+-keep public class com.baidu.xenv.active.Active {*;}
+-keep public class com.baidu.xenv.mutiprocess.Sp {*;}
+-keep public class * extends android.app.Service
+-keep public class * extends android.content.BroadcastReceiver
+-keep public class * extends android.content.ContentProvider
+-keep class com.baidu.xenv.core.ApkInfo {*;}
+-keep class com.baidu.xenv.rp.Report {
+    <methods>;
+}
+
+-keep class * implements android.os.Parcelable {
+  public static final android.os.Parcelable$Creator *;
+}

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Looper;
 import android.text.TextUtils;
 
+import com.bytedance.applog.GameReportHelper;
 import com.easou.androidsdk.Starter;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.http.EAPayInter;
@@ -31,15 +32,17 @@ public class StartESUserPlugin {
      * 登陆接口
      */
     public static void loginSdk() {
-
-//        StartOtherPlugin.getOaid(Starter.mActivity);
+        if (CommonUtils.readPropertiesValue(Starter.mActivity, "isTurnExt").equals("0")) {
+            Constant.isTurnExt = 1;
+        }
         //设置支付渠道
         setPayChannel();
-
         ThreadPoolManager.getInstance().addTask(new Runnable() {
             @Override
             public void run() {
                 Looper.prepare();
+                //三次轮询请求
+//                getDeviceId();
                 EAPayInter.getOnlyDeviceId();
                 if (!Constant.IS_LOGINED) {
                     startH5Login();
@@ -68,6 +71,25 @@ public class StartESUserPlugin {
         enterH5View();
     }
 
+
+    public static void getDeviceId() {
+        int count = 0;
+        while (count < 3) {
+            int result = EAPayInter.getOnlyDeviceId();
+            if (result == 1) {
+                //请求成功停止轮询请求
+                break;
+            } else {
+                //-1为接口请求出错，暂停100毫秒轮询三次
+                count++;
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    ESdkLog.d(e.toString());
+                }
+            }
+        }
+    }
 
     /**
      * 进入H5 SDK页面
@@ -123,15 +145,17 @@ public class StartESUserPlugin {
         enterH5View();
     }
 
+    //退出登录
+    public static void changeAccount() {
+        ESUserWebActivity.clientToJS(Constant.YSTOJS_GAME_LOGOUT, null);
+        enterH5View();
+    }
 
     /**
      * 游戏登录日志
      */
     public static void startGameLoginLog(Map<String, String> playerInfo) {
-
-        StartLogPlugin.startGameLoginLog(playerInfo);
-        //传送游戏角色数据给h5
-        ESUserWebActivity.clientToJS(Constant.YSTOJS_GAME_LOGIN_DATA, playerInfo);
+        StartLogPlugin.startGameLoginLog(playerInfo, CommonUtils.readPropertiesValue(Starter.mActivity, "isTurnExt").equals("0"));
         //传游戏角色给h5
 //		ESUserWebActivity.clientToJS(Constant.YSTOJS_GAME_LOGIN_LOG, playerInfo);
     }
@@ -190,9 +214,11 @@ public class StartESUserPlugin {
         }
         //红包版本需要加红包，非红包版本注释掉就可以
 //        param = param + "&sdkVersion=hongbao";
+        if (CommonUtils.getTestMoney(Starter.mActivity) == 1) {
+            param = param + "&sdkVersion=hongbao";
+        }
         ESdkLog.d("上传的oaid：" + Constant.OAID);
         System.out.println("param：" + param);
-
         return param;
     }
 
