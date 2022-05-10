@@ -45,6 +45,8 @@ public class ESPlatform {
         String isAdult = "";
         String isHoliday = "";
 
+        String openId = "";
+        int registType = 0;
         try {
             JSONObject jsonObj = new JSONObject(param);
             userId = jsonObj.getString(ESConstant.SDK_USER_ID);
@@ -54,6 +56,13 @@ public class ESPlatform {
             isIdentityUser = jsonObj.getString(ESConstant.SDK_IS_IDENTITY_USER);
             isAdult = jsonObj.getString(ESConstant.SDK_IS_ADULT);
             isHoliday = jsonObj.getString(ESConstant.SDK_IS_HOLIDAY);
+
+            //转端增加openId和registType（是否为转端用户）
+            if (Constant.isTurnExt == 1) {
+                openId = jsonObj.getString("openid");
+                registType = jsonObj.getInt("registType");
+                Constant.isTurnExtUser = registType;
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -83,6 +92,10 @@ public class ESPlatform {
         result.put(ESConstant.SDK_IS_IDENTITY_USER, isIdentityUser);
         result.put(ESConstant.SDK_IS_ADULT, isAdult);
         result.put(ESConstant.SDK_IS_HOLIDAY, isHoliday);
+
+        if (Constant.isTurnExt == 1) {
+            result.put(ESConstant.SDK_OPENID, openId);
+        }
 
         Starter.mCallback.onLogin(result);
         AppTimeWatcher.getInstance().startTimer();

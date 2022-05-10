@@ -21,15 +21,17 @@ public class ESConstant {
 	public static final String SERVER_NAME = "serverName";
 	public static final String LEVEL_NICK_NAME = "levelNickName";
 	public static final String CREATEDTIME = "createTime";
-	public static final String PROJECTMARK = "projectMark";
+    public static final String PROJECTMARK = "projectMark";
 
-	public static final String SDK_USER_NAME = "userName";
-	public static final String SDK_USER_ID = "userId";
-	public static final String SDK_USER_TOKEN = "userToken";
-	public static final String SDK_USER_BIRTH_DATE = "userBirthdate";
-	public static final String SDK_IS_IDENTITY_USER = "isIdentityUser";
-	public static final String SDK_IS_ADULT = "isAdult";
-	public static final String SDK_IS_HOLIDAY = "isHoliday";
-	public static final String SDK_LOGIN_STATUS = "loginStatus";
-	public static String SDK_STATUS = "true";
+    public static final String SDK_USER_NAME = "userName";
+    public static final String SDK_USER_ID = "userId";
+    public static final String SDK_USER_TOKEN = "userToken";
+    public static final String SDK_USER_BIRTH_DATE = "userBirthdate";
+    public static final String SDK_IS_IDENTITY_USER = "isIdentityUser";
+    public static final String SDK_IS_ADULT = "isAdult";
+    public static final String SDK_IS_HOLIDAY = "isHoliday";
+    public static final String SDK_LOGIN_STATUS = "loginStatus";
+    public static final String SDK_OPENID = "openId";
+    public static final String SDK_REGISTTYPE = "registType";
+    public static String SDK_STATUS = "true";
 }

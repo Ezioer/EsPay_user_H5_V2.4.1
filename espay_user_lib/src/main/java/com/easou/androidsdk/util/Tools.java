@@ -203,23 +203,15 @@ public class Tools {
      * 获取设备IMEI
      */
     public static String getDeviceImei(Context context) {
-
         String imei = CommonUtils.getEsDeviceID(context);
-
         try {
             TelephonyManager manager = (TelephonyManager) context.getApplicationContext().
                     getSystemService(context.getApplicationContext().TELEPHONY_SERVICE);
 
             String deviceImei = manager.getDeviceId();
-
-            if (!TextUtils.isEmpty(deviceImei)) {
-
-                if (!deviceImei.contains("000000000000000") && deviceImei.length() <= 18
-                        && deviceImei.length() <= 10) {
-                    imei = deviceImei;
-                }
+            if (isAvailableImei(deviceImei)) {
+                imei = deviceImei;
             }
-
         } catch (Exception e) {
             // TODO Auto-generated catch block
             ESdkLog.d("deviceiderror" + e.toString());
@@ -228,23 +220,28 @@ public class Tools {
         return imei;
     }
 
+    //判断当前imei是否可用
+    private static boolean isAvailableImei(String deviceImei) {
+        if (!TextUtils.isEmpty(deviceImei) && !deviceImei.equals("null") && !deviceImei.equals("Null")
+                && !deviceImei.contains("000000000000000") && deviceImei.length() <= 18 && !deviceImei.equals("0")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * 获取设备IMSI
      */
     public static String getDeviceImsi(Context context) {
-
         String imsi = "0";
-
         try {
             TelephonyManager manager = (TelephonyManager) context.getApplicationContext().
                     getSystemService(context.getApplicationContext().TELEPHONY_SERVICE);
-
             String deviceImsi = manager.getSubscriberId();
-
-            if (!TextUtils.isEmpty(deviceImsi)) {
+            if (isAvailableImei(deviceImsi)) {
                 imsi = deviceImsi;
             }
-
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

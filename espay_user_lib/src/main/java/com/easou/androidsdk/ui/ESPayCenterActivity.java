@@ -219,8 +219,8 @@ public class ESPayCenterActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
 
-        if (isShowNoti){
-            ESToast.getInstance().ToastShow(ESPayCenterActivity.this,"短信发送后，请留意回复内容。");
+        if (isShowNoti) {
+            ESToast.getInstance().ToastShow(ESPayCenterActivity.this, "短信发送后，请留意回复内容。");
             isShowNoti = false;
         }
         if (isPaying) {
@@ -456,7 +456,7 @@ public class ESPayCenterActivity extends BaseActivity {
     }
 
     private void jfPay() {
-        View view = LayoutInflater.from(ESPayCenterActivity.this).inflate(R.layout.easou_mobileinput,null);
+        View view = LayoutInflater.from(ESPayCenterActivity.this).inflate(R.layout.easou_mobileinput, null);
         final EditText mobile = (EditText) view.findViewById(R.id.et_inputmobile);
         final TextView noti = (TextView) view.findViewById(R.id.tv_noti);
         SpannableStringBuilder ssb = new SpannableStringBuilder(noti.getText().toString());
@@ -496,9 +496,9 @@ public class ESPayCenterActivity extends BaseActivity {
                 // TODO Auto-generated method stub
                 json = (JSONObject) object;
                 try {
-                   String port =  json.getString("port");
-                   String sms =  json.getString("sms");
-                   sendSms(port,sms);
+                    String port = json.getString("port");
+                    String sms = json.getString("sms");
+                    sendSms(port, sms);
                 } catch (JSONException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -521,7 +521,7 @@ public class ESPayCenterActivity extends BaseActivity {
         }
     }
 
-    private void sendSms(String port,String sms) {
+    private void sendSms(String port, String sms) {
         Uri smsToUri = Uri.parse("smsto:" + port);
         Intent intent = new Intent(Intent.ACTION_SENDTO, smsToUri);
         intent.putExtra("sms_body", sms);
@@ -1130,7 +1130,7 @@ public class ESPayCenterActivity extends BaseActivity {
         StartOtherPlugin.logKSActionPerchase(money);
         StartOtherPlugin.logBDActionPerchase(money);
         StartOtherPlugin.purchaseAqyAction(money);
-
+//        StartLogPlugin.startGamePayLog(money, String.valueOf(System.currentTimeMillis()));
         Message msg = new Message();
         msg.what = ESConstant.ESPAY_SUC;
 

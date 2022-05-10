@@ -199,6 +199,7 @@ public class ESUserWebActivity extends Activity {
             }
         };
 
+        Constant.ua = mWebView.getSettings().getUserAgentString();
         mWebView.setWebViewClient(mWebViewClient);
         mWebView.setWebChromeClient(new MyWebChromClient());
         String url_backup = CommonUtils.getIsReplaceSso(mActivity);
@@ -311,6 +312,16 @@ public class ESUserWebActivity extends Activity {
                     @Override
                     public void run() {
                         mWebView.loadUrl("javascript:EsSdkShell.esUserClickCert()");
+                    }
+                });
+                break;
+
+            /** 调用服务端实名认证接口 */
+            case Constant.YSTOJS_GAME_LOGOUT:
+                mWebView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mWebView.loadUrl("javascript:EsSdkShell.esUserClickLogOut()");
                     }
                 });
                 break;

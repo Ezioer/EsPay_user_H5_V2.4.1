@@ -239,7 +239,7 @@ public class EAPayInter {
         }
     }
 
-    public static void getOnlyDeviceId() {
+    public static int getOnlyDeviceId() {
         try {
             String url = "https://egamec.eayou.com/deviceInfo/getCustomDeviceId";
             JSONObject map = Tools.getOnlyId();
@@ -251,8 +251,16 @@ public class EAPayInter {
 //                DevicesInfo info = GsonUtil.fromJson(result.getData().toString(), DevicesInfo.class);
                 JSONObject custom = new JSONObject(result.getData().toString());
                 Constant.CUSTOMDEVICES = custom.getString("customDeviceId");
+                if (Constant.CUSTOMDEVICES.isEmpty()) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            } else {
+                return -1;
             }
         } catch (Exception e) {
+            return -1;
         }
     }
 
@@ -278,5 +286,13 @@ public class EAPayInter {
             return null;
         }
         return bean;
+    }
+
+    public static String getResponse(String url, JSONObject map) {
+        String result = EucHttpClient.httpPost(url, map);
+        if (result == null || "".equals(result)) {
+            return null;
+        }
+        return result;
     }
 }
