@@ -49,7 +49,7 @@ dependencies {
     compile files('libs/locSDK_4.2.jar')
     compile files('libs/payecoplugin_standard_baidu_3-2.1.12.jar')
     compile files('libs/ulo5sdk-1.5.2.jar')
-    compile files('libs/oaid_sdk_1.0.25.jar')
+    compile files('libs/oaid_sdk_1.1.0.jar')
     compile files('libs/RangersAppLog-Lite-cn-5.3.0.jar')
     compile files('libs/gism_1.3.3.jar')
     compile files('libs/GDTActionSDK.min.1.8.1.jar')

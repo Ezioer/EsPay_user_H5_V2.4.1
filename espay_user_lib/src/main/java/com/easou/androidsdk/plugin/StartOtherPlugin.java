@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.baidu.mobads.action.BaiduAction;
 import com.baidu.mobads.action.PrivacyStatus;
@@ -18,7 +19,7 @@ import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.http.EAPayInter;
 import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESdkLog;
-import com.easou.androidsdk.util.MiitHelper;
+import com.easou.androidsdk.util.OaidHelper;
 import com.easou.androidsdk.util.SimulatorUtils;
 import com.easou.androidsdk.util.Tools;
 import com.gism.sdk.GismConfig;
@@ -219,12 +220,27 @@ public class StartOtherPlugin {
     /**
      * 获取oaid
      */
-    public static void getOaid(Context mContext) {
+    public static void getOaid(final Context mContext) {
 
         ESdkLog.d("调用了联盟SDK获取oaid接口");
 
         try {
-            MiitHelper.getOaid(mContext);
+//            MiitHelper.getOaid(mContext);
+            OaidHelper helper = new OaidHelper(new OaidHelper.AppIdsUpdater() {
+                @Override
+                public void onIdsValid(final String ids) {
+                    ((Activity) mContext).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Constant.OAID = ids;
+                            Toast.makeText(mContext, "oaid -----> " + ids, Toast.LENGTH_LONG);
+                            ESdkLog.d("oaid -----> " + ids);
+                            StartOtherPlugin.logGDTActionSetOAID(ids);
+                        }
+                    });
+                }
+            });
+            helper.getDeviceIds(mContext);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

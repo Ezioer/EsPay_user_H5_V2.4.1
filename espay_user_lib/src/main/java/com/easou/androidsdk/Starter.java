@@ -356,6 +356,7 @@ public class Starter {
             builder.detectFileUriExposure();
             StrictMode.setVmPolicy(builder.build());
         }
+        System.loadLibrary("msaoaidsec");
         /** 百度初始化 */
         StartOtherPlugin.initBD(mContext);
         AppTimeWatcher.getInstance().registerWatcher((Application) mContext);

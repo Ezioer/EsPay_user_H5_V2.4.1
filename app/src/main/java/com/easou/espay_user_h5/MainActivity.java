@@ -8,8 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -31,17 +29,13 @@ import com.easou.androidsdk.Starter;
 import com.easou.androidsdk.callback.ESdkCallback;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.data.ESConstant;
-import com.easou.androidsdk.plugin.StartOtherPlugin;
 import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESdkLog;
-import com.easou.androidsdk.util.NetworkUtils;
 import com.easou.androidsdk.util.Tools;
 
-import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -219,6 +213,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
                     param = param + "\n环境=测试";
                 }
+                param = param + "\n" + Constant.OAID;
                 mInfo.setText(param);
             }
         });

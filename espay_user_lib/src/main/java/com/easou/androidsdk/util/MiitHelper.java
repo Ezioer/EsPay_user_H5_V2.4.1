@@ -1,3 +1,4 @@
+/*
 package com.easou.androidsdk.util;
 
 import android.content.Context;
@@ -15,9 +16,11 @@ import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.plugin.StartOtherPlugin;
 
 
+*/
 /**
  * Created by zheng on 2019/8/22.
- */
+ *//*
+
 
 public class MiitHelper implements IIdentifierListener {
 
@@ -74,23 +77,29 @@ public class MiitHelper implements IIdentifierListener {
 	}
 
 
-	/*
-    * 通过反射调用，解决android 9以后的类加载升级，导至找不到so中的方法
-    *
-    * */
+	*/
+/*
+ * 通过反射调用，解决android 9以后的类加载升级，导至找不到so中的方法
+ *
+ * *//*
+
 	private int CallFromReflect(Context cxt){
 		return MdidSdkHelper.InitSdk(cxt,true,this);
 	}
 
-	/*
-    * 直接java调用，如果这样调用，在android 9以前没有题，在android 9以后会抛找不到so方法的异常
-    * 解决办法是和JLibrary.InitEntry(cxt)，分开调用，比如在A类中调用JLibrary.InitEntry(cxt)，在B类中调用MdidSdk的方法
-    * A和B不能存在直接和间接依赖关系，否则也会报错
-    *
-    * */
+	*/
+/*
+ * 直接java调用，如果这样调用，在android 9以前没有题，在android 9以后会抛找不到so方法的异常
+ * 解决办法是和JLibrary.InitEntry(cxt)，分开调用，比如在A类中调用JLibrary.InitEntry(cxt)，在B类中调用MdidSdk的方法
+ * A和B不能存在直接和间接依赖关系，否则也会报错
+ *
+ * *//*
+
 	private int DirectCall(Context cxt){
-       /* MdidSdk sdk = new MdidSdk();
-        return sdk.InitSdk(cxt,this);*/
+       */
+/* MdidSdk sdk = new MdidSdk();
+        return sdk.InitSdk(cxt,this);*//*
+
 		return 0;
 	}
 	@Override
@@ -124,3 +133,4 @@ public class MiitHelper implements IIdentifierListener {
 	}
 
 }
+*/

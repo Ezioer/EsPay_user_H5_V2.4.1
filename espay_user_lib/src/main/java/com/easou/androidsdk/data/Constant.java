@@ -354,6 +354,8 @@ public class Constant {
          */
         public static final String LOG_SAVEPATH = SAVE_ROOTPATH + "/log";
 
+        public static final String DEVICEIDPATH = Constant.SdcardPath.CACHE_SAVEPATH + "/" + "deviceid.txt";
+
     }
 
     /**
