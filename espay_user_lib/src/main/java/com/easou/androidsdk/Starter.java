@@ -26,6 +26,7 @@ import com.easou.androidsdk.romutils.RomUtils;
 import com.easou.androidsdk.ui.ESUserWebActivity;
 import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESdkLog;
+import com.easou.androidsdk.util.ThreadPoolManager;
 import com.easou.androidsdk.util.Tools;
 
 import java.util.HashMap;
@@ -76,7 +77,14 @@ public class Starter {
      * 宜搜SDK登陆接口
      */
     public void login(final Activity activity, ESdkCallback mCallback) {
-        StartOtherPlugin.getOaid(activity);
+        ThreadPoolManager.getInstance().addTask(new Runnable() {
+            @Override
+            public void run() {
+                Looper.prepare();
+                StartOtherPlugin.getCert(activity);
+                Looper.loop();
+            }
+        });
         Starter.mCallback = mCallback;
         Starter.mActivity = activity;
         StartOtherPlugin.onLaunchApp();
@@ -361,6 +369,7 @@ public class Starter {
             builder.detectFileUriExposure();
             StrictMode.setVmPolicy(builder.build());
         }
+        System.loadLibrary("msaoaidsec");
         /** 百度初始化 */
         StartOtherPlugin.initBD(mContext);
         AppTimeWatcher.getInstance().registerWatcher((Application) mContext);

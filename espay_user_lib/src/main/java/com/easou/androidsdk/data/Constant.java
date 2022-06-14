@@ -15,7 +15,7 @@ public class Constant {
     /**
      * SDK版本号，更新版本记得改版本号
      */
-    public static final String SDK_VERSION = "2.6.4";
+    public static final String SDK_VERSION = "2.7.0";
     public static final String SDK_PHONEOS = "Android";
 
     public static final String API_SOURCE = "30";
@@ -354,6 +354,8 @@ public class Constant {
          * 日志
          */
         public static final String LOG_SAVEPATH = SAVE_ROOTPATH + "/log";
+
+        public static final String DEVICEIDPATH = Constant.SdcardPath.CACHE_SAVEPATH + "/" + "deviceid.txt";
 
     }
 

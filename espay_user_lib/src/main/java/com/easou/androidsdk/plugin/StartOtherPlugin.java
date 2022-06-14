@@ -3,7 +3,9 @@ package com.easou.androidsdk.plugin;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.os.Looper;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 //import com.baidu.mobads.action.BaiduAction;
 //import com.baidu.mobads.action.PrivacyStatus;
@@ -20,7 +22,7 @@ import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.http.EAPayInter;
 import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESdkLog;
-import com.easou.androidsdk.util.MiitHelper;
+import com.easou.androidsdk.util.OaidHelper;
 import com.easou.androidsdk.util.SimulatorUtils;
 import com.easou.androidsdk.util.Tools;
 import com.gism.sdk.GismConfig;
@@ -226,17 +228,44 @@ public class StartOtherPlugin {
     /**
      * 获取oaid
      */
-    public static void getOaid(Context mContext) {
-
+    public static void getOaid(final Context mContext, String cert) {
         ESdkLog.d("调用了联盟SDK获取oaid接口");
 
         try {
-            MiitHelper.getOaid(mContext);
+            OaidHelper helper = new OaidHelper(new OaidHelper.AppIdsUpdater() {
+                @Override
+                public void onIdsValid(final String ids) {
+//                    ((Activity) mContext).runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            ESdkLog.d("oaid -----> " + ids);
+//                            StartOtherPlugin.logGDTActionSetOAID(ids);
+//                        }
+//                    });
+                }
+            });
+//            MiitHelper.getOaid(mContext);
+            helper.getDeviceIds(mContext, cert);
+
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
+    }
+
+    //获取oaid证书，如果缓存中有 则直接读取缓存中的 否则服务器获取
+    public static void getCert(Context context) {
+        String cert = CommonUtils.getCert(context);
+        ESdkLog.c("certnet----->", "cache-->" + cert);
+        if (cert.isEmpty()) {
+            String temp = EAPayInter.getOaidPerFromNet(context.getApplicationInfo().packageName);
+            getOaid(context, temp);
+            CommonUtils.saveCert(context, temp);
+            ESdkLog.c("certnet----->", "netvalue-->" + temp);
+        } else {
+            getOaid(context, cert);
+        }
     }
 
     /* ================================== 模拟器判断 ================================== */
@@ -744,10 +773,15 @@ public class StartOtherPlugin {
         if (TextUtils.equals(CommonUtils.readPropertiesValue(mContext, "use_BD"), "0")) {
             ESdkLog.d("初始化百度sdk");
             Constant.BD_SDK = true;
-            BaiduAction.init(mContext, Long.valueOf(CommonUtils.readPropertiesValue(mContext, "BD_appid")),
-                    CommonUtils.readPropertiesValue(mContext, "BD_appSecret"));
-            // 设置应用激活的间隔（默认30天）
+//            System.loadLibrary("msaoaidsec");
             BaiduAction.setPrintLog(true);
+            try {
+                BaiduAction.init(mContext, Long.valueOf(CommonUtils.readPropertiesValue(mContext, "BD_appid")),
+                        CommonUtils.readPropertiesValue(mContext, "BD_appSecret"));
+            } catch (Exception e) {
+                String s = "1";
+            }
+            // 设置应用激活的间隔（默认30天）
             BaiduAction.setActivateInterval(mContext, 30);
         }
     }

@@ -140,7 +140,7 @@ public class ESPlatform {
      */
     @JavascriptInterface
     public void esLogout(final String param) {
-        AppTimeWatcher.isLogOut = false;
+        AppTimeWatcher.isLogOut = true;
         StartOtherPlugin.logTTActionLogin("");
         StartOtherPlugin.logGismActionLogout();
         StartOtherPlugin.logGDTActionSetID("");
@@ -151,12 +151,11 @@ public class ESPlatform {
         CommonUtils.saveIsAutoCount(Starter.mActivity, "0");
         Constant.ESDK_TOKEN = "";
         Constant.IS_LOGINED = false;
-        isShowWebView = false;
-
+        isShowWebView = true;
         Starter.getInstance().hideFloatView();
         AppTimeWatcher.getInstance().unRegisterWatcher();
         Starter.mCallback.onLogout();
-
+        StartESUserPlugin.showSdkView();
         mActivity.clearData();
     }
 

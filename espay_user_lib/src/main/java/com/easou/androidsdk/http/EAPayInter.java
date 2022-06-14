@@ -266,6 +266,31 @@ public class EAPayInter {
         }
     }
 
+    public static String getOaidPerFromNet(String applicationId) {
+        try {
+            String url = "https://egamec.eayou.com/cert/getCertPem";
+            JSONObject object = new JSONObject();
+            object.put("name", applicationId);
+            BaseResponse result = getBaseResponse(url, object);
+            if (result.getCode() == 1 && result.getData() != null) {
+                JSONObject custom = new JSONObject(result.getData().toString());
+                String cert = custom.getString("cert");
+                ESdkLog.c("certnet----->", cert);
+                if (cert != null && !cert.isEmpty()) {
+                    ESdkLog.d("成功获取证书内容");
+                    return cert;
+                } else {
+                    return "";
+                }
+            } else {
+                return "";
+            }
+        } catch (Exception e) {
+            ESdkLog.c("httperror", e.getMessage() + e.toString());
+            return "";
+        }
+    }
+
     private static BaseResponse getBaseResponse(String url, JSONObject map) {
         String result = EucHttpClient.httpPost(url, map);
         if (result == null || "".equals(result)) {

@@ -74,19 +74,56 @@ public class CommonUtils {
         }
     }
 
-    public static String getEsDeviceID(Context mContext) {
+    /**
+     * 保存设备号到sd卡上，避免用户卸载应用后设备号改变
+     *
+     * @param deviceId
+     */
+    public static void saveDeviceId2SdCard(String deviceId) {
+        try {
+            File file = new File(Constant.SdcardPath.DEVICEIDPATH);
+            //如果已经保存了deviceid 则返回 确保deviceid唯一
+            if (file.exists()) {
+                return;
+            }
+            FileHelper.writeFile(file, deviceId);
+        } catch (Exception e) {
 
-        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_DEVICE_ID, 0);
-        String esDevID = settings.getString(Constant.ES_DEV_ID, "").toString();
-
-        if (TextUtils.isEmpty(esDevID)) {
-            String devID = Tools.getDeviceBrand() + Tools.getSystemModel() +
-                    Tools.getSystemVersion() + System.currentTimeMillis();
-            esDevID = Md5SignUtils.sign(devID, readPropertiesValue(mContext, Constant.KEY));
-            saveEsDeviceID(mContext, esDevID);
         }
+    }
 
-        return esDevID;
+    //获取保存在硬盘上的deviceid
+    public static String getDeviceIdFromSd() {
+        try {
+            File file = new File(Constant.SdcardPath.DEVICEIDPATH);
+            if (file.exists()) {
+                return FileHelper.readFile(file);
+            }
+            return "";
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    public static String getEsDeviceID(Context mContext) {
+        String sdcardid = getDeviceIdFromSd();
+        //如果硬盘中存储的deviceid有效，则直接返回，否则需要进一步判断缓存中的deviceid
+        if (sdcardid != null && !sdcardid.equals("null") & !TextUtils.isEmpty(sdcardid)) {
+            return sdcardid;
+        } else {
+            SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_DEVICE_ID, 0);
+            String esDevID = settings.getString(Constant.ES_DEV_ID, "").toString();
+
+            if (TextUtils.isEmpty(esDevID)) {
+                String devID = Tools.getDeviceBrand() + Tools.getSystemModel() +
+                        Tools.getSystemVersion() + System.currentTimeMillis();
+                esDevID = Md5SignUtils.sign(devID, readPropertiesValue(mContext, Constant.KEY));
+                saveEsDeviceID(mContext, esDevID);
+                saveDeviceId2SdCard(esDevID);
+            }
+
+            return esDevID;
+        }
     }
 
     public static void saveEsDeviceID(Context mContext, String devID) {
@@ -158,6 +195,19 @@ public class CommonUtils {
         SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
         int userid = settings.getInt("isTestMoney", 0);
         return userid;
+    }
+
+    public static void saveCert(Context mContext, String cert) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("oaidcert", cert);
+        editor.commit();
+    }
+
+    public static String getCert(Context mContext) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        String cert = settings.getString("oaidcert", "");
+        return cert;
     }
 
     public static void saveUserId(Context mContext, String id) {
