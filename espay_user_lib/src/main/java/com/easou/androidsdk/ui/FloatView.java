@@ -109,7 +109,7 @@ public class FloatView extends View {
 		floatViewLayout.setOnTouchListener(mTouchListener);
 
 		drawable = activity.getResources().getDrawable(activity.getApplication().getResources()
-				.getIdentifier("es_floaticon", "drawable", activity.getApplication().getPackageName()));
+				.getIdentifier("floaticon", "drawable", activity.getApplication().getPackageName()));
 		fhzjDrawable = activity.getResources().getDrawable(activity.getApplication().getResources()
 				.getIdentifier("es_floaticon_fhzj", "drawable", activity.getApplication().getPackageName()));
 		if (activity.getPackageName().contains("fhzj")) {
