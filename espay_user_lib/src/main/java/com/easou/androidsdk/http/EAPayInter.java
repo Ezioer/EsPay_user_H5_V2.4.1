@@ -2,6 +2,7 @@ package com.easou.androidsdk.http;
 
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.data.PayItem;
+import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESPayLog;
 import com.easou.androidsdk.util.ESdkLog;
 import com.easou.androidsdk.util.GsonUtil;
@@ -261,6 +262,31 @@ public class EAPayInter {
             }
         } catch (Exception e) {
             return -1;
+        }
+    }
+
+    public static String getOaidPerFromNet(String applicationId) {
+        try {
+            String url = "https://egamec.eayou.com/cert/getCertPem";
+            JSONObject object = new JSONObject();
+            object.put("name", applicationId);
+            BaseResponse result = getBaseResponse(url, object);
+            if (result.getCode() == 1 && result.getData() != null) {
+                JSONObject custom = new JSONObject(result.getData().toString());
+                String cert = custom.getString("cert");
+                ESdkLog.c("certnet----->", cert);
+                if (cert != null && !cert.isEmpty()) {
+                    ESdkLog.d("成功获取证书内容");
+                    return cert;
+                } else {
+                    return "";
+                }
+            } else {
+                return "";
+            }
+        } catch (Exception e) {
+            ESdkLog.c("httperror", e.getMessage() + e.toString());
+            return "";
         }
     }
 

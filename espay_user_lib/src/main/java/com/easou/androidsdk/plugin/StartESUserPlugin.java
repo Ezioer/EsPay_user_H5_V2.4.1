@@ -3,10 +3,12 @@ package com.easou.androidsdk.plugin;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
 import com.bytedance.applog.GameReportHelper;
+import com.easou.androidsdk.ESPlatform;
 import com.easou.androidsdk.Starter;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.http.EAPayInter;
@@ -43,7 +45,7 @@ public class StartESUserPlugin {
                 Looper.prepare();
                 //三次轮询请求
 //                getDeviceId();
-                EAPayInter.getOnlyDeviceId();
+//                EAPayInter.getOnlyDeviceId();
                 if (!Constant.IS_LOGINED) {
                     startH5Login();
                     startRequestHost(Starter.mActivity, false, null);
@@ -147,8 +149,8 @@ public class StartESUserPlugin {
 
     //退出登录
     public static void changeAccount() {
+        showSdkView();
         ESUserWebActivity.clientToJS(Constant.YSTOJS_GAME_LOGOUT, null);
-        enterH5View();
     }
 
     /**

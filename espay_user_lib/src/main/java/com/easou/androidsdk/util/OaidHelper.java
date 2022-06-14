@@ -8,6 +8,8 @@ import com.bun.miitmdid.core.MdidSdkHelper;
 import com.bun.miitmdid.interfaces.IIdentifierListener;
 import com.bun.miitmdid.interfaces.IdSupplier;
 import com.bun.miitmdid.pojo.IdSupplierImpl;
+import com.easou.androidsdk.data.Constant;
+import com.easou.androidsdk.http.EAPayInter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,6 +18,7 @@ import java.io.InputStreamReader;
 
 public class OaidHelper implements IIdentifierListener {
     public static final String TAG = "DemoHelper";
+    private static int updateCount = 0;
     public static final int HELPER_VERSION_CODE = 20211214; // DemoHelper版本号
     private final AppIdsUpdater appIdsUpdater;
     private boolean isCertInit = false;
@@ -39,16 +42,19 @@ public class OaidHelper implements IIdentifierListener {
      *
      * @param cxt
      */
-    public void getDeviceIds(Context cxt) {
+    public void getDeviceIds(Context cxt, String cert) {
         // TODO （4）初始化SDK证书
         if (!isCertInit) { // 证书只需初始化一次
             // 证书为PEM文件中的所有文本内容（包括首尾行、换行符）
             try {
-                isCertInit = MdidSdkHelper.InitCert(cxt, loadPemFromAssetFile(cxt, ASSET_FILE_NAME_CERT));
+//                isCertInit = MdidSdkHelper.InitCert(cxt, loadPemFromAssetFile(cxt, ASSET_FILE_NAME_CERT));
+                ESdkLog.c("certnet----->getoaid", "" + cert);
+                isCertInit = MdidSdkHelper.InitCert(cxt, cert);
             } catch (Error e) {
                 e.printStackTrace();
             }
             if (!isCertInit) {
+                ESdkLog.c("certnet----->", "getDeviceIds: cert init failed");
                 Log.w(TAG, "getDeviceIds: cert init failed");
             }
         }
@@ -72,6 +78,8 @@ public class OaidHelper implements IIdentifierListener {
         IdSupplierImpl unsupportedIdSupplier = new IdSupplierImpl();
         if (code == InfoCode.INIT_ERROR_CERT_ERROR) {                         // 证书未初始化或证书无效，SDK内部不会回调onSupport
             // APP自定义逻辑
+            ESdkLog.c("certnet----->", "cert not init or check not pass");
+            updateCert(cxt);
             Log.w(TAG, "cert not init or check not pass");
             onSupport(unsupportedIdSupplier);
         } else if (code == InfoCode.INIT_ERROR_DEVICE_NOSUPPORT) {             // 不支持的设备, SDK内部不会回调onSupport
@@ -121,6 +129,7 @@ public class OaidHelper implements IIdentifierListener {
         boolean isSupported = supplier.isSupported();
         boolean isLimited = supplier.isLimited();
         String oaid = supplier.getOAID();
+        Constant.OAID = oaid;
         String vaid = supplier.getVAID();
         String aaid = supplier.getAAID();
 
@@ -131,7 +140,7 @@ public class OaidHelper implements IIdentifierListener {
                 "\nVAID: " + vaid +
                 "\nAAID: " + aaid + "\n";
         Log.d(TAG, "onSupport: ids: \n" + idsText);
-        appIdsUpdater.onIdsValid(idsText);
+        appIdsUpdater.onIdsValid(oaid);
     }
 
     public interface AppIdsUpdater {
@@ -159,6 +168,83 @@ public class OaidHelper implements IIdentifierListener {
         } catch (IOException e) {
             Log.e(TAG, "loadPemFromAssetFile failed");
             return "";
+        }
+    }
+
+    //证书无效时从读武器更新证书
+    public void updateCert(Context context) {
+        if (updateCount < 1) {
+            String temp = EAPayInter.getOaidPerFromNet(context.getApplicationInfo().packageName);
+            CommonUtils.saveCert(context, temp);
+            updateCount++;
+            initOaid(context, temp);
+        }
+    }
+
+    public void initOaid(Context cxt, String cert) {
+        // TODO （4）初始化SDK证书
+        if (!isCertInit) { // 证书只需初始化一次
+            // 证书为PEM文件中的所有文本内容（包括首尾行、换行符）
+            try {
+//                isCertInit = MdidSdkHelper.InitCert(cxt, loadPemFromAssetFile(cxt, ASSET_FILE_NAME_CERT));
+                ESdkLog.c("certnet----->getoaid", "" + cert);
+                isCertInit = MdidSdkHelper.InitCert(cxt, cert);
+            } catch (Error e) {
+                e.printStackTrace();
+            }
+            if (!isCertInit) {
+                ESdkLog.c("certnet----->", "getDeviceIds: cert init failed");
+                Log.w(TAG, "getDeviceIds: cert init failed");
+            }
+        }
+
+        //（可选）设置InitSDK接口回调超时时间(仅适用于接口为异步)，默认值为5000ms.
+        // 注：请在调用前设置一次后就不再更改，否则可能导致回调丢失、重复等问题
+        try {
+            MdidSdkHelper.setGlobalTimeout(5000);
+        } catch (Error error) {
+            error.printStackTrace();
+        }
+        int code = 0;
+        // TODO （5）调用SDK获取ID
+        try {
+            code = MdidSdkHelper.InitSdk(cxt, isSDKLogOn, this);
+        } catch (Error error) {
+            error.printStackTrace();
+        }
+
+        // TODO （6）根据SDK返回的code进行不同处理
+        IdSupplierImpl unsupportedIdSupplier = new IdSupplierImpl();
+        if (code == InfoCode.INIT_ERROR_CERT_ERROR) {                         // 证书未初始化或证书无效，SDK内部不会回调onSupport
+            // APP自定义逻辑
+            ESdkLog.c("certnet----->", "cert not init or check not pass");
+            updateCert(cxt);
+            Log.w(TAG, "cert not init or check not pass");
+            onSupport(unsupportedIdSupplier);
+        } else if (code == InfoCode.INIT_ERROR_DEVICE_NOSUPPORT) {             // 不支持的设备, SDK内部不会回调onSupport
+            // APP自定义逻辑
+            Log.w(TAG, "device not supported");
+            onSupport(unsupportedIdSupplier);
+        } else if (code == InfoCode.INIT_ERROR_LOAD_CONFIGFILE) {            // 加载配置文件出错, SDK内部不会回调onSupport
+            // APP自定义逻辑
+            Log.w(TAG, "failed to load config file");
+            onSupport(unsupportedIdSupplier);
+        } else if (code == InfoCode.INIT_ERROR_MANUFACTURER_NOSUPPORT) {      // 不支持的设备厂商, SDK内部不会回调onSupport
+            // APP自定义逻辑
+            Log.w(TAG, "manufacturer not supported");
+            onSupport(unsupportedIdSupplier);
+        } else if (code == InfoCode.INIT_ERROR_SDK_CALL_ERROR) {             // sdk调用出错, SSDK内部不会回调onSupport
+            // APP自定义逻辑
+            Log.w(TAG, "sdk call error");
+            onSupport(unsupportedIdSupplier);
+        } else if (code == InfoCode.INIT_INFO_RESULT_DELAY) {             // 获取接口是异步的，SDK内部会回调onSupport
+            Log.i(TAG, "result delay (async)");
+        } else if (code == InfoCode.INIT_INFO_RESULT_OK) {                  // 获取接口是同步的，SDK内部会回调onSupport
+            Log.i(TAG, "result ok (sync)");
+        } else {
+            // sdk版本高于DemoHelper代码版本可能出现的情况，无法确定是否调用onSupport
+            // 不影响成功的OAID获取
+            Log.w(TAG, "getDeviceIds: unknown code: " + code);
         }
     }
 }

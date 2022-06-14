@@ -316,7 +316,7 @@ public class ESUserWebActivity extends Activity {
                 });
                 break;
 
-            /** 调用服务端实名认证接口 */
+            /** 调用服务端切换账号接口 */
             case Constant.YSTOJS_GAME_LOGOUT:
                 mWebView.post(new Runnable() {
                     @Override

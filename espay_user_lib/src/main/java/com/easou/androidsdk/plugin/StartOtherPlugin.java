@@ -3,6 +3,7 @@ package com.easou.androidsdk.plugin;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESdkLog;
 import com.easou.androidsdk.util.OaidHelper;
 import com.easou.androidsdk.util.SimulatorUtils;
+import com.easou.androidsdk.util.ThreadPoolManager;
 import com.easou.androidsdk.util.Tools;
 import com.gism.sdk.GismConfig;
 import com.gism.sdk.GismEventBuilder;
@@ -208,6 +210,7 @@ public class StartOtherPlugin {
         Tools.disableAPIDialog();
 
         try {
+//            System.loadLibrary("msaoaidsec");
 //            JLibrary.InitEntry(mContext);
             //直接在此处调用即获取oaid，应该会更快
 //            getOaid(mContext);
@@ -220,32 +223,44 @@ public class StartOtherPlugin {
     /**
      * 获取oaid
      */
-    public static void getOaid(final Context mContext) {
-
+    public static void getOaid(final Context mContext, String cert) {
         ESdkLog.d("调用了联盟SDK获取oaid接口");
 
         try {
-//            MiitHelper.getOaid(mContext);
             OaidHelper helper = new OaidHelper(new OaidHelper.AppIdsUpdater() {
                 @Override
                 public void onIdsValid(final String ids) {
-                    ((Activity) mContext).runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Constant.OAID = ids;
-                            Toast.makeText(mContext, "oaid -----> " + ids, Toast.LENGTH_LONG);
-                            ESdkLog.d("oaid -----> " + ids);
-                            StartOtherPlugin.logGDTActionSetOAID(ids);
-                        }
-                    });
+//                    ((Activity) mContext).runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            ESdkLog.d("oaid -----> " + ids);
+//                            StartOtherPlugin.logGDTActionSetOAID(ids);
+//                        }
+//                    });
                 }
             });
-            helper.getDeviceIds(mContext);
+//            MiitHelper.getOaid(mContext);
+            helper.getDeviceIds(mContext, cert);
+
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
+    }
+
+    //获取oaid证书，如果缓存中有 则直接读取缓存中的 否则服务器获取
+    public static void getCert(Context context) {
+        String cert = CommonUtils.getCert(context);
+        ESdkLog.c("certnet----->", "cache-->" + cert);
+        if (cert.isEmpty()) {
+            String temp = EAPayInter.getOaidPerFromNet(context.getApplicationInfo().packageName);
+            getOaid(context, temp);
+            CommonUtils.saveCert(context, temp);
+            ESdkLog.c("certnet----->", "netvalue-->" + temp);
+        } else {
+            getOaid(context, cert);
+        }
     }
 
     /* ================================== 模拟器判断 ================================== */

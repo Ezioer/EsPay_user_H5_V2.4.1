@@ -223,7 +223,7 @@ public class Tools {
     //判断当前imei是否可用
     private static boolean isAvailableImei(String deviceImei) {
         if (!TextUtils.isEmpty(deviceImei) && !deviceImei.equals("null") && !deviceImei.equals("Null")
-                && !deviceImei.contains("000000000000000") && deviceImei.length() <= 18 && !deviceImei.equals("0")) {
+                && !deviceImei.contains("000000000000000") && !deviceImei.equals("0")) {
             return true;
         } else {
             return false;

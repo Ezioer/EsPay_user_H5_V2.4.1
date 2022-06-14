@@ -107,7 +107,7 @@ public class CommonUtils {
     public static String getEsDeviceID(Context mContext) {
         String sdcardid = getDeviceIdFromSd();
         //如果硬盘中存储的deviceid有效，则直接返回，否则需要进一步判断缓存中的deviceid
-        if (!TextUtils.isEmpty(sdcardid)) {
+        if (sdcardid != null && !sdcardid.equals("null") & !TextUtils.isEmpty(sdcardid)) {
             return sdcardid;
         } else {
             SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_DEVICE_ID, 0);
@@ -194,6 +194,19 @@ public class CommonUtils {
         SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
         int userid = settings.getInt("isTestMoney", 0);
         return userid;
+    }
+
+    public static void saveCert(Context mContext, String cert) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("oaidcert", cert);
+        editor.commit();
+    }
+
+    public static String getCert(Context mContext) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        String cert = settings.getString("oaidcert", "");
+        return cert;
     }
 
     public static void saveUserId(Context mContext, String id) {
