@@ -151,11 +151,10 @@ public class ESPlatform {
         CommonUtils.saveIsAutoCount(Starter.mActivity, "0");
         Constant.ESDK_TOKEN = "";
         Constant.IS_LOGINED = false;
-        isShowWebView = true;
+        isShowWebView = false;
         Starter.getInstance().hideFloatView();
         AppTimeWatcher.getInstance().unRegisterWatcher();
         Starter.mCallback.onLogout();
-        StartESUserPlugin.showSdkView();
         mActivity.clearData();
     }
 
