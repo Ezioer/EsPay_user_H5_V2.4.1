@@ -110,8 +110,8 @@ public class Constant {
     /**
      * 热云日志URL
      */
-//    public static final String MAIN_URL = "https://reyun.game.";
-    public static final String MAIN_URL = "http://lab.reyun.tjqzqkj.com";
+    public static final String MAIN_URL = "https://reyun.game.";
+//    public static final String MAIN_URL = "http://lab.reyun.tjqzqkj.com";
 //    public static final String MAIN_URL = "http://192.168.1.139:8083";
 
     /**
