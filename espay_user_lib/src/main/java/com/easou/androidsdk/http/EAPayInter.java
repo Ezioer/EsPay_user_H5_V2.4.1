@@ -267,6 +267,7 @@ public class EAPayInter {
 
     public static String getOaidPerFromNet(String applicationId) {
         try {
+            ESdkLog.c("certnet----->", applicationId);
             String url = "https://egamec.eayou.com/cert/getCertPem";
             JSONObject object = new JSONObject();
             object.put("name", applicationId);

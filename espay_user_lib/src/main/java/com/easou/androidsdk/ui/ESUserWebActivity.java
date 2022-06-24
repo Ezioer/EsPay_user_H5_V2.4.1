@@ -376,9 +376,14 @@ public class ESUserWebActivity extends Activity {
     }
 
     public void clearData() {
+        mWebView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mWebView.clearFormData();
+                mWebView.clearHistory();
+            }
+        }, 300);
 
-        mWebView.clearFormData();
-        mWebView.clearHistory();
     }
 
     private void showAlert() {

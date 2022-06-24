@@ -49,7 +49,7 @@ public class Constant {
     /**
      * 记录oaid
      */
-    public static String OAID = "0";
+    public static String OAID = "";
     /**
      * 记录是否为模拟器 0为真机，1为模拟器
      */
