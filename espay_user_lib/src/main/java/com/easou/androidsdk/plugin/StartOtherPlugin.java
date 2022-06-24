@@ -728,7 +728,7 @@ public class StartOtherPlugin {
         if (Constant.AQY_SDK) {
             try {
                 JSONObject actionParam = new JSONObject();
-                actionParam.put("money", Double.valueOf(money) * 100);
+                actionParam.put("money", Double.valueOf(money));
                 QiLinTrans.uploadTrans(TransType.QL_PLACE_ORDER, actionParam);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -750,7 +750,7 @@ public class StartOtherPlugin {
 
                     try {
                         JSONObject actionParam = new JSONObject();
-                        actionParam.put("money", Integer.valueOf(payMoney) * 100);
+                        actionParam.put("money", Integer.valueOf(payMoney));
                         QiLinTrans.uploadTrans(TransType.QL_PURCHASE, actionParam);
                     } catch (JSONException e) {
                         e.printStackTrace();
