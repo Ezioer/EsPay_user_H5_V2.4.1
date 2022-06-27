@@ -97,7 +97,6 @@ public class StartESUserPlugin {
      * 进入H5 SDK页面
      */
     public static void enterH5View() {
-
         Intent intent = new Intent();
         intent.putExtra("params", getNewParam());
         intent.setClass(Starter.mActivity, ESUserWebActivity.class);
@@ -108,7 +107,6 @@ public class StartESUserPlugin {
      * 获取SDK用户信息
      */
     public static void getH5UserInfo() {
-
         ESUserWebActivity.clientToJS(Constant.YSTOJS_GET_USERINFO, null);
     }
 
@@ -215,7 +213,7 @@ public class StartESUserPlugin {
             param = param + "&sdkType=fhzj";
         }
         //红包版本需要加红包，非红包版本注释掉就可以
-        param = param + "&sdkVersion=hongbao";
+//        param = param + "&sdkVersion=hongbao";
        /* if (CommonUtils.getTestMoney(Starter.mActivity) == 1) {
             param = param + "&sdkVersion=hongbao";
         }*/
