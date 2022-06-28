@@ -235,13 +235,15 @@ public class StartOtherPlugin {
             OaidHelper helper = new OaidHelper(new OaidHelper.AppIdsUpdater() {
                 @Override
                 public void onIdsValid(final String ids) {
-//                    ((Activity) mContext).runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            ESdkLog.d("oaid -----> " + ids);
-//                            StartOtherPlugin.logGDTActionSetOAID(ids);
-//                        }
-//                    });
+                    ((Activity) mContext).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ESdkLog.d("oaid -----> " + ids);
+                            if (!Constant.AQY_SDK) {
+                                StartOtherPlugin.initAQY(mContext);
+                            }
+                        }
+                    });
                 }
             });
 //            MiitHelper.getOaid(mContext);
@@ -652,7 +654,7 @@ public class StartOtherPlugin {
     public static void initAQY(Context mContext) {
         if (TextUtils.equals(CommonUtils.readPropertiesValue(mContext, "use_AQY"), "0")) {
             Constant.AQY_SDK = true;
-            ESdkLog.d("调用了爱奇艺sdk初始化");
+            ESdkLog.d("调用了爱奇艺sdk初始化" + Constant.OAID);
             QiLinTrans.setDebug(TransParam.LogLevel.LOG_DEBUG, false, "");
             QiLinTrans.init(mContext, CommonUtils.readPropertiesValue(mContext, "aiqiyi_appid"),
                     CommonUtils.readPropertiesValue(mContext, "qn"), Constant.OAID);
@@ -727,6 +729,7 @@ public class StartOtherPlugin {
     public static void orderAqyAction(String money) {
         if (Constant.AQY_SDK) {
             try {
+                purchaseAqyAction(money);
                 JSONObject actionParam = new JSONObject();
                 actionParam.put("money", Double.valueOf(money));
                 QiLinTrans.uploadTrans(TransType.QL_PLACE_ORDER, actionParam);

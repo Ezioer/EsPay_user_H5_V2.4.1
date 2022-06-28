@@ -215,7 +215,7 @@ public class StartESUserPlugin {
             param = param + "&sdkType=fhzj";
         }
         //红包版本需要加红包，非红包版本注释掉就可以
-        param = param + "&sdkVersion=hongbao";
+//        param = param + "&sdkVersion=hongbao";
       /*  if (CommonUtils.getTestMoney(Starter.mActivity) == 1) {
             param = param + "&sdkVersion=hongbao";
         }*/

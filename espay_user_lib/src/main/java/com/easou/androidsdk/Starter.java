@@ -90,7 +90,6 @@ public class Starter {
         StartOtherPlugin.onLaunchApp();
         StartOtherPlugin.initKSSDK(activity);
         StartOtherPlugin.initTTSDK(activity);
-        StartOtherPlugin.initAQY(activity);
         /** 初始化汇川广告GISM SDK */
         StartOtherPlugin.initGism(activity, false);
         /** 广点通SDK初始化 */
@@ -103,6 +102,9 @@ public class Starter {
             public void run() {
 //                ESdkLog.d("快手sdk激活");
                 StartOtherPlugin.logKSActionAppActive();
+                if (!Constant.AQY_SDK) {
+                    StartOtherPlugin.initAQY(activity);
+                }
             }
         }, 3000);
         StartESUserPlugin.loginSdk();
