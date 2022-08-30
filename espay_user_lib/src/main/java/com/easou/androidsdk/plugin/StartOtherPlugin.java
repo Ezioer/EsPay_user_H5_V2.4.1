@@ -773,6 +773,7 @@ public class StartOtherPlugin {
             Constant.BD_SDK = true;
 //            System.loadLibrary("msaoaidsec");
             BaiduAction.setPrintLog(true);
+            BaiduAction.enableClip(false);
             try {
                 BaiduAction.init(mContext, Long.valueOf(CommonUtils.readPropertiesValue(mContext, "BD_appid")),
                         CommonUtils.readPropertiesValue(mContext, "BD_appSecret"));

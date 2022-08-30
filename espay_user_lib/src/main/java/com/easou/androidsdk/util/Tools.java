@@ -329,10 +329,7 @@ public class Tools {
      */
     public static JSONObject getOnlyId() {
 //        StringBuilder deviceId = new StringBuilder();
-        String imei = getImei();
-        if (imei == null) {
-            imei = "";
-        }
+        String imei = Constant.IMEI;
         String androidId = getAndroidId();
         String serial = getSerNum();
         String uuid = getUuid().replace("-", "");
@@ -421,17 +418,6 @@ public class Tools {
         try {
             return Build.SERIAL;
         } catch (Exception e) {
-        }
-        return "";
-    }
-
-    public static String getImei() {
-        try {
-            TelephonyManager manager = (TelephonyManager) Starter.mActivity.getApplicationContext().
-                    getSystemService(Starter.mActivity.getApplicationContext().TELEPHONY_SERVICE);
-            return manager.getDeviceId();
-        } catch (Exception e) {
-
         }
         return "";
     }

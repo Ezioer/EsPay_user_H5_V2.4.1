@@ -91,7 +91,9 @@ public class Starter {
         StartOtherPlugin.initGism(activity, false);
         /** 广点通SDK初始化 */
         StartOtherPlugin.initGDTAction(activity);
-        BaiduAction.setPrivacyStatus(PrivacyStatus.AGREE);
+        if (Constant.BD_SDK) {
+            BaiduAction.setPrivacyStatus(PrivacyStatus.AGREE);
+        }
         new Handler(Looper.myLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
