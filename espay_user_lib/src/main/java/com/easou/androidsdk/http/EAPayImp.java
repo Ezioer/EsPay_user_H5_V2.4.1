@@ -125,8 +125,6 @@ public class EAPayImp {
 	 * 银联的充值。
 	 * 
 	 * @param token
-	 * @param value
-	 * @param invoiceId
 	 * @return
 	 */
 	public static String[] cardChargeYinLian(String param, String token) {
@@ -166,11 +164,6 @@ public class EAPayImp {
 	/**
 	 * 卡类充值请求
 	 * @param token 废弃，有用户中心需要使用，传null
-	 * @param channel 卡类型
-	 * @param card_num 卡号
-	 * @param card_pass 卡密
-	 * @param value 交易金额
-	 * @param invoiceId 
 	 * @return
 	 */
 	public static String[] cardCharge(String params, String token) {
@@ -280,7 +273,6 @@ public class EAPayImp {
 	/**
 	 * 请求支付类型
 	 * @param token 废弃，有用户中心需要使用，传null
-	 * @param appId 
 	 * @return
 	 */
 	public static String getWechatPayment(Map<String, String> map, String token) {

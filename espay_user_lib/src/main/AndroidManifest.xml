@@ -40,11 +40,11 @@
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.RECORD_VIDEO" />
 
-    <permission
+   <!-- <permission
         android:name="${applicationId}.permission.xenv.RECEIVE"
-        android:protectionLevel="signatureOrSystem" />
+        android:protectionLevel="signatureOrSystem" />-->
 
-    <uses-permission android:name="${applicationId}.permission.xenv.RECEIVE" />
+    <!--    <uses-permission android:name="${applicationId}.permission.xenv.RECEIVE" />-->
 
     <application
         android:allowBackup="true"
@@ -169,7 +169,7 @@
             android:launchMode="singleInstance"
             android:screenOrientation="behind" />
 
-        <activity
+        <!--<activity
             android:name="com.baidu.xenv.XenvActivity"
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale"
             android:excludeFromRecents="true"
@@ -199,14 +199,14 @@
             android:name="com.baidu.xenv.XenvProvider"
             android:authorities="${applicationId}.xenv.ac.provider"
             android:exported="false"
-            tools:replace="android:authorities" />
+            tools:replace="android:authorities" />-->
 
-        <meta-data
-            android:name="seckey_avscan"
-            android:value="660346260f8a841a04ec2a56815b421b" />
-        <meta-data
-            android:name="appkey_avscan"
-            android:value="100034" />
+        <!-- <meta-data
+             android:name="seckey_avscan"
+             android:value="660346260f8a841a04ec2a56815b421b" />
+         <meta-data
+             android:name="appkey_avscan"
+             android:value="100034" />-->
     </application>
 
 </manifest>

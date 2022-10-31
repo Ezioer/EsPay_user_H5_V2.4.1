@@ -7,8 +7,6 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.baidu.mobads.action.BaiduAction;
-import com.baidu.mobads.action.PrivacyStatus;
 import com.bytedance.applog.AppLog;
 import com.bytedance.applog.GameReportHelper;
 //import com.bytedance.applog.ILogger;
@@ -39,9 +37,6 @@ import com.qq.gdt.action.GDTAction;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import static com.baidu.mobads.action.ActionParam.Key.PURCHASE_MONEY;
-
 
 public class StartOtherPlugin {
 
@@ -768,7 +763,7 @@ public class StartOtherPlugin {
      * @param mContext
      */
     public static void initBD(Context mContext) {
-        if (TextUtils.equals(CommonUtils.readPropertiesValue(mContext, "use_BD"), "0")) {
+        /*if (TextUtils.equals(CommonUtils.readPropertiesValue(mContext, "use_BD"), "0")) {
             ESdkLog.d("初始化百度sdk");
             Constant.BD_SDK = true;
 //            System.loadLibrary("msaoaidsec");
@@ -782,14 +777,14 @@ public class StartOtherPlugin {
             }
             // 设置应用激活的间隔（默认30天）
             BaiduAction.setActivateInterval(mContext, 30);
-        }
+        }*/
     }
 
     /**
      * baidu SDK付费成功事件
      */
     public static void logBDActionPerchase(String money) {
-        if (Constant.BD_SDK) {
+       /* if (Constant.BD_SDK) {
             if (money != null) {
                 String[] strs = money.split("\\.");
                 int payMoney = 0;
@@ -802,41 +797,41 @@ public class StartOtherPlugin {
                     ESdkLog.d(e.getMessage());
                 }
             }
-        }
+        }*/
     }
 
     /**
      * baidu sdk注册事件
      */
     public static void logBDRegister() {
-        if (Constant.BD_SDK) {
+       /* if (Constant.BD_SDK) {
             BaiduAction.logAction(com.baidu.mobads.action.ActionType.REGISTER);
-        }
+        }*/
     }
 
     /**
      * baidu sdk登陆事件
      */
     public static void logBDLogin() {
-        if (Constant.BD_SDK) {
+       /* if (Constant.BD_SDK) {
             BaiduAction.logAction(com.baidu.mobads.action.ActionType.LOGIN);
-        }
+        }*/
     }
 
     /**
      * baidu sdk页面浏览事件
      */
     public static void logBDPage() {
-        if (Constant.BD_SDK) {
+      /*  if (Constant.BD_SDK) {
             BaiduAction.logAction(com.baidu.mobads.action.ActionType.PAGE_VIEW);
-        }
+        }*/
     }
 
     /**
      * baidu SDK下单成功事件
      */
     public static void logBDActionOrder(String money) {
-        if (Constant.BD_SDK) {
+        /*if (Constant.BD_SDK) {
             if (money != null) {
                 String[] strs = money.split("\\.");
                 int payMoney = 0;
@@ -848,6 +843,6 @@ public class StartOtherPlugin {
                 } catch (Exception e) {
                 }
             }
-        }
+        }*/
     }
 }

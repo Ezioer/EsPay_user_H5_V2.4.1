@@ -9,8 +9,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.StrictMode;
 
-import com.baidu.mobads.action.BaiduAction;
-import com.baidu.mobads.action.PrivacyStatus;
 import com.easou.androidsdk.callback.AppTimeWatcher;
 import com.easou.androidsdk.callback.ESdkCallback;
 import com.easou.androidsdk.data.Constant;
@@ -91,9 +89,9 @@ public class Starter {
         StartOtherPlugin.initGism(activity, false);
         /** 广点通SDK初始化 */
         StartOtherPlugin.initGDTAction(activity);
-        if (Constant.BD_SDK) {
+       /* if (Constant.BD_SDK) {
             BaiduAction.setPrivacyStatus(PrivacyStatus.AGREE);
-        }
+        }*/
         new Handler(Looper.myLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -335,7 +333,7 @@ public class Starter {
      */
     public void handleBDPermissions(int requestCode,
                                     String permissions[], int[] grantResults) {
-        if (!Constant.BD_SDK) {
+        /*if (!Constant.BD_SDK) {
             return;
         }
         ESdkLog.d("调用百度授权回调接口");
@@ -348,7 +346,7 @@ public class Starter {
                 BaiduAction.onRequestPermissionsResult(requestCode, permissions, grantResults);
                 break;
             }
-        }
+        }*/
        /* if (!isGet) {
             BaiduAction.setPrivacyStatus(PrivacyStatus.DISAGREE);
         } else {
