@@ -11,8 +11,6 @@ import android.os.StrictMode;
 import android.support.annotation.NonNull;
 
 //import com.baidu.mobads.action.BaiduAction;
-import com.baidu.mobads.action.BaiduAction;
-import com.baidu.mobads.action.PrivacyStatus;
 import com.bytedance.hume.readapk.HumeSDK;
 import com.easou.androidsdk.callback.AppTimeWatcher;
 import com.easou.androidsdk.callback.ESdkCallback;
@@ -95,7 +93,7 @@ public class Starter {
         /** 广点通SDK初始化 */
         StartOtherPlugin.initGDTAction(activity);
         /** 百度初始化 */
-        BaiduAction.setPrivacyStatus(PrivacyStatus.AGREE);
+//        BaiduAction.setPrivacyStatus(PrivacyStatus.AGREE);
         Constant.qnChannel = HumeSDK.getChannel(activity);
         new Handler(Looper.myLooper()).postDelayed(new Runnable() {
             @Override
@@ -338,7 +336,7 @@ public class Starter {
      */
     public void handleBDPermissions(int requestCode,
                                     String permissions[], int[] grantResults) {
-        if (!Constant.BD_SDK) {
+       /* if (!Constant.BD_SDK) {
             return;
         }
         ESdkLog.d("调用百度授权回调接口");
@@ -351,7 +349,7 @@ public class Starter {
                 BaiduAction.onRequestPermissionsResult(requestCode, permissions, grantResults);
                 break;
             }
-        }
+        }*/
        /* if (!isGet) {
             BaiduAction.setPrivacyStatus(PrivacyStatus.DISAGREE);
         } else {
