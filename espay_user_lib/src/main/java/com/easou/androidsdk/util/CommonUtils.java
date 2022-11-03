@@ -20,6 +20,7 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import com.bytedance.hume.readapk.HumeSDK;
 import com.easou.androidsdk.Starter;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.sso.AuthBean;
@@ -468,6 +469,22 @@ public class CommonUtils {
      * @param key：参数名称
      */
     public static String readPropertiesValue(Context _context, String key) {
+        if (Constant.isTTVersion == 1 && key.equals("qn")) {
+            String qnChannel = "";
+            if (Constant.qnChannel.equals("")) {
+                if (Starter.mActivity == null) {
+                    qnChannel = HumeSDK.getChannel(_context);
+                } else {
+                    qnChannel = HumeSDK.getChannel(Starter.mActivity);
+                }
+            } else {
+                qnChannel = Constant.qnChannel;
+            }
+            if (!qnChannel.equals("")) {
+                ESdkLog.d("头条分包渠道号:" + qnChannel);
+                return qnChannel;
+            }
+        }
         Properties prop = new Properties();
         InputStream is = null;
         String str = "ZKX";

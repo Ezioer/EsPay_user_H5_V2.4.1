@@ -49,7 +49,9 @@ public class Constant {
     /**
      * 记录oaid
      */
-    public static String OAID = "";
+    public static String OAID = "0";
+    public static String qnChannel = "";
+    public static final int isTTVersion = 0;
     /**
      * 记录是否为模拟器 0为真机，1为模拟器
      */

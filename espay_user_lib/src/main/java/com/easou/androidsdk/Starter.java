@@ -8,7 +8,10 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.StrictMode;
+import android.support.annotation.NonNull;
 
+//import com.baidu.mobads.action.BaiduAction;
+import com.bytedance.hume.readapk.HumeSDK;
 import com.easou.androidsdk.callback.AppTimeWatcher;
 import com.easou.androidsdk.callback.ESdkCallback;
 import com.easou.androidsdk.data.Constant;
@@ -89,9 +92,13 @@ public class Starter {
         StartOtherPlugin.initGism(activity, false);
         /** 广点通SDK初始化 */
         StartOtherPlugin.initGDTAction(activity);
+        /** 百度初始化 */
        /* if (Constant.BD_SDK) {
             BaiduAction.setPrivacyStatus(PrivacyStatus.AGREE);
         }*/
+        if (Constant.isTTVersion == 1) {
+            Constant.qnChannel = HumeSDK.getChannel(activity);
+        }
         new Handler(Looper.myLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
