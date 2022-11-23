@@ -9,11 +9,8 @@ import com.easou.androidsdk.http.ReYunLogHelper;
 import com.easou.androidsdk.ui.ESUserWebActivity;
 import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESdkLog;
-import com.easou.androidsdk.util.GsonUtil;
 import com.easou.androidsdk.util.HttpLogHelper;
 import com.easou.androidsdk.util.Tools;
-import com.google.gson.Gson;
-import com.ulopay.android.h5_library.utils.JSONUtils;
 
 import org.json.JSONObject;
 

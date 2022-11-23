@@ -6,7 +6,6 @@ import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.data.ESConstant;
 import com.easou.androidsdk.data.ErrorResult;
 import com.easou.androidsdk.data.FeeType;
-import com.easou.androidsdk.ui.ESPayCenterActivity;
 import com.easou.androidsdk.ui.ESToast;
 import com.easou.androidsdk.ui.UIHelper;
 import com.easou.androidsdk.util.DialogerUtils;
@@ -79,7 +78,6 @@ public class HttpAsyncTaskImp extends HttpAsyncTask<Void, Void, String[]> {
         DialogerUtils.dismiss(mContext);
         JSONObject json = new JSONObject();
         if (result == null) {
-            ESPayCenterActivity.onFailedCallBack(ErrorResult.ESPAY_NETWORK_ERROR, "网络异常，请稍后重试");
             return;
         }
         if (result[1] != null
@@ -177,7 +175,6 @@ public class HttpAsyncTaskImp extends HttpAsyncTask<Void, Void, String[]> {
         } else {
             UIHelper.isClicked = false;
             if (result[0] != null && !result[0].equals("")) {
-                ESPayCenterActivity.onFailedCallBack(ErrorResult.ESPAY_NETWORK_ERROR, result[0]);
                 ESToast.getInstance().ToastShow(mContext, result[0]);
             }
         }

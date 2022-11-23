@@ -3,17 +3,19 @@ package com.easou.espay_user_h5;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
-import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.View;
@@ -29,29 +31,24 @@ import android.widget.Toast;
 
 import com.easou.androidsdk.Starter;
 import com.easou.androidsdk.callback.ESdkCallback;
+import com.easou.androidsdk.callback.ESdkPayCallback;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.data.ESConstant;
-import com.easou.androidsdk.plugin.StartOtherPlugin;
 import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESdkLog;
-import com.easou.androidsdk.util.NetworkUtils;
+import com.easou.androidsdk.util.TestRSA;
 import com.easou.androidsdk.util.Tools;
 
-import org.json.JSONException;
-
-import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Button btnBuyPort, btnChangeAccount, btnGetUserInfo, btnUserCert, btnLogin;
+    private Button btnBuyPort, btnChangeAccount, btnGetUserInfo, btnUserCert, btnGoogleLogin, btnGoogleLogout, btnLoginGame, btnFacebookLogin, btnFacebookLogout;
     private Switch mSwitch;
     private EditText mPlayId;
-
     /**
      * 特别说明！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
      * client.properties文件中appId, partnerId, key, qn, notifyUrl, redirectUrl，
@@ -60,57 +57,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 具体配置详情请查看sdk接入文档说明
      */
 
-    /* =================================== 测试参数 =================================== */
-    private static String tradeId = System.currentTimeMillis() + ""; // 游戏订单号
-    private static String needChannels = "ALIPAY2,WECHAT,UNIONPAY2,WEB"; // 支付方式
-
     private static final int PERMISSIONCODE = 1;
-    private Map<String, String> payInfo; // 支付参数map
-
-    /* =================================== 支付接口回调 =================================== */
-    private Handler mHandler = new Handler() {
-
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case ESConstant.ESPAY_SUC:
-                    Toast.makeText(MainActivity.this, "订单提交成功", Toast.LENGTH_SHORT).show();
-                    System.out.println("计费成功");
-                    break;
-
-                case ESConstant.ESPAY_FAL:
-                    Toast.makeText(MainActivity.this, "计费失败", Toast.LENGTH_SHORT).show();
-                    System.out.println("计费失败");
-                    System.out.println("错误码：" + msg.getData().getString("errorCode"));
-                    System.out.println("错误信息：" + msg.getData().getString("errorMessage"));
-                    break;
-                case ESConstant.ESPAY_BACK:
-                    //从支付页面返回
-                    ESdkLog.d("支付页面点击了返回或右上角的关闭按钮");
-                    break;
-            }
-            super.handleMessage(msg);
-        }
-    };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         mPlayId = (EditText) findViewById(R.id.tv_player_id);
         getSupportActionBar().hide();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 //		hideBottomUIMenu();
-        /** 初始化头条SDK */
-//        Starter.getInstance().initTTSDK(MainActivity.this);
-
-        /** 快手SDK活跃事件，进入app首页时调用 */
-//        Starter.getInstance().logKSActionAppActive();
 
         // 初始化demo演示UI
         initUI();
         checkRunTimePermission();
+
+        try {
+            String data = "待加密的文字内容";
+            String encryptData = TestRSA.encrypt(data, TestRSA.getPublicKey(TestRSA.publicKey));
+            System.out.println("加密后内容:" + encryptData);
+        } catch (Exception e) {
+
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Starter.getInstance().handleActivityResult(requestCode, resultCode, data);
     }
 
     private void checkRunTimePermission() {
@@ -142,9 +117,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[], @NonNull int[] grantResults) {
         //PERMISSIONCODE为申请权限时的请求码
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         boolean isAllGet = true;
-        //百度权限回调
-        Starter.getInstance().handleBDPermissions(requestCode, permissions, grantResults);
         if (PERMISSIONCODE == requestCode) {
             // 从数组中取出返回结果，遍历判断多组权限
             for (int result : grantResults) {
@@ -227,15 +201,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         btnGetUserInfo = (Button) this.findViewById(R.id.parse_userinfo);
         btnBuyPort = (Button) this.findViewById(R.id.parse_port);
+        btnGoogleLogout = (Button) this.findViewById(R.id.btn_googleLogout);
+        btnGoogleLogin = (Button) this.findViewById(R.id.btn_googleLogin);
+        btnFacebookLogout = (Button) this.findViewById(R.id.btn_facebookLogout);
+        btnFacebookLogin = (Button) this.findViewById(R.id.btn_facebookLogin);
         btnChangeAccount = (Button) this.findViewById(R.id.parse_changeaccount);
         btnUserCert = (Button) this.findViewById(R.id.parse_usercert);
-        btnLogin = (Button) this.findViewById(R.id.login_game);
+        btnLoginGame = (Button) this.findViewById(R.id.login_game);
         mSwitch = (Switch) this.findViewById(R.id.switch_env);
         btnGetUserInfo.setOnClickListener(this);
         btnBuyPort.setOnClickListener(this);
+        btnGoogleLogin.setOnClickListener(this);
+        btnGoogleLogout.setOnClickListener(this);
+        btnFacebookLogin.setOnClickListener(this);
+        btnFacebookLogout.setOnClickListener(this);
         btnChangeAccount.setOnClickListener(this);
         btnUserCert.setOnClickListener(this);
-        btnLogin.setOnClickListener(this);
+        btnLoginGame.setOnClickListener(this);
 
         mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -373,9 +355,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Starter.getInstance().logOut();
                 break;
 
+            case R.id.btn_googleLogout:
+                Starter.getInstance().googleLogout();
+                break;
+
+            case R.id.btn_googleLogin:
+                sdkLogin();
+                break;
+
+            case R.id.btn_facebookLogin:
+                Starter.getInstance().initFacebook();
+                break;
+
+            case R.id.btn_facebookLogout:
+                break;
+
             case R.id.parse_port:
                 // demo演示代码，调用支付接口演示
-                showInputDialog();
+                /**
+                 * 支付接口
+                 * Activity：当前activity
+                 */
+                Starter.getInstance().pay(MainActivity.this, "esgame_04", new ESdkPayCallback() {
+
+                    @Override
+                    public void onPaySuccess() {
+                        Toast.makeText(MainActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onPayFail(int code) {
+                        //1000用户取消支付
+                        //1001支付失败
+                        //1002服务器验证交易失败，等验证成功后会继续回调支付成功接口
+                        //1003已拥有该商品
+                        Toast.makeText(MainActivity.this, "支付失败" + code, Toast.LENGTH_SHORT).show();
+                    }
+                });
                 break;
 
             case R.id.login_game:
@@ -393,9 +409,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 playerInfo.put(ESConstant.PROJECTMARK, "ka");
                 playerInfo.put(ESConstant.CREATEDTIME, String.valueOf(System.currentTimeMillis()));
                 Starter.getInstance().startGameLoginLog(playerInfo);
-
                 // demo演示代码
-                enterGame(View.VISIBLE);
                 break;
 
             default:
@@ -416,107 +430,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         /** 显示悬浮窗 */
         Starter.getInstance().showFloatView();
-        /** 为方便及准确的接入第三方数据统计服务，现更改为页面数据浏览接口，统一处理，
-         * 之前的接口仍保留，但调用了此接口后无需再调用额外接口，不要重复调用*/
         Starter.getInstance().pageResume(MainActivity.this);
-        /** 广点通SDK上报App启动 */
-//        Starter.getInstance().logGDTAction();
-        /** 快手SDK进入游戏界面 */
-//        Starter.getInstance().logKSActionPageResume(MainActivity.this);
-        /** 百度浏览页面 */
-//        Starter.getInstance().logBDPageResume();
-        /** 头条进入游戏页面 */
-//        Starter.getInstance().logTTPageResume(MainActivity.this);
-    }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        /** 为方便及准确的接入第三方数据统计服务，现更改为页面数据浏览接口，统一处理，
-         * 之前的接口仍保留，但调用了此接口后无需再调用额外接口，不要重复调用*/
-        Starter.getInstance().pagePause(MainActivity.this);
-        /** 快手SDK退出游戏界面 */
-//        Starter.getInstance().logKSActionPagePause(MainActivity.this);
-        /** 头条退出游戏页面 */
-//        Starter.getInstance().logTTPagePause(MainActivity.this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Starter.getInstance().pageDestory();
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        /** GISM SDK 退出游戏回调 */
-        Starter.getInstance().onGismExitApp();
-
         System.exit(0);
-    }
-
-    /**
-     * demo演示代码，调用支付接口演示
-     */
-    private void showInputDialog() {
-
-        final EditText inputAmount = new EditText(MainActivity.this);
-        inputAmount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        inputAmount.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle("输入支付金额").setView(inputAmount)
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-
-                String mPayAmount = inputAmount.getText().toString();
-                if (mPayAmount != null && !mPayAmount.isEmpty()) {
-                    DecimalFormat df = new DecimalFormat("##");
-                    String tradeName = df.format(Float.parseFloat(mPayAmount) * 100) + "金币";
-
-                  /*  tradeId = "eyJvaWQiOjM3OCwib3JkZXJfdGltZSI6MTU4ODY4NTIwOH00000193c124800011fULK3fsX3bGSj0rzQPEwO3CqpmlwHcXvwjUaesywkI";
-                    tradeName = "60钻石";
-                    mPayAmount = "6";*/
-                    // 设置调用支付接口所需的Map参数
-                    payInfo = new HashMap<String, String>();
-                    payInfo.put(ESConstant.MONEY, mPayAmount); // 支付金额
-                    payInfo.put(ESConstant.TRADE_ID, tradeId); // 游戏订单号
-                    payInfo.put(ESConstant.TRADE_NAME, tradeName); // 购买商品名称，根据支付金额对应修改，如6元对应600金币，98元对应9800金币
-                    payInfo.put(ESConstant.NEED_CHANNELS, needChannels); // 支付方式
-
-                    /**
-                     * 支付接口
-                     * Activity：当前activity
-                     * Map<String, String>：支付所需的Map参数
-                     * Handler：支付回调
-                     */
-                    Starter.getInstance().pay(MainActivity.this, payInfo, mHandler);
-                }
-            }
-        });
-        builder.show();
-    }
-
-    /**
-     * demo演示代码
-     */
-    void enterGame(final int visible) {
-
-        runOnUiThread(new Runnable() {
-            public void run() {
-                btnGetUserInfo.setVisibility(visible);
-                btnBuyPort.setVisibility(visible);
-                btnChangeAccount.setVisibility(visible);
-                btnUserCert.setVisibility(visible);
-                btnLogin.setVisibility(visible == View.VISIBLE ? View.GONE : View.VISIBLE);
-            }
-        });
     }
 }

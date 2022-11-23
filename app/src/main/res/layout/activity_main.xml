@@ -1,74 +1,120 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="15dp" >
+    android:padding="15dp">
 
-    <Button
-        android:id="@+id/parse_userinfo"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:text="获取SDK用户信息" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/parse_usercert"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:text="实名认证" />
+        <Button
+            android:id="@+id/parse_userinfo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="获取SDK用户信息" />
 
-    <Button
-        android:id="@+id/parse_changeaccount"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:text="切换账号" />
+        <Button
+            android:id="@+id/parse_usercert"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="实名认证" />
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/parse_port"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:text="调用支付" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <Switch
-        android:id="@+id/switch_env"
-        android:text="测试环境"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/parse_changeaccount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="切换账号" />
+
+        <Button
+            android:id="@+id/parse_port"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="调用支付" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btn_googleLogin"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="google登录" />
+
+        <Button
+            android:id="@+id/btn_facebookLogin"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="facebook登录" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btn_googleLogout"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="退出google登录" />
+
+        <Button
+            android:id="@+id/btn_facebookLogout"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="退出facebook登录" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/login_game"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="进入游戏" />
+        android:text="游戏角色登录" />
+
+    <Switch
+        android:id="@+id/switch_env"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="测试环境" />
 
     <EditText
         android:id="@+id/tv_player_id"
-        android:hint="请输入角色id"
-        android:inputType="number"
         android:layout_width="match_parent"
-        android:layout_height="40dp" />
+        android:layout_height="40dp"
+        android:hint="请输入角色id"
+        android:inputType="number" />
 
     <RadioGroup
-        android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <RadioButton
-            android:text="红包版本"
             android:id="@+id/radio_money"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="红包版本" />
 
         <RadioButton
-            android:text="非红包版本"
             android:id="@+id/radio_normal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="非红包版本" />
     </RadioGroup>
 
     <Button
@@ -79,7 +125,7 @@
 
     <TextView
         android:id="@+id/tv_info"
-        android:text=""
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="" />
 </LinearLayout>

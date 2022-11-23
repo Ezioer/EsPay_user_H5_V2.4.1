@@ -3,15 +3,11 @@ package com.easou.androidsdk.plugin;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
-import com.bytedance.applog.GameReportHelper;
-import com.easou.androidsdk.ESPlatform;
 import com.easou.androidsdk.Starter;
 import com.easou.androidsdk.data.Constant;
-import com.easou.androidsdk.http.EAPayInter;
 import com.easou.androidsdk.ui.ESUserWebActivity;
 import com.easou.androidsdk.ui.FloatView;
 import com.easou.androidsdk.util.AES;
@@ -24,8 +20,8 @@ import com.easou.androidsdk.util.ReplaceCallBack;
 import com.easou.androidsdk.util.ThreadPoolManager;
 import com.easou.androidsdk.util.Tools;
 
-import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.Map;
 
 public class StartESUserPlugin {
@@ -38,19 +34,14 @@ public class StartESUserPlugin {
             Constant.isTurnExt = 1;
         }
         //设置支付渠道
-        setPayChannel();
         ThreadPoolManager.getInstance().addTask(new Runnable() {
             @Override
             public void run() {
                 Looper.prepare();
-                //三次轮询请求
-//                getDeviceId();
-//                EAPayInter.getOnlyDeviceId();
                 if (!Constant.IS_LOGINED) {
                     startH5Login();
                     startRequestHost(Starter.mActivity, false, null);
                 }
-
                 Looper.loop();
             }
         });
@@ -60,37 +51,13 @@ public class StartESUserPlugin {
      * 打开H5 SDK页面
      */
     public static void startH5Login() {
-
-//		StartOtherPlugin.logGDTActionRegister();
-
         // 获取deviceID
         String imei = Tools.getDeviceImei(Starter.mActivity);
         if (!TextUtils.isEmpty(imei.trim())) {
             Constant.IMEI = imei;
         }
         Constant.NET_IP = Tools.getNetIp();
-
         enterH5View();
-    }
-
-
-    public static void getDeviceId() {
-        int count = 0;
-        while (count < 3) {
-            int result = EAPayInter.getOnlyDeviceId();
-            if (result == 1) {
-                //请求成功停止轮询请求
-                break;
-            } else {
-                //-1为接口请求出错，暂停100毫秒轮询三次
-                count++;
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    ESdkLog.d(e.toString());
-                }
-            }
-        }
     }
 
     /**
@@ -122,8 +89,15 @@ public class StartESUserPlugin {
      * 判断用户是否实名认证
      */
     public static void getUserCertStatus() {
-
         ESUserWebActivity.clientToJS(Constant.YSTOJS_IS_CERTUSER, null);
+        enterH5View();
+    }
+
+    //登录google账号
+    public static void loginGoogle(String idToken) {
+        HashMap map = new HashMap();
+        map.put("idToken", idToken);
+        ESUserWebActivity.clientToJS(Constant.YSTOJS_GAME_LOGINGOOGLE, map);
         enterH5View();
     }
 
@@ -131,7 +105,6 @@ public class StartESUserPlugin {
      * 打开实名认证页面
      */
     public static void showUserCert() {
-
         ESUserWebActivity.clientToJS(Constant.YSTOJS_USERCERT, null);
         enterH5View();
     }

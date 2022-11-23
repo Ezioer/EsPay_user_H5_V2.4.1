@@ -20,7 +20,6 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.bytedance.hume.readapk.HumeSDK;
 import com.easou.androidsdk.Starter;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.sso.AuthBean;
@@ -149,6 +148,32 @@ public class CommonUtils {
         SharedPreferences.Editor editor = settings.edit();
         editor.putString(Constant.ES_TOKEN, token);
         editor.commit();
+    }
+
+    public static void saveGoogleToken(Context mContext, String token) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("googleToken", token);
+        editor.commit();
+    }
+
+    public static String getGoogleToken(Context mContext) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        String userid = settings.getString("googleToken", "");
+        return userid;
+    }
+
+    public static void saveFBToken(Context mContext, String token) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("facebookToken", token);
+        editor.commit();
+    }
+
+    public static String getFBToken(Context mContext) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        String userid = settings.getString("facebookToken", "");
+        return userid;
     }
 
     public static String getUserId(Context mContext) {
@@ -469,22 +494,6 @@ public class CommonUtils {
      * @param key：参数名称
      */
     public static String readPropertiesValue(Context _context, String key) {
-        if (Constant.isTTVersion == 1 && key.equals("qn")) {
-            String qnChannel = "";
-            if (Constant.qnChannel.equals("")) {
-                if (Starter.mActivity == null) {
-                    qnChannel = HumeSDK.getChannel(_context);
-                } else {
-                    qnChannel = HumeSDK.getChannel(Starter.mActivity);
-                }
-            } else {
-                qnChannel = Constant.qnChannel;
-            }
-            if (!qnChannel.equals("")) {
-                ESdkLog.d("头条分包渠道号:" + qnChannel);
-                return qnChannel;
-            }
-        }
         Properties prop = new Properties();
         InputStream is = null;
         String str = "ZKX";

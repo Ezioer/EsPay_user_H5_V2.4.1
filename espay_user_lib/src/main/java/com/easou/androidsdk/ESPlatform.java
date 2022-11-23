@@ -36,7 +36,6 @@ public class ESPlatform {
 
     @JavascriptInterface
     public void esLogin(final String param) {
-        StartOtherPlugin.logGDTAction();
         String userId = "";
         String userName = "";
         String token = "";
@@ -71,14 +70,7 @@ public class ESPlatform {
         CommonUtils.saveIsAutoCount(Starter.mActivity, isAdult);
         CommonUtils.saveH5Token(Starter.mActivity, token);
         CommonUtils.saveH5TokenToCard(token, CommonUtils.readPropertiesValue(Starter.mActivity, Constant.APP_ID));
-        final String user_ID = userId;
         CommonUtils.saveUserId(Starter.mActivity, userId);
-        StartOtherPlugin.logTTActionLogin(user_ID);
-        StartOtherPlugin.logGismActionLogin(user_ID);
-        StartOtherPlugin.logGDTActionSetID(user_ID);
-        StartOtherPlugin.loginAqyAction();
-        StartOtherPlugin.logBDLogin();
-        StartOtherPlugin.createRoleAqyAction(userName);
         Constant.IS_LOGINED = true;
         Constant.ESDK_USERID = userId;
         Constant.ESDK_TOKEN = token;
@@ -141,11 +133,6 @@ public class ESPlatform {
     @JavascriptInterface
     public void esLogout(final String param) {
         AppTimeWatcher.isLogOut = true;
-        StartOtherPlugin.logTTActionLogin("");
-        StartOtherPlugin.logGismActionLogout();
-        StartOtherPlugin.logGDTActionSetID("");
-        StartOtherPlugin.logoutAqyAction();
-        StartOtherPlugin.logOutTT();
         Constant.ESDK_USERID = "";
         CommonUtils.saveUserId(Starter.mActivity, "");
         CommonUtils.saveIsAutoCount(Starter.mActivity, "0");
@@ -198,13 +185,6 @@ public class ESPlatform {
     @JavascriptInterface
     public void esRegister(final String param) {
         AppTimeWatcher.isLogOut = false;
-        StartOtherPlugin.logGDTAction();
-        StartOtherPlugin.logTTActionRegister();
-        StartOtherPlugin.logGismActionRegister();
-        StartOtherPlugin.logKSActionRegister();
-        StartOtherPlugin.logBDRegister();
-        StartOtherPlugin.logGDTActionRegister();
-        StartOtherPlugin.registerAqyAction();
         String userId = "";
         String userName = "";
 
@@ -368,5 +348,13 @@ public class ESPlatform {
         result.put(Constant.SDK_C_PAY, cPay);
 
         Constant.PAY_LIMIT_INFO_MAP = result;
+    }
+
+    /**
+     * h5调用google登录
+     */
+    @JavascriptInterface
+    public void esGoogleLogin(final String param) {
+        Starter.getInstance().beginLogin();
     }
 }

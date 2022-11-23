@@ -1,21 +1,38 @@
 package com.easou.androidsdk;
 
-import android.Manifest;
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.StrictMode;
-import android.support.annotation.NonNull;
+import android.util.Log;
+import android.widget.Toast;
 
-//import com.baidu.mobads.action.BaiduAction;
-import com.bytedance.hume.readapk.HumeSDK;
-import com.easou.androidsdk.callback.AppTimeWatcher;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.collection.ArrayMap;
+
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingFlowParams;
+import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.ConsumeParams;
+import com.android.billingclient.api.ConsumeResponseListener;
+import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchasesResponseListener;
+import com.android.billingclient.api.PurchasesUpdatedListener;
+import com.android.billingclient.api.SkuDetails;
+import com.android.billingclient.api.SkuDetailsParams;
+import com.android.billingclient.api.SkuDetailsResponseListener;
+import com.appsflyer.AppsFlyerLib;
+import com.appsflyer.AppsFlyerProperties;
 import com.easou.androidsdk.callback.ESdkCallback;
+import com.easou.androidsdk.callback.ESdkPayCallback;
 import com.easou.androidsdk.data.Constant;
-import com.easou.androidsdk.plugin.StartESPayPlugin;
+import com.easou.androidsdk.http.BaseResponse;
+import com.easou.androidsdk.http.EAPayInter;
 import com.easou.androidsdk.plugin.StartESUserPlugin;
 import com.easou.androidsdk.plugin.StartLogPlugin;
 import com.easou.androidsdk.plugin.StartOtherPlugin;
@@ -26,8 +43,35 @@ import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESdkLog;
 import com.easou.androidsdk.util.ThreadPoolManager;
 import com.easou.androidsdk.util.Tools;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginConfiguration;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.google.android.gms.auth.api.identity.BeginSignInRequest;
+import com.google.android.gms.auth.api.identity.SignInClient;
+import com.google.android.gms.auth.api.identity.SignInCredential;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Currency;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -39,6 +83,19 @@ public class Starter {
     public static Activity mActivity;
 
     public volatile static Starter mSingleton = null;
+    private SignInClient oneTapClient;
+    private BeginSignInRequest signInRequest;
+    private BeginSignInRequest signUpRequest;
+    private String productId = "";
+    private ESdkPayCallback mPayCallBack;
+    private GoogleSignInClient mGoogleSignInClient;
+    private BillingClient billingClient;
+    private ArrayMap<String, String> currencyArrayMap;
+    private CallbackManager callbackManager;
+    public static final String TAG = "GoogleMainActivity";
+    public static final int REQ_ONE_TAP = 10;
+    public static final int REQ_ONE_TAP2 = 11;
+    public static final int SIGN_LOGIN = 13;
 
     private Starter() {
     }
@@ -60,14 +117,195 @@ public class Starter {
 
     /**
      * 宜搜SDK支付接口
-     *
-     * @param mHandler 回调
-     * @param map      参数
      */
-    public void pay(Activity mActivity, Map<String, String> map, Handler mHandler) {
-        Starter.map = map;
-        Starter.mHandler = mHandler;
-        StartESPayPlugin.setPayParams(mActivity, map);
+    public void pay(Activity mActivity, String id, ESdkPayCallback callback) {
+        productId = id;
+        mPayCallBack = callback;
+        initBilling(mActivity);
+    }
+
+    private PurchasesUpdatedListener purchasesUpdatedListener = new PurchasesUpdatedListener() {
+        @Override
+        public void onPurchasesUpdated(BillingResult billingResult, List<Purchase> purchases) {
+            verResultAndConsume(billingResult, purchases);
+        }
+    };
+
+    private void verResultAndConsume(BillingResult billingResult, final List<Purchase> purchases) {
+        //list为购买交易的集合,查询后继续验证交易和核销订单
+        switch (billingResult.getResponseCode()) {
+            case BillingClient.BillingResponseCode.OK:
+                //通过服务器验证订单
+                ThreadPoolManager.getInstance().addTask(new Runnable() {
+                    @Override
+                    public void run() {
+                        //购买商品成功
+                        synchronized (Starter.class) {
+                            Log.d(TAG, "购买成功，进入验证订单程序........");
+                            for (final Purchase purchase : purchases) {
+                                if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
+                                    Log.d(TAG, "购买成功，验证订单中........");
+                                    BaseResponse result = EAPayInter.verGooglePlayOrder(purchase.getPurchaseToken(), productId, purchase.getPackageName());
+                                    if (result != null && result.getCode() == 0) {
+                                        //订单确认状态 0 待确认 1 已确认
+                                        int acknowledgementState = 0;
+                                        //订单核销状态 0 待核销 1 已核销
+                                        int consumptionState = 0;
+                                        try {
+                                            JSONObject custom = new JSONObject(result.getData().toString());
+                                            acknowledgementState = custom.getInt("acknowledgementState");
+                                            consumptionState = custom.getInt("consumptionState");
+                                        } catch (JSONException e) {
+                                        }
+                                        if (acknowledgementState == 0) {
+                                            //服务器验证成功，核销订单
+                                            Log.d(TAG, "验证成功，核销订单中........");
+                                            consumePurchase(purchase.getPurchaseToken());
+                                            //可重复购买的内购商品核销，回调购买给游戏处理
+                                            if (mPayCallBack != null) {
+                                                mActivity.runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        Log.d(TAG, "验证成功，发放用户权益");
+                                                        mPayCallBack.onPaySuccess();
+                                                    }
+                                                });
+                                            }
+                                        } else {
+                                            if (consumptionState == 0) {
+                                                Log.d(TAG, "验证成功，该订单未核销，执行核销订单........");
+                                                consumePurchase(purchase.getPurchaseToken());
+                                            }
+                                            Log.d(TAG, "该订单已经验证并已被核销........");
+                                        }
+                                    } else {
+                                        if (mPayCallBack != null) {
+                                            //验证失败
+                                            Log.d(TAG, "验证失败，核销订单失败........" + 1002);
+                                            mActivity.runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    mPayCallBack.onPayFail(1002);
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+                break;
+            case BillingClient.BillingResponseCode.USER_CANCELED:
+                //取消购买
+                if (mPayCallBack != null) {
+                    Log.d(TAG, "验证失败，核销订单失败........" + 1000);
+                    mPayCallBack.onPayFail(1000);
+                }
+                break;
+            case BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED:
+                //用户已拥有
+                if (mPayCallBack != null) {
+                    Log.d(TAG, "验证失败，核销订单失败........" + 1003);
+                    mPayCallBack.onPayFail(1003);
+                }
+                break;
+            default:
+                //购买失败，具体异常码可以到BillingClient.BillingResponseCode中查看
+                if (mPayCallBack != null) {
+                    Log.d(TAG, "验证失败，核销订单失败........" + 1001);
+                    mPayCallBack.onPayFail(1001);
+                }
+                break;
+        }
+    }
+
+    //核销回调
+    ConsumeResponseListener consumeResponseListener = new ConsumeResponseListener() {
+        @Override
+        public void onConsumeResponse(@NonNull BillingResult billingResult, @NonNull String purchaseToken) {
+            //核销完成后回调
+            Log.d(TAG, "核销订单成功........");
+        }
+    };
+
+    //核销订单
+    void consumePurchase(String purchaseToken) {
+        if (billingClient != null && billingClient.isReady()) {
+            ConsumeParams consumeParams = ConsumeParams.newBuilder()
+                    .setPurchaseToken(purchaseToken)
+                    .build();
+            billingClient.consumeAsync(consumeParams, consumeResponseListener);
+        }
+    }
+
+    PurchasesResponseListener purchasesResponseListener = new PurchasesResponseListener() {
+        @Override
+        public void onQueryPurchasesResponse(@NonNull BillingResult billingResult, @NonNull List<Purchase> list) {
+            verResultAndConsume(billingResult, list);
+        }
+    };
+
+
+    private BillingClientStateListener billingClientStateListener = new BillingClientStateListener() {
+        @Override
+        public void onBillingServiceDisconnected() {
+            // Try to restart the connection on the next request to
+            // Google Play by calling the startConnection() method.
+            Log.d(TAG, "服务断开，重新连接");
+            billingClient.startConnection(this);
+        }
+
+        @Override
+        public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
+            if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                // The BillingClient is ready. You can query purchases here.
+                //获取商品详情回调
+                SkuDetailsResponseListener skuDetailsResponseListener = new SkuDetailsResponseListener() {
+                    @Override
+                    public void onSkuDetailsResponse(@NonNull BillingResult billingResult, @Nullable List<SkuDetails> list) {
+                        //list为可用商品的集合
+                        //将要购买商品的商品详情配置到参数中
+                        Log.d(TAG, "应用内商品数量：" + list.size());
+                   /*     for (SkuDetails skuDetail : list) {
+                            String googleProductPrice = skuDetail.getPrice();
+                            String googleCurrencyCode = skuDetail.getPriceCurrencyCode();
+                            String currencySymbol = currencyArrayMap.get(googleCurrencyCode) == null ? googleCurrencyCode : currencyArrayMap.get(googleCurrencyCode);
+                            String replacePrice = replacePrice(googleProductPrice, googleCurrencyCode, currencySymbol);
+                        }*/
+                        BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
+                                .setSkuDetails(list.get(0))
+                                .build();
+
+                        //启动购买，返回BillingResult。
+                        BillingResult billingFlow = billingClient.launchBillingFlow(mActivity, billingFlowParams);
+                    }
+                };
+
+                //查询内购类型的商品
+                //productId为产品ID(从谷歌后台获取)
+                ArrayList<String> inAppSkuInfo = new ArrayList<>();
+                inAppSkuInfo.add(productId);
+                SkuDetailsParams skuParams = SkuDetailsParams.newBuilder()
+                        .setType(BillingClient.SkuType.INAPP)
+                        .setSkusList(inAppSkuInfo)
+                        .build();
+                billingClient.querySkuDetailsAsync(skuParams, skuDetailsResponseListener);
+                Log.d(TAG, "查询后台商品");
+            }
+        }
+    };
+
+    private void initBilling(Activity mActivity) {
+        if (billingClient == null) {
+            billingClient = BillingClient.newBuilder(mActivity)
+                    .setListener(purchasesUpdatedListener)
+                    .enablePendingPurchases()
+                    .build();
+            Log.d(TAG, "billingclient 初始化");
+        }
+        billingClient.startConnection(billingClientStateListener);
+        Log.d(TAG, "billingclient 开始连接google play");
     }
 
 
@@ -85,31 +323,8 @@ public class Starter {
         });
         Starter.mCallback = mCallback;
         Starter.mActivity = activity;
-        StartOtherPlugin.onLaunchApp();
-        StartOtherPlugin.initKSSDK(activity);
-        StartOtherPlugin.initTTSDK(activity);
-        /** 初始化汇川广告GISM SDK */
-        StartOtherPlugin.initGism(activity, false);
-        /** 广点通SDK初始化 */
-        StartOtherPlugin.initGDTAction(activity);
-        /** 百度初始化 */
-       /* if (Constant.BD_SDK) {
-            BaiduAction.setPrivacyStatus(PrivacyStatus.AGREE);
-        }*/
-        if (Constant.isTTVersion == 1) {
-            Constant.qnChannel = HumeSDK.getChannel(activity);
-        }
-        new Handler(Looper.myLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-//                ESdkLog.d("快手sdk激活");
-                StartOtherPlugin.logKSActionAppActive();
-                if (!Constant.AQY_SDK) {
-                    StartOtherPlugin.initAQY(activity);
-                }
-            }
-        }, 2000);
-        StartESUserPlugin.loginSdk();
+        initGoogleTapClient();
+//        StartESUserPlugin.loginSdk();
     }
 
     /**
@@ -189,26 +404,9 @@ public class Starter {
 
 
     /**
-     * 初始化今日头条SDK
-     */
-    @Deprecated
-    public void initTTSDK(Context context) {
-//        StartOtherPlugin.initTTSDK(context);
-    }
-
-    /**
-     * 初始化爱奇艺SDK
-     */
-    @Deprecated
-    public void initAQY(Context mContext) {
-        StartOtherPlugin.initAQY(mContext);
-    }
-
-    /**
      * 初始化SDK，获取oaid，判断是否为模拟器
      */
     public void initEntry(Context mContext) {
-        StartOtherPlugin.initEntry(mContext);
         StartOtherPlugin.checkSimulator(mContext);
     }
 
@@ -221,144 +419,59 @@ public class Starter {
         return StartESUserPlugin.getPropValue(_context, key);
     }
 
-    /**
-     * 初始化GISM SDK
-     */
-    @Deprecated
-    public void initGismSDK(Context context, boolean debug) {
-//        StartOtherPlugin.initGism(context, debug);
-    }
-
-    /**
-     * GISM退出游戏回调
-     */
-    public void onGismExitApp() {
-        StartOtherPlugin.logGismActionExitApp();
-    }
-
-
-    /**
-     * 广点通SDK行为数据上报初始化
-     *
-     * @param mContext 上下文对象
-     */
-    @Deprecated
-    public void initGDTAction(Context mContext) {
-        StartOtherPlugin.initGDTAction(mContext);
-        AppTimeWatcher.getInstance().registerWatcher((Application) mContext);
-    }
-
-    /**
-     * 广点通SDK上报app启动
-     */
-    @Deprecated
-    public void logGDTAction() {
-        if (Constant.IS_LOGINED) {
-            StartOtherPlugin.logGDTAction();
-        }
-    }
-
-    /**
-     * 快手SDK初始化
-     */
-    @Deprecated
-    public void initKSSDK(Context mContext) {
-        StartOtherPlugin.initBD(mContext);
-//        StartOtherPlugin.initKSSDK(mContext);
-    }
-
-    /**
-     * 快手SDK活跃事件，进入app首页时调用
-     */
-    @Deprecated
-    public void logKSActionAppActive() {
-//        StartOtherPlugin.logKSActionAppActive();
-    }
-
-    /**
-     * 头条进入页面统计
-     */
-    @Deprecated
-    public void logTTPageResume(Activity context) {
-        StartOtherPlugin.onTTResume(context);
-    }
-
-    /**
-     * 头条离开页面统计
-     */
-    @Deprecated
-    public void logTTPagePause(Activity context) {
-        StartOtherPlugin.onTTPause(context);
-    }
-
-    /**
-     * 快手SDK进入游戏界面
-     */
-    @Deprecated
-    public void logKSActionPageResume(Activity activity) {
-        StartOtherPlugin.logKSActionPageResume(activity);
-    }
-
-    /**
-     * 快手SDK退出游戏界面
-     */
-    @Deprecated
-    public void logKSActionPagePause(Activity activity) {
-        StartOtherPlugin.logKSActionPagePause(activity);
-    }
-
-    /**
-     * 爱奇艺SDK进入游戏界面
-     */
-    @Deprecated
-    public void logAQYActionPageResume() {
-        StartOtherPlugin.resumeAQY();
-    }
-
-    /**
-     * 爱奇艺SDK退出游戏界面
-     */
-    @Deprecated
-    public void logAQYActionPageDestory() {
-        StartOtherPlugin.destoryAQY();
-    }
-
-    /**
-     * baidu进入页面统计
-     */
-    @Deprecated
-    public void logBDPageResume() {
-        StartOtherPlugin.logBDPage();
-    }
-
-    /**
-     * 处理百度sdk的权限回调
-     *
-     * @param requestCode
-     * @param permissions
-     * @param grantResults
-     */
-    public void handleBDPermissions(int requestCode,
-                                    String permissions[], int[] grantResults) {
-        /*if (!Constant.BD_SDK) {
-            return;
-        }
-        ESdkLog.d("调用百度授权回调接口");
-        boolean isGet = false;
-        for (int i = 0; i < permissions.length; i++) {
-            String temp = permissions[i];
-            if (temp.equals(Manifest.permission.READ_PHONE_STATE)) {
-                // 授权结果回传
-                isGet = true;
-                BaiduAction.onRequestPermissionsResult(requestCode, permissions, grantResults);
-                break;
+    public void handleActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_ONE_TAP) {
+            try {
+                SignInCredential credential = oneTapClient.getSignInCredentialFromIntent(data);
+                String idToken = credential.getGoogleIdToken();
+                String username = credential.getId();
+                String password = credential.getPassword();
+                if (idToken != null) {
+                    // Got an ID token from Google. Use it to authenticate
+                    // with your backend.
+                    Log.d(TAG, "Got ID token.");
+                } else if (password != null) {
+                    // Got a saved username and password. Use them to authenticate
+                    // with your backend.
+                    Log.d(TAG, "Got password.");
+                }
+            } catch (ApiException e) {
+                if (e.getStatusCode() == CommonStatusCodes.CANCELED) {
+                    //用户拒绝一键登录
+                    Log.d(TAG, "用户拒绝一键登录");
+                }
             }
-        }*/
-       /* if (!isGet) {
-            BaiduAction.setPrivacyStatus(PrivacyStatus.DISAGREE);
-        } else {
-            BaiduAction.setPrivacyStatus(PrivacyStatus.AGREE);
-        }*/
+        } else if (requestCode == REQ_ONE_TAP2) {
+            try {
+                SignInCredential credential = oneTapClient.getSignInCredentialFromIntent(data);
+                String idToken = credential.getGoogleIdToken();
+                if (idToken != null) {
+                    // Got an ID token from Google. Use it to authenticate
+                    // with your backend.
+                    Log.d(TAG, "Got ID token.");
+                }
+            } catch (ApiException e) {
+                //用户拒绝一键创建账号，使用常规账号创建
+                Log.d(TAG, "用户拒绝一键创建账号，使用常规账号创建");
+            }
+        } else if (requestCode == SIGN_LOGIN) {
+            Log.d(TAG, "setActivityResultGoogle");
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            if (task == null) {
+                Log.d(TAG, "task：null");
+            }
+            try {
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+//                StartESUserPlugin.loginGoogle(account.getIdToken());
+                Toast.makeText(mActivity, "登录成功" + "Id:" + account.getId() + "|Email:" + account.getEmail(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Id:" + account.getId() + "|Email:" + account.getEmail() + "|IdToken:" + account.getIdToken());
+            } catch (ApiException e) {
+                e.printStackTrace();
+                Log.d(TAG, "ApiException:" + e.getMessage());
+                Toast.makeText(mActivity, "网络出错了,请重新登录", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     /**
@@ -367,40 +480,219 @@ public class Starter {
      * @param mContext
      */
     public void dataCollectInit(Context mContext) {
-        ESdkLog.d("初始化媒体接口");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             builder.detectFileUriExposure();
             StrictMode.setVmPolicy(builder.build());
         }
-        System.loadLibrary("msaoaidsec");
-        /** 百度初始化 */
-        StartOtherPlugin.initBD(mContext);
-        AppTimeWatcher.getInstance().registerWatcher((Application) mContext);
+        AppsFlyerLib.getInstance().waitForCustomerUserId(true);
+        AppsFlyerLib.getInstance().init("", null, mContext);
+        AppsFlyerLib.getInstance().start(mContext);
+        AppsFlyerLib.getInstance().setDebugLog(true);
+        String cuid = AppsFlyerProperties.getInstance().getString(AppsFlyerProperties.APP_USER_ID);
+        AppsFlyerLib.getInstance().setCustomerIdAndLogSession(cuid, mContext);
+        AppsFlyerLib.getInstance().setCollectIMEI(true);
+        AppsFlyerLib.getInstance().setCollectAndroidID(true);
+//        AppTimeWatcher.getInstance().registerWatcher((Application) mContext);
     }
 
     public void pageResume(Activity activity) {
         ESdkLog.d("进入游戏界面接口");
-        //广点通上报启动
-        if (Constant.IS_LOGINED) {
-            StartOtherPlugin.logGDTAction();
+        if (billingClient != null) {
+            //内购商品交易查询
+            billingClient.queryPurchasesAsync(BillingClient.SkuType.INAPP, purchasesResponseListener);
         }
-        //快手sdk进入游戏界面
-        StartOtherPlugin.logKSActionPageResume(activity);
-        //百度浏览页面
-        StartOtherPlugin.logBDPage();
-        StartOtherPlugin.onTTResume(activity);
-        StartOtherPlugin.resumeAQY();
     }
 
-    public void pagePause(Activity activity) {
-        ESdkLog.d("离开游戏界面接口");
-        StartOtherPlugin.logKSActionPagePause(activity);
-        StartOtherPlugin.onTTPause(activity);
+    //初始化facebook登录
+    public void initFacebook() {
+        callbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance().registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        // App code
+                        AccessToken accessToken = loginResult.getAccessToken();
+                        Log.d(TAG, "Facebook------>>" + "token:" + accessToken.getToken() + "|userid:" + accessToken.getUserId());
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        // App code
+                        Log.d(TAG, "Facebook cancel");
+                    }
+
+                    @Override
+                    public void onError(FacebookException exception) {
+                        // App code
+                        Log.d(TAG, "Facebook error------>>" + exception.toString());
+                    }
+                });
+
+        LoginManager.getInstance().logIn(mActivity, Arrays.asList("public_profile", "user_friends"));
     }
 
-    public void pageDestory() {
-        ESdkLog.d("退出游戏");
-        StartOtherPlugin.destoryAQY();
+    //初始化google登录
+    public void initGoogleTapClient() {
+        if (mGoogleSignInClient == null) {
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions
+                    .DEFAULT_SIGN_IN)
+                    .requestEmail()
+                    .requestIdToken("846876477691-gjefh1ll8fdq72pb5htugj4459kls3nr.apps.googleusercontent.com")
+                    .build();
+            mGoogleSignInClient = GoogleSignIn.getClient(mActivity, gso);
+        }
+        mGoogleSignInClient.silentSignIn()
+                .addOnCompleteListener(mActivity,
+                        new OnCompleteListener<GoogleSignInAccount>() {
+                            @Override
+                            public void onComplete(@NonNull Task<GoogleSignInAccount> task) {
+                                if (task != null) {
+                                    GoogleSignInAccount account = null;
+                                    try {
+                                        account = task.getResult(ApiException.class);
+                                        String idToken = account.getIdToken();
+                                        Log.d(TAG, "用户已登录google账号--->" + idToken);
+//                                        StartESUserPlugin.loginGoogle(idToken);
+                                    } catch (ApiException e) {
+                                        beginLogin();
+                                    }
+                                } else {
+                                    beginLogin();
+                                }
+                            }
+                        });
+//        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(mActivity);
+        /*oneTapClient = Identity.getSignInClient(mActivity);
+        signInRequest = BeginSignInRequest.builder()
+                .setPasswordRequestOptions(BeginSignInRequest.PasswordRequestOptions.builder()
+                        .setSupported(true)
+                        .build())
+                .setGoogleIdTokenRequestOptions(BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                        .setSupported(true)
+                        // Your server's client ID, not your Android client ID.
+                        .setServerClientId("846876477691-gjefh1ll8fdq72pb5htugj4459kls3nr.apps.googleusercontent.com")
+                        // Only show accounts previously used to sign in.
+                        .setFilterByAuthorizedAccounts(true)
+                        .build())
+                // Automatically sign in when exactly one credential is retrieved.
+//                .setAutoSelectEnabled(true)
+                .build();
+        signUpRequest = BeginSignInRequest.builder()
+                .setGoogleIdTokenRequestOptions(BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                        .setSupported(true)
+                        // Your server's client ID, not your Android client ID.
+                        .setServerClientId("846876477691-gjefh1ll8fdq72pb5htugj4459kls3nr.apps.googleusercontent.com")
+                        // Show all accounts on the device.
+                        .setFilterByAuthorizedAccounts(false)
+                        .build())
+                .build();*/
+    }
+
+    public void beginLogin() {
+        mActivity.startActivityForResult(getGoogleIntent(), SIGN_LOGIN);
+        /*oneTapClient.beginSignIn(signInRequest)
+                .addOnSuccessListener(mActivity, new OnSuccessListener<BeginSignInResult>() {
+                    @Override
+                    public void onSuccess(BeginSignInResult result) {
+                        try {
+                            mActivity.startIntentSenderForResult(
+                                    result.getPendingIntent().getIntentSender(), REQ_ONE_TAP,
+                                    null, 0, 0, 0);
+                        } catch (IntentSender.SendIntentException e) {
+                            Log.e(TAG, "Couldn't start One Tap UI: " + e.getLocalizedMessage());
+                        }
+                    }
+                })
+                .addOnFailureListener(mActivity, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // No saved credentials found. Launch the One Tap sign-up flow, or
+                        // do nothing and continue presenting the signed-out UI.
+                        Log.d(TAG, "Couldn't find credentials:" + e.getLocalizedMessage());
+                        //使用一键创建账号
+                        oneTapClient.beginSignIn(signUpRequest)
+                                .addOnSuccessListener(mActivity, new OnSuccessListener<BeginSignInResult>() {
+                                    @Override
+                                    public void onSuccess(BeginSignInResult result) {
+                                        try {
+                                            mActivity.startIntentSenderForResult(
+                                                    result.getPendingIntent().getIntentSender(), REQ_ONE_TAP,
+                                                    null, 0, 0, 0);
+                                        } catch (IntentSender.SendIntentException e) {
+                                            Log.e(TAG, "Couldn't start One Tap UI: " + e.getLocalizedMessage());
+                                        }
+                                    }
+                                })
+                                .addOnFailureListener(mActivity, new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // No Google Accounts found. Just continue presenting the signed-out UI.
+                                        Log.d(TAG, "Couldnt find google account" + e.getLocalizedMessage());
+                                    }
+                                });
+                    }
+                });*/
+    }
+
+    public Intent getGoogleIntent() {
+        Intent signInInten;
+        if (mGoogleSignInClient == null) {
+            initGoogleTapClient();
+        }
+        signInInten = mGoogleSignInClient.getSignInIntent();
+        return signInInten;
+    }
+
+    //退出账号
+    public void googleLogout() {
+        mGoogleSignInClient.signOut()
+                .addOnCompleteListener(mActivity, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        // ...
+                    }
+                });
+    }
+
+    //解除关联
+    private void revokeAccess() {
+        mGoogleSignInClient.revokeAccess()
+                .addOnCompleteListener(mActivity, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        // ...
+                    }
+                });
+    }
+
+    //国家货币代码和符号
+    private void initCurrency() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            //用map存储，便于匹配
+            currencyArrayMap = new ArrayMap<>();
+            for (Currency availableCurrency : Currency.getAvailableCurrencies()) {
+                //currentcyCode为key,货币符号为value
+                //对于没有特定符号的货币，symbol与currencyCode相同。
+                currencyArrayMap.put(availableCurrency.getCurrencyCode(), availableCurrency.getSymbol());
+            }
+        }
+    }
+
+    //将美元符号替换未对应国家货币的符号
+    private String replacePrice(String priceStr, String currencyCode, String currencySymbol) {
+        if (priceStr.startsWith("$")) {
+            if (currencySymbol != null) {
+                if (currencySymbol.equals(currencyCode)) {
+                    //没有货币符号的情况，把货币码拼接到前面
+                    priceStr = currencySymbol + priceStr;
+                } else {
+                    if (!priceStr.startsWith(currencySymbol)) {
+                        priceStr = priceStr.replace("$", currencySymbol);
+                    }
+                }
+            }
+        }
+        return priceStr;
     }
 }

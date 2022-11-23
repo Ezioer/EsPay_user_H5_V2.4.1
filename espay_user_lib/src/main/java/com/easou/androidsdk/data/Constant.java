@@ -229,6 +229,7 @@ public static String DOMAIN = "https://service.pay.";
     public static final int YSTOJS_GAME_LOGINOROUTLOG = 32;
     public static final int YSTOJS_GAME_INTOFOREGROUND = 33;
     public static final int YSTOJS_GAME_LOGOUT = 35;
+    public static final int YSTOJS_GAME_LOGINGOOGLE = 100;
 
     public static final String WECHAT = "WECHAT";
     public static final String WECHAT_DHT = "WECHAT_DHT";

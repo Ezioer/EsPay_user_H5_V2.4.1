@@ -16,8 +16,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.RequiresApi;
-import android.support.v4.content.FileProvider;
+
+import androidx.annotation.RequiresApi;
+import androidx.core.content.FileProvider;
+
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -366,6 +368,18 @@ public class ESUserWebActivity extends Activity {
                         @Override
                         public void run() {
                             mWebView.loadUrl("javascript:EsSdkShell.esUserOnlineTimer()");
+                        }
+                    });
+                }
+                break;
+            case Constant.YSTOJS_GAME_LOGINGOOGLE:
+                final String idToken = "idToken:" + "'" + params.get("idToken") + "'";
+                if (mWebView != null) {
+                    mWebView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            ESdkLog.d("google登录Token：" + idToken);
+                            mWebView.loadUrl("javascript:EsSdkShell.esGoogleLogin({" + idToken + "})");
                         }
                     });
                 }

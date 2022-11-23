@@ -6,6 +6,7 @@ import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESPayLog;
 import com.easou.androidsdk.util.ESdkLog;
 import com.easou.androidsdk.util.GsonUtil;
+import com.easou.androidsdk.util.Md5SignUtils;
 import com.easou.androidsdk.util.Tools;
 import com.google.gson.Gson;
 
@@ -265,6 +266,22 @@ public class EAPayInter {
         }
     }
 
+    public static BaseResponse verGooglePlayOrder(String token, String productId, String packName) {
+        try {
+//            String sign = Md5SignUtils.sign("","");
+            String url = "http://8.218.104.185:6700/play/check";
+            JSONObject object = new JSONObject();
+            object.put("token", token);
+            object.put("packageName", packName);
+            object.put("productId", productId);
+//            object.put("sign", sign);
+            BaseResponse result = getBaseResponse(url, object);
+            return result;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public static String getOaidPerFromNet(String applicationId) {
         try {
             ESdkLog.c("certnet----->", applicationId);
@@ -306,9 +323,6 @@ public class EAPayInter {
             }
             bean.setMsg(info);
             bean.setCode(code);
-            if (code != 1) {
-                return null;
-            }
         } catch (JSONException e) {
             return null;
         }

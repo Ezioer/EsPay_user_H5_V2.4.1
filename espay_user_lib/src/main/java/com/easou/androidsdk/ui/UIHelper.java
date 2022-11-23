@@ -414,34 +414,6 @@ public class UIHelper {
     }
 
     /**
-     * 购买记录列表
-     */
-    public static View createMainPayListView(final Context context, final Handler handler, View titleView,
-                                             LinkedList<PayItem> datalist) {
-        LinearLayout layout = new LinearLayout(context);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        LayoutParams layoutParams = new LayoutParams(LayoutParams.FILL_PARENT, 0);
-        layout.setGravity(Gravity.CENTER_HORIZONTAL);
-        layout.setLayoutParams(layoutParams);
-//		Bitmap main_bg_Img = CommonUtils.getBitmap(context, "es_main_bg.png");
-//		layout.setBackgroundDrawable(new BitmapDrawable(context.getResources(), main_bg_Img));
-        layout.setBackgroundResource(context.getResources().getIdentifier("es_main_bg", "drawable",
-                context.getPackageName()));
-
-        // 添加导航条
-        layout.addView(titleView);
-
-        LinearLayout.LayoutParams rightParams = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, 0);
-        rightParams.weight = 1;
-        rightParams.setMargins(20, 20, 20, 10);
-        HashMap<String, Object> lay = createPayListView(context, handler, datalist);
-        layout.addView((View) lay.get("View"), rightParams);
-
-        return layout;
-
-    }
-
-    /**
      * 支付界面
      */
     public static View createPayView(final Context context, final Handler handler, Map<String, String> map) {
@@ -781,101 +753,6 @@ public class UIHelper {
 
         tv_morePayment.setText("展开");
         moreLineImageView.setVisibility(View.GONE);
-    }
-
-    /**
-     * 购买记录列表
-     */
-    public static HashMap<String, Object> createPayListView(final Context context, final Handler handler,
-                                                            final LinkedList<PayItem> data_list) {
-        LinearLayout layout = new LinearLayout(context);
-        layout.setOrientation(LinearLayout.HORIZONTAL);
-        LayoutParams layoutParams = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
-
-        layout.setOrientation(LinearLayout.HORIZONTAL);
-        layout.setGravity(Gravity.CENTER_VERTICAL);
-        layout.setLayoutParams(layoutParams);
-
-        LayoutParams listlayoutParams = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-
-        ListView lv = new ListView(context);
-        // 为ListView设置适配器
-        lv.setLayoutParams(listlayoutParams);
-        lv.setSelector(new ColorDrawable(Color.TRANSPARENT));
-        lv.setCacheColorHint(Color.TRANSPARENT);
-        lv.setVerticalScrollBarEnabled(true);
-        lv.setFadingEdgeLength(0);
-        Bitmap btn_bg_Img;
-        btn_bg_Img = BitmapFactory.decodeResource(context.getResources(),
-                context.getResources().getIdentifier("es_list_line", "drawable", context.getPackageName()));
-//		btn_bg_Img = CommonUtils.getBitmap(context, "es_list_line.png");
-        lv.setDivider(new BitmapDrawable(context.getResources(), btn_bg_Img));
-        final Pay_List_Adapter adapter = new Pay_List_Adapter(context, data_list);
-        lv.setAdapter(adapter);
-        // 注册监听事件
-        lv.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
-        lv.setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-            }
-        });
-
-        if (data_list.size() == 0) {
-            Toast.makeText(context, "暂无数据！", Toast.LENGTH_SHORT).show();
-        }
-
-        if (data_list.size() >= 10) {
-            lv.setOnScrollListener(new OnScrollListener() {
-
-                @Override
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
-                    // TODO Auto-generated method stub
-                    if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
-                        // 滚动到底部
-                        if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
-                            View v = (View) view.getChildAt(view.getChildCount() - 1);
-                            int[] location = new int[2];
-                            v.getLocationOnScreen(location);// 获取在整个屏幕内的绝对坐标
-                            int y = location[1];
-                            if (view.getLastVisiblePosition() != getLastVisiblePosition && lastVisiblePositionY != y)// 第一次拖至底部
-                            {
-                                Toast.makeText(view.getContext(), "再次上拉加载更多数据...", Toast.LENGTH_SHORT).show();
-                                getLastVisiblePosition = view.getLastVisiblePosition();
-                                lastVisiblePositionY = y;
-                                return;
-                            } else if (view.getLastVisiblePosition() == getLastVisiblePosition
-                                    && lastVisiblePositionY == y)// 第二次拖至底部
-                            {
-                                for (PayItem payItem : data_list) {
-                                    if (payItem.isHasNext() == false) {
-                                        Toast.makeText(view.getContext(), "数据已全部加载完毕", Toast.LENGTH_SHORT).show();
-                                        return;
-                                    }
-                                }
-                                ESPayCenterActivity.page++;
-                                Message msg = handler.obtainMessage();
-                                msg.what = Constant.HANDLER_PAYLIST_SHOW_VIEW;
-                                msg.sendToTarget();
-                            }
-                        }
-                        // 未滚动到底部，第二次拖至底部都初始化
-                        getLastVisiblePosition = 0;
-                        lastVisiblePositionY = 0;
-                    }
-                }
-
-                @Override
-                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                    // TODO Auto-generated method stub
-
-                }
-            });
-        }
-
-        layout.addView(lv);
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("View", layout);
-        map.put("Pay_List_Adapter", adapter);
-        return map;
     }
 
     // 自定义适配器

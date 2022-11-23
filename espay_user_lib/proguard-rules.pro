@@ -140,31 +140,11 @@ native <methods>;
 -keep class com.snail.antifake.** {*;}
 -keep class com.payeco.android.plugin.** {*;}
 -dontwarn com.payeco.android.plugin.**
--keepclassmembers class com.payeco.android.plugin {
-  public *;
-}
+
 
 -keepattributes SourceFile,LineNumberTable
 -renamesourcefileattribute SourceFile
 -keepparameternames
--keep class com.bytedance.applog.AppLog { public *; }
--keep public interface com.bytedance.applog.IDataObserver { *; }
--keep public interface com.bytedance.applog.IAppParam { *; }
--keep public interface com.bytedance.applog.IExtraParams { *; }
--keep public interface com.bytedance.applog.IPicker { *; }
--keep public interface com.bytedance.applog.IOaidObserver { *; }
--keep class com.bytedance.applog.IOaidObserver$Oaid { *; }
--keep class com.bytedance.applog.GameReportHelper { public *; }
--keep class com.bytedance.applog.WhalerGameHelper { *; }
--keep class com.bytedance.applog.WhalerGameHelper$Result { *; }
--keep class com.bytedance.applog.InitConfig { public *; }
--keep class com.bytedance.applog.util.UriConfig { public *; }
--keep class com.bytedance.applog.tracker.Tracker { public *; }
--keep class com.bytedance.applog.picker.Picker { public *; }
--keep class com.bytedance.applog.tracker.WebViewJsUtil { *; }
--keep interface com.bytedance.base_bdtracker.bt { public *; }
--keep class com.bytedance.base_bdtracker.bt$a { public *; }
--keep class com.bytedance.base_bdtracker.bt$a$a { public *; }
 -dontwarn com.tencent.smtt.sdk.WebView
 -dontwarn com.tencent.smtt.sdk.WebChromeClient
 
@@ -202,31 +182,7 @@ native <methods>;
 -keepclassmembers class com.easou.androidsdk.ESPlatform {
    public *;
 }
--dontwarn com.iqiyi.qilin.trans.**
--keep class com.iqiyi.qilin.trans.** {*;}
 
--dontwarn com.baidu.mobads.action.**
--keep class com.baidu.mobads.action.** {*;}
-
--keep class com.bytedance.applog.picker.DomSender { public *; }
-
--keep class com.bytedance.dr.VivoIdentifier {*;}
--keep class com.bytedance.dr.VivoIdentifier$* {*;}
-
-# 这个 ProGuard 文件被指定为 consumerProguardFiles。
-# 如此一来，AAR 包的使用者在其应用进行 ProGuard 混淆时，将自动附加下列规则，
-# 省去了接入 JAR 时手动在 ProGuard 规则文件中加入支付宝 SDK 规则的步骤。
-
--keep class com.alipay.android.app.IAlixPay{*;}
--keep class com.alipay.android.app.IAlixPay$Stub{*;}
--keep class com.alipay.android.app.IRemoteServiceCallback{*;}
--keep class com.alipay.android.app.IRemoteServiceCallback$Stub{*;}
--keep class com.alipay.sdk.app.PayTask{ public *;}
--keep class com.alipay.sdk.app.AuthTask{ public *;}
--keep class com.alipay.sdk.app.H5PayCallback {
-    <fields>;
-    <methods>;
-}
 -keep class com.alipay.android.phone.mrpc.core.** { *; }
 -keep class com.alipay.apmobilesecuritysdk.** { *; }
 -keep class com.alipay.mobile.framework.service.annotation.** { *; }
@@ -262,21 +218,6 @@ native <methods>;
 -renamesourcefileattribute SourceFile
 -keepattributes InnerClasses
 
--keep class com.baidu.mobads.action.ActionType {
-    public protected *;
-}
--keep class com.baidu.mobads.action.ActionParam {
-    public protected *;
-}
--keep class com.baidu.mobads.action.ActionParam$* {
-    public protected *;
-}
--keep class com.baidu.mobads.action.BaiduAction {
-    public protected *;
-}
--keep class com.baidu.mobads.action.PrivacyStatus {
-    public *;
-}
 # oaid sdk
 -keep, includedescriptorclasses class com.asus.msa.SupplementaryDID.** { *; }
 -keepclasseswithmembernames class com.asus.msa.SupplementaryDID.** { *; }
@@ -291,21 +232,6 @@ native <methods>;
 # 安全SDK
 -keepattributes *JavascriptInterface*
 -ignorewarnings
-
--keep class com.baidu.xenv.ac.** {*;}
--keepclasseswithmembers class com.baidu.xenv.jni.Asc {
-    native <methods>;
-}
--keepclasseswithmembers class com.baidu.xenv.ac.F {*;}
--keep public class com.baidu.xenv.active.Active {*;}
--keep public class com.baidu.xenv.mutiprocess.Sp {*;}
--keep public class * extends android.app.Service
--keep public class * extends android.content.BroadcastReceiver
--keep public class * extends android.content.ContentProvider
--keep class com.baidu.xenv.core.ApkInfo {*;}
--keep class com.baidu.xenv.rp.Report {
-    <methods>;
-}
 
 -keep class * implements android.os.Parcelable {
   public static final android.os.Parcelable$Creator *;
@@ -336,21 +262,6 @@ native <methods>;
 -renamesourcefileattribute SourceFile
 -keepattributes InnerClasses
 
--keep class com.baidu.mobads.action.ActionType {
-    public protected *;
-}
--keep class com.baidu.mobads.action.ActionParam {
-    public protected *;
-}
--keep class com.baidu.mobads.action.ActionParam$* {
-    public protected *;
-}
--keep class com.baidu.mobads.action.BaiduAction {
-    public protected *;
-}
--keep class com.baidu.mobads.action.PrivacyStatus {
-    public *;
-}
 # oaid sdk
 # sdk
 -keep class com.bun.miitmdid.** { *; }
@@ -389,21 +300,13 @@ native <methods>;
 -keepattributes *JavascriptInterface*
 -ignorewarnings
 
--keep class com.baidu.xenv.ac.** {*;}
--keepclasseswithmembers class com.baidu.xenv.jni.Asc {
-    native <methods>;
-}
--keepclasseswithmembers class com.baidu.xenv.ac.F {*;}
--keep public class com.baidu.xenv.active.Active {*;}
--keep public class com.baidu.xenv.mutiprocess.Sp {*;}
 -keep public class * extends android.app.Service
 -keep public class * extends android.content.BroadcastReceiver
 -keep public class * extends android.content.ContentProvider
--keep class com.baidu.xenv.core.ApkInfo {*;}
--keep class com.baidu.xenv.rp.Report {
-    <methods>;
-}
 
 -keep class * implements android.os.Parcelable {
   public static final android.os.Parcelable$Creator *;
 }
+
+#appsflyer
+-keep class com.appsflyer.** { *; }

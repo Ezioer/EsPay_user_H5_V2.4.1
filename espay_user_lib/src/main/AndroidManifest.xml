@@ -24,34 +24,22 @@
     <uses-permission android:name="com.asus.msa.SupplementaryDID.ACCESS" />
     <uses-permission android:name="android.permission.REORDER_TASKS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
-    <!-- 以下为银联sdk附带权限，非必须添加，可删除 -->
-
-    <!-- 照相的权限 -->
-    <uses-feature android:name="android.hardware.camera" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-feature android:name="android.hardware.camera.autofocus" />
-
-    <!-- 读取短信验证码	可选 -->
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.READ_SMS" />
-
-    <!-- 录像需要的权限 -->
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-    <uses-permission android:name="android.permission.RECORD_VIDEO" />
-
-   <!-- <permission
-        android:name="${applicationId}.permission.xenv.RECEIVE"
-        android:protectionLevel="signatureOrSystem" />-->
-
-    <!--    <uses-permission android:name="${applicationId}.permission.xenv.RECEIVE" />-->
+    <permission android:name="com.android.vending" />
 
     <application
+        android:networkSecurityConfig="@xml/network_security_config"
         android:allowBackup="true"
         android:label="@string/app_name"
         android:supportsRtl="true">
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="com.facebook.sdk.ClientToken"
+            android:value="@string/facebook_client_token" />
+
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
@@ -59,154 +47,57 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-        <!-- 银联的 -->
-        <!-- 插件入口界面 -->
-        <activity
-            android:name="com.payeco.android.plugin.PayecoPluginLoadingActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
 
-        <!-- 插件拍照界面 -->
-        <activity
-            android:name="com.payeco.android.plugin.PayecoCameraActivity"
-            android:screenOrientation="portrait"
-            />
-
-        <!-- 插件录像界面 -->
-        <activity
-            android:name="com.payeco.android.plugin.PayecoVedioActivity"
-            android:screenOrientation="landscape"
-            android:process="com.payeco.android.plugin.vedio"
-            />
         <service
             android:name="com.snail.antifake.jni.EmulatorCheckService"
             android:process=":EmulatorCheckService" />
-        <!--百度插件部分  -->
-        <service
-            android:name="com.baidu.location.f"
-            android:enabled="true"
-            android:process=":remote" >
-            <intent-filter>
-                <action android:name="com.baidu.location.service_v2.2" >
-                </action>
-            </intent-filter>
-        </service>
-        <!-- meta-data需要写在application中 -->
-        <meta-data
-            android:name="com.baidu.lbsapi.API_KEY"
-            android:value="DhNxS47YIr3CNdocGoAcy1ts" />
 
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
 
         <activity
-            android:name="com.alipay.sdk.app.H5PayActivity"
-            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
-            android:exported="false"
-            android:theme="@android:style/Theme.NoTitleBar"></activity>
-        <activity
-            android:name="com.alipay.sdk.app.H5AuthActivity"
-            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
-            android:exported="false"
-            android:theme="@android:style/Theme.NoTitleBar"></activity>
-        <activity
-            android:name="com.alipay.sdk.app.PayResultActivity"
-            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:name="com.facebook.FacebookActivity"
             android:exported="true"
-            android:launchMode="singleInstance"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name" />
         <activity
-            android:name="com.alipay.sdk.app.AlipayResultActivity"
-            android:exported="true"
-            android:launchMode="singleTask"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
-        <activity
-            android:name="com.alipay.sdk.app.H5OpenAuthActivity"
-            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
-            android:exported="false"
-            android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
-        <activity
-            android:name="com.alipay.sdk.app.APayEntranceActivity"
-            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
-            android:exported="false"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            android:name="com.facebook.CustomTabActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
-        <activity
-            android:name="com.heepay.plugin.activity.HyNotityActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="behind"
-            android:theme="@style/HyHeepaySDKTheme" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
-        <activity
-            android:name="com.easou.androidsdk.ui.ESAccountCenterActivity"
-            android:launchMode="singleTask"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:screenOrientation="behind" >
+                <data android:scheme="@string/fb_login_protocol_scheme" />
+            </intent-filter>
         </activity>
+
         <activity
             android:name="com.easou.androidsdk.ui.ESUserWebActivity"
             android:launchMode="singleInstance"
             android:taskAffinity="com.easou.usersdk"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:excludeFromRecents="true"
+            android:exported="true"
             android:theme="@style/easou_translucent_notitle"
-            android:screenOrientation="behind" />
-        <activity
-            android:name="com.easou.androidsdk.ui.ESPayCenterActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:screenOrientation="behind" />
-        <activity
-            android:name="com.easou.androidsdk.ui.ESPayWebActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:screenOrientation="behind" />
-        <activity
-            android:name="com.easou.androidsdk.ui.ESCertAlertActivity"
-            android:theme="@style/easou_translucent_notitle"
-            android:launchMode="singleInstance"
             android:screenOrientation="behind" />
 
-        <!--<activity
-            android:name="com.baidu.xenv.XenvActivity"
-            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale"
+        <activity
+            android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
             android:excludeFromRecents="true"
             android:exported="false"
-            android:launchMode="standard"
-            android:theme="@android:style/Theme.Translucent">
-            <intent-filter>
-                <action android:name="com.baidu.action.Xenv.VIEW" />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
-                <category android:name="com.baidu.category.xenv" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
+        <!--
+            Service handling Google Sign-In user revocation. For apps that do not integrate with
+            Google Sign-In, this service will never be started.
+        -->
         <service
-            android:name="com.baidu.xenv.XenvService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.baidu.action.Xenv.VIEW" />
-
-                <category android:name="com.baidu.category.xenv" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </service>
-
-        <provider
-            android:name="com.baidu.xenv.XenvProvider"
-            android:authorities="${applicationId}.xenv.ac.provider"
-            android:exported="false"
-            tools:replace="android:authorities" />-->
-
-        <!-- <meta-data
-             android:name="seckey_avscan"
-             android:value="660346260f8a841a04ec2a56815b421b" />
-         <meta-data
-             android:name="appkey_avscan"
-             android:value="100034" />-->
+            android:name="com.google.android.gms.auth.api.signin.RevocationBoundService"
+            android:exported="true"
+            android:permission="com.google.android.gms.auth.api.signin.permission.REVOCATION_NOTIFICATION" />
     </application>
 
 </manifest>
