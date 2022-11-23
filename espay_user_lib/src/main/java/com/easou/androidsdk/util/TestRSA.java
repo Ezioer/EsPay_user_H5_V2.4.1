@@ -7,10 +7,13 @@ import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
+import java.security.spec.MGF1ParameterSpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.OAEPParameterSpec;
+import javax.crypto.spec.PSource;
 
 import org.apache.commons.codec.binary.Base64;
 
@@ -76,8 +79,9 @@ public class TestRSA {
      * @return
      */
     public static String encrypt(String data, PublicKey publicKey) throws Exception {
-        Cipher cipher = Cipher.getInstance("RSA");
-        cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+        Cipher cipher = Cipher.getInstance("RSA/None/PKCS1Padding");
+        OAEPParameterSpec sp = new OAEPParameterSpec("SHA-256", "MGF1", new MGF1ParameterSpec("SHA-1"), PSource.PSpecified.DEFAULT);
+        cipher.init(Cipher.ENCRYPT_MODE, publicKey, sp);
         int inputLen = data.getBytes().length;
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         int offset = 0;
@@ -109,8 +113,9 @@ public class TestRSA {
      * @return
      */
     public static String decrypt(String data, PrivateKey privateKey) throws Exception {
-        Cipher cipher = Cipher.getInstance("RSA");
-        cipher.init(Cipher.DECRYPT_MODE, privateKey);
+        Cipher cipher = Cipher.getInstance("RSA/None/PKCS1Padding");
+        OAEPParameterSpec sp = new OAEPParameterSpec("SHA-256", "MGF1", new MGF1ParameterSpec("SHA-1"), PSource.PSpecified.DEFAULT);
+        cipher.init(Cipher.DECRYPT_MODE, privateKey, sp);
         byte[] dataBytes = com.easou.androidsdk.util.Base64.decode(data);
         int inputLen = dataBytes.length;
         ByteArrayOutputStream out = new ByteArrayOutputStream();

@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final int PERMISSIONCODE = 1;
 
+    private String privateKey = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAJO75xz0CnPMftpMH6F7jVBqCKH4dnqPlxZBiQaN3Tyf+yAhnPxK8fl/KrK4SY7KT+plbaFAQ6sxyNE4mxk4N54SOmD0TFeHUTV/FxqSjFcSttLTq+sOmyTVOJ8LmGyAe7fXXYNzjz6hnfLIwmdLyntsee+CDfwdFnuubnpcpERxAgMBAAECgYA5d21GSPPL6a8qkVP4h8wHjMeA4dqMgFCAOsvnfcWicITKEek0Bp8rszjTvnX2kmIVxpCnmgz4iewY3pEOdVzEi6QRktLpEHkcfsTXUWJOnm6ctmg5DvbeRS603IZNA9Ja+Edce9ej9Oa3Evqi7/1mZrvc4CrbXyEWrdGWtCZ1BQJBANARjNz0/mnbc8A0FoWTxb5HlgOYT9rnhhpeu6OgMtXKuLAoZMaieSFy9JWneFei4Ce5CgzmlbPZ6Fo8mX8r0qMCQQC1xDxjX8jUAuCBYujVrHCBVwPN6H3MFEqwKBrTURI7D6T1t6NB8k5/cr48Pw4jRz6uJC9qnM4sx4IT5LXrENHbAkEAzbTcOEN7F/sf2CFnNs7fDH1Hwewe3wRRH9cS2fVy7M1MhNSatYtCCKDXUPHOV44u4PbfCdwam0JPpo8NDp6r0wJAMbCfwZrhz/OpZDWh6Sfm6bTb+WJhYXT6pgWQr8wt669vLS0ymEihZP39O4MRXluPqxOBUufjBSLVUJLpmIVUmQJAYLqNVoAilcT1VFqyDRieQ2Aczt6U04U0JvO7iTtUM5PNXFBSL6iDmE0rYn8BXljE8TMzJX9YrcjA32OwQ9kDZA==";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,8 +78,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String data = "待加密的文字内容";
             String encryptData = TestRSA.encrypt(data, TestRSA.getPublicKey(TestRSA.publicKey));
             System.out.println("加密后内容:" + encryptData);
-        } catch (Exception e) {
 
+            String decData = TestRSA.decrypt("1btG9bLpIBBNLa+2gaxvx8YJf9KNHW6JqPbqtz1oQ3jdFcfo5L1YN3TuXRGRtCk2fPrejzlE43Vojw7ixsstZm5NgD0Kq7IvxMZUkiuMp9GnmAGDJ2K1d4m4vL+0NmAq940ZLMIquebrmyNUJmXUBXAoKIGAJPUZeago++mFTC+I=", TestRSA.getPrivateKey(privateKey));
+            System.out.println("加密后内容:" + encryptData);
+        } catch (Exception e) {
+            int i = 9;
         }
     }
 
