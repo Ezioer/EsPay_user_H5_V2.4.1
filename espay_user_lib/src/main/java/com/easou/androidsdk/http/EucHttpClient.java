@@ -131,7 +131,6 @@ public class EucHttpClient {
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }*/
-
         }
         SSLSocketFactory.getSocketFactory().setHostnameVerifier(new AllowAllHostnameVerifier());
         //httpclient 设置请求超时

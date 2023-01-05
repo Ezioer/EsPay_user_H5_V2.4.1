@@ -15,10 +15,13 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.Toast;
+
+import androidx.collection.ArrayMap;
 
 import com.easou.androidsdk.Starter;
 import com.easou.androidsdk.data.Constant;
@@ -31,6 +34,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Calendar;
+import java.util.Currency;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -877,5 +881,56 @@ public class CommonUtils {
         } catch (Exception e) {
             return 0;
         }
+    }
+
+    //国家货币代码和符号
+    private void initCurrency(Map map) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            //用map存储，便于匹配
+            for (Currency availableCurrency : Currency.getAvailableCurrencies()) {
+                //currentcyCode为key,货币符号为value
+                //对于没有特定符号的货币，symbol与currencyCode相同。
+                map.put(availableCurrency.getCurrencyCode(), availableCurrency.getSymbol());
+            }
+        }
+    }
+
+    //将美元符号替换未对应国家货币的符号
+    private String replacePrice(String priceStr, String currencyCode, String currencySymbol) {
+        if (priceStr.startsWith("$")) {
+            if (currencySymbol != null) {
+                if (currencySymbol.equals(currencyCode)) {
+                    //没有货币符号的情况，把货币码拼接到前面
+                    priceStr = currencySymbol + priceStr;
+                } else {
+                    if (!priceStr.startsWith(currencySymbol)) {
+                        priceStr = priceStr.replace("$", currencySymbol);
+                    }
+                }
+            }
+        }
+        return priceStr;
+    }
+
+    public static Map getCheckOutParams() {
+        String appId = CommonUtils.readPropertiesValue(Starter.mActivity, "appId");
+        String qn = CommonUtils.readPropertiesValue(Starter.mActivity, "qn");
+        String notifyUrl = CommonUtils.readPropertiesValue(Starter.mActivity, "notifyUrl");
+        Map<String, String> map = new HashMap();
+        map.put("appId", appId);
+        map.put("qn", qn);
+        map.put("notifyUrl", notifyUrl);
+        return map;
+    }
+
+    public static String getMoneyFromStr(String str) {
+        int k = 0;
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) >= 48 && str.charAt(i) <= 57) {
+                k = i;
+                break;
+            }
+        }
+        return str.substring(k);
     }
 }

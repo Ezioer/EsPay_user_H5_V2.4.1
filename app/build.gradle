@@ -5,7 +5,7 @@ android {
     buildToolsVersion "30.0.3"
     defaultConfig {
         applicationId "com.easou.espay_user_h5"
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion 31
         versionCode 4
         versionName "4.0"
@@ -72,6 +72,6 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
     compile project(':espay_user_lib')
-    implementation 'com.google.android.gms:play-services-auth:20.3.0'
-    implementation "com.android.billingclient:billing:4.1.0"
+    /* implementation 'com.google.android.gms:play-services-auth:20.3.0'
+     implementation "com.android.billingclient:billing:4.1.0"*/
 }

@@ -1,14 +1,10 @@
 package com.easou.espay_user_h5;
 
 import android.Manifest;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,8 +12,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.text.InputFilter;
-import android.text.InputType;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -34,19 +28,20 @@ import com.easou.androidsdk.callback.ESdkCallback;
 import com.easou.androidsdk.callback.ESdkPayCallback;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.data.ESConstant;
+import com.easou.androidsdk.http.EAPayInter;
+import com.easou.androidsdk.util.AESUtil;
 import com.easou.androidsdk.util.CommonUtils;
-import com.easou.androidsdk.util.ESdkLog;
-import com.easou.androidsdk.util.TestRSA;
 import com.easou.androidsdk.util.Tools;
 
-import java.text.DecimalFormat;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Button btnBuyPort, btnChangeAccount, btnGetUserInfo, btnUserCert, btnGoogleLogin, btnGoogleLogout, btnLoginGame, btnFacebookLogin, btnFacebookLogout;
+    private Button btnBuyPort, btnChangeAccount, btnGetUserInfo, btnCallSdk, btnGoogleLogin, btnGoogleLogout, btnLoginGame, btnFacebookLogin, btnFacebookLogout;
     private Switch mSwitch;
     private EditText mPlayId;
     /**
@@ -58,14 +53,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
 
     private static final int PERMISSIONCODE = 1;
+    private static String tradeId; // 游戏订单号
+    private static String productId = "esgame_05";
 
-    private String privateKey = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAJO75xz0CnPMftpMH6F7jVBqCKH4dnqPlxZBiQaN3Tyf+yAhnPxK8fl/KrK4SY7KT+plbaFAQ6sxyNE4mxk4N54SOmD0TFeHUTV/FxqSjFcSttLTq+sOmyTVOJ8LmGyAe7fXXYNzjz6hnfLIwmdLyntsee+CDfwdFnuubnpcpERxAgMBAAECgYA5d21GSPPL6a8qkVP4h8wHjMeA4dqMgFCAOsvnfcWicITKEek0Bp8rszjTvnX2kmIVxpCnmgz4iewY3pEOdVzEi6QRktLpEHkcfsTXUWJOnm6ctmg5DvbeRS603IZNA9Ja+Edce9ej9Oa3Evqi7/1mZrvc4CrbXyEWrdGWtCZ1BQJBANARjNz0/mnbc8A0FoWTxb5HlgOYT9rnhhpeu6OgMtXKuLAoZMaieSFy9JWneFei4Ce5CgzmlbPZ6Fo8mX8r0qMCQQC1xDxjX8jUAuCBYujVrHCBVwPN6H3MFEqwKBrTURI7D6T1t6NB8k5/cr48Pw4jRz6uJC9qnM4sx4IT5LXrENHbAkEAzbTcOEN7F/sf2CFnNs7fDH1Hwewe3wRRH9cS2fVy7M1MhNSatYtCCKDXUPHOV44u4PbfCdwam0JPpo8NDp6r0wJAMbCfwZrhz/OpZDWh6Sfm6bTb+WJhYXT6pgWQr8wt669vLS0ymEihZP39O4MRXluPqxOBUufjBSLVUJLpmIVUmQJAYLqNVoAilcT1VFqyDRieQ2Aczt6U04U0JvO7iTtUM5PNXFBSL6iDmE0rYn8BXljE8TMzJX9YrcjA32OwQ9kDZA==";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mPlayId = (EditText) findViewById(R.id.tv_player_id);
+        mPlayId = (EditText) findViewById(R.id.tv_playerId);
         getSupportActionBar().hide();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 //		hideBottomUIMenu();
@@ -73,17 +69,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // 初始化demo演示UI
         initUI();
         checkRunTimePermission();
-
-        try {
-            String data = "待加密的文字内容";
-            String encryptData = TestRSA.encrypt(data, TestRSA.getPublicKey(TestRSA.publicKey));
-            System.out.println("加密后内容:" + encryptData);
-
-            String decData = TestRSA.decrypt("1btG9bLpIBBNLa+2gaxvx8YJf9KNHW6JqPbqtz1oQ3jdFcfo5L1YN3TuXRGRtCk2fPrejzlE43Vojw7ixsstZm5NgD0Kq7IvxMZUkiuMp9GnmAGDJ2K1d4m4vL+0NmAq940ZLMIquebrmyNUJmXUBXAoKIGAJPUZeago++mFTC+I=", TestRSA.getPrivateKey(privateKey));
-            System.out.println("加密后内容:" + encryptData);
-        } catch (Exception e) {
-            int i = 9;
-        }
     }
 
     @Override
@@ -109,10 +94,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         permissions.toArray(new String[permissions.size()]),
                         PERMISSIONCODE);
             } else {
-                //有相关权限,则启动sdk登录接口
+                //有相关权限,执行响应操作
                 sdkLogin();
             }
         } else {
+            //6.0以下不需要申请运行时权限
             sdkLogin();
         }
     }
@@ -131,10 +117,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
             if (isAllGet) {
-                //用户给了相应的权限,初始化sdk登录逻辑
+                //用户给了相应的权限后得操作
                 sdkLogin();
             } else {
-                //用户拒绝了权限，可以登录，也可以选择再次申请
+                //用户拒绝了权限，可以选择再次申请
                 sdkLogin();
             }
         }
@@ -149,32 +135,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initUI() {
-
-        RadioButton money = (RadioButton) this.findViewById(R.id.radio_money);
-        RadioButton normal = (RadioButton) this.findViewById(R.id.radio_normal);
-        if (CommonUtils.getTestMoney(MainActivity.this) == 1) {
-            money.setChecked(true);
-        } else {
-            normal.setChecked(true);
-        }
-        money.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    CommonUtils.saveTestMoney(MainActivity.this, 1);
-                }
-            }
-        });
-
-        normal.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    CommonUtils.saveTestMoney(MainActivity.this, 0);
-                }
-            }
-        });
-
         Button btnInfo = (Button) this.findViewById(R.id.btn_info);
         final TextView mInfo = (TextView) this.findViewById(R.id.tv_info);
         btnInfo.setOnClickListener(new View.OnClickListener() {
@@ -203,15 +163,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        btnGetUserInfo = (Button) this.findViewById(R.id.parse_userinfo);
-        btnBuyPort = (Button) this.findViewById(R.id.parse_port);
+        btnGetUserInfo = (Button) this.findViewById(R.id.btn_userInfo);
+        btnBuyPort = (Button) this.findViewById(R.id.btn_pay);
         btnGoogleLogout = (Button) this.findViewById(R.id.btn_googleLogout);
         btnGoogleLogin = (Button) this.findViewById(R.id.btn_googleLogin);
         btnFacebookLogout = (Button) this.findViewById(R.id.btn_facebookLogout);
         btnFacebookLogin = (Button) this.findViewById(R.id.btn_facebookLogin);
-        btnChangeAccount = (Button) this.findViewById(R.id.parse_changeaccount);
-        btnUserCert = (Button) this.findViewById(R.id.parse_usercert);
-        btnLoginGame = (Button) this.findViewById(R.id.login_game);
+        btnChangeAccount = (Button) this.findViewById(R.id.btn_changeAccount);
+        btnCallSdk = (Button) this.findViewById(R.id.btn_callSdk);
+        btnLoginGame = (Button) this.findViewById(R.id.btn_loginGame);
         mSwitch = (Switch) this.findViewById(R.id.switch_env);
         btnGetUserInfo.setOnClickListener(this);
         btnBuyPort.setOnClickListener(this);
@@ -220,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnFacebookLogin.setOnClickListener(this);
         btnFacebookLogout.setOnClickListener(this);
         btnChangeAccount.setOnClickListener(this);
-        btnUserCert.setOnClickListener(this);
+        btnCallSdk.setOnClickListener(this);
         btnLoginGame.setOnClickListener(this);
 
         mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -272,7 +232,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 System.out.println("退出登录");
 //                Starter.getInstance().getUserInfo();
                 // demo演示代码
-//                enterGame(View.GONE);
             }
 
             @Override
@@ -344,17 +303,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
 
         switch (v.getId()) {
-            case R.id.parse_userinfo:
+            case R.id.btn_userInfo:
                 /** 获取SDK用户信息 */
                 Starter.getInstance().getUserInfo();
                 break;
 
-            case R.id.parse_usercert:
-                /** 进入SDK实名认证界面 */
-                Starter.getInstance().showUserCertView();
+            case R.id.btn_callSdk:
+                sdkLogin();
                 break;
 
-            case R.id.parse_changeaccount:
+            case R.id.btn_changeAccount:
                 /** 进入SDK用户中心界面 */
                 Starter.getInstance().logOut();
                 break;
@@ -374,16 +332,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_facebookLogout:
                 break;
 
-            case R.id.parse_port:
+            case R.id.btn_pay:
                 // demo演示代码，调用支付接口演示
                 /**
                  * 支付接口
                  * Activity：当前activity
                  */
-                Starter.getInstance().pay(MainActivity.this, "esgame_04", new ESdkPayCallback() {
+                tradeId = System.currentTimeMillis() + "";
+                Starter.getInstance().pay(MainActivity.this, productId, tradeId, new ESdkPayCallback() {
 
                     @Override
-                    public void onPaySuccess() {
+                    public void onPaySuccess(int num) {
+                        // num为用户购买此件商品的数量
                         Toast.makeText(MainActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
                     }
 
@@ -393,12 +353,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         //1001支付失败
                         //1002服务器验证交易失败，等验证成功后会继续回调支付成功接口
                         //1003已拥有该商品
+                        //1004宜搜下单失败
+                        //1005重复验证交易，该交易已验证成功，可以忽略
                         Toast.makeText(MainActivity.this, "支付失败" + code, Toast.LENGTH_SHORT).show();
                     }
                 });
                 break;
 
-            case R.id.login_game:
+            case R.id.btn_loginGame:
                 /**
                  * 上传游戏登陆日志接口
                  * 用于数据统计，在游戏登录成功（非sdk登录成功，玩家登录成功且经过选区服及创建角色或选择角色，完全进入游戏后）后调用
@@ -434,7 +396,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         /** 显示悬浮窗 */
         Starter.getInstance().showFloatView();
-        Starter.getInstance().pageResume(MainActivity.this);
+        Starter.getInstance().pageResume();
 
     }
 

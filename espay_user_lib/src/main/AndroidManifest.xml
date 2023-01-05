@@ -37,6 +37,9 @@
         <meta-data
             android:name="com.facebook.sdk.ClientToken"
             android:value="@string/facebook_client_token" />
+        <meta-data
+            android:name="CHANNEL"
+            android:value="oneteststore" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

@@ -58,15 +58,15 @@ public class ESPlatform {
 
             //转端增加openId和registType（是否为转端用户）
             if (Constant.isTurnExt == 1) {
-                openId = jsonObj.getString("openid");
-                registType = jsonObj.getInt("registType");
+                openId = jsonObj.optString("openid");
+                registType = jsonObj.optInt("registType");
                 Constant.isTurnExtUser = registType;
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
+        StartOtherPlugin.appsFlyerLogin(userId);
         CommonUtils.saveIsAutoCount(Starter.mActivity, isAdult);
         CommonUtils.saveH5Token(Starter.mActivity, token);
         CommonUtils.saveH5TokenToCard(token, CommonUtils.readPropertiesValue(Starter.mActivity, Constant.APP_ID));
@@ -90,8 +90,7 @@ public class ESPlatform {
         }
 
         Starter.mCallback.onLogin(result);
-        AppTimeWatcher.getInstance().startTimer();
-        mActivity.clientToJS(Constant.YSTOJS_GET_PAY_LIMIT_INFO, null);
+//        AppTimeWatcher.getInstance().startTimer();
 
         new Handler().postDelayed(new Runnable() {
             public void run() {
@@ -140,7 +139,7 @@ public class ESPlatform {
         Constant.IS_LOGINED = false;
         isShowWebView = false;
         Starter.getInstance().hideFloatView();
-        AppTimeWatcher.getInstance().unRegisterWatcher();
+//        AppTimeWatcher.getInstance().unRegisterWatcher();
         Starter.mCallback.onLogout();
         mActivity.clearData();
     }
@@ -197,7 +196,7 @@ public class ESPlatform {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
+        StartOtherPlugin.appsFlyerRegister(userId);
         CommonUtils.saveIsAutoCount(Starter.mActivity, "0");
         Map<String, String> result = new HashMap<String, String>();
         result.put(ESConstant.SDK_USER_ID, userId);
@@ -250,16 +249,11 @@ public class ESPlatform {
         }
 
         if (isIdentityUser.equals(ESConstant.SDK_STATUS)) {
-
             mActivity.moveTaskToBack(false);
-
             Map<String, String> result = new HashMap<String, String>();
             result.put(ESConstant.SDK_IS_IDENTITY_USER, isIdentityUser);
-
             Starter.mCallback.onUserCert(result);
-
         } else {
-
             StartESUserPlugin.showUserCert();
         }
     }
@@ -269,27 +263,20 @@ public class ESPlatform {
      */
     @JavascriptInterface
     public void esUserCert(final String param) {
-
         String status = "";
         String userBirthdate = "";
-
         try {
             JSONObject jsonObj = new JSONObject(param);
             status = jsonObj.getString(Constant.SDK_SHOWSTATUS);
             userBirthdate = jsonObj.getString(ESConstant.SDK_USER_BIRTH_DATE);
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         CommonUtils.saveIsAutoCount(Starter.mActivity, CommonUtils.getAge(userBirthdate) >= 18 ? "1" : "0");
-
         mActivity.clientToJS(Constant.YSTOJS_GET_PAY_LIMIT_INFO, null);
-
         Map<String, String> result = new HashMap<String, String>();
         result.put(ESConstant.SDK_IS_IDENTITY_USER, "false");
         result.put(ESConstant.SDK_USER_BIRTH_DATE, userBirthdate);
-
         Starter.mCallback.onUserCert(result);
     }
 
@@ -298,7 +285,6 @@ public class ESPlatform {
      */
     @JavascriptInterface
     public void esGetOaid(final String param) {
-
         mActivity.clientToJS(Constant.YSTOJS_GET_OAID, null);
     }
 
@@ -307,47 +293,7 @@ public class ESPlatform {
      */
     @JavascriptInterface
     public void esGetCustomDeviceId(final String param) {
-
         mActivity.clientToJS(Constant.YSTOJS_GET_CUSTOMDEVICE, null);
-    }
-
-    /**
-     * 获取支付限制信息
-     */
-    @JavascriptInterface
-    public void esPayLimitInfo(final String param) {
-
-        String payStatus = "";
-        String userType = "";
-        String minAge = "";
-        String maxAge = "";
-        String sPay = "";
-        String cPay = "";
-
-        try {
-            JSONObject jsonObj = new JSONObject(param);
-            payStatus = jsonObj.getString(Constant.SDK_PAY_STATUS);
-            userType = jsonObj.getString(Constant.SDK_USER_TYPE);
-            if (!userType.equals("2")) {
-                minAge = jsonObj.getString(Constant.SDK_MIN_AGE);
-                maxAge = jsonObj.getString(Constant.SDK_MAX_AGE);
-                sPay = jsonObj.getString(Constant.SDK_S_PAY);
-                cPay = jsonObj.getString(Constant.SDK_C_PAY);
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        Map<String, String> result = new HashMap<String, String>();
-        result.put(Constant.SDK_PAY_STATUS, payStatus);
-        result.put(Constant.SDK_USER_TYPE, userType);
-        result.put(Constant.SDK_MIN_AGE, minAge);
-        result.put(Constant.SDK_MAX_AGE, maxAge);
-        result.put(Constant.SDK_S_PAY, sPay);
-        result.put(Constant.SDK_C_PAY, cPay);
-
-        Constant.PAY_LIMIT_INFO_MAP = result;
     }
 
     /**
@@ -355,6 +301,14 @@ public class ESPlatform {
      */
     @JavascriptInterface
     public void esGoogleLogin(final String param) {
-        Starter.getInstance().beginLogin();
+        Starter.getInstance().initGoogleLogin();
+    }
+
+    /**
+     * h5调用facebook登录
+     */
+    @JavascriptInterface
+    public void esFacebookLogin(final String param) {
+        Starter.getInstance().initFacebook();
     }
 }

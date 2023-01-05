@@ -4,23 +4,23 @@
     android:orientation="vertical"
     android:padding="15dp">
 
+    <Button
+        android:id="@+id/btn_callSdk"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="调起sdk登录" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <Button
-            android:id="@+id/parse_userinfo"
+            android:id="@+id/btn_userInfo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="获取SDK用户信息" />
-
-        <Button
-            android:id="@+id/parse_usercert"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="实名认证" />
     </LinearLayout>
 
     <LinearLayout
@@ -28,14 +28,14 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:id="@+id/parse_changeaccount"
+            android:id="@+id/btn_changeAccount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="切换账号" />
 
         <Button
-            android:id="@+id/parse_port"
+            android:id="@+id/btn_pay"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -43,85 +43,76 @@
     </LinearLayout>
 
     <LinearLayout
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <Button
             android:id="@+id/btn_googleLogin"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="google登录" />
 
         <Button
             android:id="@+id/btn_facebookLogin"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="facebook登录" />
     </LinearLayout>
 
     <LinearLayout
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <Button
             android:id="@+id/btn_googleLogout"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="退出google登录" />
 
         <Button
             android:id="@+id/btn_facebookLogout"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="退出facebook登录" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Switch
+            android:id="@+id/switch_env"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="测试环境" />
+
+        <EditText
+            android:id="@+id/tv_playerId"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:hint="请输入角色id"
+            android:inputType="number" />
+    </LinearLayout>
+
     <Button
-        android:id="@+id/login_game"
+        android:id="@+id/btn_loginGame"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="游戏角色登录" />
-
-    <Switch
-        android:id="@+id/switch_env"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="测试环境" />
-
-    <EditText
-        android:id="@+id/tv_player_id"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:hint="请输入角色id"
-        android:inputType="number" />
-
-    <RadioGroup
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <RadioButton
-            android:id="@+id/radio_money"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="红包版本" />
-
-        <RadioButton
-            android:id="@+id/radio_normal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="非红包版本" />
-    </RadioGroup>
+        android:text="上传游戏角色登录日志" />
 
     <Button
         android:id="@+id/btn_info"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="包体信息" />
+        android:text="查看包体信息" />
 
     <TextView
         android:id="@+id/tv_info"

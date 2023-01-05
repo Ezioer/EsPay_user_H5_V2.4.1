@@ -160,7 +160,7 @@ public class ESUserWebActivity extends Activity {
             @Override
             public void onReceivedError(final WebView view, int errorCode, String description, String failingUrl) {
                 super.onReceivedError(view, errorCode, description, failingUrl);
-                ThreadPoolManager.getInstance().addTask(new Runnable() {
+                /*ThreadPoolManager.getInstance().addTask(new Runnable() {
                     @Override
                     public void run() {
                         StartESUserPlugin.startRequestHost(mActivity, true, new ReplaceCallBack() {
@@ -181,7 +181,7 @@ public class ESUserWebActivity extends Activity {
                             }
                         });
                     }
-                });
+                });*/
             }
 
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -204,15 +204,15 @@ public class ESUserWebActivity extends Activity {
         Constant.ua = mWebView.getSettings().getUserAgentString();
         mWebView.setWebViewClient(mWebViewClient);
         mWebView.setWebChromeClient(new MyWebChromClient());
-        String url_backup = CommonUtils.getIsReplaceSso(mActivity);
-        if (!TextUtils.isEmpty(CommonUtils.getIsReplaceSso(mActivity))) {
+//        String url_backup = CommonUtils.getIsReplaceSso(mActivity);
+     /*   if (!TextUtils.isEmpty(CommonUtils.getIsReplaceSso(mActivity))) {
             Constant.URL_BACKUP = url_backup;
-        }
-        if (Constant.SSO_URL.startsWith("https")) {
+        }*/
+     /*   if (Constant.SSO_URL.startsWith("https")) {
             mWebView.loadUrl(Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + mParams);
-        } else {
-            mWebView.loadUrl(Constant.SSO_URL + mParams);
-        }
+        } else {*/
+        mWebView.loadUrl(Constant.SSO_URL + mParams);
+//        }
     }
 
     public static void clientToJS(int type, final Map<String, String> params) {
@@ -374,12 +374,26 @@ public class ESUserWebActivity extends Activity {
                 break;
             case Constant.YSTOJS_GAME_LOGINGOOGLE:
                 final String idToken = "idToken:" + "'" + params.get("idToken") + "'";
+                final String uId = "userId:" + "'" + params.get("userId") + "'";
                 if (mWebView != null) {
                     mWebView.post(new Runnable() {
                         @Override
                         public void run() {
                             ESdkLog.d("google登录Token：" + idToken);
-                            mWebView.loadUrl("javascript:EsSdkShell.esGoogleLogin({" + idToken + "})");
+                            mWebView.loadUrl("javascript:EsSdkShell.esGoogleLogin({" + idToken + ", " + uId + "})");
+                        }
+                    });
+                }
+                break;
+            case Constant.YSTOJS_GAME_LOGINFACEBOOK:
+                final String token = "token:" + "'" + params.get("token") + "'";
+                final String id = "userId:" + "'" + params.get("userId") + "'";
+                if (mWebView != null) {
+                    mWebView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            ESdkLog.d("facebook登录token和userid：" + token + id);
+                            mWebView.loadUrl("javascript:EsSdkShell.esFacebookLogin({" + token + ", " + id + "})");
                         }
                     });
                 }
@@ -684,7 +698,7 @@ public class ESUserWebActivity extends Activity {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                 if (title.contains("404") || title.contains("500") || title.contains("Error")
                         || title.contains("找不到网页") || title.contains("网页无法打开")) {
-                    ThreadPoolManager.getInstance().addTask(new Runnable() {
+                    /*ThreadPoolManager.getInstance().addTask(new Runnable() {
                         @Override
                         public void run() {
                             StartESUserPlugin.startRequestHost(mActivity, true, new ReplaceCallBack() {
@@ -705,7 +719,7 @@ public class ESUserWebActivity extends Activity {
                                 }
                             });
                         }
-                    });
+                    });*/
                 }
             }
         }

@@ -6,6 +6,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.adjust.sdk.Adjust;
+import com.adjust.sdk.AdjustEvent;
 import com.appsflyer.AFInAppEventParameterName;
 import com.appsflyer.AFInAppEventType;
 import com.appsflyer.AppsFlyerLib;
@@ -99,11 +101,133 @@ public class StartOtherPlugin {
     }
 
     //购买
-    public static void appsFlyerPurchase(int price, float ncy) {
+    public static void appsFlyerPurchase(float price, String ncy, String productId, String orderId) {
+        AdjustEvent adjustEvent = new AdjustEvent("abc123");
+        adjustEvent.setRevenue(price, ncy);
+        adjustEvent.setOrderId(orderId);
+        Adjust.trackEvent(adjustEvent);
+
         Map<String, Object> eventValues = new HashMap<String, Object>();
         eventValues.put(AFInAppEventParameterName.CURRENCY, ncy);
         eventValues.put(AFInAppEventParameterName.REVENUE, price);
+        eventValues.put(AFInAppEventParameterName.CONTENT_ID, productId);
+        eventValues.put(AFInAppEventParameterName.ORDER_ID, orderId);
         AppsFlyerLib.getInstance().logEvent(getApplicationContext(),
                 AFInAppEventType.PURCHASE, eventValues);
+    }
+
+    //添加到心愿清单
+    public static void appsFlyerAddToWishList(float price, String id) {
+        Map<String, Object> eventValues = new HashMap<String, Object>();
+        eventValues.put(AFInAppEventParameterName.PRICE, price);
+        eventValues.put(AFInAppEventParameterName.CONTENT_ID, id);
+        AppsFlyerLib.getInstance().logEvent(getApplicationContext(),
+                AFInAppEventType.ADD_TO_WISH_LIST, eventValues);
+    }
+
+    //添加到购物车
+    public static void appsFlyerAddToCar(float price, String id) {
+        Map<String, Object> eventValues = new HashMap<String, Object>();
+        eventValues.put(AFInAppEventParameterName.PRICE, price);
+        eventValues.put(AFInAppEventParameterName.CONTENT_ID, id);
+        AppsFlyerLib.getInstance().logEvent(getApplicationContext(),
+                AFInAppEventType.ADD_TO_CART, eventValues);
+    }
+
+    //广告点击
+    public static void appsFlyerADClick(String id) {
+        Map<String, Object> eventValues = new HashMap<String, Object>();
+        eventValues.put(AFInAppEventParameterName.CONTENT_ID, id);
+        AppsFlyerLib.getInstance().logEvent(getApplicationContext(),
+                AFInAppEventType.AD_CLICK, eventValues);
+    }
+
+    //更新
+    public static void appsFlyerUpdate(String oldVersion, String newVersion) {
+        Map<String, Object> eventValues = new HashMap<String, Object>();
+        eventValues.put(AFInAppEventParameterName.OLD_VERSION, oldVersion);
+        eventValues.put(AFInAppEventParameterName.NEW_VERSION, newVersion);
+        AppsFlyerLib.getInstance().logEvent(getApplicationContext(),
+                AFInAppEventType.UPDATE, eventValues);
+    }
+
+    //分享
+    public static void appsFlyerShare(String name, String platform) {
+        Map<String, Object> eventValues = new HashMap<String, Object>();
+        eventValues.put(AFInAppEventParameterName.CONTENT, name);
+        eventValues.put("platform", platform);
+        AppsFlyerLib.getInstance().logEvent(getApplicationContext(),
+                AFInAppEventType.SHARE, eventValues);
+    }
+
+    //搜索
+    public static void appsFlyerSearch(String key) {
+        Map<String, Object> eventValues = new HashMap<String, Object>();
+        eventValues.put(AFInAppEventParameterName.SEARCH_STRING, key);
+        AppsFlyerLib.getInstance().logEvent(getApplicationContext(),
+                AFInAppEventType.SEARCH, eventValues);
+    }
+
+    //邀请
+    public static void appsFlyerInvite(String content) {
+        Map<String, Object> eventParameters6 = new HashMap<String, Object>();
+        eventParameters6.put(AFInAppEventParameterName.DESCRIPTION, content); // Context of invitation
+        AppsFlyerLib.getInstance().logEvent(getApplicationContext(), AFInAppEventType.INVITE, eventParameters6);
+    }
+
+    //从通知中打开app
+    public static void appsFlyerOFPN(String id) {
+        Map<String, Object> eventValues = new HashMap<String, Object>();
+        eventValues.put(AFInAppEventParameterName.CONTENT_ID, id);
+        AppsFlyerLib.getInstance().logEvent(getApplicationContext(),
+                AFInAppEventType.OPENED_FROM_PUSH_NOTIFICATION, eventValues);
+    }
+
+    //完成教程
+    public static void appsFlyerCompTutorial() {
+        AppsFlyerLib.getInstance().logEvent(getApplicationContext(),
+                AFInAppEventType.TUTORIAL_COMPLETION, null);
+    }
+
+    //下单
+    public static void appsFlyerCheckout(float price, String ncy, String productId, String orderId) {
+        Map<String, Object> eventParameters3 = new HashMap<String, Object>();
+        eventParameters3.put(AFInAppEventParameterName.CURRENCY, ncy);
+        eventParameters3.put(AFInAppEventParameterName.REVENUE, price);
+        eventParameters3.put(AFInAppEventParameterName.CONTENT_ID, productId);
+        eventParameters3.put(AFInAppEventParameterName.ORDER_ID, orderId);
+        AppsFlyerLib.getInstance().logEvent(getApplicationContext(), AFInAppEventType.INITIATED_CHECKOUT, eventParameters3);
+    }
+
+    //游戏通关
+    public static void appsFlyerAchievedLevel(String level) {
+        Map<String, Object> eventParameters3 = new HashMap<String, Object>();
+        eventParameters3.put(AFInAppEventParameterName.LEVEL, level); // Level the user achieved
+        AppsFlyerLib.getInstance().logEvent(getApplicationContext(), AFInAppEventType.LEVEL_ACHIEVED, eventParameters3);
+    }
+
+    //首次付费
+    public static void appsFlyerFirstPurchase(float price, String ncy, String productId, String orderId) {
+        Map<String, Object> eventParameters3 = new HashMap<String, Object>();
+        eventParameters3.put(AFInAppEventParameterName.CURRENCY, ncy);
+        eventParameters3.put(AFInAppEventParameterName.REVENUE, price);
+        eventParameters3.put(AFInAppEventParameterName.CONTENT_ID, productId);
+        eventParameters3.put(AFInAppEventParameterName.ORDER_ID, orderId);
+        AppsFlyerLib.getInstance().logEvent(getApplicationContext(), "first_purchase", eventParameters3);
+    }
+
+    //成就解锁
+    public static void appsFlyerAchUnlock(String id, String name) {
+        Map<String, Object> eventParameters3 = new HashMap<String, Object>();
+        eventParameters3.put(AFInAppEventParameterName.CONTENT_ID, id); // Level the user achieved
+        eventParameters3.put(AFInAppEventParameterName.CONTENT, name); // Level the user achieved
+        AppsFlyerLib.getInstance().logEvent(getApplicationContext(), AFInAppEventType.ACHIEVEMENT_UNLOCKED, eventParameters3);
+    }
+
+    //广告浏览
+    public static void appsFlyerADView(String id) {
+        Map<String, Object> eventParameters3 = new HashMap<String, Object>();
+        eventParameters3.put(AFInAppEventParameterName.CONTENT_ID, id); // Level the user achieved
+        AppsFlyerLib.getInstance().logEvent(getApplicationContext(), AFInAppEventType.AD_VIEW, eventParameters3);
     }
 }

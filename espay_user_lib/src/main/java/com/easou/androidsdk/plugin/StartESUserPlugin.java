@@ -40,7 +40,7 @@ public class StartESUserPlugin {
                 Looper.prepare();
                 if (!Constant.IS_LOGINED) {
                     startH5Login();
-                    startRequestHost(Starter.mActivity, false, null);
+//                    startRequestHost(Starter.mActivity, false, null);
                 }
                 Looper.loop();
             }
@@ -85,19 +85,20 @@ public class StartESUserPlugin {
         ESUserWebActivity.clientToJS(Constant.YSTOJS_GAME_INTOFOREGROUND, null);
     }
 
-    /**
-     * 判断用户是否实名认证
-     */
-    public static void getUserCertStatus() {
-        ESUserWebActivity.clientToJS(Constant.YSTOJS_IS_CERTUSER, null);
+    //登录google账号
+    public static void loginGoogle(String idToken, String id) {
+        HashMap map = new HashMap();
+        map.put("idToken", idToken);
+        map.put("userId", id);
+        ESUserWebActivity.clientToJS(Constant.YSTOJS_GAME_LOGINGOOGLE, map);
         enterH5View();
     }
 
-    //登录google账号
-    public static void loginGoogle(String idToken) {
+    public static void loginFacebook(String token, String userId) {
         HashMap map = new HashMap();
-        map.put("idToken", idToken);
-        ESUserWebActivity.clientToJS(Constant.YSTOJS_GAME_LOGINGOOGLE, map);
+        map.put("token", token);
+        map.put("userId", userId);
+        ESUserWebActivity.clientToJS(Constant.YSTOJS_GAME_LOGINFACEBOOK, map);
         enterH5View();
     }
 
@@ -246,61 +247,5 @@ public class StartESUserPlugin {
      */
     public static String getPropValue(Context _context, String key) {
         return CommonUtils.readPropertiesValue(_context, key);
-    }
-
-    public static void setPayChannel() {
-        String channel = CommonUtils.readPropertiesValue(Starter.mActivity, Constant.CHANNEL_MARK);
-        String payMark = "";
-        String payWx = "";
-        String payAlipay = "";
-        if (channel.equals("DHT")) {
-            payMark = "DHT";
-            payWx = "WECHAT_DHT";
-            payAlipay = "YXDHTALIPAY";
-            Constant.PAY_CHANNEl = 1;
-        } else if (channel.equals("YY")) {
-            payMark = "YY";
-            payWx = "WECHAT_YY";
-            payAlipay = "YYXZALIPAY";
-            Constant.PAY_CHANNEl = 2;
-        } else if (channel.equals("ZKX")) {
-            payMark = "HYWZKX";
-            payWx = "WECHAT_ZKX";
-            payAlipay = "ZKXHGALIPAY";
-            Constant.PAY_CHANNEl = 3;
-        } else if (channel.equals("JHHY")) {
-            payMark = "HYWJHHY";
-            payWx = "WECHAT_JHHY";
-            payAlipay = "JHHYALIPAY";
-            Constant.PAY_CHANNEl = 4;
-        } else if (channel.equals("ZZSD")) {
-            payMark = "HYWZZSD";
-            payWx = "WECHAT_ZZSD";
-            payAlipay = "ZZSDALIPAY";
-            Constant.PAY_CHANNEl = 5;
-        } else if (channel.equals("SHDT")) {
-            payMark = "HYWSHDT";
-            payWx = "WECHAT_SHDT";
-            payAlipay = "SHDTALIPAY";
-            Constant.PAY_CHANNEl = 6;
-        } else if (channel.equals("BJHM")) {
-            payMark = "HYWBJHM";
-            payWx = "WECHAT_BJHM";
-            payAlipay = "BJHMALIPAY";
-            Constant.PAY_CHANNEl = 7;
-        } else if (channel.equals("ZZQ")) {
-            payMark = "HYWZZQ";
-            payWx = "WECHAT_ZZQ";
-            payAlipay = "ZZQALIPAY";
-            Constant.PAY_CHANNEl = 8;
-        } else {
-            payMark = "";
-            payWx = "WECHAT";
-            payAlipay = "ALIPAY2";
-            Constant.PAY_CHANNEl = 0;
-        }
-        CommonUtils.savePayMarkObject(Starter.mActivity, payMark);
-        CommonUtils.savePayWxObject(Starter.mActivity, payWx);
-        CommonUtils.savePayAliObject(Starter.mActivity, payAlipay);
     }
 }

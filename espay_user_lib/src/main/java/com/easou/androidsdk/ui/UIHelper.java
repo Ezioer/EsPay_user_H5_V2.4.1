@@ -683,11 +683,11 @@ public class UIHelper {
 				unipayLineImageView.setVisibility(View.GONE);
 			}*/
 
-            if (Constant.PAY_CHANNEl == 1 || Constant.PAY_CHANNEl == 2 || Constant.PAY_CHANNEl == 3 || Constant.PAY_CHANNEl == 4
+          /*  if (Constant.PAY_CHANNEl == 1 || Constant.PAY_CHANNEl == 2 || Constant.PAY_CHANNEl == 3 || Constant.PAY_CHANNEl == 4
                     || Constant.PAY_CHANNEl == 0 || Constant.PAY_CHANNEl == 5 || Constant.PAY_CHANNEl == 6 || Constant.PAY_CHANNEl == 7) {
                 ylLayout.setVisibility(View.GONE);
                 unipayLineImageView.setVisibility(View.GONE);
-            }
+            }*/
         }
 
 

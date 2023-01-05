@@ -1,20 +1,13 @@
 package com.easou.androidsdk.util;
 
+
 import java.io.ByteArrayOutputStream;
 import java.security.KeyFactory;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.Signature;
-import java.security.spec.MGF1ParameterSpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-
 import javax.crypto.Cipher;
-import javax.crypto.spec.OAEPParameterSpec;
-import javax.crypto.spec.PSource;
-
 import org.apache.commons.codec.binary.Base64;
 
 /**
@@ -22,7 +15,7 @@ import org.apache.commons.codec.binary.Base64;
  * on 2022/11/22
  * fun
  */
-public class TestRSA {
+public class RSAUtil {
 
     /**
      * RSA最大加密明文大小
@@ -33,17 +26,7 @@ public class TestRSA {
      * RSA最大解密密文大小
      */
     private static final int MAX_DECRYPT_BLOCK = 128;
-
-    /**
-     * 获取密钥对
-     *
-     * @return 密钥对
-     */
-    public static KeyPair getKeyPair() throws Exception {
-        KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
-        generator.initialize(1024);
-        return generator.generateKeyPair();
-    }
+    public static String publicKey = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAMcpLi8L/HjPAUnedRptN/g82rZdkICvxy07Iznwv0NdUXGNFc58jyK6n4iPV6JbU21GsHDO2jfhxVCGI0d8o3sCAwEAAQ==";
 
     /**
      * 获取私钥
@@ -80,8 +63,8 @@ public class TestRSA {
      */
     public static String encrypt(String data, PublicKey publicKey) throws Exception {
         Cipher cipher = Cipher.getInstance("RSA/None/PKCS1Padding");
-        OAEPParameterSpec sp = new OAEPParameterSpec("SHA-256", "MGF1", new MGF1ParameterSpec("SHA-1"), PSource.PSpecified.DEFAULT);
-        cipher.init(Cipher.ENCRYPT_MODE, publicKey, sp);
+//        OAEPParameterSpec sp = new OAEPParameterSpec("SHA-256", "MGF1", new MGF1ParameterSpec("SHA-1"), PSource.PSpecified.DEFAULT);
+        cipher.init(Cipher.ENCRYPT_MODE, publicKey);
         int inputLen = data.getBytes().length;
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         int offset = 0;
@@ -114,9 +97,9 @@ public class TestRSA {
      */
     public static String decrypt(String data, PrivateKey privateKey) throws Exception {
         Cipher cipher = Cipher.getInstance("RSA/None/PKCS1Padding");
-        OAEPParameterSpec sp = new OAEPParameterSpec("SHA-256", "MGF1", new MGF1ParameterSpec("SHA-1"), PSource.PSpecified.DEFAULT);
-        cipher.init(Cipher.DECRYPT_MODE, privateKey, sp);
-        byte[] dataBytes = com.easou.androidsdk.util.Base64.decode(data);
+//        OAEPParameterSpec sp = new OAEPParameterSpec("SHA-256", "MGF1", new MGF1ParameterSpec("SHA-1"), PSource.PSpecified.DEFAULT);
+        cipher.init(Cipher.DECRYPT_MODE, privateKey);
+        byte[] dataBytes = Base64.decodeBase64(data.getBytes());
         int inputLen = dataBytes.length;
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         int offset = 0;
@@ -137,69 +120,5 @@ public class TestRSA {
         out.close();
         // 解密后的内容
         return new String(decryptedData, "UTF-8");
-    }
-
-    /**
-     * 签名
-     *
-     * @param data       待签名数据
-     * @param privateKey 私钥
-     * @return 签名
-     */
-    public static String sign(String data, PrivateKey privateKey) throws Exception {
-        byte[] keyBytes = privateKey.getEncoded();
-        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        PrivateKey key = keyFactory.generatePrivate(keySpec);
-        Signature signature = Signature.getInstance("MD5withRSA");
-        signature.initSign(key);
-        signature.update(data.getBytes());
-        return new String(Base64.encodeBase64(signature.sign()));
-    }
-
-    /**
-     * 验签
-     *
-     * @param srcData   原始字符串
-     * @param publicKey 公钥
-     * @param sign      签名
-     * @return 是否验签通过
-     */
-    public static boolean verify(String srcData, PublicKey publicKey, String sign) throws Exception {
-        byte[] keyBytes = publicKey.getEncoded();
-        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        PublicKey key = keyFactory.generatePublic(keySpec);
-        Signature signature = Signature.getInstance("MD5withRSA");
-        signature.initVerify(key);
-        signature.update(srcData.getBytes());
-        return signature.verify(Base64.decodeBase64(sign.getBytes()));
-    }
-
-    public static String publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCTu+cc9ApzzH7aTB+he41Qagih+HZ6j5cWQYkGjd08n/sgIZz8SvH5fyqyuEmOyk/qZW2hQEOrMcjROJsZODeeEjpg9ExXh1E1fxcakoxXErbS06vrDpsk1TifC5hsgHu3112Dc48+oZ3yyMJnS8p7bHnvgg38HRZ7rm56XKREcQIDAQAB";
-
-    public static void main(String[] args) {
-        try {
-            // 生成密钥对
-//            KeyPair keyPair = getKeyPair();
-//            String privateKey = new String(Base64.encodeBase64(keyPair.getPrivate().getEncoded()));
-//            String publicKey = new String(Base64.encodeBase64(keyPair.getPublic().getEncoded()));
-//            System.out.println("私钥:" + privateKey);
-//            System.out.println("公钥:" + publicKey);
-            // RSA加密
-
-           /* // RSA解密
-            String decryptData = decrypt(encryptData, getPrivateKey(privateKey));
-            System.out.println("解密后内容:" + decryptData);
-
-            // RSA签名
-            String sign = sign(data, getPrivateKey(privateKey));
-            // RSA验签
-            boolean result = verify(data, getPublicKey(publicKey), sign);*/
-//            System.out.print("验签结果:" + result);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.print("加解密异常");
-        }
     }
 }
