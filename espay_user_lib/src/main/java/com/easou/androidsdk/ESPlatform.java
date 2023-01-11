@@ -66,7 +66,8 @@ public class ESPlatform {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        StartOtherPlugin.appsFlyerLogin(userId);
+//        StartOtherPlugin.appsFlyerLogin(userId);
+        Starter.getInstance().adjustLogin(userId);
         CommonUtils.saveIsAutoCount(Starter.mActivity, isAdult);
         CommonUtils.saveH5Token(Starter.mActivity, token);
         CommonUtils.saveH5TokenToCard(token, CommonUtils.readPropertiesValue(Starter.mActivity, Constant.APP_ID));
@@ -196,7 +197,9 @@ public class ESPlatform {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        StartOtherPlugin.appsFlyerRegister(userId);
+//        StartOtherPlugin.appsFlyerRegister(userId);
+        Starter.getInstance().adjustRegister(userId);
+        Starter.getInstance().fbCompRegister("");
         CommonUtils.saveIsAutoCount(Starter.mActivity, "0");
         Map<String, String> result = new HashMap<String, String>();
         result.put(ESConstant.SDK_USER_ID, userId);
@@ -301,7 +304,7 @@ public class ESPlatform {
      */
     @JavascriptInterface
     public void esGoogleLogin(final String param) {
-        Starter.getInstance().initGoogleLogin();
+        Starter.getInstance().initGoogleLogin(false);
     }
 
     /**
@@ -309,6 +312,23 @@ public class ESPlatform {
      */
     @JavascriptInterface
     public void esFacebookLogin(final String param) {
-        Starter.getInstance().initFacebook();
+        Starter.getInstance().initFacebook(false);
+    }
+
+
+    /**
+     * h5调用google登录
+     */
+    @JavascriptInterface
+    public void esGoogleBind(final String param) {
+        Starter.getInstance().initGoogleLogin(true);
+    }
+
+    /**
+     * h5调用facebook登录
+     */
+    @JavascriptInterface
+    public void esFacebookBind(final String param) {
+        Starter.getInstance().initFacebook(true);
     }
 }

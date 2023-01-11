@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-
 android {
     compileSdkVersion 31
     buildToolsVersion "30.0.3"
@@ -44,17 +43,20 @@ dependencies {
     compile 'androidx.appcompat:appcompat:1.0.0'
     compile files('libs/gson-1.5.jar')
     compile files('libs/oaid_sdk_2.0.0.jar')
+//    compile files('libs/adjust-4.33.2.jar')
+//    compile files('libs/google-billing-4.1.0.jar')
+//    compile files('libs/installreferrer-2.2.jar')
+//    compile files('libs/play-service-ads-iden-18.0.1.jar')
     implementation 'com.google.android.gms:play-services-auth:20.3.0'
     implementation "com.android.billingclient:billing:4.1.0"
     implementation 'com.facebook.android:facebook-login:latest.release'
 
-    implementation 'com.appsflyer:af-android-sdk:6.9.0'
-    implementation "com.android.installreferrer:installreferrer:2.2"
+//    implementation 'com.appsflyer:af-android-sdk:6.9.0'
 
     implementation 'com.adjust.sdk:adjust-android:4.33.0'
+    //google商店归因
     implementation 'com.android.installreferrer:installreferrer:2.2'
     // Add the following if you are using the Adjust SDK inside web views on your app
-    implementation 'com.adjust.sdk:adjust-android-webbridge:4.33.0'
+//    implementation 'com.adjust.sdk:adjust-android-webbridge:4.33.0'
     implementation 'com.google.android.gms:play-services-ads-identifier:17.0.1'
-    implementation 'com.android.installreferrer:installreferrer:2.2'
 }

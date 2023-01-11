@@ -375,12 +375,18 @@ public class ESUserWebActivity extends Activity {
             case Constant.YSTOJS_GAME_LOGINGOOGLE:
                 final String idToken = "idToken:" + "'" + params.get("idToken") + "'";
                 final String uId = "userId:" + "'" + params.get("userId") + "'";
+                final String bind = params.get("isBind");
                 if (mWebView != null) {
                     mWebView.post(new Runnable() {
                         @Override
                         public void run() {
                             ESdkLog.d("google登录Token：" + idToken);
-                            mWebView.loadUrl("javascript:EsSdkShell.esGoogleLogin({" + idToken + ", " + uId + "})");
+                            if (bind.equals("1")) {
+                                mWebView.loadUrl("javascript:EsSdkShell.esGoogleBind({" + idToken + ", " + uId + "})");
+                            } else {
+                                mWebView.loadUrl("javascript:EsSdkShell.esGoogleLogin({" + idToken + ", " + uId + "})");
+                            }
+
                         }
                     });
                 }
@@ -388,12 +394,18 @@ public class ESUserWebActivity extends Activity {
             case Constant.YSTOJS_GAME_LOGINFACEBOOK:
                 final String token = "token:" + "'" + params.get("token") + "'";
                 final String id = "userId:" + "'" + params.get("userId") + "'";
+                final String isBind = params.get("isBind");
                 if (mWebView != null) {
                     mWebView.post(new Runnable() {
                         @Override
                         public void run() {
                             ESdkLog.d("facebook登录token和userid：" + token + id);
-                            mWebView.loadUrl("javascript:EsSdkShell.esFacebookLogin({" + token + ", " + id + "})");
+                            if (isBind.equals("1")) {
+                                mWebView.loadUrl("javascript:EsSdkShell.esFacebookBind({" + token + ", " + id + "})");
+                            } else {
+                                mWebView.loadUrl("javascript:EsSdkShell.esFacebookLogin({" + token + ", " + id + "})");
+                            }
+
                         }
                     });
                 }

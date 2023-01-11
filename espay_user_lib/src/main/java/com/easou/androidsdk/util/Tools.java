@@ -303,9 +303,9 @@ public class Tools {
         return "";
     }
 
-    /**
+    /* *//**
      * 反射 禁止弹窗
-     */
+     *//*
     public static void disableAPIDialog() {
         if (Build.VERSION.SDK_INT < 28) return;
         try {
@@ -319,7 +319,7 @@ public class Tools {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
 
     /**
@@ -330,7 +330,7 @@ public class Tools {
     public static JSONObject getOnlyId() {
 //        StringBuilder deviceId = new StringBuilder();
         String imei = Constant.IMEI;
-        String androidId = getAndroidId();
+        String androidId = Constant.ANDROIDID;
         String serial = getSerNum();
         String uuid = getUuid().replace("-", "");
         JSONObject jsonObject = new JSONObject();
@@ -405,13 +405,11 @@ public class Tools {
         }
     }
 
-    public static String getAndroidId() {
+    public static void getAndroidId(Context mContext) {
         try {
-            return Settings.System.getString(Starter.mActivity.getContentResolver(), Settings.Secure.ANDROID_ID);
+            Constant.ANDROIDID = Settings.System.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
         } catch (Exception e) {
-
         }
-        return "";
     }
 
     public static String getSerNum() {

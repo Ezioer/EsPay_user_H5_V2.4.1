@@ -151,9 +151,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (Starter.mActivity.getPackageName().contains("fhzj")) {
                     param = param + "\nsdkType=fhzj";
                 }
-                if (CommonUtils.getTestMoney(Starter.mActivity) == 1) {
+                /*if (CommonUtils.getTestMoney(Starter.mActivity) == 1) {
                     param = param + "\nsdkVersion=hongbao";
-                }
+                }*/
                 if (Constant.SSO_URL.startsWith("https")) {
                     param = param + "\n环境=线上";
                 } else {
@@ -326,7 +326,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.btn_facebookLogin:
-                Starter.getInstance().initFacebook();
+//                Starter.getInstance().initFacebook();
                 break;
 
             case R.id.btn_facebookLogout:

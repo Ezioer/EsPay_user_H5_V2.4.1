@@ -154,32 +154,6 @@ public class CommonUtils {
         editor.commit();
     }
 
-    public static void saveGoogleToken(Context mContext, String token) {
-        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("googleToken", token);
-        editor.commit();
-    }
-
-    public static String getGoogleToken(Context mContext) {
-        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
-        String userid = settings.getString("googleToken", "");
-        return userid;
-    }
-
-    public static void saveFBToken(Context mContext, String token) {
-        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("facebookToken", token);
-        editor.commit();
-    }
-
-    public static String getFBToken(Context mContext) {
-        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
-        String userid = settings.getString("facebookToken", "");
-        return userid;
-    }
-
     public static String getUserId(Context mContext) {
         SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
         String userid = settings.getString("esuserid", "");
@@ -199,6 +173,19 @@ public class CommonUtils {
         editor.commit();
     }
 
+    public static int getIsFirstStart(Context mContext) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        int sso = settings.getInt("isfirststart", 0);
+        return sso;
+    }
+
+    public static void saveIsFirstStart(Context mContext) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt("isfirststart", 1);
+        editor.commit();
+    }
+
     public static void saveIsAutoCount(Context mContext, String isCount) {
         SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
         SharedPreferences.Editor editor = settings.edit();
@@ -210,19 +197,6 @@ public class CommonUtils {
     public static String getIsAutoCount(Context mContext) {
         SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
         String userid = settings.getString("isautocount", "0");
-        return userid;
-    }
-
-    public static void saveTestMoney(Context mContext, int isCount) {
-        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putInt("isTestMoney", isCount);
-        editor.commit();
-    }
-
-    public static int getTestMoney(Context mContext) {
-        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
-        int userid = settings.getInt("isTestMoney", 0);
         return userid;
     }
 
@@ -244,45 +218,6 @@ public class CommonUtils {
         SharedPreferences.Editor editor = settings.edit();
         editor.putString("esuserid", id);
         editor.commit();
-    }
-
-    public static void savePayMarkObject(Context mContext, String pay) {
-        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("paymark", pay);
-        editor.commit();
-    }
-
-    public static String getPayMarkObject(Context mContext) {
-        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
-        String userid = settings.getString("paymark", "HYWZZQ");
-        return userid;
-    }
-
-    public static void savePayWxObject(Context mContext, String pay) {
-        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("paywx", pay);
-        editor.commit();
-    }
-
-    public static String getPayWxObject(Context mContext) {
-        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
-        String userid = settings.getString("paywx", "WECHAT_ZZQ");
-        return userid;
-    }
-
-    public static void savePayAliObject(Context mContext, String pay) {
-        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("payalipay", pay);
-        editor.commit();
-    }
-
-    public static String getPayAliObject(Context mContext) {
-        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
-        String userid = settings.getString("payalipay", "ZZQALIPAY");
-        return userid;
     }
 
     /**

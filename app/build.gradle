@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+//apply plugin: 'com.google.gms.google-services'
 android {
     compileSdkVersion 31
     buildToolsVersion "30.0.3"
@@ -72,6 +72,7 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
     compile project(':espay_user_lib')
-    /* implementation 'com.google.android.gms:play-services-auth:20.3.0'
-     implementation "com.android.billingclient:billing:4.1.0"*/
+
+    implementation 'com.facebook.android:facebook-login:latest.release'
+    implementation 'com.google.android.gms:play-services-auth:20.3.0'
 }

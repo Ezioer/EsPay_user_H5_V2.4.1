@@ -21,7 +21,7 @@ public class Constant {
     /**
      * H5 SDK 用户id
      */
-    public static String ESDK_USERID = "sssss";
+    public static String ESDK_USERID = "11111";
     /**
      * H5 SDK 用户token
      */
@@ -39,6 +39,7 @@ public class Constant {
      * 记录设备号
      */
     public static String IMEI = "0";
+    public static String ANDROIDID = "";
     /**
      * 记录外网ip
      */

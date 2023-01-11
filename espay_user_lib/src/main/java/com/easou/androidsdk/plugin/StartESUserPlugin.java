@@ -51,11 +51,6 @@ public class StartESUserPlugin {
      * 打开H5 SDK页面
      */
     public static void startH5Login() {
-        // 获取deviceID
-        String imei = Tools.getDeviceImei(Starter.mActivity);
-        if (!TextUtils.isEmpty(imei.trim())) {
-            Constant.IMEI = imei;
-        }
         Constant.NET_IP = Tools.getNetIp();
         enterH5View();
     }
@@ -86,18 +81,20 @@ public class StartESUserPlugin {
     }
 
     //登录google账号
-    public static void loginGoogle(String idToken, String id) {
+    public static void loginGoogle(String idToken, String id, boolean isBindGoogle) {
         HashMap map = new HashMap();
         map.put("idToken", idToken);
         map.put("userId", id);
+        map.put("isBind", isBindGoogle ? "1" : "0");
         ESUserWebActivity.clientToJS(Constant.YSTOJS_GAME_LOGINGOOGLE, map);
         enterH5View();
     }
 
-    public static void loginFacebook(String token, String userId) {
+    public static void loginFacebook(String token, String userId, boolean isBindFacebook) {
         HashMap map = new HashMap();
         map.put("token", token);
         map.put("userId", userId);
+        map.put("isBind", isBindFacebook ? "1" : "0");
         ESUserWebActivity.clientToJS(Constant.YSTOJS_GAME_LOGINFACEBOOK, map);
         enterH5View();
     }

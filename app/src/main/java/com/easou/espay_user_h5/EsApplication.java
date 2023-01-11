@@ -15,7 +15,5 @@ public class EsApplication extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        Starter.getInstance().initEntry(base);
     }
-
 }

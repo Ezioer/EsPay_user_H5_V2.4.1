@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -15,6 +16,7 @@ import androidx.annotation.Nullable;
 
 import com.adjust.sdk.Adjust;
 import com.adjust.sdk.AdjustConfig;
+import com.adjust.sdk.AdjustEvent;
 import com.adjust.sdk.LogLevel;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
@@ -28,7 +30,6 @@ import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
-import com.appsflyer.AppsFlyerLib;
 import com.easou.androidsdk.callback.ESdkCallback;
 import com.easou.androidsdk.callback.ESdkPayCallback;
 import com.easou.androidsdk.data.Constant;
@@ -49,10 +50,10 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.appevents.AppEventsConstants;
+import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.google.android.gms.auth.api.identity.BeginSignInRequest;
-import com.google.android.gms.auth.api.identity.SignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -76,23 +77,28 @@ public class Starter {
     public static Activity mActivity;
 
     public volatile static Starter mSingleton = null;
-    private SignInClient oneTapClient;
-    private BeginSignInRequest signInRequest;
-    private BeginSignInRequest signUpRequest;
-    private String productId = "";
-    private String tradeId = "";
+    //    private SignInClient oneTapClient;
+//    private BeginSignInRequest signInRequest;
+//    private BeginSignInRequest signUpRequest;
+    private String mProductId = "";
+    private String mTradeId = "";
     private ESdkPayCallback mPayCallBack;
     private GoogleSignInClient mGoogleSignInClient;
     private BillingClient billingClient;
     private CallbackManager callbackManager;
     public static final String TAG = "GoogleAndFBLog";
-    public static final int REQ_ONE_TAP = 10;
-    public static final int REQ_ONE_TAP2 = 11;
+    //    public static final int REQ_ONE_TAP = 10;
+//    public static final int REQ_ONE_TAP2 = 11;
     public static final int SIGN_LOGIN = 13;
-    private static final String AF_DEV_KEY = "tDumMnMfhmLERFkWr5pZaY";
+    //    private static final String AF_DEV_KEY = "CKrrrbztntPYFpSXe86MJb";
+    private static final String googleID = "807370166346-mbc8cuo915hb03ulbp45jaqvmgku72uo.apps.googleusercontent.com";
+    private static String ADJUSTKEY = "g51ej45btr7k";
+    private AppEventsLogger logger = null;
     private String mESOrder = "";
-    private String ncy = "";
+    private String mNcy = "";
     private String mPrice = "";
+    private boolean isBindGoogle = false;
+    private boolean isBindFacebook = false;
 
     private Starter() {
     }
@@ -116,9 +122,9 @@ public class Starter {
      * 宜搜SDK支付接口
      */
     public void pay(Activity mActivity, String id, String tradeId, ESdkPayCallback callback) {
-        productId = id;
+        mProductId = id;
         mPayCallBack = callback;
-        this.tradeId = tradeId;
+        this.mTradeId = tradeId;
         initBilling(mActivity);
     }
 
@@ -156,10 +162,10 @@ public class Starter {
                                             JSONObject custom = new JSONObject(result.getData().toString());
                                             String data = AESUtil.decrypt(custom.optString("content"), Constant.AESKEY);
                                             JSONObject content = new JSONObject(data);
-                                            if (content.optBoolean("isFirstPay")) {
+                                          /*  if (content.optBoolean("isFirstPay")) {
                                                 //首次付费
-                                                StartOtherPlugin.appsFlyerFirstPurchase(Float.valueOf(mPrice) * num, ncy, productId, mESOrder);
-                                            }
+                                                StartOtherPlugin.appsFlyerFirstPurchase(Float.valueOf(mPrice) * num, mNcy, mProductId, mESOrder);
+                                            }*/
                                             acknowledgementState = content.getInt("ackStatus");
                                             consumptionState = content.getInt("consumptionStatus");
                                         } catch (Exception e) {
@@ -167,7 +173,9 @@ public class Starter {
                                         if (acknowledgementState == 0) {
                                             //服务器验证成功，核销订单
                                             Log.d(TAG, "验证成功，核销订单中........");
-                                            StartOtherPlugin.appsFlyerPurchase(Float.valueOf(mPrice) * num, ncy, productId, mESOrder);
+//                                            StartOtherPlugin.appsFlyerPurchase(Float.valueOf(mPrice) * num, mNcy, mProductId, mESOrder);
+                                            adjustPay(Float.valueOf(mPrice), mNcy, mESOrder);
+                                            fbPurchased(Float.valueOf(mPrice), mNcy, mProductId, mESOrder);
                                             consumePurchase(purchase.getPurchaseToken());
                                             //可重复购买的内购商品核销，回调购买给游戏处理
                                             if (mPayCallBack != null) {
@@ -298,8 +306,8 @@ public class Starter {
                         ThreadPoolManager.getInstance().addTask(new Runnable() {
                             @Override
                             public void run() {
-                                ncy = list.get(0).getPriceCurrencyCode();
-                                BaseResponse result = EAPayInter.checkOrder(tradeId, productId, list.get(0).getPrice(), list.get(0).getPriceAmountMicros(), ncy,
+                                mNcy = list.get(0).getPriceCurrencyCode();
+                                BaseResponse result = EAPayInter.checkOrder(mTradeId, mProductId, list.get(0).getPrice(), list.get(0).getPriceAmountMicros(), mNcy,
                                         CommonUtils.getCheckOutParams());
                                 if (result != null && result.getCode() == 0) {
                                     mPrice = CommonUtils.getMoneyFromStr(list.get(0).getPrice());
@@ -314,7 +322,9 @@ public class Starter {
                                         String data = AESUtil.decrypt(custom.optString("content"), Constant.AESKEY);
                                         JSONObject content = new JSONObject(data);
                                         mESOrder = content.optString("orderNo");
-                                        StartOtherPlugin.appsFlyerCheckout(Float.valueOf(mPrice), ncy, productId, mESOrder);
+//                                        StartOtherPlugin.appsFlyerCheckout(Float.valueOf(mPrice), mNcy, mProductId, mESOrder);
+                                        adjustCheckOut(Float.valueOf(mPrice), mNcy, mESOrder);
+                                        fbCheckOut(Float.valueOf(mPrice), mProductId, mNcy, mESOrder);
                                     } catch (Exception e) {
                                     }
                                 } else {
@@ -334,7 +344,7 @@ public class Starter {
                 //查询内购类型的商品
                 //productId为产品ID(从谷歌后台获取)
                 ArrayList<String> inAppSkuInfo = new ArrayList<>();
-                inAppSkuInfo.add(productId);
+                inAppSkuInfo.add(mProductId);
                 SkuDetailsParams skuParams = SkuDetailsParams.newBuilder()
                         .setType(BillingClient.SkuType.INAPP)
                         .setSkusList(inAppSkuInfo)
@@ -369,10 +379,33 @@ public class Starter {
                 Looper.loop();
             }
         });*/
-        AppsFlyerLib.getInstance().setCollectIMEI(true);
-        AppsFlyerLib.getInstance().setCollectAndroidID(true);
+      /*  AppsFlyerLib.getInstance().setCollectIMEI(true);
+        AppsFlyerLib.getInstance().setCollectAndroidID(true);*/
         Starter.mCallback = mCallback;
         Starter.mActivity = activity;
+        // 获取deviceID
+        String imei = Tools.getDeviceImei(activity);
+        if (!TextUtils.isEmpty(imei.trim())) {
+            Constant.IMEI = imei;
+        }
+        if (CommonUtils.getIsFirstStart(activity) == 0) {
+            adjustActive();
+            fbActApp();
+            CommonUtils.saveIsFirstStart(activity);
+        }
+        adjustStart();
+        adjustCheckOut(6.0f, "USD", "1111");
+        adjustShare();
+        adjustPay(6.0f, "USD", "1111");
+        adjustUpdate();
+        adjustOFPN();
+        adjustInvite();
+        adjustCompTour();
+        adjustAddToCar();
+        adjustAdClick();
+        adjustLogin("111");
+        adjustRegister("111");
+        adjustSearch();
         StartESUserPlugin.loginSdk();
     }
 
@@ -449,7 +482,7 @@ public class Starter {
      * 初始化SDK，获取oaid，判断是否为模拟器
      */
     public void initEntry(Context mContext) {
-        StartOtherPlugin.checkSimulator(mContext);
+//        StartOtherPlugin.checkSimulator(mContext);
     }
 
     /**
@@ -508,7 +541,7 @@ public class Starter {
             }
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                StartESUserPlugin.loginGoogle(account.getIdToken(), account.getId());
+                StartESUserPlugin.loginGoogle(account.getIdToken(), account.getId(), isBindGoogle);
                 Toast.makeText(mActivity, "登录成功" + "Id:" + account.getId() + "|Email:" + account.getEmail(), Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "Id:" + account.getId() + "|Email:" + account.getEmail() + "|IdToken:" + account.getIdToken());
             } catch (ApiException e) {
@@ -531,14 +564,14 @@ public class Starter {
             StrictMode.setVmPolicy(builder.build());
         }
 
-        String appToken = "{YourAppToken}";
+        Tools.getAndroidId(mContext);
         String environment = AdjustConfig.ENVIRONMENT_SANDBOX;
-        AdjustConfig config = new AdjustConfig(mContext, appToken, environment);
+        AdjustConfig config = new AdjustConfig(mContext, ADJUSTKEY, environment);
         config.setLogLevel(LogLevel.WARN);
         Adjust.onCreate(config);
         ((Application) mContext).registerActivityLifecycleCallbacks(activityLifecycleCallbacks);
-
-        AppsFlyerLib.getInstance().waitForCustomerUserId(true);
+        logger = AppEventsLogger.newLogger(mContext);
+      /*  AppsFlyerLib.getInstance().waitForCustomerUserId(true);
         AppsFlyerLib.getInstance().init(AF_DEV_KEY, null, mContext);
         AppsFlyerLib.getInstance().start(mContext);
         String cuid = CommonUtils.readPropertiesValue(mContext, Constant.CUID);
@@ -546,7 +579,7 @@ public class Starter {
 //        String cuid = AppsFlyerProperties.getInstance().getString(AppsFlyerProperties.APP_USER_ID);
 //        AppTimeWatcher.getInstance().registerWatcher((Application) mContext);
         AppsFlyerLib.getInstance().setDebugLog(true);
-        AppsFlyerLib.getInstance().setCustomerIdAndLogSession(cuid, mContext);
+        AppsFlyerLib.getInstance().setCustomerIdAndLogSession(cuid, mContext);*/
     }
 
     private Application.ActivityLifecycleCallbacks activityLifecycleCallbacks = new Application.ActivityLifecycleCallbacks() {
@@ -595,7 +628,8 @@ public class Starter {
     }
 
     //初始化facebook登录
-    public void initFacebook() {
+    public void initFacebook(boolean isBind) {
+        isBindFacebook = isBind;
         callbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(callbackManager,
                 new FacebookCallback<LoginResult>() {
@@ -604,7 +638,7 @@ public class Starter {
                         // App code
                         AccessToken accessToken = loginResult.getAccessToken();
                         Log.d(TAG, "Facebook------>>" + "token:" + accessToken.getToken() + "|userid:" + accessToken.getUserId());
-                        StartESUserPlugin.loginFacebook(accessToken.getToken(), accessToken.getUserId());
+                        StartESUserPlugin.loginFacebook(accessToken.getToken(), accessToken.getUserId(), isBindFacebook);
                     }
 
                     @Override
@@ -629,7 +663,7 @@ public class Starter {
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions
                     .DEFAULT_SIGN_IN)
                     .requestEmail()
-                    .requestIdToken("846876477691-gjefh1ll8fdq72pb5htugj4459kls3nr.apps.googleusercontent.com")
+                    .requestIdToken(googleID)
                     .build();
             mGoogleSignInClient = GoogleSignIn.getClient(mActivity, gso);
         }
@@ -680,7 +714,8 @@ public class Starter {
                 .build();*/
     }
 
-    public void initGoogleLogin() {
+    public void initGoogleLogin(boolean isBind) {
+        isBindGoogle = isBind;
         mActivity.startActivityForResult(getGoogleIntent(), SIGN_LOGIN);
         /*oneTapClient.beginSignIn(signInRequest)
                 .addOnSuccessListener(mActivity, new OnSuccessListener<BeginSignInResult>() {
@@ -755,7 +790,7 @@ public class Starter {
                 });
     }
 
-    //appsflyer平台接入接口
+    /*//appsflyer平台接入接口
 
     //添加到心愿清单
     public void appsFlyerAddToWishList(float price, String id) {
@@ -768,8 +803,9 @@ public class Starter {
     }
 
     //广告点击
-    public void appsFlyerADClick(String id) {
-        StartOtherPlugin.appsFlyerADClick("1");
+    public void appsFlyerADClick(String type) {
+        //banner, screen,video,dialog
+        StartOtherPlugin.appsFlyerADClick(type);
     }
 
     //更新
@@ -813,7 +849,291 @@ public class Starter {
     }
 
     //广告浏览
-    public void appsFlyerADView(String id) {
-        StartOtherPlugin.appsFlyerADView("111");
+    public void appsFlyerADView(String type) {
+        //banner, screen,video,dialog
+        StartOtherPlugin.appsFlyerADView(type);
+    }*/
+
+    //facebook媒体事件接入
+
+    //购买
+    public void fbPurchased(float price, String ncy, String productId, String orderId) {
+        Bundle params = new Bundle();
+        params.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, ncy);
+        params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, productId);
+        params.putString(AppEventsConstants.EVENT_PARAM_ORDER_ID, orderId);
+        if (logger != null) {
+            logger.logEvent(AppEventsConstants.EVENT_NAME_PURCHASED, price, params);
+        }
+    }
+
+    //下单
+    public void fbCheckOut(float price, String ncy, String productId, String orderId) {
+        Bundle params = new Bundle();
+        params.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, ncy);
+        params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, productId);
+        params.putString(AppEventsConstants.EVENT_PARAM_ORDER_ID, orderId);
+        if (logger != null) {
+            logger.logEvent(AppEventsConstants.EVENT_NAME_INITIATED_CHECKOUT, price, params);
+        }
+    }
+
+    //添加至购物车
+    public void fbAddToCar(float price, String id) {
+        Bundle params = new Bundle();
+        params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, id);
+        if (logger != null) {
+            logger.logEvent(AppEventsConstants.EVENT_NAME_ADDED_TO_CART, price, params);
+        }
+    }
+
+    //添加至心愿单
+    public void fbAddToWishList(float price, String id) {
+        Bundle params = new Bundle();
+        params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, id);
+        if (logger != null) {
+            logger.logEvent(AppEventsConstants.EVENT_NAME_ADDED_TO_WISHLIST, price, params);
+        }
+    }
+
+    //广告点击
+    public void fbAdClick(String type) {
+        //banner, interstitial, rewarded_video, native
+        Bundle params = new Bundle();
+        params.putString(AppEventsConstants.EVENT_PARAM_AD_TYPE, type);
+        if (logger != null) {
+            logger.logEvent(AppEventsConstants.EVENT_NAME_AD_CLICK, params);
+        }
+    }
+
+    //广告浏览
+    public void fbAdView(String type) {
+        //banner, interstitial, rewarded_video, native
+        Bundle params = new Bundle();
+        params.putString(AppEventsConstants.EVENT_PARAM_AD_TYPE, type);
+        if (logger != null) {
+            logger.logEvent(AppEventsConstants.EVENT_NAME_AD_IMPRESSION, params);
+        }
+    }
+
+    //完成关卡
+    public void fbAchUnlock(String level) {
+        Bundle params = new Bundle();
+        params.putString(AppEventsConstants.EVENT_PARAM_LEVEL, level);
+        if (logger != null) {
+            logger.logEvent(AppEventsConstants.EVENT_NAME_ACHIEVED_LEVEL, params);
+        }
+    }
+
+    //激活app
+    public void fbActApp() {
+        if (logger != null) {
+            logger.logEvent(AppEventsConstants.EVENT_NAME_ACTIVATED_APP);
+        }
+    }
+
+    //完成注册
+    public void fbCompRegister(String method) {
+        Bundle params = new Bundle();
+        params.putString(AppEventsConstants.EVENT_PARAM_REGISTRATION_METHOD, method);
+        if (logger != null) {
+            logger.logEvent(AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION, params);
+        }
+    }
+
+    //完成教程
+    public void fbCompTutorial() {
+        if (logger != null) {
+            logger.logEvent(AppEventsConstants.EVENT_NAME_COMPLETED_TUTORIAL);
+        }
+    }
+
+    //搜索
+    public void fbSearch(String key) {
+        Bundle params = new Bundle();
+        params.putString(AppEventsConstants.EVENT_PARAM_SEARCH_STRING, key);
+        if (logger != null) {
+            logger.logEvent(AppEventsConstants.EVENT_NAME_SEARCHED, params);
+        }
+    }
+
+    //解锁成就
+    public void fbUnlockedAch(String des) {
+        Bundle params = new Bundle();
+        params.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, des);
+        if (logger != null) {
+            logger.logEvent(AppEventsConstants.EVENT_NAME_UNLOCKED_ACHIEVEMENT, params);
+        }
+    }
+
+    //---------------------------------------adjust------------------------------------//
+
+    //adjust login事件
+    public void adjustLogin(String userId) {
+        AdjustEvent event = new AdjustEvent("twaj2x");
+        event.addCallbackParameter("android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("device_id", Constant.IMEI);
+        event.addCallbackParameter("device_name", Tools.getSystemModel());
+        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_user_id", userId);
+        Adjust.trackEvent(event);
+    }
+
+    //adjust 下单事件
+    public void adjustCheckOut(float price, String ncy, String orderId) {
+        AdjustEvent event = new AdjustEvent("3f7zfy");
+        event.addCallbackParameter("android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("device_id", Constant.IMEI);
+        event.addCallbackParameter("device_name", Tools.getSystemModel());
+        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
+        event.setRevenue(price, ncy);
+        event.setOrderId(orderId);
+        Adjust.trackEvent(event);
+    }
+
+    //adjust 启动事件
+    public void adjustStart() {
+        AdjustEvent event = new AdjustEvent("sqslba");
+        event.addCallbackParameter("android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("device_id", Constant.IMEI);
+        event.addCallbackParameter("device_name", Tools.getSystemModel());
+        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
+        Adjust.trackEvent(event);
+    }
+
+    //adjust 支付事件
+    public void adjustPay(float price, String ncy, String orderId) {
+        AdjustEvent event = new AdjustEvent("6yila5");
+        event.addCallbackParameter("android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("device_id", Constant.IMEI);
+        event.addCallbackParameter("device_name", Tools.getSystemModel());
+        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
+        event.setRevenue(price, ncy);
+        event.setOrderId(orderId);
+        Adjust.trackEvent(event);
+    }
+
+    //adjust 注册事件
+    public void adjustRegister(String userId) {
+        AdjustEvent event = new AdjustEvent("1mmn9g");
+        event.addCallbackParameter("android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("device_id", Constant.IMEI);
+        event.addCallbackParameter("device_name", Tools.getSystemModel());
+        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
+        Adjust.trackEvent(event);
+    }
+
+    //adjust 激活事件
+    public void adjustActive() {
+        AdjustEvent event = new AdjustEvent("saqddr");
+        event.addCallbackParameter("android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("device_id", Constant.IMEI);
+        event.addCallbackParameter("device_name", Tools.getSystemModel());
+        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
+        Adjust.trackEvent(event);
+    }
+
+    //adjust 分享事件
+    public void adjustShare() {
+        AdjustEvent event = new AdjustEvent("qhiow4");
+        event.addCallbackParameter("android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("device_id", Constant.IMEI);
+        event.addCallbackParameter("device_name", Tools.getSystemModel());
+        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
+        Adjust.trackEvent(event);
+    }
+
+    //adjust 完成教程事件
+    public void adjustCompTour() {
+        AdjustEvent event = new AdjustEvent("9pyu0g");
+        event.addCallbackParameter("android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("device_id", Constant.IMEI);
+        event.addCallbackParameter("device_name", Tools.getSystemModel());
+        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
+        Adjust.trackEvent(event);
+    }
+
+    //adjust 广告点击事件
+    public void adjustAdClick() {
+        AdjustEvent event = new AdjustEvent("hn0bbi");
+        event.addCallbackParameter("android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("device_id", Constant.IMEI);
+        event.addCallbackParameter("device_name", Tools.getSystemModel());
+        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
+        Adjust.trackEvent(event);
+    }
+
+    //adjust 搜索事件
+    public void adjustSearch() {
+        AdjustEvent event = new AdjustEvent("ljl83j");
+        event.addCallbackParameter("android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("device_id", Constant.IMEI);
+        event.addCallbackParameter("device_name", Tools.getSystemModel());
+        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
+        Adjust.trackEvent(event);
+    }
+
+    //adjust 更新事件
+    public void adjustUpdate() {
+        AdjustEvent event = new AdjustEvent("2k9lcf");
+        event.addCallbackParameter("android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("device_id", Constant.IMEI);
+        event.addCallbackParameter("device_name", Tools.getSystemModel());
+        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
+        Adjust.trackEvent(event);
+    }
+
+    //adjust 添加到购物车事件
+    public void adjustAddToCar() {
+        AdjustEvent event = new AdjustEvent("oxg0zu");
+        event.addCallbackParameter("android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("device_id", Constant.IMEI);
+        event.addCallbackParameter("device_name", Tools.getSystemModel());
+        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
+        Adjust.trackEvent(event);
+    }
+
+    //adjust 点击推送消息打开app事件
+    public void adjustOFPN() {
+        AdjustEvent event = new AdjustEvent("xmdded");
+        event.addCallbackParameter("android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("device_id", Constant.IMEI);
+        event.addCallbackParameter("device_name", Tools.getSystemModel());
+        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
+        Adjust.trackEvent(event);
+    }
+
+    //adjust 通关事件
+    public void adjustCompGame() {
+        AdjustEvent event = new AdjustEvent("m62ogs");
+        event.addCallbackParameter("android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("device_id", Constant.IMEI);
+        event.addCallbackParameter("device_name", Tools.getSystemModel());
+        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
+        Adjust.trackEvent(event);
+    }
+
+    //adjust 邀请事件
+    public void adjustInvite() {
+        AdjustEvent event = new AdjustEvent("q8v65g");
+        event.addCallbackParameter("android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("device_id", Constant.IMEI);
+        event.addCallbackParameter("device_name", Tools.getSystemModel());
+        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
+        Adjust.trackEvent(event);
     }
 }

@@ -328,3 +328,12 @@ native <methods>;
 -keep public class com.android.installreferrer.**{ *; }
 
 -keep public class com.android.installreferrer.** { *; }
+
+# Keep the AIDL interface
+-keep class com.android.vending.billing.** { *; }
+
+-dontwarn javax.annotation.**
+-dontwarn org.checkerframework.**
+-dontwarn com.google.android.apps.common.proguard.UsedByReflection
+
+-keepnames class com.android.billingclient.api.ProxyBillingActivity

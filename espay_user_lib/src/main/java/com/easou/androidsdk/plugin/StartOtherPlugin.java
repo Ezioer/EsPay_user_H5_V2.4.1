@@ -1,25 +1,14 @@
 package com.easou.androidsdk.plugin;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
-
-import com.adjust.sdk.Adjust;
-import com.adjust.sdk.AdjustEvent;
-import com.appsflyer.AFInAppEventParameterName;
-import com.appsflyer.AFInAppEventType;
-import com.appsflyer.AppsFlyerLib;
 import com.easou.androidsdk.http.EAPayInter;
 import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESdkLog;
 import com.easou.androidsdk.util.OaidHelper;
 import com.easou.androidsdk.util.SimulatorUtils;
-
-import java.util.HashMap;
-import java.util.Map;
-
 public class StartOtherPlugin {
 
     /**
@@ -82,7 +71,7 @@ public class StartOtherPlugin {
 
     /* ================================== appsflyer ================================== */
 
-    //登录
+    /*//登录
     public static void appsFlyerLogin(String userId) {
         Map<String, Object> eventValues = new HashMap<String, Object>();
         eventValues.put(AFInAppEventParameterName.CUSTOMER_USER_ID, userId);
@@ -102,11 +91,6 @@ public class StartOtherPlugin {
 
     //购买
     public static void appsFlyerPurchase(float price, String ncy, String productId, String orderId) {
-        AdjustEvent adjustEvent = new AdjustEvent("abc123");
-        adjustEvent.setRevenue(price, ncy);
-        adjustEvent.setOrderId(orderId);
-        Adjust.trackEvent(adjustEvent);
-
         Map<String, Object> eventValues = new HashMap<String, Object>();
         eventValues.put(AFInAppEventParameterName.CURRENCY, ncy);
         eventValues.put(AFInAppEventParameterName.REVENUE, price);
@@ -135,9 +119,9 @@ public class StartOtherPlugin {
     }
 
     //广告点击
-    public static void appsFlyerADClick(String id) {
+    public static void appsFlyerADClick(String type) {
         Map<String, Object> eventValues = new HashMap<String, Object>();
-        eventValues.put(AFInAppEventParameterName.CONTENT_ID, id);
+        eventValues.put(AFInAppEventParameterName.AD_REVENUE_AD_TYPE, type);
         AppsFlyerLib.getInstance().logEvent(getApplicationContext(),
                 AFInAppEventType.AD_CLICK, eventValues);
     }
@@ -227,7 +211,12 @@ public class StartOtherPlugin {
     //广告浏览
     public static void appsFlyerADView(String id) {
         Map<String, Object> eventParameters3 = new HashMap<String, Object>();
-        eventParameters3.put(AFInAppEventParameterName.CONTENT_ID, id); // Level the user achieved
+        eventParameters3.put(AFInAppEventParameterName.AD_REVENUE_AD_TYPE, id); // Level the user achieved
         AppsFlyerLib.getInstance().logEvent(getApplicationContext(), AFInAppEventType.AD_VIEW, eventParameters3);
     }
+*/
+
+    //-------------------------------------facebook----------------------------------------//
+
+
 }
