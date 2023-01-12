@@ -4,7 +4,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        minSdkVersion 17
+        minSdkVersion 19
         targetSdkVersion 31
         versionCode 1
         versionName "1.0"
@@ -59,4 +59,10 @@ dependencies {
     // Add the following if you are using the Adjust SDK inside web views on your app
 //    implementation 'com.adjust.sdk:adjust-android-webbridge:4.33.0'
     implementation 'com.google.android.gms:play-services-ads-identifier:17.0.1'
+
+    // Import the BoM for the Firebase platform
+    implementation platform('com.google.firebase:firebase-bom:31.1.1')
+    // Add the dependency for the Analytics library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation 'com.google.firebase:firebase-analytics'
 }

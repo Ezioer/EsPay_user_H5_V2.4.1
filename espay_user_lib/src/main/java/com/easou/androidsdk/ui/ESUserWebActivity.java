@@ -386,7 +386,6 @@ public class ESUserWebActivity extends Activity {
                             } else {
                                 mWebView.loadUrl("javascript:EsSdkShell.esGoogleLogin({" + idToken + ", " + uId + "})");
                             }
-
                         }
                     });
                 }
@@ -405,7 +404,6 @@ public class ESUserWebActivity extends Activity {
                             } else {
                                 mWebView.loadUrl("javascript:EsSdkShell.esFacebookLogin({" + token + ", " + id + "})");
                             }
-
                         }
                     });
                 }
@@ -429,9 +427,9 @@ public class ESUserWebActivity extends Activity {
     private void showAlert() {
 
         final AlertDialog.Builder exitDialog = new AlertDialog.Builder(mActivity, AlertDialog.THEME_HOLO_LIGHT);
-        exitDialog.setTitle("温馨提示")
-                .setMessage("网络连接错误，请检查网络后重启游戏！")
-                .setPositiveButton("确 定", new DialogInterface.OnClickListener() {
+        exitDialog.setTitle("Notice")
+                .setMessage("net error ,please restart game")
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //...To-do
@@ -449,7 +447,7 @@ public class ESUserWebActivity extends Activity {
             if (progressDialog == null) {
                 progressDialog = new ProgressDialog(mActivity, ProgressDialog.THEME_HOLO_LIGHT);
             }
-            progressDialog.setMessage("数据加载中，请稍候...");
+            progressDialog.setMessage("Loading,please wait...");
             progressDialog.show();
         } catch (Exception e) {
             e.printStackTrace();

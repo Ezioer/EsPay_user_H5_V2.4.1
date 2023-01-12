@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
-//apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.gms.google-services'
 android {
     compileSdkVersion 31
     buildToolsVersion "30.0.3"
     defaultConfig {
-        applicationId "com.easou.espay_user_h5"
-        minSdkVersion 17
+        applicationId "com.shuta.jdnsf"
+        minSdkVersion 19
         targetSdkVersion 31
         versionCode 4
         versionName "4.0"
-        vectorDrawables.useSupportLibrary =true
+        vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     compileOptions {

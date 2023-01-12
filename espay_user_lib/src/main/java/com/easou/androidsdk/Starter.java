@@ -50,6 +50,8 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.LoggingBehavior;
 import com.facebook.appevents.AppEventsConstants;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
@@ -61,6 +63,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.json.JSONObject;
 
@@ -394,18 +397,19 @@ public class Starter {
             CommonUtils.saveIsFirstStart(activity);
         }
         adjustStart();
-        adjustCheckOut(6.0f, "USD", "1111");
-        adjustShare();
-        adjustPay(6.0f, "USD", "1111");
+        adjustCheckOut(6.0f, "USD", AESUtil.getRandomString());
+        adjustLogin("222");
+        /*adjustShare();
+        adjustPay(6.0f, "USD", AESUtil.getRandomString());
         adjustUpdate();
         adjustOFPN();
         adjustInvite();
-        adjustCompTour();
+        adjustCompTutorial();
         adjustAddToCar();
         adjustAdClick();
-        adjustLogin("111");
         adjustRegister("111");
         adjustSearch();
+        fbCompRegister("easou");*/
         StartESUserPlugin.loginSdk();
     }
 
@@ -542,12 +546,12 @@ public class Starter {
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 StartESUserPlugin.loginGoogle(account.getIdToken(), account.getId(), isBindGoogle);
-                Toast.makeText(mActivity, "登录成功" + "Id:" + account.getId() + "|Email:" + account.getEmail(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mActivity, "登录成功" + "Id:" + account.getId() + "|Email:" + account.getEmail(), Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "Id:" + account.getId() + "|Email:" + account.getEmail() + "|IdToken:" + account.getIdToken());
             } catch (ApiException e) {
                 e.printStackTrace();
                 Log.d(TAG, "ApiException:" + e.getMessage());
-                Toast.makeText(mActivity, "网络出错了,请重新登录", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, "login error", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -565,12 +569,31 @@ public class Starter {
         }
 
         Tools.getAndroidId(mContext);
-        String environment = AdjustConfig.ENVIRONMENT_SANDBOX;
-        AdjustConfig config = new AdjustConfig(mContext, ADJUSTKEY, environment);
-        config.setLogLevel(LogLevel.WARN);
-        Adjust.onCreate(config);
-        ((Application) mContext).registerActivityLifecycleCallbacks(activityLifecycleCallbacks);
-        logger = AppEventsLogger.newLogger(mContext);
+        if (CommonUtils.readPropertiesValue(mContext, "adjust").equals("0")) {
+            Constant.adjust = false;
+        } else {
+            Constant.adjust = true;
+            String environment = AdjustConfig.ENVIRONMENT_SANDBOX;
+            AdjustConfig config = new AdjustConfig(mContext, ADJUSTKEY, environment);
+            config.setLogLevel(LogLevel.VERBOSE);
+            config.setSendInBackground(true);
+            Adjust.onCreate(config);
+            ((Application) mContext).registerActivityLifecycleCallbacks(activityLifecycleCallbacks);
+        }
+        if (CommonUtils.readPropertiesValue(mContext, "facebook").equals("0")) {
+            Constant.facebook = false;
+        } else {
+            Constant.facebook = true;
+            logger = AppEventsLogger.newLogger(mContext);
+            FacebookSdk.setIsDebugEnabled(true);
+            FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
+        }
+        if (CommonUtils.readPropertiesValue(mContext, "facebook").equals("0")) {
+            Constant.firebase = false;
+        } else {
+            Constant.firebase = true;
+            FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(mContext);
+        }
       /*  AppsFlyerLib.getInstance().waitForCustomerUserId(true);
         AppsFlyerLib.getInstance().init(AF_DEV_KEY, null, mContext);
         AppsFlyerLib.getInstance().start(mContext);
@@ -879,26 +902,26 @@ public class Starter {
     }
 
     //添加至购物车
-    public void fbAddToCar(float price, String id) {
+    public void fbAddToCar(String id) {
         Bundle params = new Bundle();
         params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, id);
         if (logger != null) {
-            logger.logEvent(AppEventsConstants.EVENT_NAME_ADDED_TO_CART, price, params);
+            logger.logEvent(AppEventsConstants.EVENT_NAME_ADDED_TO_CART, params);
         }
     }
 
     //添加至心愿单
-    public void fbAddToWishList(float price, String id) {
+    public void fbAddToWishList(String id) {
         Bundle params = new Bundle();
         params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, id);
         if (logger != null) {
-            logger.logEvent(AppEventsConstants.EVENT_NAME_ADDED_TO_WISHLIST, price, params);
+            logger.logEvent(AppEventsConstants.EVENT_NAME_ADDED_TO_WISHLIST, params);
         }
     }
 
     //广告点击
     public void fbAdClick(String type) {
-        //banner, interstitial, rewarded_video, native
+        //banner, rewarded_video, native
         Bundle params = new Bundle();
         params.putString(AppEventsConstants.EVENT_PARAM_AD_TYPE, type);
         if (logger != null) {
@@ -971,10 +994,10 @@ public class Starter {
     //adjust login事件
     public void adjustLogin(String userId) {
         AdjustEvent event = new AdjustEvent("twaj2x");
-        event.addCallbackParameter("android_id", Constant.ANDROIDID);
-        event.addCallbackParameter("device_id", Constant.IMEI);
-        event.addCallbackParameter("device_name", Tools.getSystemModel());
-        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
+//        event.addCallbackParameter("device_name", Tools.getSystemModel());
+//        event.addCallbackParameter("device_type", "phone");
         event.addCallbackParameter("easou_hk_user_id", userId);
         Adjust.trackEvent(event);
     }
@@ -982,11 +1005,12 @@ public class Starter {
     //adjust 下单事件
     public void adjustCheckOut(float price, String ncy, String orderId) {
         AdjustEvent event = new AdjustEvent("3f7zfy");
-        event.addCallbackParameter("android_id", Constant.ANDROIDID);
-        event.addCallbackParameter("device_id", Constant.IMEI);
-        event.addCallbackParameter("device_name", Tools.getSystemModel());
-        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
+//        event.addCallbackParameter("device_name", Tools.getSystemModel());
+//        event.addCallbackParameter("device_type", "phone");
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
+        event.addCallbackParameter("easou_hk_price", String.valueOf(price));
         event.setRevenue(price, ncy);
         event.setOrderId(orderId);
         Adjust.trackEvent(event);
@@ -995,10 +1019,10 @@ public class Starter {
     //adjust 启动事件
     public void adjustStart() {
         AdjustEvent event = new AdjustEvent("sqslba");
-        event.addCallbackParameter("android_id", Constant.ANDROIDID);
-        event.addCallbackParameter("device_id", Constant.IMEI);
-        event.addCallbackParameter("device_name", Tools.getSystemModel());
-        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
+//        event.addCallbackParameter("device_name", Tools.getSystemModel());
+//        event.addCallbackParameter("device_type", "phone");
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
         Adjust.trackEvent(event);
     }
@@ -1006,10 +1030,10 @@ public class Starter {
     //adjust 支付事件
     public void adjustPay(float price, String ncy, String orderId) {
         AdjustEvent event = new AdjustEvent("6yila5");
-        event.addCallbackParameter("android_id", Constant.ANDROIDID);
-        event.addCallbackParameter("device_id", Constant.IMEI);
-        event.addCallbackParameter("device_name", Tools.getSystemModel());
-        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
+//        event.addCallbackParameter("device_name", Tools.getSystemModel());
+//        event.addCallbackParameter("device_type", "phone");
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
         event.setRevenue(price, ncy);
         event.setOrderId(orderId);
@@ -1019,21 +1043,21 @@ public class Starter {
     //adjust 注册事件
     public void adjustRegister(String userId) {
         AdjustEvent event = new AdjustEvent("1mmn9g");
-        event.addCallbackParameter("android_id", Constant.ANDROIDID);
-        event.addCallbackParameter("device_id", Constant.IMEI);
-        event.addCallbackParameter("device_name", Tools.getSystemModel());
-        event.addCallbackParameter("device_type", "phone");
-        event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
+        event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
+//        event.addCallbackParameter("device_name", Tools.getSystemModel());
+//        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_user_id", userId);
         Adjust.trackEvent(event);
     }
 
     //adjust 激活事件
     public void adjustActive() {
         AdjustEvent event = new AdjustEvent("saqddr");
-        event.addCallbackParameter("android_id", Constant.ANDROIDID);
-        event.addCallbackParameter("device_id", Constant.IMEI);
-        event.addCallbackParameter("device_name", Tools.getSystemModel());
-        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
+//        event.addCallbackParameter("device_name", Tools.getSystemModel());
+//        event.addCallbackParameter("device_type", "phone");
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
         Adjust.trackEvent(event);
     }
@@ -1041,21 +1065,21 @@ public class Starter {
     //adjust 分享事件
     public void adjustShare() {
         AdjustEvent event = new AdjustEvent("qhiow4");
-        event.addCallbackParameter("android_id", Constant.ANDROIDID);
-        event.addCallbackParameter("device_id", Constant.IMEI);
-        event.addCallbackParameter("device_name", Tools.getSystemModel());
-        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
+//        event.addCallbackParameter("device_name", Tools.getSystemModel());
+//        event.addCallbackParameter("device_type", "phone");
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
         Adjust.trackEvent(event);
     }
 
     //adjust 完成教程事件
-    public void adjustCompTour() {
+    public void adjustCompTutorial() {
         AdjustEvent event = new AdjustEvent("9pyu0g");
-        event.addCallbackParameter("android_id", Constant.ANDROIDID);
-        event.addCallbackParameter("device_id", Constant.IMEI);
-        event.addCallbackParameter("device_name", Tools.getSystemModel());
-        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
+//        event.addCallbackParameter("device_name", Tools.getSystemModel());
+//        event.addCallbackParameter("device_type", "phone");
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
         Adjust.trackEvent(event);
     }
@@ -1063,10 +1087,10 @@ public class Starter {
     //adjust 广告点击事件
     public void adjustAdClick() {
         AdjustEvent event = new AdjustEvent("hn0bbi");
-        event.addCallbackParameter("android_id", Constant.ANDROIDID);
-        event.addCallbackParameter("device_id", Constant.IMEI);
-        event.addCallbackParameter("device_name", Tools.getSystemModel());
-        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
+//        event.addCallbackParameter("device_name", Tools.getSystemModel());
+//        event.addCallbackParameter("device_type", "phone");
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
         Adjust.trackEvent(event);
     }
@@ -1074,10 +1098,10 @@ public class Starter {
     //adjust 搜索事件
     public void adjustSearch() {
         AdjustEvent event = new AdjustEvent("ljl83j");
-        event.addCallbackParameter("android_id", Constant.ANDROIDID);
-        event.addCallbackParameter("device_id", Constant.IMEI);
-        event.addCallbackParameter("device_name", Tools.getSystemModel());
-        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
+//        event.addCallbackParameter("device_name", Tools.getSystemModel());
+//        event.addCallbackParameter("device_type", "phone");
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
         Adjust.trackEvent(event);
     }
@@ -1085,10 +1109,10 @@ public class Starter {
     //adjust 更新事件
     public void adjustUpdate() {
         AdjustEvent event = new AdjustEvent("2k9lcf");
-        event.addCallbackParameter("android_id", Constant.ANDROIDID);
-        event.addCallbackParameter("device_id", Constant.IMEI);
-        event.addCallbackParameter("device_name", Tools.getSystemModel());
-        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
+//        event.addCallbackParameter("device_name", Tools.getSystemModel());
+//        event.addCallbackParameter("device_type", "phone");
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
         Adjust.trackEvent(event);
     }
@@ -1096,10 +1120,10 @@ public class Starter {
     //adjust 添加到购物车事件
     public void adjustAddToCar() {
         AdjustEvent event = new AdjustEvent("oxg0zu");
-        event.addCallbackParameter("android_id", Constant.ANDROIDID);
-        event.addCallbackParameter("device_id", Constant.IMEI);
-        event.addCallbackParameter("device_name", Tools.getSystemModel());
-        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
+//        event.addCallbackParameter("device_name", Tools.getSystemModel());
+//        event.addCallbackParameter("device_type", "phone");
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
         Adjust.trackEvent(event);
     }
@@ -1107,10 +1131,10 @@ public class Starter {
     //adjust 点击推送消息打开app事件
     public void adjustOFPN() {
         AdjustEvent event = new AdjustEvent("xmdded");
-        event.addCallbackParameter("android_id", Constant.ANDROIDID);
-        event.addCallbackParameter("device_id", Constant.IMEI);
-        event.addCallbackParameter("device_name", Tools.getSystemModel());
-        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
+//        event.addCallbackParameter("device_name", Tools.getSystemModel());
+//        event.addCallbackParameter("device_type", "phone");
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
         Adjust.trackEvent(event);
     }
@@ -1118,10 +1142,10 @@ public class Starter {
     //adjust 通关事件
     public void adjustCompGame() {
         AdjustEvent event = new AdjustEvent("m62ogs");
-        event.addCallbackParameter("android_id", Constant.ANDROIDID);
-        event.addCallbackParameter("device_id", Constant.IMEI);
-        event.addCallbackParameter("device_name", Tools.getSystemModel());
-        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
+//        event.addCallbackParameter("device_name", Tools.getSystemModel());
+//        event.addCallbackParameter("device_type", "phone");
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
         Adjust.trackEvent(event);
     }
@@ -1129,10 +1153,10 @@ public class Starter {
     //adjust 邀请事件
     public void adjustInvite() {
         AdjustEvent event = new AdjustEvent("q8v65g");
-        event.addCallbackParameter("android_id", Constant.ANDROIDID);
-        event.addCallbackParameter("device_id", Constant.IMEI);
-        event.addCallbackParameter("device_name", Tools.getSystemModel());
-        event.addCallbackParameter("device_type", "phone");
+        event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
+        event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
+//        event.addCallbackParameter("device_name", Tools.getSystemModel());
+//        event.addCallbackParameter("device_type", "phone");
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
         Adjust.trackEvent(event);
     }

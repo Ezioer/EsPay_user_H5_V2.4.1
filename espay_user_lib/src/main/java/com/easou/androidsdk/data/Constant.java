@@ -78,6 +78,9 @@ public static String DOMAIN = "https://service.pay.";
     public static String ua = "";
     public static int isTurnExt = 0;
     public static int isTurnExtUser = 0;
+    public static boolean facebook = true;
+    public static boolean adjust = true;
+    public static boolean firebase = true;
     /**
      * 热云日志URL
      */
@@ -108,7 +111,7 @@ public static String DOMAIN = "https://service.pay.";
      */
     public static String URL_BACKUP = "mtianshitong.com";
     //        public static String SSO_URL = "http://lab.h5.tjqzqkj.com/static/sdk/3.0.0/es_sdk3_original.html?1=1&sdkSource=Android-SDK&payHostName=http://lab.pay.appeasou.com&ssoHostName=http://lab.sso.mtianshitong.com";
-    public static String SSO_URL = "http://8.218.104.185:7500/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
+    public static String SSO_URL = "https://login.easou-hk.com/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
     //    public static String SSO_URL = "https://h5.pay.mtianshitong.com/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
     public static String SSO_REST = "/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
 
@@ -121,11 +124,11 @@ public static String DOMAIN = "https://service.pay.";
      * 支付 url
      */
     //google验证交易
-    public static final String GOOGLEVER = "http://8.218.104.185:6700/play/checkSign";
+    public static final String GOOGLEVER = "https://pay.easou-hk.com/play/checkSign";
     //海外下单
-    public static final String CHECKORDER = "http://8.218.104.185:6700/play/createOrder";
+    public static final String CHECKORDER = "https://pay.easou-hk.com/play/createOrder";
     //同步核销状态
-    public static final String CONSUMPTION = "http://8.218.104.185:6700/play/consumption";
+    public static final String CONSUMPTION = "https://pay.easou-hk.com/play/consumption";
     //获取oaid证书
     public static final String GETOAIDCERT = "https://egamec.eayou.com/cert/getCertPem";
     /**

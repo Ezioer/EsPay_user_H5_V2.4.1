@@ -58,6 +58,9 @@ public class EAPayInter {
             data.put("productPrice", productPrice);
             data.put("productPriceMicros", productPriceMicros);
             data.put("currencyCode", currencyCode);
+            data.put("deviceId", Constant.IMEI);
+            data.put("area", "");
+            data.put("ip", Constant.NET_IP);
             data.put("payType", 1);
             return handleNetOpera(data, object, map.get("appId"), Constant.CHECKORDER);
         } catch (Exception e) {

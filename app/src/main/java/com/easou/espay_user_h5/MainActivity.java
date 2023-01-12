@@ -397,7 +397,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         /** 显示悬浮窗 */
         Starter.getInstance().showFloatView();
         Starter.getInstance().pageResume();
-
     }
 
     @Override

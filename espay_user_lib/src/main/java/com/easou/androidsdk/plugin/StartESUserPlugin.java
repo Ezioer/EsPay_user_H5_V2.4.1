@@ -30,9 +30,9 @@ public class StartESUserPlugin {
      * 登陆接口
      */
     public static void loginSdk() {
-        if (CommonUtils.readPropertiesValue(Starter.mActivity, "isTurnExt").equals("0")) {
+       /* if (CommonUtils.readPropertiesValue(Starter.mActivity, "isTurnExt").equals("0")) {
             Constant.isTurnExt = 1;
-        }
+        }*/
         //设置支付渠道
         ThreadPoolManager.getInstance().addTask(new Runnable() {
             @Override
