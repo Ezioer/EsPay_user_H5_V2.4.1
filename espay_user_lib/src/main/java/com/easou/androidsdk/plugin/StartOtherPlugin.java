@@ -8,11 +8,11 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.bytedance.applog.AppLog;
-import com.bytedance.applog.GameReportHelper;
 //import com.bytedance.applog.ILogger;
 import com.bytedance.applog.ILogger;
 import com.bytedance.applog.InitConfig;
 //import com.bytedance.applog.util.UriConstants;
+import com.bytedance.applog.game.GameReportHelper;
 import com.bytedance.applog.util.UriConstants;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.http.EAPayInter;
@@ -68,10 +68,15 @@ public class StartOtherPlugin {
                     }
                 }
             });
+            config.setImeiEnable(false);
+            config.setAutoTrackEnabled(true);
+            config.setLogEnable(true);
+            AppLog.setEncryptAndCompress(true);
             config.setEnablePlay(true);
             config.setAutoStart(true);
-            config.setProcess(true);
             config.setAbEnable(true);
+            config.setMacEnable(false);
+            config.setAndroidIdEnabled(false);
             AppLog.init(context, config);
         }
     }

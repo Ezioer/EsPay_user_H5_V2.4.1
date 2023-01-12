@@ -3,12 +3,9 @@ package com.easou.androidsdk.plugin;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
-import com.bytedance.applog.GameReportHelper;
-import com.easou.androidsdk.ESPlatform;
 import com.easou.androidsdk.Starter;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.http.EAPayInter;

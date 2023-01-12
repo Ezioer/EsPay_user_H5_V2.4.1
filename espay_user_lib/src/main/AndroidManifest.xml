@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="ProtectedPermissions"
-    package="com.easou.espay_user_lib">
+    package="com.easou.espay_user_lib"
+    tools:ignore="ProtectedPermissions">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -18,7 +18,7 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.webkit.permission.PLUGIN"/>
+    <uses-permission android:name="android.webkit.permission.PLUGIN" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
     <uses-permission android:name="com.asus.msa.SupplementaryDID.ACCESS" />
@@ -40,9 +40,9 @@
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.RECORD_VIDEO" />
 
-   <!-- <permission
-        android:name="${applicationId}.permission.xenv.RECEIVE"
-        android:protectionLevel="signatureOrSystem" />-->
+    <!-- <permission
+         android:name="${applicationId}.permission.xenv.RECEIVE"
+         android:protectionLevel="signatureOrSystem" />-->
 
     <!--    <uses-permission android:name="${applicationId}.permission.xenv.RECEIVE" />-->
 
@@ -69,15 +69,13 @@
         <!-- 插件拍照界面 -->
         <activity
             android:name="com.payeco.android.plugin.PayecoCameraActivity"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
 
         <!-- 插件录像界面 -->
         <activity
             android:name="com.payeco.android.plugin.PayecoVedioActivity"
-            android:screenOrientation="landscape"
             android:process="com.payeco.android.plugin.vedio"
-            />
+            android:screenOrientation="landscape" />
         <service
             android:name="com.snail.antifake.jni.EmulatorCheckService"
             android:process=":EmulatorCheckService" />
@@ -85,10 +83,9 @@
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote" >
+            android:process=":remote">
             <intent-filter>
-                <action android:name="com.baidu.location.service_v2.2" >
-                </action>
+                <action android:name="com.baidu.location.service_v2.2"></action>
             </intent-filter>
         </service>
         <!-- meta-data需要写在application中 -->
@@ -142,32 +139,31 @@
         <activity
             android:name="com.easou.androidsdk.ui.ESAccountCenterActivity"
             android:launchMode="singleTask"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:screenOrientation="behind" >
-        </activity>
+            android:screenOrientation="behind"
+            android:theme="@android:style/Theme.NoTitleBar"></activity>
         <activity
             android:name="com.easou.androidsdk.ui.ESUserWebActivity"
-            android:launchMode="singleInstance"
-            android:taskAffinity="com.easou.usersdk"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:excludeFromRecents="true"
-            android:theme="@style/easou_translucent_notitle"
-            android:screenOrientation="behind" />
+            android:launchMode="singleInstance"
+            android:screenOrientation="behind"
+            android:taskAffinity="com.easou.usersdk"
+            android:theme="@style/easou_translucent_notitle" />
         <activity
             android:name="com.easou.androidsdk.ui.ESPayCenterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:screenOrientation="behind" />
+            android:screenOrientation="behind"
+            android:theme="@android:style/Theme.NoTitleBar" />
         <activity
             android:name="com.easou.androidsdk.ui.ESPayWebActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:screenOrientation="behind" />
+            android:screenOrientation="behind"
+            android:theme="@android:style/Theme.NoTitleBar" />
         <activity
             android:name="com.easou.androidsdk.ui.ESCertAlertActivity"
-            android:theme="@style/easou_translucent_notitle"
             android:launchMode="singleInstance"
-            android:screenOrientation="behind" />
+            android:screenOrientation="behind"
+            android:theme="@style/easou_translucent_notitle" />
 
         <!--<activity
             android:name="com.baidu.xenv.XenvActivity"
@@ -207,6 +203,24 @@
          <meta-data
              android:name="appkey_avscan"
              android:value="100034" />-->
+
+        <service
+            android:name="com.volcengine.onekit.component.ComponentDiscoveryService"
+            android:exported="false">
+            <meta-data
+                android:name="com.bytedance.applog.onekit.AnalyticsComponentRegistrar"
+                android:value="com.volcengine.onekit.component.ComponentRegistrar" />
+            <meta-data
+                android:name="com.bytedance.applog.onekit.DeviceComponentRegistrar"
+                android:value="com.volcengine.onekit.component.ComponentRegistrar" />
+        </service>
+
+        <activity android:name="com.bytedance.applog.migrate.MigrateDetectorActivity" />
+
+        <receiver
+            android:name="com.bytedance.applog.collector.Collector"
+            android:enabled="true"
+            android:exported="false" />
     </application>
 
 </manifest>
