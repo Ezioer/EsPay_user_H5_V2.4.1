@@ -120,7 +120,7 @@ public class CommonUtils {
             if (TextUtils.isEmpty(esDevID)) {
                 String devID = Tools.getDeviceBrand() + Tools.getSystemModel() +
                         Tools.getSystemVersion() + System.currentTimeMillis();
-                esDevID = Md5SignUtils.sign(devID, readPropertiesValue(mContext, Constant.KEY));
+                esDevID = "easou_hk_" + Md5SignUtils.sign(devID, readPropertiesValue(mContext, Constant.KEY));
                 saveEsDeviceID(mContext, esDevID);
                 saveDeviceId2SdCard(esDevID);
             }

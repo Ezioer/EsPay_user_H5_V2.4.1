@@ -151,9 +151,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (Starter.mActivity.getPackageName().contains("fhzj")) {
                     param = param + "\nsdkType=fhzj";
                 }
-                /*if (CommonUtils.getTestMoney(Starter.mActivity) == 1) {
-                    param = param + "\nsdkVersion=hongbao";
-                }*/
                 if (Constant.SSO_URL.startsWith("https")) {
                     param = param + "\n环境=线上";
                 } else {
@@ -308,28 +305,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Starter.getInstance().getUserInfo();
                 break;
 
-            case R.id.btn_callSdk:
-                sdkLogin();
-                break;
-
             case R.id.btn_changeAccount:
-                /** 进入SDK用户中心界面 */
                 Starter.getInstance().logOut();
-                break;
-
-            case R.id.btn_googleLogout:
-                Starter.getInstance().googleLogout();
-                break;
-
-            case R.id.btn_googleLogin:
-                sdkLogin();
-                break;
-
-            case R.id.btn_facebookLogin:
-//                Starter.getInstance().initFacebook();
-                break;
-
-            case R.id.btn_facebookLogout:
                 break;
 
             case R.id.btn_pay:

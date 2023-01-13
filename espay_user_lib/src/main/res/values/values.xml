@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <color name="background_light_dark">#fff0f0f0</color>
     <color name="black">@color/w1</color>
     <color name="colorAccent">#79A7D3</color>

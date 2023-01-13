@@ -21,7 +21,7 @@ public class Constant {
     /**
      * H5 SDK 用户id
      */
-    public static String ESDK_USERID = "11111";
+    public static String ESDK_USERID = "";
     /**
      * H5 SDK 用户token
      */
@@ -78,9 +78,9 @@ public static String DOMAIN = "https://service.pay.";
     public static String ua = "";
     public static int isTurnExt = 0;
     public static int isTurnExtUser = 0;
-    public static boolean facebook = true;
-    public static boolean adjust = true;
-    public static boolean firebase = true;
+//    public static boolean facebook = true;
+//    public static boolean adjust = true;
+//    public static boolean firebase = true;
     /**
      * 热云日志URL
      */

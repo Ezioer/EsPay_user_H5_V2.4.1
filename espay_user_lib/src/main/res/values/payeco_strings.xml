@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-   	<string name="payeco_error_get_order_error">"获取订单失败"</string>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+	<string name="payeco_error_get_order_error">"获取订单失败"</string>
 	<string name="payeco_prompt">"提示"</string>
 	<string name="payeco_confirm">"确\u0020\u0020认"</string>
 	<string name="payeco_plugin_pay_fail">"支付失败"</string>
@@ -8,7 +8,7 @@
 	<string name="payeco_plugin_pay_verify_fail">"订单验证失败"</string>
 	<string name="payeco_plugin_initing">"正在初始化..."</string>
 	<string name="payeco_networkError">"没有网络连接，请检查网络设置"</string>
-		<!-- 密码键盘 -->
+	<!-- 密码键盘 -->
 	<string name="payeco_keyboard">"密\u0020\u0020码\u0020\u0020键\u0020\u0020盘"</string>
 	<string name="payeco_keyboard_tips">"采用银联标准加密技术传输，保证密码输入安全"</string>
 	<string name="payeco_keyboard_digital">"数字"</string>

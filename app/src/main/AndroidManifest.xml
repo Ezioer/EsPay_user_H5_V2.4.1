@@ -20,6 +20,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!--  <meta-data
+              android:name="g_clientId"
+              android:value="807370166346-mbc8cuo915hb03ulbp45jaqvmgku72uo.apps.googleusercontent.com"/> -->
+        <meta-data
+            android:name="g_clientId"
+            android:value="846876477691-gjefh1ll8fdq72pb5htugj4459kls3nr.apps.googleusercontent.com" />
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="fb889510188880340" />
+        <meta-data
+            android:name="com.facebook.sdk.ClientToken"
+            android:value="3af809ced2ef8ca25d2e70ffe8c19048" />
     </application>
 
 </manifest>

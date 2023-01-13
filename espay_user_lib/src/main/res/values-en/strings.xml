@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">espay_user_lib</string>
+    <!--    <string name="facebook_client_token">3af809ced2ef8ca25d2e70ffe8c19048</string>-->
+
+    <string name="neterror">Net Error,Please Restart Game</string>
+    <string name="loginerror">Login Error</string>
+    <string name="notice">Notice</string>
+    <string name="ok">Ok</string>
+    <string name="loading">Loading...... Please wait</string>
+</resources>

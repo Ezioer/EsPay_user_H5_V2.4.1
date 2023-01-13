@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">espay_user_lib</string>
+
+    <string name="neterror">網絡錯誤,請重啟遊戲</string>
+    <string name="loginerror">登錄出錯啦</string>
+    <string name="notice">提示</string>
+    <string name="ok">確定</string>
+    <string name="loading">正在加載中,請稍等</string>
+</resources>

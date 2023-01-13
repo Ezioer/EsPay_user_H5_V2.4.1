@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -37,7 +39,6 @@ import com.easou.androidsdk.http.BaseResponse;
 import com.easou.androidsdk.http.EAPayInter;
 import com.easou.androidsdk.plugin.StartESUserPlugin;
 import com.easou.androidsdk.plugin.StartLogPlugin;
-import com.easou.androidsdk.plugin.StartOtherPlugin;
 import com.easou.androidsdk.romutils.RomHelper;
 import com.easou.androidsdk.romutils.RomUtils;
 import com.easou.androidsdk.ui.ESUserWebActivity;
@@ -46,6 +47,7 @@ import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESdkLog;
 import com.easou.androidsdk.util.ThreadPoolManager;
 import com.easou.androidsdk.util.Tools;
+import com.easou.espay_user_lib.R;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -94,7 +96,7 @@ public class Starter {
 //    public static final int REQ_ONE_TAP2 = 11;
     public static final int SIGN_LOGIN = 13;
     //    private static final String AF_DEV_KEY = "CKrrrbztntPYFpSXe86MJb";
-    private static final String googleID = "807370166346-mbc8cuo915hb03ulbp45jaqvmgku72uo.apps.googleusercontent.com";
+    private static String googleID = "807370166346-mbc8cuo915hb03ulbp45jaqvmgku72uo.apps.googleusercontent.com";
     private static String ADJUSTKEY = "g51ej45btr7k";
     private AppEventsLogger logger = null;
     private String mESOrder = "";
@@ -397,19 +399,6 @@ public class Starter {
             CommonUtils.saveIsFirstStart(activity);
         }
         adjustStart();
-        adjustCheckOut(6.0f, "USD", AESUtil.getRandomString());
-        adjustLogin("222");
-        /*adjustShare();
-        adjustPay(6.0f, "USD", AESUtil.getRandomString());
-        adjustUpdate();
-        adjustOFPN();
-        adjustInvite();
-        adjustCompTutorial();
-        adjustAddToCar();
-        adjustAdClick();
-        adjustRegister("111");
-        adjustSearch();
-        fbCompRegister("easou");*/
         StartESUserPlugin.loginSdk();
     }
 
@@ -458,15 +447,18 @@ public class Starter {
      * @param playerInfo 游戏角色信息
      */
     public void startGameLoginLog(Map<String, String> playerInfo) {
-        StartESUserPlugin.startGameLoginLog(playerInfo);
-        //游戏角色数据上传
-        StartLogPlugin.gamePlayerDataLog(playerInfo, CommonUtils.readPropertiesValue(Starter.mActivity, "isTurnExt").equals("0"));
-        //游戏角色上线日志上传
-        Map info = new HashMap();
-        info.put("bt", "1");
-        info.put("deviceId", Tools.getDeviceImei(Starter.mActivity));
-        info.put("userId", CommonUtils.getUserId(Starter.mActivity));
-        ESUserWebActivity.clientToJS(Constant.YSTOJS_GAME_LOGINOROUTLOG, info);
+        try {
+            StartESUserPlugin.startGameLoginLog(playerInfo);
+            //游戏角色数据上传
+            StartLogPlugin.gamePlayerDataLog(playerInfo, CommonUtils.readPropertiesValue(Starter.mActivity, "isTurnExt").equals("0"));
+            //游戏角色上线日志上传
+            Map info = new HashMap();
+            info.put("bt", "1");
+            info.put("deviceId", Constant.IMEI);
+            info.put("userId", Constant.ESDK_USERID);
+            ESUserWebActivity.clientToJS(Constant.YSTOJS_GAME_LOGINOROUTLOG, info);
+        } catch (Exception e) {
+        }
     }
 
     /**
@@ -551,7 +543,7 @@ public class Starter {
             } catch (ApiException e) {
                 e.printStackTrace();
                 Log.d(TAG, "ApiException:" + e.getMessage());
-                Toast.makeText(mActivity, "login error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, R.string.loginerror, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -567,33 +559,37 @@ public class Starter {
             builder.detectFileUriExposure();
             StrictMode.setVmPolicy(builder.build());
         }
-
+        try {
+            ApplicationInfo info = mContext.getPackageManager().getApplicationInfo(mContext.getPackageName(), PackageManager.GET_META_DATA);
+            googleID = info.metaData.getString("g_clientId");
+        } catch (PackageManager.NameNotFoundException e) {
+        }
         Tools.getAndroidId(mContext);
-        if (CommonUtils.readPropertiesValue(mContext, "adjust").equals("0")) {
+      /*  if (CommonUtils.readPropertiesValue(mContext, "adjust").equals("0")) {
             Constant.adjust = false;
         } else {
-            Constant.adjust = true;
-            String environment = AdjustConfig.ENVIRONMENT_SANDBOX;
-            AdjustConfig config = new AdjustConfig(mContext, ADJUSTKEY, environment);
-            config.setLogLevel(LogLevel.VERBOSE);
-            config.setSendInBackground(true);
-            Adjust.onCreate(config);
-            ((Application) mContext).registerActivityLifecycleCallbacks(activityLifecycleCallbacks);
-        }
-        if (CommonUtils.readPropertiesValue(mContext, "facebook").equals("0")) {
+            Constant.adjust = true;*/
+        String environment = AdjustConfig.ENVIRONMENT_PRODUCTION;
+        AdjustConfig config = new AdjustConfig(mContext, ADJUSTKEY, environment);
+        config.setLogLevel(LogLevel.VERBOSE);
+        config.setSendInBackground(true);
+        Adjust.onCreate(config);
+        ((Application) mContext).registerActivityLifecycleCallbacks(activityLifecycleCallbacks);
+//        }
+      /*  if (CommonUtils.readPropertiesValue(mContext, "facebook").equals("0")) {
             Constant.facebook = false;
         } else {
-            Constant.facebook = true;
-            logger = AppEventsLogger.newLogger(mContext);
-            FacebookSdk.setIsDebugEnabled(true);
-            FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
-        }
-        if (CommonUtils.readPropertiesValue(mContext, "facebook").equals("0")) {
+            Constant.facebook = true;*/
+        logger = AppEventsLogger.newLogger(mContext);
+        FacebookSdk.setIsDebugEnabled(true);
+        FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
+      /*  }
+        if (CommonUtils.readPropertiesValue(mContext, "firebase").equals("0")) {
             Constant.firebase = false;
         } else {
-            Constant.firebase = true;
-            FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(mContext);
-        }
+            Constant.firebase = true;*/
+        FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(mContext);
+//        }
       /*  AppsFlyerLib.getInstance().waitForCustomerUserId(true);
         AppsFlyerLib.getInstance().init(AF_DEV_KEY, null, mContext);
         AppsFlyerLib.getInstance().start(mContext);
@@ -956,11 +952,9 @@ public class Starter {
     }
 
     //完成注册
-    public void fbCompRegister(String method) {
-        Bundle params = new Bundle();
-        params.putString(AppEventsConstants.EVENT_PARAM_REGISTRATION_METHOD, method);
+    public void fbCompRegister() {
         if (logger != null) {
-            logger.logEvent(AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION, params);
+            logger.logEvent(AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION);
         }
     }
 
@@ -996,8 +990,6 @@ public class Starter {
         AdjustEvent event = new AdjustEvent("twaj2x");
         event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
         event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
-//        event.addCallbackParameter("device_name", Tools.getSystemModel());
-//        event.addCallbackParameter("device_type", "phone");
         event.addCallbackParameter("easou_hk_user_id", userId);
         Adjust.trackEvent(event);
     }
@@ -1007,8 +999,6 @@ public class Starter {
         AdjustEvent event = new AdjustEvent("3f7zfy");
         event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
         event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
-//        event.addCallbackParameter("device_name", Tools.getSystemModel());
-//        event.addCallbackParameter("device_type", "phone");
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
         event.addCallbackParameter("easou_hk_price", String.valueOf(price));
         event.setRevenue(price, ncy);
@@ -1021,8 +1011,6 @@ public class Starter {
         AdjustEvent event = new AdjustEvent("sqslba");
         event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
         event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
-//        event.addCallbackParameter("device_name", Tools.getSystemModel());
-//        event.addCallbackParameter("device_type", "phone");
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
         Adjust.trackEvent(event);
     }
@@ -1032,8 +1020,6 @@ public class Starter {
         AdjustEvent event = new AdjustEvent("6yila5");
         event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
         event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
-//        event.addCallbackParameter("device_name", Tools.getSystemModel());
-//        event.addCallbackParameter("device_type", "phone");
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
         event.setRevenue(price, ncy);
         event.setOrderId(orderId);
@@ -1045,8 +1031,6 @@ public class Starter {
         AdjustEvent event = new AdjustEvent("1mmn9g");
         event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
         event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
-//        event.addCallbackParameter("device_name", Tools.getSystemModel());
-//        event.addCallbackParameter("device_type", "phone");
         event.addCallbackParameter("easou_hk_user_id", userId);
         Adjust.trackEvent(event);
     }
@@ -1056,8 +1040,6 @@ public class Starter {
         AdjustEvent event = new AdjustEvent("saqddr");
         event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
         event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
-//        event.addCallbackParameter("device_name", Tools.getSystemModel());
-//        event.addCallbackParameter("device_type", "phone");
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
         Adjust.trackEvent(event);
     }
@@ -1067,8 +1049,6 @@ public class Starter {
         AdjustEvent event = new AdjustEvent("qhiow4");
         event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
         event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
-//        event.addCallbackParameter("device_name", Tools.getSystemModel());
-//        event.addCallbackParameter("device_type", "phone");
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
         Adjust.trackEvent(event);
     }
@@ -1078,8 +1058,6 @@ public class Starter {
         AdjustEvent event = new AdjustEvent("9pyu0g");
         event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
         event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
-//        event.addCallbackParameter("device_name", Tools.getSystemModel());
-//        event.addCallbackParameter("device_type", "phone");
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
         Adjust.trackEvent(event);
     }
@@ -1089,8 +1067,6 @@ public class Starter {
         AdjustEvent event = new AdjustEvent("hn0bbi");
         event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
         event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
-//        event.addCallbackParameter("device_name", Tools.getSystemModel());
-//        event.addCallbackParameter("device_type", "phone");
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
         Adjust.trackEvent(event);
     }
@@ -1100,8 +1076,6 @@ public class Starter {
         AdjustEvent event = new AdjustEvent("ljl83j");
         event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
         event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
-//        event.addCallbackParameter("device_name", Tools.getSystemModel());
-//        event.addCallbackParameter("device_type", "phone");
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
         Adjust.trackEvent(event);
     }
@@ -1111,8 +1085,6 @@ public class Starter {
         AdjustEvent event = new AdjustEvent("2k9lcf");
         event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
         event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
-//        event.addCallbackParameter("device_name", Tools.getSystemModel());
-//        event.addCallbackParameter("device_type", "phone");
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
         Adjust.trackEvent(event);
     }
@@ -1122,8 +1094,6 @@ public class Starter {
         AdjustEvent event = new AdjustEvent("oxg0zu");
         event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
         event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
-//        event.addCallbackParameter("device_name", Tools.getSystemModel());
-//        event.addCallbackParameter("device_type", "phone");
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
         Adjust.trackEvent(event);
     }
@@ -1133,8 +1103,6 @@ public class Starter {
         AdjustEvent event = new AdjustEvent("xmdded");
         event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
         event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
-//        event.addCallbackParameter("device_name", Tools.getSystemModel());
-//        event.addCallbackParameter("device_type", "phone");
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
         Adjust.trackEvent(event);
     }
@@ -1144,8 +1112,6 @@ public class Starter {
         AdjustEvent event = new AdjustEvent("m62ogs");
         event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
         event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
-//        event.addCallbackParameter("device_name", Tools.getSystemModel());
-//        event.addCallbackParameter("device_type", "phone");
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
         Adjust.trackEvent(event);
     }
@@ -1155,8 +1121,6 @@ public class Starter {
         AdjustEvent event = new AdjustEvent("q8v65g");
         event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
         event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
-//        event.addCallbackParameter("device_name", Tools.getSystemModel());
-//        event.addCallbackParameter("device_type", "phone");
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
         Adjust.trackEvent(event);
     }

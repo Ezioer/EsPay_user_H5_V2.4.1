@@ -427,9 +427,9 @@ public class ESUserWebActivity extends Activity {
     private void showAlert() {
 
         final AlertDialog.Builder exitDialog = new AlertDialog.Builder(mActivity, AlertDialog.THEME_HOLO_LIGHT);
-        exitDialog.setTitle("Notice")
-                .setMessage("net error ,please restart game")
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        exitDialog.setTitle(R.string.notice)
+                .setMessage(R.string.neterror)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //...To-do
@@ -447,7 +447,7 @@ public class ESUserWebActivity extends Activity {
             if (progressDialog == null) {
                 progressDialog = new ProgressDialog(mActivity, ProgressDialog.THEME_HOLO_LIGHT);
             }
-            progressDialog.setMessage("Loading,please wait...");
+            progressDialog.setMessage(mActivity.getString(R.string.loading));
             progressDialog.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -738,8 +738,8 @@ public class ESUserWebActivity extends Activity {
         public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
 
             AlertDialog.Builder b2 = new AlertDialog.Builder(mActivity, AlertDialog.THEME_HOLO_LIGHT)
-                    .setTitle("温馨提示").setMessage(message)
-                    .setPositiveButton("确 定", new AlertDialog.OnClickListener() {
+                    .setTitle(R.string.notice).setMessage(message)
+                    .setPositiveButton(R.string.ok, new AlertDialog.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             result.confirm();
                         }
