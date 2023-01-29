@@ -1,50 +1,42 @@
 {
   "project_info": {
-    "project_number": "807370166346",
-    "project_id": "jdnsf-342709",
-    "storage_bucket": "jdnsf-342709.appspot.com"
+    "project_number": "364910254975",
+    "project_id": "jingdudazhanggui",
+    "storage_bucket": "jingdudazhanggui.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:807370166346:android:b41c7997d3064ce62e56b3",
+        "mobilesdk_app_id": "1:364910254975:android:c32bd69936829cb40f984a",
         "android_client_info": {
-          "package_name": "com.shuta.jdnsf"
+          "package_name": "com.jddzg.yisou"
         }
       },
       "oauth_client": [
         {
-          "client_id": "807370166346-htbjss9pe6a4l4ddbv6fj1qk1pjds4e7.apps.googleusercontent.com",
+          "client_id": "364910254975-6cs7clglg6pm1698ogis2qaa5lmb1uk2.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.shuta.jdnsf",
-            "certificate_hash": "c87569d7525abe1e8fc7a1a77600e64ae55cfe15"
+            "package_name": "com.jddzg.yisou",
+            "certificate_hash": "ea3c0ce3f2baa55749b7aa54a17c2c70b7e073e9"
           }
         },
         {
-          "client_id": "807370166346-mbc8cuo915hb03ulbp45jaqvmgku72uo.apps.googleusercontent.com",
+          "client_id": "364910254975-528flh2qinad7b28u7lsi9lm7rpf44ur.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBN5Db0l98wrZNfI8hxNgQYD0VmM32llkA"
+          "current_key": "AIzaSyDFEgcbYSiZFmDuUZ-N869flKfI6N7gtww"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "807370166346-mbc8cuo915hb03ulbp45jaqvmgku72uo.apps.googleusercontent.com",
+              "client_id": "364910254975-528flh2qinad7b28u7lsi9lm7rpf44ur.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "807370166346-ioh8r2cqu6o1t796803ct0nsiqkpuolq.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.jdxm.sd",
-                "app_store_id": "1555981468"
-              }
             }
           ]
         }

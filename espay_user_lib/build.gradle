@@ -49,7 +49,7 @@ dependencies {
 //    compile files('libs/play-service-ads-iden-18.0.1.jar')
     implementation 'com.google.android.gms:play-services-auth:20.3.0'
     implementation "com.android.billingclient:billing:4.1.0"
-    implementation 'com.facebook.android:facebook-login:latest.release'
+    implementation 'com.facebook.android:facebook-login:15.2.0'
 
 //    implementation 'com.appsflyer:af-android-sdk:6.9.0'
 

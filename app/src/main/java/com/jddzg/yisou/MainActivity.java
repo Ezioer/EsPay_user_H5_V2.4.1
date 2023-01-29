@@ -1,4 +1,4 @@
-package com.easou.espay_user_h5;
+package com.jddzg.yisou;
 
 import android.Manifest;
 import android.content.Intent;
@@ -18,7 +18,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,12 +27,8 @@ import com.easou.androidsdk.callback.ESdkCallback;
 import com.easou.androidsdk.callback.ESdkPayCallback;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.data.ESConstant;
-import com.easou.androidsdk.http.EAPayInter;
-import com.easou.androidsdk.util.AESUtil;
 import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.Tools;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;

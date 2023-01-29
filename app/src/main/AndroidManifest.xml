@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.easou.espay_user_h5">
+    package="com.jddzg.yisou">
 
     <application
-        android:name="EsApplication"
+        android:name="com.jddzg.yisou.EsApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"
@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="MainActivity"
+            android:name="com.jddzg.yisou.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,18 +21,18 @@
             </intent-filter>
         </activity>
 
-        <!--  <meta-data
-              android:name="g_clientId"
-              android:value="807370166346-mbc8cuo915hb03ulbp45jaqvmgku72uo.apps.googleusercontent.com"/> -->
+        <!--<meta-data
+            android:name="g_clientId"
+            android:value="807370166346-mbc8cuo915hb03ulbp45jaqvmgku72uo.apps.googleusercontent.com"/>-->
         <meta-data
             android:name="g_clientId"
-            android:value="846876477691-gjefh1ll8fdq72pb5htugj4459kls3nr.apps.googleusercontent.com" />
+            android:value="364910254975-u909v8v674q8p341kr0k7lg1l7lh92hm.apps.googleusercontent.com" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="fb889510188880340" />
+            android:value="fb462019716121167" />
         <meta-data
             android:name="com.facebook.sdk.ClientToken"
-            android:value="3af809ced2ef8ca25d2e70ffe8c19048" />
+            android:value="bb37c4727e4e9c39bc69329ce9b3c027" />
     </application>
 
 </manifest>

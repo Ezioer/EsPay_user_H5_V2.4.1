@@ -4,7 +4,8 @@ android {
     compileSdkVersion 31
     buildToolsVersion "30.0.3"
     defaultConfig {
-        applicationId "com.shuta.jdnsf"
+//        applicationId "com.easou.espay_user_h5"
+        applicationId "com.jddzg.yisou"
         minSdkVersion 19
         targetSdkVersion 31
         versionCode 4
@@ -38,6 +39,7 @@ android {
             minifyEnabled true
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
 
         debug {
@@ -73,6 +75,4 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile project(':espay_user_lib')
 
-    implementation 'com.facebook.android:facebook-login:latest.release'
-    implementation 'com.google.android.gms:play-services-auth:20.3.0'
 }

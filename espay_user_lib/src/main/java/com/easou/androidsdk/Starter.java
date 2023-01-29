@@ -66,6 +66,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
+//import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.json.JSONObject;
 
@@ -96,7 +97,7 @@ public class Starter {
 //    public static final int REQ_ONE_TAP2 = 11;
     public static final int SIGN_LOGIN = 13;
     //    private static final String AF_DEV_KEY = "CKrrrbztntPYFpSXe86MJb";
-    private static String googleID = "807370166346-mbc8cuo915hb03ulbp45jaqvmgku72uo.apps.googleusercontent.com";
+    private static String googleID = "364910254975-u909v8v674q8p341kr0k7lg1l7lh92hm.apps.googleusercontent.com";
     private static String ADJUSTKEY = "g51ej45btr7k";
     private AppEventsLogger logger = null;
     private String mESOrder = "";

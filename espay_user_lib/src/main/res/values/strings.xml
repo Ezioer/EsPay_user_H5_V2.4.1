@@ -1,8 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">espay_user_lib</string>
     <!--    <string name="facebook_app_id">889510188880340</string>-->
-    <!--    <string name="facebook_app_id">3189631774608208</string>-->
-    <string name="fb_login_protocol_scheme">fb889510188880340</string>
+    <string name="fb_login_protocol_scheme">fb462019716121167</string>
     <!--    <string name="facebook_client_token">3af809ced2ef8ca25d2e70ffe8c19048</string>-->
 
     <string name="neterror">网络错误,请重启游戏</string>
@@ -10,4 +9,11 @@
     <string name="notice">提示</string>
     <string name="ok">确定</string>
     <string name="loading">正在加载中......请稍等</string>
+    <string name="allowfloat">需要您设置允许“显示悬浮窗”的权限，否则将无法使用账户中心功能</string>
+    <string name="go">去设置</string>
+    <string name="nomorenotice">不再提示</string>
+    <string name="cancel">取消</string>
+
+    <string name="areusure">您确定不使用账户中心功能吗？没有悬浮窗您将不能进行切换账号等操作哦！</string>
+    <string name="settingfloat">Please go to Settings - Permissions Management to allow hover windows to be displayed！</string>
 </resources>

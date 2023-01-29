@@ -8,4 +8,10 @@
     <string name="notice">Notice</string>
     <string name="ok">Ok</string>
     <string name="loading">Loading...... Please wait</string>
+    <string name="go">go</string>
+    <string name="nomorenotice">No more tips</string>
+    <string name="allowfloat">You need to set the permission to allow "Show Hover Window", otherwise you will not be able to use the Account Center function</string>
+    <string name="cancel">cancel</string>
+    <string name="areusure">Are you sure you dont want to use the Account Center feature? Without the hover window you will not be able to switch accounts and other operations!</string>
+    <string name="settingfloat">請到「設置-權限管理」中允許顯示懸浮窗！</string>
 </resources>

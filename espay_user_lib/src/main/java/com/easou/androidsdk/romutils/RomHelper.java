@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.util.CommonUtils;
+import com.easou.espay_user_lib.R;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -146,8 +147,8 @@ public class RomHelper {
 				try {
 					commonROMPermissionApplyInternal(context);
 				} catch (Exception e) {
-					Toast.makeText(context, "请到“设置-权限管理”中允许显示悬浮窗！", Toast.LENGTH_LONG).show();
-					Log.e(TAG, Log.getStackTraceString(e));
+                    Toast.makeText(context, R.string.settingfloat, Toast.LENGTH_LONG).show();
+                    Log.e(TAG, Log.getStackTraceString(e));
 				}
 			}
 		}
@@ -166,21 +167,21 @@ public class RomHelper {
 	public static void
 	showNormalDialog(final Context context) {
 		normalDialog = new AlertDialog.Builder(context, AlertDialog.THEME_HOLO_LIGHT)
-				.setTitle("温馨提示：")
-				.setMessage("需要您设置允许“显示悬浮窗”的权限，否则将无法使用账户中心功能！")
-				.setPositiveButton("去设置", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						applyPermission(context);
-					}
-				})
-				.setNeutralButton("不再提示", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						showConfirmDialog(context);
-					}
-				})
-				.setNegativeButton("取消", null)
+                .setTitle(R.string.notice)
+                .setMessage(R.string.allowfloat)
+                .setPositiveButton(R.string.go, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        applyPermission(context);
+                    }
+                })
+                .setNeutralButton(R.string.nomorenotice, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        showConfirmDialog(context);
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
 				.create();
 		normalDialog.show();
 		normalDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED);
@@ -190,20 +191,20 @@ public class RomHelper {
 
 	public static void showConfirmDialog(final Context context) {
 		normalDialog = new AlertDialog.Builder(context, AlertDialog.THEME_HOLO_LIGHT)
-				.setTitle("温馨提示：")
-				.setMessage("您确定不使用账户中心功能吗？没有悬浮窗您将不能进行切换账号等操作哦！")
-				.setPositiveButton("马上去设置", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						applyPermission(context);
-					}
-				})
-				.setNeutralButton("确定不再提示", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						CommonUtils.getSettings(context).edit().putBoolean(Constant.KEY_NEED_SHOW_DIALOG, false).commit();
-					}
-				})
+                .setTitle(R.string.notice)
+                .setMessage(R.string.areusure)
+                .setPositiveButton(R.string.go, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        applyPermission(context);
+                    }
+                })
+                .setNeutralButton(R.string.nomorenotice, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        CommonUtils.getSettings(context).edit().putBoolean(Constant.KEY_NEED_SHOW_DIALOG, false).commit();
+                    }
+                })
 				.create();
 		// 显示
 		normalDialog.show();
