@@ -1,4 +1,4 @@
-package com.jddzg.yisou;
+package com.shuta.jdnsf;
 
 import android.app.Application;
 import android.content.Context;

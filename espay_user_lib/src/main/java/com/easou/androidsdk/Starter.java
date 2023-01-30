@@ -66,7 +66,6 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
-//import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.json.JSONObject;
 
@@ -988,19 +987,12 @@ public class Starter {
 
     //adjust login事件
     public void adjustLogin(String userId) {
-        AdjustEvent event = new AdjustEvent("twaj2x");
-        event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
-        event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
-        event.addCallbackParameter("easou_hk_user_id", userId);
-        Adjust.trackEvent(event);
+        Adjust.trackEvent(generateEvent("twaj2x"));
     }
 
     //adjust 下单事件
     public void adjustCheckOut(float price, String ncy, String orderId) {
-        AdjustEvent event = new AdjustEvent("3f7zfy");
-        event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
-        event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
-        event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
+        AdjustEvent event = generateEvent("3f7zfy");
         event.addCallbackParameter("easou_hk_price", String.valueOf(price));
         event.setRevenue(price, ncy);
         event.setOrderId(orderId);
@@ -1009,19 +1001,12 @@ public class Starter {
 
     //adjust 启动事件
     public void adjustStart() {
-        AdjustEvent event = new AdjustEvent("sqslba");
-        event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
-        event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
-        event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
-        Adjust.trackEvent(event);
+        Adjust.trackEvent(generateEvent("sqslba"));
     }
 
     //adjust 支付事件
     public void adjustPay(float price, String ncy, String orderId) {
-        AdjustEvent event = new AdjustEvent("6yila5");
-        event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
-        event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
-        event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
+        AdjustEvent event = generateEvent("6yila5");
         event.setRevenue(price, ncy);
         event.setOrderId(orderId);
         Adjust.trackEvent(event);
@@ -1029,100 +1014,69 @@ public class Starter {
 
     //adjust 注册事件
     public void adjustRegister(String userId) {
-        AdjustEvent event = new AdjustEvent("1mmn9g");
-        event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
-        event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
-        event.addCallbackParameter("easou_hk_user_id", userId);
-        Adjust.trackEvent(event);
+        Adjust.trackEvent(generateEvent("1mmn9g"));
     }
 
     //adjust 激活事件
     public void adjustActive() {
-        AdjustEvent event = new AdjustEvent("saqddr");
-        event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
-        event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
-        event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
-        Adjust.trackEvent(event);
+        Adjust.trackEvent(generateEvent("saqddr"));
     }
 
     //adjust 分享事件
     public void adjustShare() {
-        AdjustEvent event = new AdjustEvent("qhiow4");
-        event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
-        event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
-        event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
-        Adjust.trackEvent(event);
+        Adjust.trackEvent(generateEvent("qhiow4"));
     }
 
     //adjust 完成教程事件
     public void adjustCompTutorial() {
-        AdjustEvent event = new AdjustEvent("9pyu0g");
-        event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
-        event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
-        event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
-        Adjust.trackEvent(event);
+        Adjust.trackEvent(generateEvent("9pyu0g"));
     }
 
     //adjust 广告点击事件
     public void adjustAdClick() {
-        AdjustEvent event = new AdjustEvent("hn0bbi");
-        event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
-        event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
-        event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
-        Adjust.trackEvent(event);
+        Adjust.trackEvent(generateEvent("hn0bbi"));
     }
 
     //adjust 搜索事件
     public void adjustSearch() {
-        AdjustEvent event = new AdjustEvent("ljl83j");
-        event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
-        event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
-        event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
-        Adjust.trackEvent(event);
+        Adjust.trackEvent(generateEvent("ljl83j"));
     }
 
     //adjust 更新事件
     public void adjustUpdate() {
-        AdjustEvent event = new AdjustEvent("2k9lcf");
-        event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
-        event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
-        event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
-        Adjust.trackEvent(event);
+        Adjust.trackEvent(generateEvent("2k9lcf"));
     }
 
     //adjust 添加到购物车事件
     public void adjustAddToCar() {
-        AdjustEvent event = new AdjustEvent("oxg0zu");
-        event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
-        event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
-        event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
-        Adjust.trackEvent(event);
+        Adjust.trackEvent(generateEvent("oxg0zu"));
     }
 
     //adjust 点击推送消息打开app事件
     public void adjustOFPN() {
-        AdjustEvent event = new AdjustEvent("xmdded");
-        event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
-        event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
-        event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
-        Adjust.trackEvent(event);
+        Adjust.trackEvent(generateEvent("xmdded"));
     }
 
     //adjust 通关事件
     public void adjustCompGame() {
-        AdjustEvent event = new AdjustEvent("m62ogs");
-        event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
-        event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
-        event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
-        Adjust.trackEvent(event);
+        Adjust.trackEvent(generateEvent("m62ogs"));
     }
 
     //adjust 邀请事件
     public void adjustInvite() {
-        AdjustEvent event = new AdjustEvent("q8v65g");
+        Adjust.trackEvent(generateEvent("q8v65g"));
+    }
+
+    private AdjustEvent generateEvent(String code) {
+        AdjustEvent event = new AdjustEvent(code);
         event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
         event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
-        Adjust.trackEvent(event);
+        event.addCallbackParameter("easou_hk_game_name", "京都大掌櫃");
+        event.addCallbackParameter("app_name", Constant.SDK_VERSION);
+        if (mActivity != null) {
+            event.addCallbackParameter("app_version", mActivity.getApplicationInfo().packageName);
+        }
+        return event;
     }
 }

@@ -6,6 +6,7 @@ android {
     defaultConfig {
 //        applicationId "com.easou.espay_user_h5"
         applicationId "com.jddzg.yisou"
+//        applicationId "com.shuta.jdnsf"
         minSdkVersion 19
         targetSdkVersion 31
         versionCode 4

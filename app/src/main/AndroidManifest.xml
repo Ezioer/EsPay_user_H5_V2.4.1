@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.jddzg.yisou">
+    package="com.shuta.jdnsf">
 
     <application
-        android:name="com.jddzg.yisou.EsApplication"
+        android:name="com.shuta.jdnsf.EsApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"
@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.jddzg.yisou.MainActivity"
+            android:name="com.shuta.jdnsf.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,9 +21,6 @@
             </intent-filter>
         </activity>
 
-        <!--<meta-data
-            android:name="g_clientId"
-            android:value="807370166346-mbc8cuo915hb03ulbp45jaqvmgku72uo.apps.googleusercontent.com"/>-->
         <meta-data
             android:name="g_clientId"
             android:value="364910254975-u909v8v674q8p341kr0k7lg1l7lh92hm.apps.googleusercontent.com" />
@@ -33,6 +30,15 @@
         <meta-data
             android:name="com.facebook.sdk.ClientToken"
             android:value="bb37c4727e4e9c39bc69329ce9b3c027" />
+        <!--  <meta-data
+              android:name="g_clientId"
+              android:value="875676869372-ql7c3bi8a7nbo08ofd4f9a69kgi94mfu.apps.googleusercontent.com" />
+          <meta-data
+              android:name="com.facebook.sdk.ApplicationId"
+              android:value="fb1174080086581245" />
+          <meta-data
+              android:name="com.facebook.sdk.ClientToken"
+              android:value="ef2eec7cab883ef911e91be6119508d2" />-->
     </application>
 
 </manifest>

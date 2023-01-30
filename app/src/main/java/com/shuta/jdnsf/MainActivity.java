@@ -1,4 +1,4 @@
-package com.jddzg.yisou;
+package com.shuta.jdnsf;
 
 import android.Manifest;
 import android.content.Intent;
