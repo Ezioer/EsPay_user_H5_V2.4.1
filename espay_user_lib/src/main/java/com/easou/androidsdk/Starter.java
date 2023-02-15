@@ -35,6 +35,7 @@ import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.easou.androidsdk.callback.ESdkCallback;
 import com.easou.androidsdk.callback.ESdkPayCallback;
 import com.easou.androidsdk.data.Constant;
+import com.easou.androidsdk.data.ESConstant;
 import com.easou.androidsdk.http.BaseResponse;
 import com.easou.androidsdk.http.EAPayInter;
 import com.easou.androidsdk.plugin.StartESUserPlugin;
@@ -104,6 +105,7 @@ public class Starter {
     private String mPrice = "";
     private boolean isBindGoogle = false;
     private boolean isBindFacebook = false;
+    private JSONObject mPayInfo;
 
     private Starter() {
     }
@@ -126,10 +128,12 @@ public class Starter {
     /**
      * 宜搜SDK支付接口
      */
-    public void pay(Activity mActivity, String id, String tradeId, ESdkPayCallback callback) {
-        mProductId = id;
+    public void pay(Activity mActivity, JSONObject info, ESdkPayCallback callback) {
+        mPayInfo = info;
+        mProductId = mPayInfo.optString(ESConstant.PRODUCT_ID);
         mPayCallBack = callback;
-        this.mTradeId = tradeId;
+        mTradeId = mPayInfo.optString(ESConstant.TRADE_ID);
+        ;
         initBilling(mActivity);
     }
 
@@ -313,7 +317,7 @@ public class Starter {
                             public void run() {
                                 mNcy = list.get(0).getPriceCurrencyCode();
                                 BaseResponse result = EAPayInter.checkOrder(mTradeId, mProductId, list.get(0).getPrice(), list.get(0).getPriceAmountMicros(), mNcy,
-                                        CommonUtils.getCheckOutParams());
+                                        CommonUtils.getCheckOutParams(), mPayInfo);
                                 if (result != null && result.getCode() == 0) {
                                     mPrice = CommonUtils.getMoneyFromStr(list.get(0).getPrice());
                                     mActivity.runOnUiThread(new Runnable() {
@@ -446,6 +450,7 @@ public class Starter {
      *
      * @param playerInfo 游戏角色信息
      */
+    @Deprecated
     public void startGameLoginLog(Map<String, String> playerInfo) {
         try {
             StartESUserPlugin.startGameLoginLog(playerInfo);
@@ -543,7 +548,8 @@ public class Starter {
             } catch (ApiException e) {
                 e.printStackTrace();
                 Log.d(TAG, "ApiException:" + e.getMessage());
-                Toast.makeText(mActivity, R.string.loginerror, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, mActivity.getApplication().getResources()
+                        .getIdentifier("es_loginerror", "string", mActivity.getApplication().getPackageName()), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -1007,6 +1013,7 @@ public class Starter {
     //adjust 支付事件
     public void adjustPay(float price, String ncy, String orderId) {
         AdjustEvent event = generateEvent("6yila5");
+        event.addCallbackParameter("easou_hk_price", String.valueOf(price));
         event.setRevenue(price, ncy);
         event.setOrderId(orderId);
         Adjust.trackEvent(event);

@@ -17,6 +17,10 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="es_dialogstyle">
+        <item name="android:textSize">12sp</item>
+    </style>
+
     <style name="payeco_keyboardButton">
         <item name="android:textColor">#ffffff</item>
         <item name="android:layout_width">70.0dip</item>

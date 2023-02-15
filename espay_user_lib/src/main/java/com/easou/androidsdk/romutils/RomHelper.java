@@ -147,9 +147,10 @@ public class RomHelper {
 				try {
 					commonROMPermissionApplyInternal(context);
 				} catch (Exception e) {
-                    Toast.makeText(context, R.string.settingfloat, Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, context.getResources()
+                            .getIdentifier("es_settingfloat", "string", context.getPackageName()), Toast.LENGTH_LONG).show();
                     Log.e(TAG, Log.getStackTraceString(e));
-				}
+                }
 			}
 		}
 	}
@@ -166,22 +167,27 @@ public class RomHelper {
 
 	public static void
 	showNormalDialog(final Context context) {
-		normalDialog = new AlertDialog.Builder(context, AlertDialog.THEME_HOLO_LIGHT)
-                .setTitle(R.string.notice)
-                .setMessage(R.string.allowfloat)
-                .setPositiveButton(R.string.go, new DialogInterface.OnClickListener() {
+        normalDialog = new AlertDialog.Builder(context)
+                .setTitle(context.getResources()
+                        .getIdentifier("es_notice", "string", context.getPackageName()))
+                .setMessage(context.getResources()
+                        .getIdentifier("es_allowfloat", "string", context.getPackageName()))
+                .setPositiveButton(context.getResources()
+                        .getIdentifier("es_go", "string", context.getPackageName()), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         applyPermission(context);
                     }
                 })
-                .setNeutralButton(R.string.nomorenotice, new DialogInterface.OnClickListener() {
+                .setNeutralButton(context.getResources()
+                        .getIdentifier("es_nomorenotice", "string", context.getPackageName()), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         showConfirmDialog(context);
                     }
                 })
-                .setNegativeButton(R.string.cancel, null)
+                .setNegativeButton(context.getResources()
+                        .getIdentifier("es_cancel", "string", context.getPackageName()), null)
 				.create();
 		normalDialog.show();
 		normalDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED);
@@ -190,16 +196,20 @@ public class RomHelper {
 	}
 
 	public static void showConfirmDialog(final Context context) {
-		normalDialog = new AlertDialog.Builder(context, AlertDialog.THEME_HOLO_LIGHT)
-                .setTitle(R.string.notice)
-                .setMessage(R.string.areusure)
-                .setPositiveButton(R.string.go, new DialogInterface.OnClickListener() {
+        normalDialog = new AlertDialog.Builder(context)
+                .setTitle(context.getResources()
+                        .getIdentifier("es_notice", "string", context.getPackageName()))
+                .setMessage(context.getResources()
+                        .getIdentifier("es_areusure", "string", context.getPackageName()))
+                .setPositiveButton(context.getResources()
+                        .getIdentifier("es_go", "string", context.getPackageName()), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         applyPermission(context);
                     }
                 })
-                .setNeutralButton(R.string.nomorenotice, new DialogInterface.OnClickListener() {
+                .setNeutralButton(context.getResources()
+                        .getIdentifier("es_nomorenotice", "string", context.getPackageName()), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         CommonUtils.getSettings(context).edit().putBoolean(Constant.KEY_NEED_SHOW_DIALOG, false).commit();

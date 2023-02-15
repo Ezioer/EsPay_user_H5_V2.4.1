@@ -99,7 +99,7 @@ public class ESPlatform {
                 RomHelper.checkFloatWindowPermission(Starter.mActivity);
                 Starter.getInstance().showFloatView();
             }
-        }, 300);
+        }, 3000);
     }
 
     //js打开webview

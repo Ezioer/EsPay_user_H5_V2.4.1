@@ -39,6 +39,7 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.easou.androidsdk.ESPlatform;
+import com.easou.androidsdk.Starter;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.data.ESConstant;
 import com.easou.androidsdk.plugin.StartESUserPlugin;
@@ -427,9 +428,12 @@ public class ESUserWebActivity extends Activity {
     private void showAlert() {
 
         final AlertDialog.Builder exitDialog = new AlertDialog.Builder(mActivity, AlertDialog.THEME_HOLO_LIGHT);
-        exitDialog.setTitle(R.string.notice)
-                .setMessage(R.string.neterror)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+        exitDialog.setTitle(mActivity.getApplication().getResources()
+                        .getIdentifier("es_notice", "string", getApplication().getPackageName()))
+                .setMessage(mActivity.getApplication().getResources()
+                        .getIdentifier("es_neterror", "string", getApplication().getPackageName()))
+                .setPositiveButton(mActivity.getApplication().getResources()
+                        .getIdentifier("es_ok", "string", getApplication().getPackageName()), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //...To-do
@@ -445,9 +449,12 @@ public class ESUserWebActivity extends Activity {
     private void showDialog() {
         try {
             if (progressDialog == null) {
-                progressDialog = new ProgressDialog(mActivity, ProgressDialog.THEME_HOLO_LIGHT);
+                progressDialog = new ProgressDialog(mActivity);
             }
-            progressDialog.setMessage(mActivity.getString(R.string.loading));
+            progressDialog.setMessage("Loading......");
+//            progressDialog.setTitle(R.string.es_loading);
+         /*   progressDialog.setTitle(mActivity.getApplication().getResources()
+                    .getIdentifier("es_loading", "string", getApplication().getPackageName()));*/
             progressDialog.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -738,8 +745,10 @@ public class ESUserWebActivity extends Activity {
         public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
 
             AlertDialog.Builder b2 = new AlertDialog.Builder(mActivity, AlertDialog.THEME_HOLO_LIGHT)
-                    .setTitle(R.string.notice).setMessage(message)
-                    .setPositiveButton(R.string.ok, new AlertDialog.OnClickListener() {
+                    .setTitle(mActivity.getApplication().getResources()
+                            .getIdentifier("es_notice", "string", getApplication().getPackageName())).setMessage(message)
+                    .setPositiveButton(mActivity.getApplication().getResources()
+                            .getIdentifier("es_ok", "string", getApplication().getPackageName()), new AlertDialog.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             result.confirm();
                         }

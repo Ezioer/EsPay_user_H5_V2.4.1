@@ -50,18 +50,20 @@ android {
             signingConfig signingConfigs.release
         }
     }
+    lintOptions {
+        abortOnError false
+    }
 
-
-  /*  configurations.all {
-        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-            def requested = details.requested
-            if (requested.group == 'com.android.support') {
-                if (!requested.name.startsWith("multidex")) {
-                    details.useVersion '25.4.0'//默认使用
-                }
-            }
-        }
-    }*/
+    /*  configurations.all {
+          resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+              def requested = details.requested
+              if (requested.group == 'com.android.support') {
+                  if (!requested.name.startsWith("multidex")) {
+                      details.useVersion '25.4.0'//默认使用
+                  }
+              }
+          }
+      }*/
 }
 
 dependencies {

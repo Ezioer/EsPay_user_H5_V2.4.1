@@ -1,6 +1,7 @@
 package com.easou.androidsdk.http;
 
 import com.easou.androidsdk.data.Constant;
+import com.easou.androidsdk.data.ESConstant;
 import com.easou.androidsdk.util.AESUtil;
 import com.easou.androidsdk.util.ESdkLog;
 import com.easou.androidsdk.util.RSAUtil;
@@ -45,7 +46,7 @@ public class EAPayInter {
 
     //海外支付下单
     public static BaseResponse checkOrder(String cpOrderNo, String productId, String productPrice,
-                                          Long productPriceMicros, String currencyCode, Map<String, String> map) {
+                                          Long productPriceMicros, String currencyCode, Map<String, String> map, JSONObject info) {
         try {
             JSONObject object = new JSONObject();
             JSONObject data = new JSONObject();
@@ -62,6 +63,15 @@ public class EAPayInter {
             data.put("area", "");
             data.put("ip", Constant.NET_IP);
             data.put("payType", 1);
+            //新加的字段
+            data.put("tradleId", cpOrderNo);
+            data.put("serverId", info.optString("serverId"));
+            data.put("serverName", info.optString("serverName"));
+            data.put("playerId", info.optString("playerId"));
+            data.put("playerName", info.optString("playerName"));
+            data.put("playerLevel", info.optString("playerLevel"));
+            data.put("money", info.optInt("money"));
+            data.put("productName", info.optString("productName"));
             return handleNetOpera(data, object, map.get("appId"), Constant.CHECKORDER);
         } catch (Exception e) {
             return null;

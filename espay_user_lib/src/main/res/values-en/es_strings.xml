@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    <string name="app_name">espay_user_lib</string>-->
+    <!--    <string name="facebook_client_token">3af809ced2ef8ca25d2e70ffe8c19048</string>-->
+
+    <string name="es_neterror">Net Error,Please Restart Game</string>
+    <string name="es_loginerror">Login Error</string>
+    <string name="es_notice">Notice</string>
+    <string name="es_ok">Ok</string>
+    <string name="es_loading">Loading...Please wait</string>
+    <string name="es_go">go</string>
+    <string name="es_nomorenotice">No more tips</string>
+    <string name="es_allowfloat">You need to set the permission to allow "Show Hover Window", otherwise you will not be able to use the Account Center function</string>
+    <string name="es_cancel">cancel</string>
+    <string name="es_areusure">Are you sure you dont want to use the Account Center feature? Without the hover window you will not be able to switch accounts and other operations!</string>
+    <string name="es_settingfloat">Please go to Settings  Permissions Management to allow hover windows to be displayed！</string>
+</resources>

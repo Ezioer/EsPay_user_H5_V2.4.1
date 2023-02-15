@@ -30,6 +30,9 @@ import com.easou.androidsdk.data.ESConstant;
 import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.Tools;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -220,7 +223,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public void onLogout() {
-
                 System.out.println("退出登录");
 //                Starter.getInstance().getUserInfo();
                 // demo演示代码
@@ -311,7 +313,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                  * Activity：当前activity
                  */
                 tradeId = System.currentTimeMillis() + "";
-                Starter.getInstance().pay(MainActivity.this, productId, tradeId, new ESdkPayCallback() {
+                JSONObject payInfo = new JSONObject();
+                try {
+                    payInfo.put(ESConstant.PRODUCT_ID, productId); // 游戏角色名称
+                    payInfo.put(ESConstant.TRADE_ID, tradeId); // 游戏角色名称
+                    payInfo.put(ESConstant.APP_ID, "2854"); // 游戏角色名称
+                    payInfo.put(ESConstant.ACCOUNT_ID, "es.9"); // 游戏角色等级
+                    payInfo.put(ESConstant.PLAYER_SERVER_ID, "1"); // 游戏区服id
+                    payInfo.put(ESConstant.SERVER_NAME, "hahaha");
+                    payInfo.put(ESConstant.QN, "ssaf2872_10054_001");
+                    payInfo.put(ESConstant.PLAYER_ID, mPlayId.getText().toString()); // 游戏角色id
+                    payInfo.put(ESConstant.PLAYER_NAME, "ka");
+                    payInfo.put(ESConstant.PLAYER_LEVEL, "1");
+                    payInfo.put(ESConstant.MONEY, 100);
+                    payInfo.put(ESConstant.PRODUCT_NAME, "宝石");
+                } catch (JSONException e) {
+                }
+                Starter.getInstance().pay(MainActivity.this, payInfo, new ESdkPayCallback() {
 
                     @Override
                     public void onPaySuccess(int num) {
@@ -326,7 +344,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         //1002服务器验证交易失败，等验证成功后会继续回调支付成功接口
                         //1003已拥有该商品
                         //1004宜搜下单失败
-                        //1005重复验证交易，该交易已验证成功，可以忽略
                         Toast.makeText(MainActivity.this, "支付失败" + code, Toast.LENGTH_SHORT).show();
                     }
                 });
