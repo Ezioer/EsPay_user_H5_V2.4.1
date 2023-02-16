@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/espay_payList"
+    android:layout_width="match_parent"
+    android:layout_height="50dip">
+
+    <LinearLayout
+        style="@style/espay_paylist_tradeinfo"
+        android:layout_centerVertical="true">
+
+        <TextView
+            android:id="@+id/espay_paylist_tradename"
+            style="@style/espay_text.middle"
+            android:textColor="@color/easou_em1_color" />
+
+        <TextView
+            android:id="@+id/espay_paylist_tradeway"
+            style="@style/easou_text.small"
+            android:textColor="@color/easou_em4_color" />
+
+        <TextView
+            android:id="@+id/espay_paylist_tradetime"
+            style="@style/easou_text.small"
+            android:textColor="@color/easou_em4_color" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/espay_id_priceLayout"
+        style="@style/easou_wrap"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:lineSpacingExtra="1.0dip"
+        android:paddingRight="15dip">
+
+        <TextView
+            android:id="@+id/espay_paylist_unit"
+            style="@style/easou_text.big"
+            android:text="@string/easou_rmb"
+            android:textColor="@color/easou_em2_color" />
+
+        <TextView
+            android:id="@+id/espay_paylist_amt"
+            style="@style/easou_text.big"
+            android:textColor="@color/easou_em2_color" />
+
+        <TextView
+            android:id="@+id/espay_paylist_point"
+            style="@style/easou_text.big"
+            android:textColor="@color/easou_em2_color" />
+
+    </LinearLayout>
+
+</RelativeLayout>

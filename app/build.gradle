@@ -4,7 +4,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
     defaultConfig {
-        applicationId "com.dw.mq.ysou"
+        applicationId "com.dw.mq.hdtx"
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
@@ -39,5 +39,5 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
     testCompile 'junit:junit:4.12'
-    compile project(':espay_user_lib')
+    compile project(':hdtx_user_lib')
 }

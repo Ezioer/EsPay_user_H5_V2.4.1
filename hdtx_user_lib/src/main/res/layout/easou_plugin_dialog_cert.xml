@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:paddingTop="0.0dip"
+    android:layout_height="wrap_content"
+    style="@style/easou_fill.wrap"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="300.0dp"
+        android:background="@drawable/easou_drawable_bg"
+        style="@style/easou_linear.certdialog">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="60.0dip"
+            android:gravity="top">
+
+            <RelativeLayout
+                android:layout_width="0.0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="100.0"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/easou_id_pay_dialog_title"
+                    style="@style/easou_text.headtitle"
+                    android:layout_width="100.0dp"
+                    android:layout_marginLeft="15.0dip"
+                    android:layout_marginRight="10.0dip"
+                    android:layout_centerInParent="true"
+                    android:text="@string/espay_cert_title"
+                    android:textAlignment="center" />
+
+                <ImageButton
+                    android:id="@+id/easou_id_pay_dialog_close"
+                    android:background="@null"
+                    android:layout_width="35.0dip"
+                    android:layout_height="52.0dip"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="20.0dp"
+                    android:src="@drawable/es_pic_del" />
+
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:paddingBottom="10.0dip"
+            style="@style/easou_linear">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                style="@style/easou_linear">
+
+                <ScrollView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="100.0">
+
+                    <LinearLayout style="@style/easou_linear">
+
+                        <LinearLayout
+                            style="@style/easou_linear"
+                            android:layout_marginBottom="10.0dip"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingLeft="5.0dip">
+
+                            <LinearLayout
+                                android:layout_width="0.0dip"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="100.0"
+                                android:gravity="center_vertical">
+
+                                <TextView
+                                    android:id="@+id/easou_id_pay_dialog_msg"
+                                    style="@style/easou_text"
+                                    android:layout_width="match_parent"
+                                    android:layout_margin="10.0dip"
+                                    android:text="@string/espay_cert_message"
+                                    android:textColor="@color/easou_em1_color"
+                                    android:textSize="16.0sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout style="@style/easou_bigviewbtn">
+
+                            <Button
+                                android:id="@+id/easou_id_pay_dialog_btn"
+                                android:text="@string/espay_cert_act"
+                                style="@style/easou_btn"
+                                android:background="@color/easou_light_blue"
+                                android:layout_margin="15.0dip" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </ScrollView>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
