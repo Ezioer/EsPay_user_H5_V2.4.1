@@ -33,12 +33,12 @@ public class HttpLogHelper {
                         JSONObject jsonObject = new JSONObject(result);
                         String resultCode = jsonObject.getString("resultCode");
                         if (resultCode.equals("1")) {
-                            ESdkLog.d("上传" + title + "日志成功");
+                            HDSdkLog.d("上传" + title + "日志成功");
                         } else {
-                            ESdkLog.d("上传" + title + "日志失败");
+                            HDSdkLog.d("上传" + title + "日志失败");
                         }
                     } catch (Exception e) {
-                        ESPayLog.d("上传" + title + "日志失败");
+                        HDPayLog.d("上传" + title + "日志失败");
                     }
                 } catch (Exception e) {
                     // TODO: handle exception

@@ -2,8 +2,8 @@ package com.hdtx.androidsdk.androidsdk.http;
 
 import com.hdtx.androidsdk.androidsdk.data.Constant;
 import com.hdtx.androidsdk.androidsdk.data.PayItem;
-import com.hdtx.androidsdk.androidsdk.util.ESPayLog;
-import com.hdtx.androidsdk.androidsdk.util.ESdkLog;
+import com.hdtx.androidsdk.androidsdk.util.HDPayLog;
+import com.hdtx.androidsdk.androidsdk.util.HDSdkLog;
 import com.hdtx.androidsdk.androidsdk.util.Tools;
 import com.google.gson.Gson;
 
@@ -112,7 +112,7 @@ public class EAPayInter {
             result_arr[7] = data.getString("OrderId"); // 易联订单号
             result_arr[8] = data.getString("Sign"); // 签名
 
-            ESPayLog.d(TAG, "银联解析完毕。");
+            HDPayLog.d(TAG, "银联解析完毕。");
         } catch (Exception e) {
 //			e.printStackTrace();
         }
@@ -132,9 +132,9 @@ public class EAPayInter {
         String url = "/ecenter/wechat!weixinCharge.e";
         //	URL url = new URL(Constant.URL_YINLIAN+"?money="+count_money +"&invoiceId="+invoiceId +
         String params = "money=" + count_money + "&invoiceId=" + invoiceId;
-        ESPayLog.d(TAG, "url:" + domain + url);
-        ESPayLog.d(TAG, "params:" + params);
-        ESPayLog.d(TAG, "token:" + token);
+        HDPayLog.d(TAG, "url:" + domain + url);
+        HDPayLog.d(TAG, "params:" + params);
+        HDPayLog.d(TAG, "token:" + token);
         String result = EsPayNetGetPost.sendGet(domain + url, params, token);
         String[] result_arr = new String[13];
         try {
@@ -148,7 +148,7 @@ public class EAPayInter {
             result_arr[3] = data.getString("bn"); // 商户代码
             result_arr[4] = data.getString("tid"); // 商户订单号
 
-            ESPayLog.d(TAG, "银联解析完毕。");
+            HDPayLog.d(TAG, "银联解析完毕。");
         } catch (Exception e) {
 //			e.printStackTrace();
         }
@@ -231,7 +231,7 @@ public class EAPayInter {
             //上传头条付费日志
             return 1;
         } catch (Exception e) {
-            ESdkLog.d(e.toString());
+            HDSdkLog.d(e.toString());
             return -1;
         }
     }
@@ -263,7 +263,7 @@ public class EAPayInter {
 
     public static String getOaidPerFromNet(String applicationId) {
         try {
-            ESdkLog.c("certnet----->", applicationId);
+            HDSdkLog.c("certnet----->", applicationId);
             String url = "https://egamec.eayou.com/cert/getCertPem";
             JSONObject object = new JSONObject();
             object.put("name", applicationId);
@@ -271,9 +271,9 @@ public class EAPayInter {
             if (result.getCode() == 1 && result.getData() != null) {
                 JSONObject custom = new JSONObject(result.getData().toString());
                 String cert = custom.getString("cert");
-                ESdkLog.c("certnet----->", cert);
+                HDSdkLog.c("certnet----->", cert);
                 if (cert != null && !cert.isEmpty()) {
-                    ESdkLog.d("成功获取证书内容");
+                    HDSdkLog.d("成功获取证书内容");
                     return cert;
                 } else {
                     return "";
@@ -282,7 +282,7 @@ public class EAPayInter {
                 return "";
             }
         } catch (Exception e) {
-            ESdkLog.c("httperror", e.getMessage() + e.toString());
+            HDSdkLog.c("httperror", e.getMessage() + e.toString());
             return "";
         }
     }

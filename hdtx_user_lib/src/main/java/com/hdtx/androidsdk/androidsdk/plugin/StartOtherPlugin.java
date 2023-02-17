@@ -14,7 +14,7 @@ import com.bytedance.applog.util.UriConstants;
 import com.hdtx.androidsdk.androidsdk.data.Constant;
 import com.hdtx.androidsdk.androidsdk.http.EAPayInter;
 import com.hdtx.androidsdk.androidsdk.util.CommonUtils;
-import com.hdtx.androidsdk.androidsdk.util.ESdkLog;
+import com.hdtx.androidsdk.androidsdk.util.HDSdkLog;
 import com.hdtx.androidsdk.androidsdk.util.OaidHelper;
 import com.hdtx.androidsdk.androidsdk.util.SimulatorUtils;
 import com.hdtx.androidsdk.androidsdk.util.Tools;
@@ -43,7 +43,7 @@ public class StartOtherPlugin {
 
         if (TextUtils.equals(CommonUtils.readPropertiesValue(context, "use_TT"), "0")) {
 
-            ESdkLog.d("调用了头条SDK初始化接口");
+            HDSdkLog.d("调用了头条SDK初始化接口");
 
             Constant.TOUTIAO_SDK = true;
 
@@ -56,7 +56,7 @@ public class StartOtherPlugin {
             config.setLogger(new ILogger() {
                 @Override
                 public void log(String s, Throwable throwable) {
-                    ESdkLog.d(s);
+                    HDSdkLog.d(s);
                     if (throwable != null) {
                         throwable.printStackTrace();
                     }
@@ -169,7 +169,7 @@ public class StartOtherPlugin {
                             if (result != -1) {
                                 //1上传头条付费日志，0不上传
                                 if (result == 1) {
-                                    ESdkLog.d("上传头条付费日志");
+                                    HDSdkLog.d("上传头条付费日志");
                                     GameReportHelper.onEventPurchase("", productName, "", 1,
                                             payType, "¥", status, mMoney);
                                 }
@@ -181,7 +181,7 @@ public class StartOtherPlugin {
                                 try {
                                     Thread.sleep(100);
                                 } catch (InterruptedException e) {
-                                    ESdkLog.d(e.toString());
+                                    HDSdkLog.d(e.toString());
                                 }
                             }
                         }
@@ -199,7 +199,7 @@ public class StartOtherPlugin {
      */
     public static void initEntry(Context mContext) {
 
-        ESdkLog.d("调用了联盟SDK初始化接口,版本号=" + Constant.SDK_VERSION);
+        HDSdkLog.d("调用了联盟SDK初始化接口,版本号=" + Constant.SDK_VERSION);
 
         Tools.disableAPIDialog();
 
@@ -218,7 +218,7 @@ public class StartOtherPlugin {
      * 获取oaid
      */
     public static void getOaid(final Context mContext, String cert) {
-        ESdkLog.d("调用了联盟SDK获取oaid接口");
+        HDSdkLog.d("调用了联盟SDK获取oaid接口");
 
         try {
             OaidHelper helper = new OaidHelper(new OaidHelper.AppIdsUpdater() {
@@ -230,7 +230,7 @@ public class StartOtherPlugin {
                             if (!Constant.AQY_SDK) {
                                 StartOtherPlugin.initAQY(mContext);
                             }
-                            ESdkLog.d("oaid -----> " + ids);
+                            HDSdkLog.d("oaid -----> " + ids);
 //                            StartOtherPlugin.logGDTActionSetOAID(ids);
                         }
                     });
@@ -249,12 +249,12 @@ public class StartOtherPlugin {
     //获取oaid证书，如果缓存中有 则直接读取缓存中的 否则服务器获取
     public static void getCert(Context context) {
         String cert = CommonUtils.getCert(context);
-        ESdkLog.c("certnet----->", "cache-->" + cert);
+        HDSdkLog.c("certnet----->", "cache-->" + cert);
         if (cert.isEmpty()) {
             String temp = EAPayInter.getOaidPerFromNet(context.getApplicationInfo().packageName);
             getOaid(context, temp);
             CommonUtils.saveCert(context, temp);
-            ESdkLog.c("certnet----->", "netvalue-->" + temp);
+            HDSdkLog.c("certnet----->", "netvalue-->" + temp);
         } else {
             getOaid(context, cert);
         }
@@ -272,7 +272,7 @@ public class StartOtherPlugin {
                 return;
             }
 
-            ESdkLog.d("调用了是否为模拟器接口");
+            HDSdkLog.d("调用了是否为模拟器接口");
             SimulatorUtils.checkSimulator(mContext);
         } catch (Exception e) {
             e.printStackTrace();
@@ -289,7 +289,7 @@ public class StartOtherPlugin {
 
         if (TextUtils.equals(CommonUtils.readPropertiesValue(mContext, "use_GISM"), "0")) {
 
-            ESdkLog.d("调用了汇川SDK初始化接口");
+            HDSdkLog.d("调用了汇川SDK初始化接口");
 
             Constant.GISM_SDK = true;
             GismSDK.init(GismConfig.newBuilder(mContext.getApplication())
@@ -410,7 +410,7 @@ public class StartOtherPlugin {
     public static void logGismActionExitApp() {
 
         if (Constant.GISM_SDK) {
-            ESdkLog.d("调用了汇川SDK退出游戏回调接口");
+            HDSdkLog.d("调用了汇川SDK退出游戏回调接口");
             GismSDK.onExitApp();
         }
     }
@@ -427,7 +427,7 @@ public class StartOtherPlugin {
 
         if (TextUtils.equals(CommonUtils.readPropertiesValue(mContext, "use_GDT"), "0")) {
 
-            ESdkLog.d("调用了广点通SDK初始化接口");
+            HDSdkLog.d("调用了广点通SDK初始化接口");
 
             Constant.GDT_SDK = true;
             GDTAction.init(mContext, CommonUtils.readPropertiesValue(mContext, "GDT_setId"),
@@ -441,7 +441,7 @@ public class StartOtherPlugin {
      */
     public static void logGDTAction() {
         if (Constant.GDT_SDK) {
-            ESdkLog.d("调用了广点通SDK上报app启动接口");
+            HDSdkLog.d("调用了广点通SDK上报app启动接口");
             GDTAction.logAction(ActionType.START_APP);
         }
     }
@@ -532,7 +532,7 @@ public class StartOtherPlugin {
 
         if (TextUtils.equals(CommonUtils.readPropertiesValue(mContext, "use_KS"), "0")) {
 
-            ESdkLog.d("调用了快手SDK初始化接口");
+            HDSdkLog.d("调用了快手SDK初始化接口");
             Constant.KS_SDK = true;
             TurboAgent.init(TurboConfig.TurboConfigBuilder.create(mContext)
                     .setAppId(CommonUtils.readPropertiesValue(mContext, "KS_appid"))
@@ -554,7 +554,7 @@ public class StartOtherPlugin {
      */
     public static void logKSActionAppActive() {
         if (Constant.KS_SDK) {
-            ESdkLog.d("调用了快手SDK活跃事件接口");
+            HDSdkLog.d("调用了快手SDK活跃事件接口");
             TurboAgent.onAppActive();
         }
     }
@@ -619,7 +619,7 @@ public class StartOtherPlugin {
      */
     public static void logKSActionPageResume(final Activity activity) {
         if (Constant.KS_SDK) {
-            ESdkLog.d("调用了快手SDK进入游戏界面接口");
+            HDSdkLog.d("调用了快手SDK进入游戏界面接口");
             TurboAgent.onPageResume(activity);
         }
     }
@@ -629,7 +629,7 @@ public class StartOtherPlugin {
      */
     public static void logKSActionPagePause(final Activity activity) {
         if (Constant.KS_SDK) {
-            ESdkLog.d("调用了快手SDK退出游戏界面接口");
+            HDSdkLog.d("调用了快手SDK退出游戏界面接口");
             TurboAgent.onPagePause(activity);
         }
     }
@@ -644,7 +644,7 @@ public class StartOtherPlugin {
     public static void initAQY(Context mContext) {
         if (TextUtils.equals(CommonUtils.readPropertiesValue(mContext, "use_AQY"), "0")) {
             Constant.AQY_SDK = true;
-            ESdkLog.d("调用了爱奇艺sdk初始化" + Constant.OAID);
+            HDSdkLog.d("调用了爱奇艺sdk初始化" + Constant.OAID);
             QiLinTrans.setDebug(TransParam.LogLevel.LOG_DEBUG, false, "");
             QiLinTrans.init(mContext, CommonUtils.readPropertiesValue(mContext, "aiqiyi_appid"),
                     CommonUtils.readPropertiesValue(mContext, "qn"), Constant.OAID);
@@ -656,7 +656,7 @@ public class StartOtherPlugin {
      */
     public static void resumeAQY() {
         if (Constant.AQY_SDK) {
-            ESdkLog.d("爱奇艺进入游戏界面");
+            HDSdkLog.d("爱奇艺进入游戏界面");
             QiLinTrans.onResume();
         }
     }
@@ -666,7 +666,7 @@ public class StartOtherPlugin {
      */
     public static void destoryAQY() {
         if (Constant.AQY_SDK) {
-            ESdkLog.d("爱奇艺退出游戏界面");
+            HDSdkLog.d("爱奇艺退出游戏界面");
             QiLinTrans.onDestroy();
         }
     }

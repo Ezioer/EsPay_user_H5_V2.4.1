@@ -46,7 +46,7 @@ import com.hdtx.androidsdk.androidsdk.plugin.StartLogPlugin;
 import com.hdtx.androidsdk.androidsdk.plugin.StartOtherPlugin;
 import com.hdtx.androidsdk.androidsdk.util.CommonUtils;
 import com.hdtx.androidsdk.androidsdk.util.DialogerUtils;
-import com.hdtx.androidsdk.androidsdk.util.ESPayLog;
+import com.hdtx.androidsdk.androidsdk.util.HDPayLog;
 import com.hdtx.androidsdk.androidsdk.util.ThreadPoolManager;
 import com.hdtx.androidsdk.androidsdk.util.Tools;
 import com.easou.espay_user_lib.R;
@@ -640,7 +640,7 @@ public class ESPayCenterActivity extends BaseActivity {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-                ESPayLog.d(TAG, "请求支付宝支付插件，参数：" + aliPayString);
+                HDPayLog.d(TAG, "请求支付宝支付插件，参数：" + aliPayString);
                 pay(aliPayString);
             }
         });
@@ -729,7 +729,7 @@ public class ESPayCenterActivity extends BaseActivity {
                 json = (JSONObject) object;
                 // 跳转至易联支付插件
                 String upPayReqString = json.toString();
-                ESPayLog.d(TAG, "请求易联支付插件，参数：" + upPayReqString);
+                HDPayLog.d(TAG, "请求易联支付插件，参数：" + upPayReqString);
                 Intent intent = new Intent(ESPayCenterActivity.this, PayecoPluginLoadingActivity.class);
                 intent.putExtra("upPay.Req", upPayReqString);
                 intent.putExtra("Broadcast", PAYECO_ESPAYACTIVITY_ACTION); // 广播接收地址
@@ -777,7 +777,7 @@ public class ESPayCenterActivity extends BaseActivity {
                         HPlugin.pay(mActivity, paramStr);
                     } catch (JSONException e) {
                         // TODO Auto-generated catch block
-                        ESPayLog.d(TAG, "解析处理失败！" + e);
+                        HDPayLog.d(TAG, "解析处理失败！" + e);
                         e.printStackTrace();
                     }
                 }
@@ -827,11 +827,11 @@ public class ESPayCenterActivity extends BaseActivity {
 //						mActivity.startActivity(intent);
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
-                        ESPayLog.d(TAG, "解析处理失败！" + e);
+                        HDPayLog.d(TAG, "解析处理失败！" + e);
                         e.printStackTrace();
                     } catch (Throwable e) {
                         // TODO Auto-generated catch block
-                        ESPayLog.d(TAG, "支付失败！" + e);
+                        HDPayLog.d(TAG, "支付失败！" + e);
                         e.printStackTrace();
                     }
                 }
@@ -1062,7 +1062,7 @@ public class ESPayCenterActivity extends BaseActivity {
             String action = intent.getAction();
             if (PAYECO_ESPAYACTIVITY_ACTION.equals(action)) {
                 String payResp = intent.getExtras().getString("upPay.Rsp");
-                ESPayLog.d(TAG, "接收到广播内容：" + payResp);
+                HDPayLog.d(TAG, "接收到广播内容：" + payResp);
                 String respCode = "";
                 String respDesc = "";
                 try {
@@ -1089,7 +1089,7 @@ public class ESPayCenterActivity extends BaseActivity {
                         }
                     }
                 } catch (JSONException e) {
-                    ESPayLog.d(TAG, "解析处理失败！" + e);
+                    HDPayLog.d(TAG, "解析处理失败！" + e);
                     onFailedCallBack(ErrorResult.ESPAY_DEAL_EEOR, "解析处理失败");
                 }
             } else {

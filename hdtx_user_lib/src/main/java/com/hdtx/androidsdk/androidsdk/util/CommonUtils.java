@@ -60,7 +60,7 @@ public class CommonUtils {
                 return null;
             return gsonStr;
         } catch (Exception e) {
-            ESdkLog.d(e.toString());
+            HDSdkLog.d(e.toString());
         }
         return "";
     }
@@ -69,7 +69,7 @@ public class CommonUtils {
         try {
             FileHelper.writeFile(new File(Constant.SdcardPath.CACHE_SAVEPATH + "/" + appid + ".txt"), token);
         } catch (Exception e) {
-            ESdkLog.d(e.toString());
+            HDSdkLog.d(e.toString());
         }
     }
 
@@ -480,7 +480,7 @@ public class CommonUtils {
                 qnChannel = Constant.qnChannel;
             }
             if (!qnChannel.equals("")) {
-                ESdkLog.d("头条分包渠道号:" + qnChannel);
+                HDSdkLog.d("头条分包渠道号:" + qnChannel);
                 return qnChannel;
             }
         }

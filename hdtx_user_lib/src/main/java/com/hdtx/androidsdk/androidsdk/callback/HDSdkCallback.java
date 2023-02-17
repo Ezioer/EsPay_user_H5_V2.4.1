@@ -2,7 +2,7 @@ package com.hdtx.androidsdk.androidsdk.callback;
 
 import java.util.Map;
 
-public interface ESdkCallback {
+public interface HDSdkCallback {
 
     void onLogin(Map<String, String> loginResult);
 

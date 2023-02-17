@@ -48,13 +48,13 @@ public class OaidHelper implements IIdentifierListener {
             // 证书为PEM文件中的所有文本内容（包括首尾行、换行符）
             try {
 //                isCertInit = MdidSdkHelper.InitCert(cxt, loadPemFromAssetFile(cxt, ASSET_FILE_NAME_CERT));
-                ESdkLog.c("certnet----->getoaid", "" + cert);
+                HDSdkLog.c("certnet----->getoaid", "" + cert);
                 isCertInit = MdidSdkHelper.InitCert(cxt, cert);
             } catch (Error e) {
                 e.printStackTrace();
             }
             if (!isCertInit) {
-                ESdkLog.c("certnet----->", "getDeviceIds: cert init failed");
+                HDSdkLog.c("certnet----->", "getDeviceIds: cert init failed");
                 Log.w(TAG, "getDeviceIds: cert init failed");
             }
         }
@@ -78,7 +78,7 @@ public class OaidHelper implements IIdentifierListener {
         IdSupplierImpl unsupportedIdSupplier = new IdSupplierImpl();
         if (code == InfoCode.INIT_ERROR_CERT_ERROR) {                         // 证书未初始化或证书无效，SDK内部不会回调onSupport
             // APP自定义逻辑
-            ESdkLog.c("certnet----->", "cert not init or check not pass");
+            HDSdkLog.c("certnet----->", "cert not init or check not pass");
             updateCert(cxt);
             Log.w(TAG, "cert not init or check not pass");
             onSupport(unsupportedIdSupplier);
@@ -187,13 +187,13 @@ public class OaidHelper implements IIdentifierListener {
             // 证书为PEM文件中的所有文本内容（包括首尾行、换行符）
             try {
 //                isCertInit = MdidSdkHelper.InitCert(cxt, loadPemFromAssetFile(cxt, ASSET_FILE_NAME_CERT));
-                ESdkLog.c("certnet----->getoaid", "" + cert);
+                HDSdkLog.c("certnet----->getoaid", "" + cert);
                 isCertInit = MdidSdkHelper.InitCert(cxt, cert);
             } catch (Error e) {
                 e.printStackTrace();
             }
             if (!isCertInit) {
-                ESdkLog.c("certnet----->", "getDeviceIds: cert init failed");
+                HDSdkLog.c("certnet----->", "getDeviceIds: cert init failed");
                 Log.w(TAG, "getDeviceIds: cert init failed");
             }
         }
@@ -217,7 +217,7 @@ public class OaidHelper implements IIdentifierListener {
         IdSupplierImpl unsupportedIdSupplier = new IdSupplierImpl();
         if (code == InfoCode.INIT_ERROR_CERT_ERROR) {                         // 证书未初始化或证书无效，SDK内部不会回调onSupport
             // APP自定义逻辑
-            ESdkLog.c("certnet----->", "cert not init or check not pass");
+            HDSdkLog.c("certnet----->", "cert not init or check not pass");
             updateCert(cxt);
             Log.w(TAG, "cert not init or check not pass");
             onSupport(unsupportedIdSupplier);

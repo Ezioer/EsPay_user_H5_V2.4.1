@@ -55,7 +55,7 @@ public class SimulatorUtils {
                     }
                     long end = System.currentTimeMillis();
 
-                    ESdkLog.d("是否被认为是模拟器：" + isEmulator + "，时间" + (end - start));
+                    HDSdkLog.d("是否被认为是模拟器：" + isEmulator + "，时间" + (end - start));
 //                    ESdkLog.d("可疑行为数量" + suspectCount + "，时间" + (end - start));
 //                    if (suspectCount >= RESULT_SUSPECT_CHECK) {
 //                        updateSimulatorStatus();
@@ -65,7 +65,7 @@ public class SimulatorUtils {
 
                 } catch (Exception e) {
                     if (TextUtils.isEmpty(e.getMessage())) {
-                        ESdkLog.d("获取是否为模拟器，抛异常了，信息:" + e.getMessage());
+                        HDSdkLog.d("获取是否为模拟器，抛异常了，信息:" + e.getMessage());
                     }
                 }
             }
@@ -84,7 +84,7 @@ public class SimulatorUtils {
      */
     private static void updateSimulatorStatus() {
         Constant.IS_SIMULATOR = 1;
-        ESdkLog.d("此设备被认为是模拟器！");
+        HDSdkLog.d("此设备被认为是模拟器！");
     }
 
 

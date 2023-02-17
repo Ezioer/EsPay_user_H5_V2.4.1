@@ -5,16 +5,11 @@ import android.app.Application;
 import android.os.Bundle;
 import android.os.Handler;
 
-import com.hdtx.androidsdk.androidsdk.ESPlatform;
+import com.hdtx.androidsdk.androidsdk.HDPlatform;
 import com.hdtx.androidsdk.androidsdk.Starter;
 import com.hdtx.androidsdk.androidsdk.util.CommonUtils;
-import com.hdtx.androidsdk.androidsdk.util.ESdkLog;
+import com.hdtx.androidsdk.androidsdk.util.HDSdkLog;
 
-/**
- * created by xiaoqing.zhou
- * on 2020/5/12
- * fun
- */
 public class AppTimeWatcher {
     private AppTimeWatcher() {
     }
@@ -42,7 +37,7 @@ public class AppTimeWatcher {
     public static boolean isLogOut = false;
 
     public void onEnterForeground() {
-        ESdkLog.d("app is in foreground");
+        HDSdkLog.d("app is in foreground");
 
         if (mHandler == null) {
             mHandler = new Handler();
@@ -72,7 +67,7 @@ public class AppTimeWatcher {
     }
 
     public void onEnterBackground() {
-        ESdkLog.d("app is in background");
+        HDSdkLog.d("app is in background");
         mHasTime = System.currentTimeMillis() - mCurrentTime;
         isCancel = true;
 //        ESdkLog.d("time:" + mHasTime);
@@ -86,7 +81,7 @@ public class AppTimeWatcher {
      * 取消前后台监听并取消handle的消息发送
      */
     public void unRegisterWatcher() {
-        ESdkLog.d("unregister");
+        HDSdkLog.d("unregister");
         mBeginWork = false;
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
@@ -97,7 +92,7 @@ public class AppTimeWatcher {
     public void startTimer() {
         mBeginWork = true;
         if (mHandler == null) {
-            ESdkLog.d("startfromlogin");
+            HDSdkLog.d("startfromlogin");
             onEnterForeground();
         }
     }
@@ -120,9 +115,9 @@ public class AppTimeWatcher {
         @Override
         public void onActivityStarted(Activity activity) {
             mActivityCount++;
-            ESdkLog.d("start----->activitycount=" + mActivityCount);
+            HDSdkLog.d("start----->activitycount=" + mActivityCount);
             if (mActivityCount == 1) {
-                ESPlatform.isBackground = false;
+                HDPlatform.isBackground = false;
                 onEnterForeground();
             }
         }
@@ -140,9 +135,9 @@ public class AppTimeWatcher {
         @Override
         public void onActivityStopped(Activity activity) {
             mActivityCount--;
-            ESdkLog.d("stop----->activitycount=" + mActivityCount);
+            HDSdkLog.d("stop----->activitycount=" + mActivityCount);
             if (mActivityCount == 0) {
-                ESPlatform.isBackground = true;
+                HDPlatform.isBackground = true;
                 onEnterBackground();
             }
         }

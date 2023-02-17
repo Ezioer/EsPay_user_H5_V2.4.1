@@ -2,9 +2,9 @@ package com.hdtx.androidsdk.androidsdk.util;
 
 import android.util.Log;
 
-public class ESdkLog {
+public class HDSdkLog {
 
-    private static String TAG = "ESDKLOG";
+    private static String TAG = "HDSDKLOG";
 
     public static void d(String msg) {
         Log.d(TAG, msg);

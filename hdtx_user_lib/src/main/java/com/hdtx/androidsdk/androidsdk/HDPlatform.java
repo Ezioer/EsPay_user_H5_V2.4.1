@@ -11,7 +11,7 @@ import com.hdtx.androidsdk.androidsdk.plugin.StartOtherPlugin;
 import com.hdtx.androidsdk.androidsdk.romutils.RomHelper;
 import com.hdtx.androidsdk.androidsdk.ui.ESUserWebActivity;
 import com.hdtx.androidsdk.androidsdk.util.CommonUtils;
-import com.hdtx.androidsdk.androidsdk.util.ESdkLog;
+import com.hdtx.androidsdk.androidsdk.util.HDSdkLog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,7 +19,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ESPlatform {
+public class HDPlatform {
 
     public static boolean isBackground = false;
     private boolean isShowWebView = false;
@@ -115,7 +115,7 @@ public class ESPlatform {
     public void showWebView(final String param) {
         if (!isShowWebView) {
             if (!isBackground) {
-                ESdkLog.d("showwebview" + param);
+                HDSdkLog.d("showwebview" + param);
                 Starter.getInstance().showUserCenter();
             }
         }
@@ -124,7 +124,7 @@ public class ESPlatform {
     //js隐藏或显示悬浮图标，1为显示，0为隐藏
     @JavascriptInterface
     public void showFloatIcon(final String param) {
-        ESdkLog.d("showFloatIcon" + param);
+        HDSdkLog.d("showFloatIcon" + param);
         if (isBackground) {
             AppTimeWatcher.isLogOut = true;
         }
@@ -231,7 +231,7 @@ public class ESPlatform {
      */
     @JavascriptInterface
     public void esShowSdk(final String param) {
-        ESdkLog.d("esShowSdk" + param);
+        HDSdkLog.d("esShowSdk" + param);
         String status = "";
 
         try {
@@ -245,10 +245,10 @@ public class ESPlatform {
         //打开 false，隐藏 true
         if (!status.equals(ESConstant.SDK_STATUS)) {
             mActivity.moveTaskToBack(false);
-            ESdkLog.d("esShowSdk isShowWebView false");
+            HDSdkLog.d("esShowSdk isShowWebView false");
             isShowWebView = false;
         } else {
-            ESdkLog.d("esShowSdk isShowWebView true");
+            HDSdkLog.d("esShowSdk isShowWebView true");
             isShowWebView = true;
         }
     }

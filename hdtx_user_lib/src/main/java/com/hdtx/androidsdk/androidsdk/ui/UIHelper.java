@@ -38,7 +38,7 @@ import android.widget.Toast;
 import com.hdtx.androidsdk.androidsdk.data.Constant;
 import com.hdtx.androidsdk.androidsdk.data.ESConstant;
 import com.hdtx.androidsdk.androidsdk.data.PayItem;
-import com.hdtx.androidsdk.androidsdk.util.ESdkLog;
+import com.hdtx.androidsdk.androidsdk.util.HDSdkLog;
 import com.hdtx.androidsdk.androidsdk.util.UnitUtils;
 
 import java.util.HashMap;
@@ -741,7 +741,7 @@ public class UIHelper {
                 context.getResources().getIdentifier("easou_id_tittleAmt", "id", context.getPackageName()));
         tittleAmt.setText("￥" + money);
 
-        ESdkLog.d("支付的金额---->" + money);
+        HDSdkLog.d("支付的金额---->" + money);
       /*  String[] strs = money.split("\\.");
         int payMoney = 0;
         try {

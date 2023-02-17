@@ -25,7 +25,7 @@ import android.widget.Toast;
 
 import com.hdtx.androidsdk.androidsdk.data.Constant;
 import com.hdtx.androidsdk.androidsdk.data.ErrorResult;
-import com.hdtx.androidsdk.androidsdk.util.ESPayLog;
+import com.hdtx.androidsdk.androidsdk.util.HDPayLog;
 import com.hdtx.androidsdk.androidsdk.util.Tools;
 
 public class ESPayWebActivity extends Activity implements OnClickListener {
@@ -138,10 +138,10 @@ public class ESPayWebActivity extends Activity implements OnClickListener {
                     progressDialog = null;
                 }
 
-                ESPayLog.d("finishUrl:" + url);
+                HDPayLog.d("finishUrl:" + url);
                 if (url.startsWith(back_url)) {
                     String status = Tools.getParam(url, "status");
-                    ESPayLog.d("status:" + status);
+                    HDPayLog.d("status:" + status);
                     if (back_num == 0) {
                         if ("success".equals(status)) {
                             ESPayCenterActivity.onSuccCallBack();
@@ -180,11 +180,11 @@ public class ESPayWebActivity extends Activity implements OnClickListener {
                     e.printStackTrace();
                 }
 
-                ESPayLog.d("pageUrl:" + url);
+                HDPayLog.d("pageUrl:" + url);
 
                 if (url.startsWith(back_url)) {
                     String status = Tools.getParam(url, "status");
-                    ESPayLog.d("status:" + status);
+                    HDPayLog.d("status:" + status);
                     if (back_num == 0) {
                         if ("success".equals(status)) {
                             ESPayCenterActivity.onSuccCallBack();
@@ -227,7 +227,7 @@ public class ESPayWebActivity extends Activity implements OnClickListener {
                 cookieManager.setCookie(url, Constant.EASOUTGC + "=" + token);//cookies是在HttpClient中获得的cookie
                 CookieSyncManager.getInstance().sync();
 
-                ESPayLog.d("url:" + url);
+                HDPayLog.d("url:" + url);
                 if (url.startsWith("http:") || url.startsWith("https:")) {
                     return super.shouldOverrideUrlLoading(view, url);
                 } else {

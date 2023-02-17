@@ -6,8 +6,8 @@ import org.json.JSONObject;
 
 import com.hdtx.androidsdk.androidsdk.data.Constant;
 import com.hdtx.androidsdk.androidsdk.ui.LoadingDialog;
-import com.hdtx.androidsdk.androidsdk.util.ESPayLog;
-import com.hdtx.androidsdk.androidsdk.util.ESdkLog;
+import com.hdtx.androidsdk.androidsdk.util.HDPayLog;
+import com.hdtx.androidsdk.androidsdk.util.HDSdkLog;
 import com.hdtx.androidsdk.androidsdk.util.Tools;
 
 public class EAPayImp {
@@ -39,16 +39,16 @@ public class EAPayImp {
                 result_arr[2] = data.getString("aid"); //通讯协议版本号
                 result_arr[3] = data.getString("bn"); // 商户代码
                 result_arr[4] = data.getString("tid"); // 商户订单号
-                ESPayLog.d("EAPayInter", result_arr[0] + "/n" + result_arr[1] + "/n" + result_arr[2] + "/n"
+                HDPayLog.d("EAPayInter", result_arr[0] + "/n" + result_arr[1] + "/n" + result_arr[2] + "/n"
                         + result_arr[3] + "/n" + result_arr[4]);
-                ESPayLog.d(TAG, "微信解析完毕。");
+                HDPayLog.d(TAG, "微信解析完毕。");
             } else {
                 result_arr[0] = jsonObject.getString("msg");
                 result_arr[1] = status;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            ESPayLog.d(TAG, e.toString());
+            HDPayLog.d(TAG, e.toString());
         }
         return result_arr;
     }
@@ -76,16 +76,16 @@ public class EAPayImp {
                 result_arr[3] = data.getString("outTradeNo"); // 商户代码
                 result_arr[4] = data.getString("tokenId"); // 商户订单号
                 result_arr[5] = data.getString("code"); // 商户订单号
-                ESPayLog.d("EAPayInter", result_arr[0] + "/n" + result_arr[1] + "/n" + result_arr[2] + "/n"
+                HDPayLog.d("EAPayInter", result_arr[0] + "/n" + result_arr[1] + "/n" + result_arr[2] + "/n"
                         + result_arr[3] + "/n" + result_arr[4] + "/n" + result_arr[5]);
-                ESPayLog.d(TAG, "微信解析完毕。");
+                HDPayLog.d(TAG, "微信解析完毕。");
             } else {
                 result_arr[0] = jsonObject.getString("msg");
                 result_arr[1] = status;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            ESPayLog.d(TAG, e.toString());
+            HDPayLog.d(TAG, e.toString());
         }
         return result_arr;
     }
@@ -113,14 +113,14 @@ public class EAPayImp {
                 result_arr[3] = data.getString("monitorUrl");
                 result_arr[4] = data.getString("resultUrl");
                 result_arr[5] = data.getString("prepay_id");
-                ESPayLog.d(TAG, "微信解析完毕。");
+                HDPayLog.d(TAG, "微信解析完毕。");
             } else {
                 result_arr[0] = jsonObject.getString("msg");
                 result_arr[1] = status;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            ESPayLog.d(TAG, e.toString());
+            HDPayLog.d(TAG, e.toString());
         }
         return result_arr;
     }
@@ -151,17 +151,17 @@ public class EAPayImp {
                 result_arr[6] = data.getString("TradeTime");//商户订单时间
                 result_arr[7] = data.getString("OrderId"); // 易联订单号
                 result_arr[8] = data.getString("Sign"); // 签名
-                ESPayLog.d(TAG, result_arr[0] + "/n" + result_arr[1] + "/n" + result_arr[2] + "/n"
+                HDPayLog.d(TAG, result_arr[0] + "/n" + result_arr[1] + "/n" + result_arr[2] + "/n"
                         + result_arr[3] + "/n" + result_arr[4] + "/n" + result_arr[5] + "/n"
                         + result_arr[6] + "/n" + result_arr[7] + "/n" + result_arr[8]);
-                ESPayLog.d(TAG, "银联解析完毕。");
+                HDPayLog.d(TAG, "银联解析完毕。");
             } else {
                 result_arr[0] = jsonObject.getString("msg");
                 result_arr[1] = status;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            ESPayLog.d(TAG, e.toString());
+            HDPayLog.d(TAG, e.toString());
         }
         return result_arr;
     }
@@ -173,9 +173,9 @@ public class EAPayImp {
      * @return
      */
     public static String[] cardCharge(String params, String token) {
-        ESPayLog.d(TAG, "卡类请求参数是：" + params);
+        HDPayLog.d(TAG, "卡类请求参数是：" + params);
         String result = HttpGroupUtils.sendPost(domain, params, token);
-        ESPayLog.d(TAG, "请求的数据是：" + result);
+        HDPayLog.d(TAG, "请求的数据是：" + result);
         String[] result_arr = new String[2];
         try {
             JSONObject jsonObject = new JSONObject(result);
@@ -188,7 +188,7 @@ public class EAPayImp {
                 result_arr[0] = jsonObject.getString("msg");
             }
         } catch (Exception e) {
-            ESPayLog.d(TAG, e.toString());
+            HDPayLog.d(TAG, e.toString());
         }
         return result_arr;
     }
@@ -201,7 +201,7 @@ public class EAPayImp {
      */
     public static String[] chargeAlipay(String params, String token) {
         String result = HttpGroupUtils.sendPost(domain, params, token);
-        ESPayLog.d(TAG, "aresult:" + result);
+        HDPayLog.d(TAG, "aresult:" + result);
         String[] result_list = new String[2];
         try {
             JSONObject jsonObject = new JSONObject(result);
@@ -215,7 +215,7 @@ public class EAPayImp {
                 result_list[1] = status;
             }
         } catch (Exception e) {
-            ESPayLog.d(e.toString());
+            HDPayLog.d(e.toString());
         }
 
         return result_list;
@@ -228,7 +228,7 @@ public class EAPayImp {
      */
     public static String[] chargeAlipayTest() {
         String result = HttpGroupUtils.sendPost("http://lab.pay.appeasou.com/basePay/charge.e?appId=2604&cpTradeDesc=%E5%BE%AE%E5%8D%B7%E5%85%85%E5%80%BC0.01%E5%85%83&cpTradeName=%E5%BE%AE%E5%8D%B7%E5%85%85%E5%80%BC0.01%E5%85%83&money=0.01&notifyUrl=http://www.baidu.com&partnerId=1000100010001028&payChannel=BY_GF_ALIPAY&qn=ysap2027_10045_003&redirectUrl=http://www.appeasou.com&tradeId=1509603958659&tradeMode=WEB&sign=93867441768c60b414ebb4266c46fd5e", null, "");
-        ESPayLog.d(TAG, "aresult:" + result);
+        HDPayLog.d(TAG, "aresult:" + result);
         String[] result_list = new String[2];
         try {
             JSONObject jsonObject = new JSONObject(result);
@@ -242,7 +242,7 @@ public class EAPayImp {
                 result_list[1] = status;
             }
         } catch (Exception e) {
-            ESPayLog.d(e.toString());
+            HDPayLog.d(e.toString());
         }
 
         return result_list;
@@ -292,7 +292,7 @@ public class EAPayImp {
 
         String result = HttpGroupUtils.sendGet(Constant.DOMAIN + Tools.getHostName() + Constant.CHANNELCONFIG_URL,
                 params, token);
-        ESPayLog.d(TAG, "请求的数据是：" + result);
+        HDPayLog.d(TAG, "请求的数据是：" + result);
         String[] result_arr = new String[3];
         try {
             JSONObject jsonObject = new JSONObject(result);
@@ -308,7 +308,7 @@ public class EAPayImp {
 
         } catch (Exception e) {
             e.printStackTrace();
-            ESPayLog.d(TAG, e.toString());
+            HDPayLog.d(TAG, e.toString());
             return null;
         }
         LoadingDialog.dismiss();
@@ -324,7 +324,7 @@ public class EAPayImp {
 
         String result = HttpGroupUtils.sendGet(Constant.DOMAIN + Tools.getHostName() + Constant.MONTH_TOTOL_PAY_URL,
                 params, null);
-        ESPayLog.d(TAG, "请求的数据是：" + result);
+        HDPayLog.d(TAG, "请求的数据是：" + result);
         String[] result_arr = new String[3];
         try {
             JSONObject jsonObject = new JSONObject(result);
@@ -337,10 +337,10 @@ public class EAPayImp {
             } else {
                 result_arr[2] = "0";
             }
-            ESdkLog.d(jsonObject.toString());
+            HDSdkLog.d(jsonObject.toString());
         } catch (Exception e) {
             e.printStackTrace();
-            ESPayLog.d(TAG, e.toString());
+            HDPayLog.d(TAG, e.toString());
             return "0";
         }
         LoadingDialog.dismiss();
@@ -355,7 +355,7 @@ public class EAPayImp {
      */
     public static String[] chargeYd(String params, String token) {
         String result = HttpGroupUtils.sendGet(domain, params, token);
-        ESPayLog.d(TAG, "aresult:" + result);
+        HDPayLog.d(TAG, "aresult:" + result);
         String[] result_list = new String[3];
         try {
             JSONObject jsonObject = new JSONObject(result);
@@ -371,7 +371,7 @@ public class EAPayImp {
                 result_list[1] = status;
             }
         } catch (Exception e) {
-            ESPayLog.d(e.toString());
+            HDPayLog.d(e.toString());
         }
 
         return result_list;

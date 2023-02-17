@@ -199,7 +199,7 @@ native <methods>;
     native <methods>;
 }
 
--keepclassmembers class com.hdtx.androidsdk.androidsdk.ESPlatform {
+-keepclassmembers class com.hdtx.androidsdk.androidsdk.HDPlatform {
    public *;
 }
 -dontwarn com.iqiyi.qilin.trans.**

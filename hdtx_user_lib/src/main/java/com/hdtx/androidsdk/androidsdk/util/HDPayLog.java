@@ -3,13 +3,13 @@ package com.hdtx.androidsdk.androidsdk.util;
 import android.text.TextUtils;
 import android.util.Log;
 
-public class ESPayLog {
+public class HDPayLog {
 
     public static boolean DEBUGMODE = false;
     private static String TAG = "ESPAYLOG";
 
     public static void setDebugmode(boolean DEBUGMODE) {
-        ESPayLog.DEBUGMODE = DEBUGMODE;
+        HDPayLog.DEBUGMODE = DEBUGMODE;
     }
 
     public static void d(String tag, String msg) {

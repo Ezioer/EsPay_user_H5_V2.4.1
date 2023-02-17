@@ -26,11 +26,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hdtx.androidsdk.androidsdk.Starter;
-import com.hdtx.androidsdk.androidsdk.callback.ESdkCallback;
+import com.hdtx.androidsdk.androidsdk.callback.HDSdkCallback;
 import com.hdtx.androidsdk.androidsdk.data.Constant;
 import com.hdtx.androidsdk.androidsdk.data.ESConstant;
 import com.hdtx.androidsdk.androidsdk.util.CommonUtils;
-import com.hdtx.androidsdk.androidsdk.util.ESdkLog;
+import com.hdtx.androidsdk.androidsdk.util.HDSdkLog;
 import com.hdtx.androidsdk.androidsdk.util.Tools;
 import com.hdtx_user_h5.R;
 
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 case ESConstant.ESPAY_BACK:
                     //从支付页面返回
-                    ESdkLog.d("支付页面点击了返回或右上角的关闭按钮");
+                    HDSdkLog.d("支付页面点击了返回或右上角的关闭按钮");
                     break;
             }
             super.handleMessage(msg);
@@ -253,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
          * isPortrait：游戏横竖屏界面，true：竖屏游戏，false：横屏游戏
          * LoginCallBack：登录、注册、登出、获取用户信息、实名认证回调
          */
-        Starter.getInstance().login(MainActivity.this, new ESdkCallback() {
+        Starter.getInstance().login(MainActivity.this, new HDSdkCallback() {
 
             @Override
             public void onLogin(Map<String, String> loginResult) {

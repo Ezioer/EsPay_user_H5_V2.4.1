@@ -11,7 +11,7 @@ import android.os.StrictMode;
 //import com.baidu.mobads.action.BaiduAction;
 import com.bytedance.hume.readapk.HumeSDK;
 import com.hdtx.androidsdk.androidsdk.callback.AppTimeWatcher;
-import com.hdtx.androidsdk.androidsdk.callback.ESdkCallback;
+import com.hdtx.androidsdk.androidsdk.callback.HDSdkCallback;
 import com.hdtx.androidsdk.androidsdk.data.Constant;
 import com.hdtx.androidsdk.androidsdk.plugin.StartESPayPlugin;
 import com.hdtx.androidsdk.androidsdk.plugin.StartESUserPlugin;
@@ -21,7 +21,7 @@ import com.hdtx.androidsdk.androidsdk.romutils.RomHelper;
 import com.hdtx.androidsdk.androidsdk.romutils.RomUtils;
 import com.hdtx.androidsdk.androidsdk.ui.ESUserWebActivity;
 import com.hdtx.androidsdk.androidsdk.util.CommonUtils;
-import com.hdtx.androidsdk.androidsdk.util.ESdkLog;
+import com.hdtx.androidsdk.androidsdk.util.HDSdkLog;
 import com.hdtx.androidsdk.androidsdk.util.ThreadPoolManager;
 import com.hdtx.androidsdk.androidsdk.util.Tools;
 
@@ -33,7 +33,7 @@ public class Starter {
 
     public static Map<String, String> map = null;
     public static Handler mHandler = null;
-    public static ESdkCallback mCallback = null;
+    public static HDSdkCallback mCallback = null;
     public static Activity mActivity;
 
     public volatile static Starter mSingleton = null;
@@ -72,7 +72,7 @@ public class Starter {
     /**
      * 宜搜SDK登陆接口
      */
-    public void login(final Activity activity, ESdkCallback mCallback) {
+    public void login(final Activity activity, HDSdkCallback mCallback) {
         ThreadPoolManager.getInstance().addTask(new Runnable() {
             @Override
             public void run() {
@@ -365,7 +365,7 @@ public class Starter {
      * @param mContext
      */
     public void dataCollectInit(Context mContext) {
-        ESdkLog.d("初始化媒体接口");
+        HDSdkLog.d("初始化媒体接口");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             builder.detectFileUriExposure();
@@ -378,7 +378,7 @@ public class Starter {
     }
 
     public void pageResume(Activity activity) {
-        ESdkLog.d("进入游戏界面接口");
+        HDSdkLog.d("进入游戏界面接口");
         //广点通上报启动
         if (Constant.IS_LOGINED) {
             StartOtherPlugin.logGDTAction();
@@ -392,13 +392,13 @@ public class Starter {
     }
 
     public void pagePause(Activity activity) {
-        ESdkLog.d("离开游戏界面接口");
+        HDSdkLog.d("离开游戏界面接口");
         StartOtherPlugin.logKSActionPagePause(activity);
         StartOtherPlugin.onTTPause(activity);
     }
 
     public void pageDestory() {
-        ESdkLog.d("退出游戏");
+        HDSdkLog.d("退出游戏");
         StartOtherPlugin.destoryAQY();
     }
 }

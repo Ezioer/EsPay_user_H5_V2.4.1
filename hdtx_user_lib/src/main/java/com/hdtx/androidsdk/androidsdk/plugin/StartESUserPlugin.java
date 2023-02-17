@@ -13,7 +13,7 @@ import com.hdtx.androidsdk.androidsdk.ui.ESUserWebActivity;
 import com.hdtx.androidsdk.androidsdk.ui.FloatView;
 import com.hdtx.androidsdk.androidsdk.util.AES;
 import com.hdtx.androidsdk.androidsdk.util.CommonUtils;
-import com.hdtx.androidsdk.androidsdk.util.ESdkLog;
+import com.hdtx.androidsdk.androidsdk.util.HDSdkLog;
 import com.hdtx.androidsdk.androidsdk.util.FileHelper;
 import com.hdtx.androidsdk.androidsdk.util.HostRequestUtils;
 import com.hdtx.androidsdk.androidsdk.util.NetworkUtils;
@@ -83,7 +83,7 @@ public class StartESUserPlugin {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
-                    ESdkLog.d(e.toString());
+                    HDSdkLog.d(e.toString());
                 }
             }
         }
@@ -213,7 +213,7 @@ public class StartESUserPlugin {
        /* if (CommonUtils.getTestMoney(Starter.mActivity) == 1) {
             param = param + "&sdkVersion=hongbao";
         }*/
-        ESdkLog.d("上传的oaid：" + Constant.OAID);
+        HDSdkLog.d("上传的oaid：" + Constant.OAID);
         System.out.println("param：" + param);
         return param;
     }

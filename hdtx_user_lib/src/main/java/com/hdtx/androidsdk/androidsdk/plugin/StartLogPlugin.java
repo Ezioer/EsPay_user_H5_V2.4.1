@@ -8,7 +8,7 @@ import com.hdtx.androidsdk.androidsdk.data.ESConstant;
 import com.hdtx.androidsdk.androidsdk.http.ReYunLogHelper;
 import com.hdtx.androidsdk.androidsdk.ui.ESUserWebActivity;
 import com.hdtx.androidsdk.androidsdk.util.CommonUtils;
-import com.hdtx.androidsdk.androidsdk.util.ESdkLog;
+import com.hdtx.androidsdk.androidsdk.util.HDSdkLog;
 import com.hdtx.androidsdk.androidsdk.util.HttpLogHelper;
 import com.hdtx.androidsdk.androidsdk.util.Tools;
 
@@ -48,7 +48,7 @@ public class StartLogPlugin {
             }
 
         } catch (Exception e) {
-            ESdkLog.d("上传角色数据出错");
+            HDSdkLog.d("上传角色数据出错");
         }
     }
 

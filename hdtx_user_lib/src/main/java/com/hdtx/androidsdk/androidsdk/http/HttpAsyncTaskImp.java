@@ -10,7 +10,7 @@ import com.hdtx.androidsdk.androidsdk.ui.ESPayCenterActivity;
 import com.hdtx.androidsdk.androidsdk.ui.ESToast;
 import com.hdtx.androidsdk.androidsdk.ui.UIHelper;
 import com.hdtx.androidsdk.androidsdk.util.DialogerUtils;
-import com.hdtx.androidsdk.androidsdk.util.ESPayLog;
+import com.hdtx.androidsdk.androidsdk.util.HDPayLog;
 import com.hdtx.androidsdk.androidsdk.util.Md5SignUtils;
 
 import org.json.JSONException;
@@ -84,7 +84,7 @@ public class HttpAsyncTaskImp extends HttpAsyncTask<Void, Void, String[]> {
         }
         if (result[1] != null
                 && result[1].equals(Constant.FLAG_TRADE_RESULT_SUC)) {
-            ESPayLog.d("响应数据：" + result.toString());
+            HDPayLog.d("响应数据：" + result.toString());
             switch (type) {
                 case ZWXESWECHAT:
                     try {
@@ -95,7 +95,7 @@ public class HttpAsyncTaskImp extends HttpAsyncTask<Void, Void, String[]> {
                         json.put("prepay_id", result[5]);
 
                     } catch (JSONException e) {
-                        ESPayLog.d("解析处理失败！" + e);
+                        HDPayLog.d("解析处理失败！" + e);
                         e.printStackTrace();
                     }
                     break;
@@ -110,7 +110,7 @@ public class HttpAsyncTaskImp extends HttpAsyncTask<Void, Void, String[]> {
                         json.put("tokenId", result[4]);
 
                     } catch (JSONException e) {
-                        ESPayLog.d("解析处理失败！" + e);
+                        HDPayLog.d("解析处理失败！" + e);
                         e.printStackTrace();
                     }
                     break;
@@ -122,7 +122,7 @@ public class HttpAsyncTaskImp extends HttpAsyncTask<Void, Void, String[]> {
                         json.put("bn", result[3]);
 
                     } catch (JSONException e) {
-                        ESPayLog.d("解析处理失败！" + e);
+                        HDPayLog.d("解析处理失败！" + e);
                         e.printStackTrace();
                     }
                     break;
@@ -138,7 +138,7 @@ public class HttpAsyncTaskImp extends HttpAsyncTask<Void, Void, String[]> {
                         json.put("Sign", result[8]);
 
                     } catch (JSONException e) {
-                        ESPayLog.d("解析处理失败！" + e);
+                        HDPayLog.d("解析处理失败！" + e);
                         e.printStackTrace();
                     }
                     break;
@@ -148,7 +148,7 @@ public class HttpAsyncTaskImp extends HttpAsyncTask<Void, Void, String[]> {
                         json.put("info", result[0]);
 
                     } catch (JSONException e) {
-                        ESPayLog.d("解析处理失败！" + e);
+                        HDPayLog.d("解析处理失败！" + e);
                         e.printStackTrace();
                     }
                     break;
@@ -159,7 +159,7 @@ public class HttpAsyncTaskImp extends HttpAsyncTask<Void, Void, String[]> {
                         json.put("info", result[0]);
 
                     } catch (JSONException e) {
-                        ESPayLog.d("解析处理失败！" + e);
+                        HDPayLog.d("解析处理失败！" + e);
                         e.printStackTrace();
                     }
                     break;
@@ -168,7 +168,7 @@ public class HttpAsyncTaskImp extends HttpAsyncTask<Void, Void, String[]> {
                         json.put("port", result[0]);
                         json.put("sms", result[2]);
                     } catch (JSONException e) {
-                        ESPayLog.d("解析处理失败！" + e);
+                        HDPayLog.d("解析处理失败！" + e);
                         e.printStackTrace();
                     }
                     break;

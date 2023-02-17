@@ -36,12 +36,12 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import com.hdtx.androidsdk.androidsdk.ESPlatform;
+import com.hdtx.androidsdk.androidsdk.HDPlatform;
 import com.hdtx.androidsdk.androidsdk.data.Constant;
 import com.hdtx.androidsdk.androidsdk.data.ESConstant;
 import com.hdtx.androidsdk.androidsdk.plugin.StartESUserPlugin;
 import com.hdtx.androidsdk.androidsdk.util.CommonUtils;
-import com.hdtx.androidsdk.androidsdk.util.ESdkLog;
+import com.hdtx.androidsdk.androidsdk.util.HDSdkLog;
 import com.hdtx.androidsdk.androidsdk.util.ReplaceCallBack;
 import com.hdtx.androidsdk.androidsdk.util.ThreadPoolManager;
 import com.hdtx.androidsdk.androidsdk.util.Tools;
@@ -91,7 +91,7 @@ public class ESUserWebActivity extends Activity {
         mActivity = this;
         Constant.IS_ENTERED_SDK = true;
 
-        ESPlatform.init(mActivity);
+        HDPlatform.init(mActivity);
         initView();
     }
 
@@ -123,7 +123,7 @@ public class ESUserWebActivity extends Activity {
         mWebView.setVerticalScrollBarEnabled(true);// 取消VerticalScrollBar显示
         mWebView.getSettings().setDomStorageEnabled(true);// 设置html5离线缓存可用
 
-        mWebView.addJavascriptInterface(new ESPlatform(), "ESDK");
+        mWebView.addJavascriptInterface(new HDPlatform(), "ESDK");
         mWebView.addJavascriptInterface(new JSAndroid(this), "Android");
         mWebView.setBackgroundColor(0); // 设置背景色
         mWebView.getBackground().setAlpha(0); // 设置填充透明度 范围：0-255
@@ -332,7 +332,7 @@ public class ESUserWebActivity extends Activity {
                 mWebView.post(new Runnable() {
                     @Override
                     public void run() {
-                        ESdkLog.d("重新获取oaid：" + OAID);
+                        HDSdkLog.d("重新获取oaid：" + OAID);
                         mWebView.loadUrl("javascript:EsSdkShell.esSetDeviceOaid({" + OAID + "})");
                     }
                 });
@@ -345,7 +345,7 @@ public class ESUserWebActivity extends Activity {
                 mWebView.post(new Runnable() {
                     @Override
                     public void run() {
-                        ESdkLog.d("获取customid：" + Constant.CUSTOMDEVICES + Tools.getOnlyId().toString());
+                        HDSdkLog.d("获取customid：" + Constant.CUSTOMDEVICES + Tools.getOnlyId().toString());
                         mWebView.loadUrl("javascript:EsSdkShell.esSetCustomId({" + customDeviceId + ", " + customJson + "})");
                     }
                 });

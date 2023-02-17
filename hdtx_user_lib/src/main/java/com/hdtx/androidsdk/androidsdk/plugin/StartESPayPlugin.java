@@ -15,7 +15,7 @@ import com.hdtx.androidsdk.androidsdk.ui.ESPayCenterActivity;
 import com.hdtx.androidsdk.androidsdk.ui.ESToast;
 import com.hdtx.androidsdk.androidsdk.ui.LoadingDialog;
 import com.hdtx.androidsdk.androidsdk.util.CommonUtils;
-import com.hdtx.androidsdk.androidsdk.util.ESdkLog;
+import com.hdtx.androidsdk.androidsdk.util.HDSdkLog;
 import com.hdtx.androidsdk.androidsdk.util.Md5SignUtils;
 import com.hdtx.androidsdk.androidsdk.util.ThreadPoolManager;
 
@@ -63,7 +63,7 @@ public class StartESPayPlugin {
         String token = Constant.ESDK_TOKEN;
 
         if (TextUtils.isEmpty(token)) {
-            ESdkLog.d("请先登录，token为空");
+            HDSdkLog.d("请先登录，token为空");
             return;
         }
         map.put(Constant.EASOUTGC, token);
