@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/hdtx_head_linear">
+
+    <LinearLayout
+        android:id="@+id/easou_id_HeadLayout"
+        style="@style/hdtx_head">
+
+        <LinearLayout style="@style/hdtx_linear">
+
+            <LinearLayout
+                style="@style/hdtx_linear"
+                android:layout_weight="100.0"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/hdtx_text.headtitle"
+                    android:text="@string/hdpay_userId" />
+
+                <TextView
+                    android:id="@+id/easou_userID"
+                    style="@style/hdtx_text.headtitle" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                style="@style/hdtx_linear"
+                android:layout_weight="100.0"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/hdtx_text.headtitle"
+                    android:text="@string/hdpay_productname" />
+
+                <TextView
+                    android:id="@+id/easou_id_tittleOfferName"
+                    style="@style/hdtx_text.headtitle" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                style="@style/hdtx_linear"
+                android:layout_weight="100.0"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/hdtx_text.headtitle"
+                    android:text="@string/hdpay_amount" />
+
+                <TextView
+                    android:id="@+id/easou_id_tittleMount"
+                    style="@style/hdtx_text.headtitle" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/easou_id_PriceLayout"
+                style="@style/hdtx_wrap"
+                android:gravity="bottom">
+
+                <TextView
+                    style="@style/hdtx_text.headtitle"
+                    android:text="@string/hdpay_money" />
+
+                <TextView
+                    android:id="@+id/easou_id_tittleAmt"
+                    style="@style/hdtx_text.big"
+                    android:textColor="@color/hdtx_em2_color" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

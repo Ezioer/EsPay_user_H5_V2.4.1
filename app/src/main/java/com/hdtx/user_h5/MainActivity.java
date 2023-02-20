@@ -25,14 +25,13 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hdtx.androidsdk.androidsdk.Starter;
-import com.hdtx.androidsdk.androidsdk.callback.HDSdkCallback;
-import com.hdtx.androidsdk.androidsdk.data.Constant;
-import com.hdtx.androidsdk.androidsdk.data.ESConstant;
-import com.hdtx.androidsdk.androidsdk.util.CommonUtils;
-import com.hdtx.androidsdk.androidsdk.util.HDSdkLog;
-import com.hdtx.androidsdk.androidsdk.util.Tools;
-import com.hdtx_user_h5.R;
+import com.hdtx.androidsdk.Starter;
+import com.hdtx.androidsdk.callback.HDSdkCallback;
+import com.hdtx.androidsdk.data.Constant;
+import com.hdtx.androidsdk.data.HDConstant;
+import com.hdtx.androidsdk.util.CommonUtils;
+import com.hdtx.androidsdk.util.HDSdkLog;
+import com.hdtx.androidsdk.util.Tools;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -66,18 +65,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case ESConstant.ESPAY_SUC:
+                case HDConstant.ESPAY_SUC:
                     Toast.makeText(MainActivity.this, "订单提交成功", Toast.LENGTH_SHORT).show();
                     System.out.println("计费成功");
                     break;
 
-                case ESConstant.ESPAY_FAL:
+                case HDConstant.ESPAY_FAL:
                     Toast.makeText(MainActivity.this, "计费失败", Toast.LENGTH_SHORT).show();
                     System.out.println("计费失败");
                     System.out.println("错误码：" + msg.getData().getString("errorCode"));
                     System.out.println("错误信息：" + msg.getData().getString("errorMessage"));
                     break;
-                case ESConstant.ESPAY_BACK:
+                case HDConstant.ESPAY_BACK:
                     //从支付页面返回
                     HDSdkLog.d("支付页面点击了返回或右上角的关闭按钮");
                     break;
@@ -258,13 +257,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onLogin(Map<String, String> loginResult) {
                 System.out.println("登录成功:" + loginResult);
-                String userId = loginResult.get(ESConstant.SDK_USER_ID); // 宜搜用户id
-                String userName = loginResult.get(ESConstant.SDK_USER_NAME); // 宜搜用户名
-                String token = loginResult.get(ESConstant.SDK_USER_TOKEN); // 宜搜用户token
-                String isIdentityUser = loginResult.get(ESConstant.SDK_IS_IDENTITY_USER); // 是否实名认证用户："0"不是， "1"是
-                String userBirthdate = loginResult.get(ESConstant.SDK_USER_BIRTH_DATE); // 用户出生日期，未实名认证用户默认为"0"
-                String isAdult = loginResult.get(ESConstant.SDK_IS_ADULT); // 用户是否成年："0"不是， "1"是
-                String isHoliday = loginResult.get(ESConstant.SDK_IS_HOLIDAY); // 当前日期是否国家法定节假日："0"不是， "1"是
+                String userId = loginResult.get(HDConstant.SDK_USER_ID); // 宜搜用户id
+                String userName = loginResult.get(HDConstant.SDK_USER_NAME); // 宜搜用户名
+                String token = loginResult.get(HDConstant.SDK_USER_TOKEN); // 宜搜用户token
+                String isIdentityUser = loginResult.get(HDConstant.SDK_IS_IDENTITY_USER); // 是否实名认证用户："0"不是， "1"是
+                String userBirthdate = loginResult.get(HDConstant.SDK_USER_BIRTH_DATE); // 用户出生日期，未实名认证用户默认为"0"
+                String isAdult = loginResult.get(HDConstant.SDK_IS_ADULT); // 用户是否成年："0"不是， "1"是
+                String isHoliday = loginResult.get(HDConstant.SDK_IS_HOLIDAY); // 当前日期是否国家法定节假日："0"不是， "1"是
 
                 // demo演示代码
                 String userinfo = "用户id：" + userId + "\n用户名：" + userName + "\n用户token：" + token +
@@ -287,8 +286,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 System.out.println("用户注册：" + registerResult);
 
-                String userId = registerResult.get(ESConstant.SDK_USER_ID); // 宜搜用户id
-                String userName = registerResult.get(ESConstant.SDK_USER_NAME); // 宜搜用户名
+                String userId = registerResult.get(HDConstant.SDK_USER_ID); // 宜搜用户id
+                String userName = registerResult.get(HDConstant.SDK_USER_NAME); // 宜搜用户名
             }
 
             @Override
@@ -297,18 +296,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 System.out.println("获取SDK用户信息:" + userInfoResult);
 
                 // SDK登录状态，"true"：已登录，"false"：未登录
-                String loginStatus = userInfoResult.get(ESConstant.SDK_LOGIN_STATUS);
+                String loginStatus = userInfoResult.get(HDConstant.SDK_LOGIN_STATUS);
 
                 String userId = "";
                 String userName = "";
                 String token = "";
 
                 // 仅当loginStatus为"true"才能获取到用户信息
-                if (loginStatus.equals(ESConstant.SDK_STATUS)) {
+                if (loginStatus.equals(HDConstant.SDK_STATUS)) {
 
-                    userId = userInfoResult.get(ESConstant.SDK_USER_ID); // 宜搜用户id
-                    userName = userInfoResult.get(ESConstant.SDK_USER_NAME); // 宜搜用户名
-                    token = userInfoResult.get(ESConstant.SDK_USER_TOKEN); // 宜搜用户token
+                    userId = userInfoResult.get(HDConstant.SDK_USER_ID); // 宜搜用户id
+                    userName = userInfoResult.get(HDConstant.SDK_USER_NAME); // 宜搜用户名
+                    token = userInfoResult.get(HDConstant.SDK_USER_TOKEN); // 宜搜用户token
 
                     // demo演示代码
                     String userinfo = "用户id：" + userId + "\n用户名：" + userName + "\n用户token：" + token;
@@ -325,10 +324,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 System.out.println("实名认证:" + userCertResult);
 
                 // 用户实名认证状态（指的是调用此接口时的状态，而非实名认证操作后的状态），"true"：已实名认证， "false"：未实名认证
-                String isIdentityUser = userCertResult.get(ESConstant.SDK_IS_IDENTITY_USER);
+                String isIdentityUser = userCertResult.get(HDConstant.SDK_IS_IDENTITY_USER);
 
                 // 理论上游戏cp应在用户实名认证成功后不再显示实名认证的入口，若未做相关处理，可在此处做相应的提示
-                if (isIdentityUser.equals(ESConstant.SDK_STATUS)) {
+                if (isIdentityUser.equals(HDConstant.SDK_STATUS)) {
 
                     // 已经实名认证过的用户不会再进入SDK的认证界面，直接回调此处
                     // demo演示代码
@@ -338,7 +337,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
 
                     // 未实名认证过的用户进入SDK的认证界面，认证成功后直接回调此处
-                    String userBirthdate = userCertResult.get(ESConstant.SDK_USER_BIRTH_DATE); // 宜搜用户出生日期
+                    String userBirthdate = userCertResult.get(HDConstant.SDK_USER_BIRTH_DATE); // 宜搜用户出生日期
 
                     // demo演示代码
                     Toast.makeText(MainActivity.this, "实名认证成功，用户出生日期为：" + userBirthdate, Toast.LENGTH_LONG).show();
@@ -377,14 +376,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                  * 用于数据统计，在游戏登录成功（非sdk登录成功，玩家登录成功且经过选区服及创建角色或选择角色，完全进入游戏后）后调用
                  */
                 Map<String, String> playerInfo = new HashMap<String, String>();
-                playerInfo.put(ESConstant.PLAYER_NAME, "哈哈哈哈哈哈"); // 游戏角色名称
-                playerInfo.put(ESConstant.PLAYER_LEVEL, "9"); // 游戏角色等级
-                playerInfo.put(ESConstant.PLAYER_ID, mPlayId.getText().toString()); // 游戏角色id
-                playerInfo.put(ESConstant.PLAYER_SERVER_ID, "1"); // 游戏区服id
-                playerInfo.put(ESConstant.LEVEL_NICK_NAME, "hahaha");
-                playerInfo.put(ESConstant.SERVER_NAME, "hahaha");
-                playerInfo.put(ESConstant.PROJECTMARK, "ka");
-                playerInfo.put(ESConstant.CREATEDTIME, String.valueOf(System.currentTimeMillis()));
+                playerInfo.put(HDConstant.PLAYER_NAME, "哈哈哈哈哈哈"); // 游戏角色名称
+                playerInfo.put(HDConstant.PLAYER_LEVEL, "9"); // 游戏角色等级
+                playerInfo.put(HDConstant.PLAYER_ID, mPlayId.getText().toString()); // 游戏角色id
+                playerInfo.put(HDConstant.PLAYER_SERVER_ID, "1"); // 游戏区服id
+                playerInfo.put(HDConstant.LEVEL_NICK_NAME, "hahaha");
+                playerInfo.put(HDConstant.SERVER_NAME, "hahaha");
+                playerInfo.put(HDConstant.PROJECTMARK, "ka");
+                playerInfo.put(HDConstant.CREATEDTIME, String.valueOf(System.currentTimeMillis()));
                 Starter.getInstance().startGameLoginLog(playerInfo);
 
                 // demo演示代码
@@ -479,10 +478,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mPayAmount = "6";*/
                     // 设置调用支付接口所需的Map参数
                     payInfo = new HashMap<String, String>();
-                    payInfo.put(ESConstant.MONEY, mPayAmount); // 支付金额
-                    payInfo.put(ESConstant.TRADE_ID, tradeId); // 游戏订单号
-                    payInfo.put(ESConstant.TRADE_NAME, tradeName); // 购买商品名称，根据支付金额对应修改，如6元对应600金币，98元对应9800金币
-                    payInfo.put(ESConstant.NEED_CHANNELS, needChannels); // 支付方式
+                    payInfo.put(HDConstant.MONEY, mPayAmount); // 支付金额
+                    payInfo.put(HDConstant.TRADE_ID, tradeId); // 游戏订单号
+                    payInfo.put(HDConstant.TRADE_NAME, tradeName); // 购买商品名称，根据支付金额对应修改，如6元对应600金币，98元对应9800金币
+                    payInfo.put(HDConstant.NEED_CHANNELS, needChannels); // 支付方式
 
                     /**
                      * 支付接口

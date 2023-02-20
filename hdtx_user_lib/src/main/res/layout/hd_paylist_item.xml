@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/hdtxpay_payList"
+    android:layout_width="match_parent"
+    android:layout_height="50dip">
+
+    <LinearLayout
+        style="@style/hdtxpay_paylist_tradeinfo"
+        android:layout_centerVertical="true">
+
+        <TextView
+            android:id="@+id/hdtxpay_paylist_tradename"
+            style="@style/espay_text.middle"
+            android:textColor="@color/hdtx_em1_color" />
+
+        <TextView
+            android:id="@+id/hdtxpay_paylist_tradeway"
+            style="@style/hdtx_text.small"
+            android:textColor="@color/hdtx_em4_color" />
+
+        <TextView
+            android:id="@+id/hdtxpay_paylist_tradetime"
+            style="@style/hdtx_text.small"
+            android:textColor="@color/hdtx_em4_color" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/espay_id_priceLayout"
+        style="@style/hdtx_wrap"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:lineSpacingExtra="1.0dip"
+        android:paddingRight="15dip">
+
+        <TextView
+            android:id="@+id/hdtxpay_paylist_unit"
+            style="@style/hdtx_text.big"
+            android:text="@string/hd_rmb"
+            android:textColor="@color/hdtx_em2_color" />
+
+        <TextView
+            android:id="@+id/hdtxpay_paylist_amt"
+            style="@style/hdtx_text.big"
+            android:textColor="@color/hdtx_em2_color" />
+
+        <TextView
+            android:id="@+id/hdtxpay_paylist_point"
+            style="@style/hdtx_text.big"
+            android:textColor="@color/hdtx_em2_color" />
+
+    </LinearLayout>
+
+</RelativeLayout>

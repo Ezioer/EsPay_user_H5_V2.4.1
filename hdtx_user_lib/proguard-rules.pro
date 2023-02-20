@@ -42,12 +42,12 @@
     public static final android.os.Parcelable$Creator *;
 }
 
--keep class com.easou.androidsdk.util.LogcatHelper {
+-keep class com.hdtx.androidsdk.util.LogcatHelper {
     <fields>;
     <methods>;
 }
 
--keep class com.hdtx.androidsdk.androidsdk.Starter {
+-keep class com.hdtx.androidsdk.Starter {
     <fields>;
     <methods>;
 }
@@ -58,38 +58,38 @@
 #    <methods>;
 #}
 
--keep class com.hdtx.androidsdk.androidsdk.data.ESConstant {
+-keep class com.hdtx.androidsdk.data.HDConstant {
     <fields>;
     <methods>;
 }
 
--keep class com.hdtx.androidsdk.androidsdk.data.PayItem{
+-keep class com.hdtx.androidsdk.data.PayItem{
     <fields>;
     <methods>;
 }
 
 
--keep class com.hdtx.androidsdk.androidsdk.util.FileHelper{
+-keep class com.hdtx.androidsdk.util.FileHelper{
     <fields>;
     <methods>;
 }
 
--keep class com.hdtx.androidsdk.androidsdk.sso.AuthBean {
+-keep class com.hdtx.androidsdk.sso.AuthBean {
     <fields>;
     <methods>;
 }
 
--keep class com.hdtx.androidsdk.androidsdk.sso.EucToken {
+-keep class com.hdtx.androidsdk.sso.EucToken {
     <fields>;
     <methods>;
 }
 
--keep class com.hdtx.androidsdk.androidsdk.sso.JUser {
+-keep class com.hdtx.androidsdk.sso.JUser {
     <fields>;
     <methods>;
 }
 
--keep class com.hdtx.androidsdk.androidsdk.sso.EucUCookie{
+-keep class com.hdtx.androidsdk.sso.EucUCookie{
     <fields>;
     <methods>;
 }
@@ -99,7 +99,7 @@
 native <methods>;
 }
 
--keep class com.easou.androidsdk.callback.** {*;}
+-keep class com.hdtx.androidsdk.callback.** {*;}
 
 ## Android architecture components: Lifecycle
 # LifecycleObserver's empty constructor is considered to be unused by proguard
@@ -199,7 +199,7 @@ native <methods>;
     native <methods>;
 }
 
--keepclassmembers class com.hdtx.androidsdk.androidsdk.HDPlatform {
+-keepclassmembers class com.hdtx.androidsdk.HDPlatform {
    public *;
 }
 -dontwarn com.iqiyi.qilin.trans.**

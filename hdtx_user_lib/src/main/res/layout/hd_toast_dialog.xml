@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout style="@style/hdtx_toast"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:id="@+id/easou_id_apToastImg"
+        style="@style/hdtx_iconwarn" />
+
+    <TextView
+        android:textColor="@color/hdtx_thin4_color"
+        android:layout_gravity="center_vertical"
+        android:id="@+id/easou_id_apToastText"
+        style="@style/hdtx_text.middle" />
+</LinearLayout>

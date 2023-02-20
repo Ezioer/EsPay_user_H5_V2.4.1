@@ -3,7 +3,7 @@ package com.hdtx.user_h5;
 import android.app.Application;
 import android.content.Context;
 
-import com.hdtx.androidsdk.androidsdk.Starter;
+import com.hdtx.androidsdk.Starter;
 
 public class HdApplication extends Application {
     @Override

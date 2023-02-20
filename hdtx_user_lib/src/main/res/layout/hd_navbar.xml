@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/easou_id_HeadLayout"
+    style="@style/hd_navbar">
+
+    <TextView
+        android:id="@+id/espay_navbar_title"
+        style="@style/hdtx_wrap"
+        android:textColor="@color/hdtx_em5_color"
+        android:textSize="19sp"
+        android:layout_centerInParent="true"
+        android:text="@string/hdpay_account" />
+
+    <TextView
+        android:id="@+id/espay_navbar_left"
+        style="@style/hdtx_wrap"
+        android:textColor="@color/hdtx_em5_color"
+        android:textSize="16sp"
+        android:paddingLeft="10dip"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true" />
+
+    <TextView
+        android:id="@+id/espay_navbar_right"
+        style="@style/hdtx_wrap"
+        android:textColor="@color/hdtx_em5_color"
+        android:textSize="16sp"
+        android:paddingRight="10dip"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:text="@string/hdpay_close" />
+
+
+</RelativeLayout>

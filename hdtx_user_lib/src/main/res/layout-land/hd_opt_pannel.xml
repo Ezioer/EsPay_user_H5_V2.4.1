@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/hdtx_fill.wrap_land"
+    android:background="@drawable/es_main_bg">
+
+    <include layout="@layout/hd_navbar" />
+
+    <LinearLayout
+        style="@style/hdtx_fill"
+        android:baselineAligned="false"
+        android:padding="15.0dip">
+
+        <include layout="@layout/hd_plugin_tradeinfo" />
+
+        <com.hdtx.androidsdk.androidsdk.ui.APScrollView
+            android:id="@+id/easou_id_ScrollView"
+            style="@style/hdtx_fill"
+            android:fillViewport="true">
+
+            <LinearLayout
+                style="@style/hdtx_cont_land"
+                android:paddingLeft="10.0dip"
+                android:paddingRight="10.0dip">
+
+                <LinearLayout
+                    android:id="@+id/easou_id_PayTypeLayout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40.0dip"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/hdtx_text"
+                        android:layout_marginLeft="8.0dip"
+                        android:gravity="center_vertical"
+                        android:text="@string/hd_pay_channel"
+                        android:textColor="@color/hdtx_em4_color" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/easou_id_wxChannelid"
+                    style="@style/hdtx_dash" />
+
+                <LinearLayout
+                    android:id="@+id/easou_id_RecoChannleLayout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/hdtx_drawable_itembtn"
+                    android:gravity="center_vertical">
+
+                    <GridView
+                        android:id="@+id/easou_id_ChannelReco"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:cacheColorHint="@android:color/transparent"
+                        android:fadingEdge="none"
+                        android:listSelector="@android:color/transparent" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/easou_id_wxChannelLayout"
+                    style="@style/hdtx_itemchannel">
+
+                    <ImageView
+                        android:id="@+id/easou_id_wxChannelIcon"
+                        style="@style/hdtx_wrap.wxchannel" />
+
+                    <LinearLayout
+                        style="@style/hdtx_linear"
+                        android:layout_weight="100.0"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/easou_id_wxChannelText"
+                            style="@style/hdtx_text"
+                            android:text="@string/hd_wx_pay" />
+                    </LinearLayout>
+
+                    <ImageView style="@style/hdtx_iconarrow" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/easou_id_list_title"
+                    style="@style/hdtx_dash" />
+
+                <LinearLayout
+                    android:id="@+id/easou_id_aliChannelLayout"
+                    style="@style/hdtx_itemchannel">
+
+                    <ImageView
+                        android:id="@+id/easou_id_aliChannelIcon"
+                        style="@style/hdtx_wrap.alichannel" />
+
+                    <LinearLayout
+                        style="@style/hdtx_linear"
+                        android:layout_weight="100.0"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/easou_id_aliChannelText"
+                            style="@style/hdtx_text"
+                            android:text="@string/hd_ali_pay" />
+                    </LinearLayout>
+
+                    <ImageView style="@style/hdtx_iconarrow" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/easou_id_aliChannelid"
+                    style="@style/hdtx_dash" />
+
+                <LinearLayout
+                    android:visibility="gone"
+                    android:id="@+id/easou_id_jfChannelLayout"
+                    style="@style/hdtx_itemchannel">
+
+                    <ImageView
+                        android:id="@+id/easou_id_jfChannelIcon"
+                        style="@style/hdtx_wrap.ydchannel" />
+
+                    <LinearLayout
+                        style="@style/hdtx_linear"
+                        android:layout_weight="100.0"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/easou_id_jfChannelText"
+                            style="@style/hdtx_text"
+                            android:text="@string/hd_jf_pay" />
+                    </LinearLayout>
+
+                    <ImageView style="@style/hdtx_iconarrow" />
+                </LinearLayout>
+
+                <ImageView
+                    android:visibility="gone"
+                    android:id="@+id/easou_id_jfChannelid"
+                    style="@style/hdtx_dash" />
+
+                <LinearLayout
+                    android:visibility="gone"
+                    android:id="@+id/easou_id_ylChannelLayout"
+                    style="@style/hdtx_itemchannel">
+
+                    <ImageView
+                        android:id="@+id/easou_id_ylChannelIcon"
+                        style="@style/hdtx_wrap.ylchannel" />
+
+                    <LinearLayout
+                        style="@style/hdtx_linear"
+                        android:layout_weight="100.0"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/easou_id_ylChannelText"
+                            style="@style/hdtx_text"
+                            android:text="@string/hd_yl_pay" />
+                    </LinearLayout>
+
+                    <ImageView style="@style/hdtx_iconarrow" />
+                </LinearLayout>
+
+                <ImageView
+                    android:visibility="gone"
+                    android:id="@+id/easou_id_ylChannelid"
+                    style="@style/hdtx_dash" />
+
+
+                <LinearLayout
+                    android:id="@+id/easou_id_moreChannelLayout"
+                    style="@style/hdtx_itemchannel">
+
+
+                    <LinearLayout
+                        style="@style/hdtx_linear"
+                        android:layout_weight="100.0"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_marginLeft="10dip"
+                            android:layout_marginTop="5dip"
+                            android:layout_marginBottom="5dip"
+                            style="@style/hdtx_text"
+                            android:text="@string/hd_more_pay" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/easou_id_moreChannelText"
+                        android:layout_marginRight="10dip"
+                        android:layout_marginTop="5dip"
+                        android:layout_marginBottom="5dip"
+                        style="@style/hdtx_text"
+                        android:text="@string/hd_more_pay_mark" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/easou_id_moreChannelid"
+                    style="@style/hdtx_dash" />
+
+
+                <LinearLayout
+                    android:id="@+id/easou_id_webChannelLayout"
+                    style="@style/hdtx_itemchannel"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/easou_id_webChannelIcon"
+                        style="@style/hdtx_wrap.webchannel" />
+
+                    <LinearLayout
+                        style="@style/hdtx_linear"
+                        android:layout_weight="100.0"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/easou_id_webChannelText"
+                            style="@style/hdtx_text"
+                            android:text="@string/hd_web_pay" />
+                    </LinearLayout>
+
+                    <ImageView style="@style/hdtx_iconarrow" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/easou_id_webChannelid"
+                    style="@style/hdtx_clear" />
+            </LinearLayout>
+        </com.hdtx.androidsdk.androidsdk.ui.APScrollView>
+    </LinearLayout>
+
+</LinearLayout>

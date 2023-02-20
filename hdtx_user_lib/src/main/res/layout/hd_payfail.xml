@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/hdtxpay_main">
+
+    <include layout="@layout/hd_navbar" />
+
+    <LinearLayout
+        style="@style/hdtxpay_space2"
+        android:layout_marginLeft="20.0dip"
+        android:layout_marginRight="20.0dip"
+        android:background="@drawable/hd_bg">
+
+        <TextView
+            android:id="@+id/espay_payfail_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="20.0dip"
+            android:textColor="@color/hdtx_em3_color"
+            android:textSize="16.0dip" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/espay_payfail_tradeHistory"
+        style="@style/hdtxpay_button"
+        android:text="@string/hdpay_checkHistory" />
+
+</LinearLayout>

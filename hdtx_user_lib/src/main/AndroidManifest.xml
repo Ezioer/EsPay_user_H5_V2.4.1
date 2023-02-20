@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.hdtx.user_lib"
+    package="com.hdtx.hdtx_user_lib"
     tools:ignore="ProtectedPermissions">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -137,33 +137,33 @@
             android:theme="@style/HyHeepaySDKTheme" />
 
         <activity
-            android:name="com.hdtx.androidsdk.androidsdk.ui.ESAccountCenterActivity"
+            android:name="com.hdtx.androidsdk.ui.ESAccountCenterActivity"
             android:launchMode="singleTask"
             android:screenOrientation="behind"
             android:theme="@android:style/Theme.NoTitleBar"></activity>
         <activity
-            android:name="com.hdtx.androidsdk.androidsdk.ui.ESUserWebActivity"
+            android:name="com.hdtx.androidsdk.androidsdk.ui.HDUserWebActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:excludeFromRecents="true"
             android:launchMode="singleInstance"
             android:screenOrientation="behind"
             android:taskAffinity="com.easou.usersdk"
-            android:theme="@style/easou_translucent_notitle" />
+            android:theme="@style/hdtx_translucent_notitle" />
         <activity
-            android:name="com.hdtx.androidsdk.androidsdk.ui.ESPayCenterActivity"
+            android:name="com.hdtx.androidsdk.androidsdk.ui.HDPayCenterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="behind"
             android:theme="@android:style/Theme.NoTitleBar" />
         <activity
-            android:name="com.hdtx.androidsdk.androidsdk.ui.ESPayWebActivity"
+            android:name="com.hdtx.androidsdk.androidsdk.ui.HDPayWebActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="behind"
             android:theme="@android:style/Theme.NoTitleBar" />
         <activity
-            android:name="com.hdtx.androidsdk.androidsdk.ui.ESCertAlertActivity"
+            android:name="com.hdtx.androidsdk.androidsdk.ui.HDCertAlertActivity"
             android:launchMode="singleInstance"
             android:screenOrientation="behind"
-            android:theme="@style/easou_translucent_notitle" />
+            android:theme="@style/hdtx_translucent_notitle" />
 
         <!--<activity
             android:name="com.baidu.xenv.XenvActivity"
