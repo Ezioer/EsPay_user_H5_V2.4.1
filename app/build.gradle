@@ -5,7 +5,7 @@ android {
     buildToolsVersion "30.0.3"
     defaultConfig {
 //        applicationId "com.easou.espay_user_h5"
-        applicationId "com.jddzg.yisou"
+        applicationId "com.jddzg.yisouf"
 //        applicationId "com.shuta.jdnsf"
         minSdkVersion 19
         targetSdkVersion 31

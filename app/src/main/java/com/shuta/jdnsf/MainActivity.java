@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final int PERMISSIONCODE = 1;
     private static String tradeId; // 游戏订单号
-    private static String productId = "esgame_05";
+    private static String productId = "yisou_128";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -315,14 +315,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 tradeId = System.currentTimeMillis() + "";
                 JSONObject payInfo = new JSONObject();
                 try {
-                    payInfo.put(ESConstant.PRODUCT_ID, productId); // 游戏角色名称
-                    payInfo.put(ESConstant.TRADE_ID, tradeId); // 游戏角色名称
-                    payInfo.put(ESConstant.APP_ID, "2854"); // 游戏角色名称
-                    payInfo.put(ESConstant.ACCOUNT_ID, "es.9"); // 游戏角色等级
-                    payInfo.put(ESConstant.PLAYER_SERVER_ID, "1"); // 游戏区服id
+                    payInfo.put(ESConstant.PRODUCT_ID, productId);
+                    payInfo.put(ESConstant.TRADE_ID, tradeId);
+                    payInfo.put(ESConstant.APP_ID, "2898");
+                    payInfo.put(ESConstant.ACCOUNT_ID, "es.9");
+                    payInfo.put(ESConstant.PLAYER_SERVER_ID, "1");
                     payInfo.put(ESConstant.SERVER_NAME, "hahaha");
-                    payInfo.put(ESConstant.QN, "ssaf2872_10054_001");
-                    payInfo.put(ESConstant.PLAYER_ID, mPlayId.getText().toString()); // 游戏角色id
+                    payInfo.put(ESConstant.QN, "jdau2898_10054_001");
+                    payInfo.put(ESConstant.PLAYER_ID, "111");
                     payInfo.put(ESConstant.PLAYER_NAME, "ka");
                     payInfo.put(ESConstant.PLAYER_LEVEL, "1");
                     payInfo.put(ESConstant.MONEY, 100);

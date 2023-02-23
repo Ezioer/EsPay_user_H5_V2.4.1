@@ -205,13 +205,13 @@ public class Starter {
                                         }
                                     } else {
                                         if (mPayCallBack != null) {
-                                            //验证失败
-                                            Log.d(TAG, "验证失败，核销订单失败........" + 1002);
                                             mActivity.runOnUiThread(new Runnable() {
                                                 @Override
                                                 public void run() {
                                                     int code = 1002;
                                                     if (result != null && result.getCode() != 9998) {
+                                                        //验证失败
+                                                        Log.d(TAG, "验证失败，核销订单失败........" + 1002);
                                                         mPayCallBack.onPayFail(code);
                                                     }
                                                 }
