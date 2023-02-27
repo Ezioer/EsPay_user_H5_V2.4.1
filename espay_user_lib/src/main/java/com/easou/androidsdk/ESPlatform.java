@@ -74,7 +74,7 @@ public class ESPlatform {
         Constant.ESDK_USERID = userId;
         Constant.ESDK_TOKEN = token;
         isShowWebView = false;
-        AppTimeWatcher.isLogOut = false;
+//        AppTimeWatcher.isLogOut = false;
         Map<String, String> result = new HashMap<String, String>();
         result.put(ESConstant.SDK_USER_ID, userId);
         result.put(ESConstant.SDK_USER_NAME, userName);
@@ -116,7 +116,7 @@ public class ESPlatform {
     public void showFloatIcon(final String param) {
         ESdkLog.d("showFloatIcon" + param);
         if (isBackground) {
-            AppTimeWatcher.isLogOut = true;
+//            AppTimeWatcher.isLogOut = true;
         }
         if (param.equals("1")) {
             Starter.getInstance().showFloatView();
@@ -130,7 +130,7 @@ public class ESPlatform {
      */
     @JavascriptInterface
     public void esLogout(final String param) {
-        AppTimeWatcher.isLogOut = true;
+//        AppTimeWatcher.isLogOut = true;
         Constant.ESDK_USERID = "";
         CommonUtils.saveUserId(Starter.mActivity, "");
         CommonUtils.saveIsAutoCount(Starter.mActivity, "0");
@@ -182,7 +182,7 @@ public class ESPlatform {
      */
     @JavascriptInterface
     public void esRegister(final String param) {
-        AppTimeWatcher.isLogOut = false;
+//        AppTimeWatcher.isLogOut = false;
         String userId = "";
         String userName = "";
 

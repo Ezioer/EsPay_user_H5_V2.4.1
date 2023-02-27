@@ -64,12 +64,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
-        <service
-            android:name="com.snail.antifake.jni.EmulatorCheckService"
-            android:exported="false"
-            android:process=":EmulatorCheckService" />
-
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />

@@ -8,7 +8,6 @@ import com.easou.androidsdk.http.EAPayInter;
 import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESdkLog;
 import com.easou.androidsdk.util.OaidHelper;
-import com.easou.androidsdk.util.SimulatorUtils;
 public class StartOtherPlugin {
 
     /**
@@ -55,7 +54,7 @@ public class StartOtherPlugin {
     /**
      * 获取系统是否为模拟器
      */
-    public static void checkSimulator(Context mContext) {
+   /* public static void checkSimulator(Context mContext) {
         try {
             String flag = CommonUtils.readPropertiesValue(mContext, "use_checkSimulator");
             if (!TextUtils.isEmpty(flag) && flag.equals("1")) {
@@ -67,7 +66,7 @@ public class StartOtherPlugin {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     /* ================================== appsflyer ================================== */
 
