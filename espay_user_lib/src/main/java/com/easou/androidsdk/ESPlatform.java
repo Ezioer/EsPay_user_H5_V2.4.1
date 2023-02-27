@@ -3,11 +3,9 @@ package com.easou.androidsdk;
 import android.os.Handler;
 import android.webkit.JavascriptInterface;
 
-import com.easou.androidsdk.callback.AppTimeWatcher;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.data.ESConstant;
 import com.easou.androidsdk.plugin.StartESUserPlugin;
-import com.easou.androidsdk.plugin.StartOtherPlugin;
 import com.easou.androidsdk.romutils.RomHelper;
 import com.easou.androidsdk.ui.ESUserWebActivity;
 import com.easou.androidsdk.util.CommonUtils;
