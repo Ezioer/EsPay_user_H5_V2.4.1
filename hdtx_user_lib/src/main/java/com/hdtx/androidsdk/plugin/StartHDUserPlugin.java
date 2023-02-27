@@ -228,7 +228,7 @@ public class StartHDUserPlugin {
         } else {
             if (Constant.IS_ENTERED_SDK) {
                 // 未登陆显示用户中心
-                com.hdtx.androidsdk.plugin.StartHDUserPlugin.enterH5View();
+                StartHDUserPlugin.enterH5View();
             }
         }
     }

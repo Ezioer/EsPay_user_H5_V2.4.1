@@ -16,6 +16,8 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.hdtx.androidsdk.plugin.StartHDUserPlugin;
+
 public class FloatView extends View {
 
     private DisplayMetrics displayMetrics;
@@ -59,7 +61,7 @@ public class FloatView extends View {
                 } else if (action == MotionEvent.ACTION_UP) {
                     if (isClick(firstX, firstY, lastX, lastY)) {
 
-                        com.hdtx.androidsdk.plugin.StartHDUserPlugin.showSdkView();
+                        StartHDUserPlugin.showSdkView();
 
                     } else {
                         if (mWMParams.x > 0) {

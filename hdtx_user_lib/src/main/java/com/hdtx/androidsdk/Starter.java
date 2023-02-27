@@ -13,10 +13,12 @@ import com.bytedance.hume.readapk.HumeSDK;
 import com.hdtx.androidsdk.callback.AppTimeWatcher;
 import com.hdtx.androidsdk.callback.HDSdkCallback;
 import com.hdtx.androidsdk.data.Constant;
+import com.hdtx.androidsdk.plugin.StartHDUserPlugin;
 import com.hdtx.androidsdk.plugin.StartLogPlugin;
 import com.hdtx.androidsdk.plugin.StartOtherPlugin;
 import com.hdtx.androidsdk.romutils.RomHelper;
 import com.hdtx.androidsdk.romutils.RomUtils;
+import com.hdtx.androidsdk.ui.HDUserWebActivity;
 import com.hdtx.androidsdk.util.CommonUtils;
 import com.hdtx.androidsdk.util.HDSdkLog;
 import com.hdtx.androidsdk.util.ThreadPoolManager;
@@ -104,33 +106,33 @@ public class Starter {
                 }
             }
         }, 2000);
-        com.hdtx.androidsdk.plugin.StartHDUserPlugin.loginSdk();
+        StartHDUserPlugin.loginSdk();
     }
 
     /**
      * 获取SDK用户信息
      */
     public void getUserInfo() {
-        com.hdtx.androidsdk.plugin.StartHDUserPlugin.getH5UserInfo();
+        StartHDUserPlugin.getH5UserInfo();
     }
 
     /**
      * 显示SDK实名认证页面
      */
     public void showUserCertView() {
-        com.hdtx.androidsdk.plugin.StartHDUserPlugin.getUserCertStatus();
+        StartHDUserPlugin.getUserCertStatus();
     }
 
     /**
      * 显示SDK用户中心页面
      */
     public void showUserCenter() {
-        com.hdtx.androidsdk.plugin.StartHDUserPlugin.showSdkView();
+        StartHDUserPlugin.showSdkView();
     }
 
     //退出登录
     public void logOut() {
-        com.hdtx.androidsdk.plugin.StartHDUserPlugin.changeAccount();
+        StartHDUserPlugin.changeAccount();
     }
 
     /**
@@ -139,10 +141,10 @@ public class Starter {
     public void showFloatView() {
         if (RomUtils.checkIsVivo()) {
             if (mActivity != null && RomHelper.checkPermission(mActivity)) {
-                com.hdtx.androidsdk.plugin.StartHDUserPlugin.showFloatView();
+                StartHDUserPlugin.showFloatView();
             }
         } else {
-            com.hdtx.androidsdk.plugin.StartHDUserPlugin.showFloatView();
+            StartHDUserPlugin.showFloatView();
         }
     }
 
@@ -150,7 +152,7 @@ public class Starter {
      * 隐藏SDK悬浮窗
      */
     public void hideFloatView() {
-        com.hdtx.androidsdk.plugin.StartHDUserPlugin.hideFloatView();
+        StartHDUserPlugin.hideFloatView();
     }
 
     /**
@@ -159,7 +161,7 @@ public class Starter {
      * @param playerInfo 游戏角色信息
      */
     public void startGameLoginLog(Map<String, String> playerInfo) {
-        com.hdtx.androidsdk.plugin.StartHDUserPlugin.startGameLoginLog(playerInfo);
+        StartHDUserPlugin.startGameLoginLog(playerInfo);
         //游戏角色数据上传
         StartLogPlugin.gamePlayerDataLog(playerInfo, CommonUtils.readPropertiesValue(Starter.mActivity, "isTurnExt").equals("0"));
         //游戏角色上线日志上传
@@ -167,7 +169,7 @@ public class Starter {
         info.put("bt", "1");
         info.put("deviceId", Tools.getDeviceImei(Starter.mActivity));
         info.put("userId", CommonUtils.getUserId(Starter.mActivity));
-        com.hdtx.androidsdk.ui.HDUserWebActivity.clientToJS(Constant.YSTOJS_GAME_LOGINOROUTLOG, info);
+        HDUserWebActivity.clientToJS(Constant.YSTOJS_GAME_LOGINOROUTLOG, info);
     }
 
     /**
@@ -179,7 +181,7 @@ public class Starter {
         info.put("bt", "0");
         info.put("deviceId", Tools.getDeviceImei(Starter.mActivity));
         info.put("userId", CommonUtils.getUserId(Starter.mActivity));
-        com.hdtx.androidsdk.ui.HDUserWebActivity.clientToJS(Constant.YSTOJS_GAME_LOGINOROUTLOG, info);
+        HDUserWebActivity.clientToJS(Constant.YSTOJS_GAME_LOGINOROUTLOG, info);
     }
 
 
@@ -213,7 +215,7 @@ public class Starter {
      * @param key：参数名称
      */
     public static String getPropertiesValue(Context _context, String key) {
-        return com.hdtx.androidsdk.plugin.StartHDUserPlugin.getPropValue(_context, key);
+        return StartHDUserPlugin.getPropValue(_context, key);
     }
 
     /**

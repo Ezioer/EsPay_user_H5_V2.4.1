@@ -6,6 +6,7 @@ import android.webkit.JavascriptInterface;
 import com.hdtx.androidsdk.callback.AppTimeWatcher;
 import com.hdtx.androidsdk.data.Constant;
 import com.hdtx.androidsdk.data.HDConstant;
+import com.hdtx.androidsdk.plugin.StartHDUserPlugin;
 import com.hdtx.androidsdk.plugin.StartOtherPlugin;
 import com.hdtx.androidsdk.romutils.RomHelper;
 import com.hdtx.androidsdk.util.CommonUtils;
@@ -278,7 +279,7 @@ public class HDPlatform {
 
         } else {
 
-            com.hdtx.androidsdk.plugin.StartHDUserPlugin.showUserCert();
+            StartHDUserPlugin.showUserCert();
         }
     }
 

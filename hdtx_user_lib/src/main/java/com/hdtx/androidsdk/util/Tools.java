@@ -273,15 +273,11 @@ public class Tools {
 
 
     public static String getHostName() {
-        if (Constant.DOMAIN.contains("service")) {
-            String host = Constant.HOST_NAME;
-            if (host.equals("")) {
-                host = Constant.HOST_NAME_DEFAULT;
-            }
-            return host;
-        } else {
-            return "";
+        String host = Constant.HOST_NAME;
+        if (host.equals("")) {
+            host = Constant.HOST_NAME_DEFAULT;
         }
+        return host;
     }
 
     public static String toURLEncoded(String paramString) {

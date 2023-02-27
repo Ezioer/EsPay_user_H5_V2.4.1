@@ -39,6 +39,7 @@ import android.widget.Toast;
 import com.hdtx.androidsdk.HDPlatform;
 import com.hdtx.androidsdk.data.Constant;
 import com.hdtx.androidsdk.data.HDConstant;
+import com.hdtx.androidsdk.plugin.StartHDUserPlugin;
 import com.hdtx.androidsdk.util.CommonUtils;
 import com.hdtx.androidsdk.util.HDSdkLog;
 import com.hdtx.androidsdk.util.ReplaceCallBack;
@@ -160,7 +161,7 @@ public class HDUserWebActivity extends Activity {
                 ThreadPoolManager.getInstance().addTask(new Runnable() {
                     @Override
                     public void run() {
-                        com.hdtx.androidsdk.plugin.StartHDUserPlugin.startRequestHost(mActivity, true, new ReplaceCallBack() {
+                        StartHDUserPlugin.startRequestHost(mActivity, true, new ReplaceCallBack() {
                             @Override
                             public void replaceSuccess() {
                                 if (Constant.SSO_URL.startsWith("https")) {
@@ -672,7 +673,7 @@ public class HDUserWebActivity extends Activity {
                     ThreadPoolManager.getInstance().addTask(new Runnable() {
                         @Override
                         public void run() {
-                            com.hdtx.androidsdk.plugin.StartHDUserPlugin.startRequestHost(mActivity, true, new ReplaceCallBack() {
+                            StartHDUserPlugin.startRequestHost(mActivity, true, new ReplaceCallBack() {
                                 @Override
                                 public void replaceSuccess() {
                                     if (Constant.SSO_URL.startsWith("https")) {
