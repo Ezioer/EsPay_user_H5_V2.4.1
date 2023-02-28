@@ -12,7 +12,7 @@
 
         <include layout="@layout/hd_plugin_tradeinfo" />
 
-        <com.hdtx.androidsdk.androidsdk.ui.APScrollView
+        <com.hdtx.androidsdk.ui.APScrollView
             android:id="@+id/easou_id_ScrollView"
             style="@style/hdtx_fill"
             android:fillViewport="true">
@@ -225,7 +225,7 @@
                     android:id="@+id/easou_id_webChannelid"
                     style="@style/hdtx_clear" />
             </LinearLayout>
-        </com.hdtx.androidsdk.androidsdk.ui.APScrollView>
+        </com.hdtx.androidsdk.ui.APScrollView>
     </LinearLayout>
 
 </LinearLayout>

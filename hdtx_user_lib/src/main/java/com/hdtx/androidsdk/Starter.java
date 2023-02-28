@@ -14,6 +14,7 @@ import com.hdtx.androidsdk.callback.AppTimeWatcher;
 import com.hdtx.androidsdk.callback.HDSdkCallback;
 import com.hdtx.androidsdk.data.Constant;
 import com.hdtx.androidsdk.plugin.StartHDUserPlugin;
+import com.hdtx.androidsdk.plugin.StartHdPayPlugin;
 import com.hdtx.androidsdk.plugin.StartLogPlugin;
 import com.hdtx.androidsdk.plugin.StartOtherPlugin;
 import com.hdtx.androidsdk.romutils.RomHelper;
@@ -64,7 +65,7 @@ public class Starter {
     public void pay(Activity mActivity, Map<String, String> map, Handler mHandler) {
         Starter.map = map;
         Starter.mHandler = mHandler;
-        com.hdtx.androidsdk.plugin.StartHdPayPlugin.setPayParams(mActivity, map);
+        StartHdPayPlugin.setPayParams(mActivity, map);
     }
 
 

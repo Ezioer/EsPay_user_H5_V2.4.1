@@ -6,7 +6,7 @@ import android.util.Log;
 public class HDPayLog {
 
     public static boolean DEBUGMODE = false;
-    private static String TAG = "ESPAYLOG";
+    private static String TAG = "HDPAYLOG";
 
     public static void setDebugmode(boolean DEBUGMODE) {
         HDPayLog.DEBUGMODE = DEBUGMODE;

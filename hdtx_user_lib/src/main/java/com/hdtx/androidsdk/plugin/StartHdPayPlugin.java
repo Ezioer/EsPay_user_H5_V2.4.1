@@ -110,7 +110,7 @@ public class StartHdPayPlugin {
                     intent.setClass(mActivity, HDCertAlertActivity.class);
                     mActivity.startActivity(intent);
                 } else {
-                    com.hdtx.androidsdk.plugin.StartHdPayPlugin.startPayCenterActivity(mActivity, intent.getExtras());
+                    StartHdPayPlugin.startPayCenterActivity(mActivity, intent.getExtras());
                 }
             } else if (payStatus.equals("2")) {
                 if (userType.equals("1")) {
@@ -147,7 +147,7 @@ public class StartHdPayPlugin {
                                     intent.setClass(mActivity, HDCertAlertActivity.class);
                                     mActivity.startActivity(intent);
                                 } else {
-                                    com.hdtx.androidsdk.plugin.StartHdPayPlugin.startPayCenterActivity(mActivity, intent.getExtras());
+                                    StartHdPayPlugin.startPayCenterActivity(mActivity, intent.getExtras());
                                 }
                             }
                         });
@@ -165,10 +165,10 @@ public class StartHdPayPlugin {
                     intent.setClass(mActivity, HDCertAlertActivity.class);
                     mActivity.startActivity(intent);
                 } else {
-                    com.hdtx.androidsdk.plugin.StartHdPayPlugin.startPayCenterActivity(mActivity, intent.getExtras());
+                    StartHdPayPlugin.startPayCenterActivity(mActivity, intent.getExtras());
                 }
             } else {
-                com.hdtx.androidsdk.plugin.StartHdPayPlugin.startPayCenterActivity(mActivity, intent.getExtras());
+                StartHdPayPlugin.startPayCenterActivity(mActivity, intent.getExtras());
             }
         }
     }

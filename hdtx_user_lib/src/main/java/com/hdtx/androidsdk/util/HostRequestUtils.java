@@ -15,7 +15,7 @@ public class HostRequestUtils {
         if (hasLocalHostInfo) {
             String hInfo = getLocalHostInfo(activity);
             String[] tempInfo = hInfo.split(",");
-            if (tempInfo.length == 4) {
+            if (tempInfo.length == 3) {
                 result = getResult(tempInfo);
             }
         }
@@ -29,16 +29,16 @@ public class HostRequestUtils {
 
             String[] tempInfo = result.split(",");
 
-            if (tempInfo.length == 4) {
+            if (tempInfo.length == 3) {
 
-                if (tempInfo[3].contains(".com") || tempInfo[3].contains(".cn")) {
+                if (tempInfo[2].contains(".com") || tempInfo[2].contains(".cn")) {
 
-                    Constant.HOST_NAME = tempInfo[3];
+                    Constant.HOST_NAME = tempInfo[2];
                     if (isReplaceSso) {
                         //是否需要替换个人中心的域名
-                        Constant.URL_BACKUP = tempInfo[3];
+                        Constant.URL_BACKUP = tempInfo[2];
                         //更换成功后记录有效的域名，下次直接使用新域名
-                        CommonUtils.saveReplaceSso(activity, tempInfo[3]);
+                        CommonUtils.saveReplaceSso(activity, tempInfo[2]);
                         if (callBack != null) {
                             //替换域名后需要重新加载个人中心页面
                             activity.runOnUiThread(new Runnable() {
@@ -90,17 +90,17 @@ public class HostRequestUtils {
 
         String result = HttpGroupUtils.sendGet(getFullHost(hostInfo[0]), null, null);
         String[] tempInfo1 = result.split(",");
-        if (tempInfo1.length != 4) {
+        if (tempInfo1.length != 3) {
 
             result = "";
             result = HttpGroupUtils.sendGet(getFullHost(hostInfo[1]), null, null);
 
-            String[] tempInfo2 = result.split(",");
-            if (tempInfo2.length != 4) {
+            /*String[] tempInfo2 = result.split(",");
+            if (tempInfo2.length != 3) {
 
                 result = "";
                 result = HttpGroupUtils.sendGet(getFullHost(hostInfo[2]), null, null);
-            }
+            }*/
         }
 
         return result;

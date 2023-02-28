@@ -244,7 +244,6 @@ public class StartHDUserPlugin {
      * 请求host信息
      */
     public static void startRequestHost(final Activity activity, boolean isReplaceSso, ReplaceCallBack callBack) {
-
         try {
             // 读取存储的host信息
             String jsonData = FileHelper.readFile(Constant.getHostInfoFile(activity));

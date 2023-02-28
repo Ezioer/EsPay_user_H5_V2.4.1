@@ -18,7 +18,7 @@
 
         <LinearLayout style="@style/hdtx_cont">
 
-            <com.hdtx.androidsdk.androidsdk.ui.APScrollView
+            <com.hdtx.androidsdk.ui.APScrollView
                 android:id="@+id/easou_id_ScrollView"
                 style="@style/hdtx_fill"
                 android:fillViewport="true">
@@ -222,7 +222,7 @@
                             android:scrollbars="none" />
                     </LinearLayout>
                 </LinearLayout>
-            </com.hdtx.androidsdk.androidsdk.ui.APScrollView>
+            </com.hdtx.androidsdk.ui.APScrollView>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

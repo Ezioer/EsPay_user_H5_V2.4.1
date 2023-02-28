@@ -859,13 +859,9 @@ public class CommonUtils {
     }
 
     public static int getAge(String birthDay) {
-        try {
-            String year = birthDay.substring(0, 4);
-            Calendar date = Calendar.getInstance();
-            String currentYear = String.valueOf(date.get(Calendar.YEAR));
-            return Integer.valueOf(currentYear) - Integer.valueOf(year);
-        } catch (Exception e) {
-            return 0;
-        }
+        String year = birthDay.substring(0, 4);
+        Calendar date = Calendar.getInstance();
+        String currentYear = String.valueOf(date.get(Calendar.YEAR));
+        return Integer.valueOf(currentYear) - Integer.valueOf(year);
     }
 }

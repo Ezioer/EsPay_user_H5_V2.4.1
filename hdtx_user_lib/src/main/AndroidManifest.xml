@@ -77,12 +77,14 @@
             android:process="com.payeco.android.plugin.vedio"
             android:screenOrientation="landscape" />
         <service
+            android:exported="false"
             android:name="com.snail.antifake.jni.EmulatorCheckService"
             android:process=":EmulatorCheckService" />
         <!--百度插件部分  -->
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
+            android:exported="false"
             android:process=":remote">
             <intent-filter>
                 <action android:name="com.baidu.location.service_v2.2"></action>
@@ -137,12 +139,12 @@
             android:theme="@style/HyHeepaySDKTheme" />
 
         <activity
-            android:name="com.hdtx.androidsdk.ui.ESAccountCenterActivity"
+            android:name="com.hdtx.androidsdk.ui.HDAccountCenterActivity"
             android:launchMode="singleTask"
             android:screenOrientation="behind"
             android:theme="@android:style/Theme.NoTitleBar"></activity>
         <activity
-            android:name="com.hdtx.androidsdk.androidsdk.ui.HDUserWebActivity"
+            android:name="com.hdtx.androidsdk.ui.HDUserWebActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:excludeFromRecents="true"
             android:launchMode="singleInstance"
@@ -150,17 +152,17 @@
             android:taskAffinity="com.easou.usersdk"
             android:theme="@style/hdtx_translucent_notitle" />
         <activity
-            android:name="com.hdtx.androidsdk.androidsdk.ui.HDPayCenterActivity"
+            android:name="com.hdtx.androidsdk.ui.HDPayCenterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="behind"
             android:theme="@android:style/Theme.NoTitleBar" />
         <activity
-            android:name="com.hdtx.androidsdk.androidsdk.ui.HDPayWebActivity"
+            android:name="com.hdtx.androidsdk.ui.HDPayWebActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="behind"
             android:theme="@android:style/Theme.NoTitleBar" />
         <activity
-            android:name="com.hdtx.androidsdk.androidsdk.ui.HDCertAlertActivity"
+            android:name="com.hdtx.androidsdk.ui.HDCertAlertActivity"
             android:launchMode="singleInstance"
             android:screenOrientation="behind"
             android:theme="@style/hdtx_translucent_notitle" />

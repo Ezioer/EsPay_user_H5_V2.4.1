@@ -76,13 +76,13 @@ public class HDPayCenterActivity extends BaseActivity {
 
     private List<String> mobileList = Arrays.asList("134", "135", "136", "137", "138", "139", "147", "148", "150", "151", "152", "157", "158", "159", "165", "172", "178", "182", "183", "184", "187", "188", "195", "198");
     private View mainFrameView;
-    private static com.hdtx.androidsdk.ui.HDPayCenterActivity mActivity;
+    private static HDPayCenterActivity mActivity;
     private static MHandler mHandler;
     private static Context mContext;
     public static int MAX_NUM = 30;
     public static String current_Charge_inv = "";
     JSONObject json = new JSONObject();
-    private static final String TAG = "ESPayCenterActivity";
+    private static final String TAG = "HDPayCenterActivity";
 
     public static int page; // 充值记录页数
     private static LinkedList<PayItem> payList;
@@ -215,7 +215,7 @@ public class HDPayCenterActivity extends BaseActivity {
         super.onResume();
 
         if (isShowNoti) {
-            HDToast.getInstance().ToastShow(com.hdtx.androidsdk.ui.HDPayCenterActivity.this, "短信发送后，请留意回复内容。");
+            HDToast.getInstance().ToastShow(HDPayCenterActivity.this, "短信发送后，请留意回复内容。");
             isShowNoti = false;
         }
         if (isPaying) {

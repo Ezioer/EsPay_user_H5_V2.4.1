@@ -95,9 +95,9 @@ public class Constant {
     //    public static String DOMAIN = "http://lab.pay.tjqzqkj.com";
     public static String DOMAIN = "https://pay.";
 
-    public static final String[] DOMAIN_HOST = {"domain.game.mtianshitong.com",
-            "domain.game.eayou.com",
-            "domain.game.szzkxkj.com"};
+    public static final String[] DOMAIN_HOST = {"domain.ahudong.cn",
+            "domain.game.ahudong.cn",
+            "ahudong.cn"};
 
 
     //记录游戏角色信息
