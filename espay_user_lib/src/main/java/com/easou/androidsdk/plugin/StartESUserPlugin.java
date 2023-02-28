@@ -137,8 +137,9 @@ public class StartESUserPlugin {
     public static String getNewParam() {
 
         String encryptKey = CommonUtils.readPropertiesValue(Starter.mActivity, "key");
+        String key = CommonUtils.getKey(Starter.mActivity);
         try {
-            encryptKey = AES.encrypt(encryptKey);
+            encryptKey = AES.encrypt(encryptKey, key);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

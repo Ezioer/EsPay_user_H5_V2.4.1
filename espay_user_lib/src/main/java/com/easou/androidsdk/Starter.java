@@ -568,6 +568,8 @@ public class Starter {
         try {
             ApplicationInfo info = mContext.getPackageManager().getApplicationInfo(mContext.getPackageName(), PackageManager.GET_META_DATA);
             googleID = info.metaData.getString("g_clientId");
+            CommonUtils.saveKey(mContext, Constant.unuselessdata);
+            CommonUtils.saveBase(mContext, Constant.unuselessvalue);
         } catch (PackageManager.NameNotFoundException e) {
         }
         Tools.getAndroidId(mContext);

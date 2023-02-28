@@ -18,8 +18,7 @@ public final class AESUtil {
      *
      * @return
      */
-    public static String getRandomString() {
-        String base = "abcdefghijklmnopqrstuvwxyz0123456789";
+    public static String getRandomString(String base) {
         Random random = new Random();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 16; i++) {

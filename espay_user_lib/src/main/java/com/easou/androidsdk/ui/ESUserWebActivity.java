@@ -154,35 +154,32 @@ public class ESUserWebActivity extends Activity {
             }
 
             @Override
-            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-                handler.proceed();
+            public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ESUserWebActivity.this);
+                builder.setMessage(mActivity.getApplication().getResources()
+                        .getIdentifier("es_sslerror", "string", getApplication().getPackageName()));
+                builder.setPositiveButton(mActivity.getApplication().getResources()
+                        .getIdentifier("es_ok", "string", getApplication().getPackageName()), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        handler.proceed();
+                    }
+                });
+                builder.setNegativeButton(mActivity.getApplication().getResources()
+                        .getIdentifier("es_cancel", "string", getApplication().getPackageName()), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        handler.cancel();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
 
             @Override
             public void onReceivedError(final WebView view, int errorCode, String description, String failingUrl) {
                 super.onReceivedError(view, errorCode, description, failingUrl);
-                /*ThreadPoolManager.getInstance().addTask(new Runnable() {
-                    @Override
-                    public void run() {
-                        StartESUserPlugin.startRequestHost(mActivity, true, new ReplaceCallBack() {
-                            @Override
-                            public void replaceSuccess() {
-                                if (Constant.SSO_URL.startsWith("https")) {
-                                    view.loadUrl(Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + mParams);
-                                } else {
-                                    view.loadUrl(Constant.SSO_URL + mParams);
-                                }
-                            }
 
-                            @Override
-                            public void replaceFail() {
-                                ViewParent webParentView = (ViewParent) mWebView.getParent();
-                                ((ViewGroup) webParentView).removeAllViews();
-                                showAlert();
-                            }
-                        });
-                    }
-                });*/
             }
 
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

@@ -213,6 +213,32 @@ public class CommonUtils {
         return cert;
     }
 
+    public static void saveKey(Context mContext, String cert) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("unuselessdata", cert);
+        editor.commit();
+    }
+
+    public static String getKey(Context mContext) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        String cert = settings.getString("unuselessdata", "");
+        return cert;
+    }
+
+    public static void saveBase(Context mContext, String base) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("unuselessvalue", base);
+        editor.commit();
+    }
+
+    public static String getBase(Context mContext) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        String cert = settings.getString("unuselessvalue", "");
+        return cert;
+    }
+
     public static void saveUserId(Context mContext, String id) {
         SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
         SharedPreferences.Editor editor = settings.edit();

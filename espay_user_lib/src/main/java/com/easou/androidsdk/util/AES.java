@@ -12,10 +12,8 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public final class AES {
 
-	private static String key = "ezGW6SrVAFezVftc";
-	
 	// 加密
-	public static String encrypt(String sSrc) throws Exception {
+	public static String encrypt(String sSrc, String key) throws Exception {
 		try {
 			// 判断Key是否为16位
 			if (key.length() != 16) {
@@ -38,7 +36,7 @@ public final class AES {
 	}
 
 	// 解密
-	public static String decrypt(String sSrc) throws Exception {
+	public static String decrypt(String sSrc, String key) throws Exception {
 		try {
 			// 判断Key是否为16位
 			if (key.length() != 16) {

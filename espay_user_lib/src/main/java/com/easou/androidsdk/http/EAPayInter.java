@@ -1,8 +1,10 @@
 package com.easou.androidsdk.http;
 
+import com.easou.androidsdk.Starter;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.data.ESConstant;
 import com.easou.androidsdk.util.AESUtil;
+import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESdkLog;
 import com.easou.androidsdk.util.RSAUtil;
 
@@ -82,7 +84,7 @@ public class EAPayInter {
         try {
             //AES加密数据
             if (Constant.AESKEY.isEmpty()) {
-                String aesKey = AESUtil.getRandomString();
+                String aesKey = AESUtil.getRandomString(CommonUtils.getBase(Starter.mActivity));
                 Constant.AESKEY = aesKey;
             }
             String content = AESUtil.encrypt(data.toString(), Constant.AESKEY);

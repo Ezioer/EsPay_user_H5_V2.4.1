@@ -7,6 +7,7 @@
     <string name="es_notice">提示</string>
     <string name="es_ok">確定</string>
     <string name="es_loading">加載中...請稍等</string>
+    <string name="es_sslerror">SSL authentication failed，continue？</string>
     <string name="es_go">去設置</string>
     <string name="es_allowfloat">需要您設置允許「顯示懸浮窗」的權限，否則將無法使用賬戶中心功能！</string>
     <string name="es_nomorenotice">不再提示</string>

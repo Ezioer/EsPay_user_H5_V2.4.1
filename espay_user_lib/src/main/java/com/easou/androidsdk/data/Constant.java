@@ -180,6 +180,8 @@ public static String DOMAIN = "https://service.pay.";
     public static final int YSTOJS_GAME_LOGINGOOGLE = 100;
     public static final int YSTOJS_GAME_LOGINFACEBOOK = 101;
     public static String AESKEY = "";
+    public static final String unuselessdata = "ezGW6SrVAFezVftc";
+    public static final String unuselessvalue = "abcdefghijklmnopqrstuvwxyz0123456789";
 
     public static final String MODULE = "MODULE";
     public static final String PAYCHANNEL = "payChannel";
