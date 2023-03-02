@@ -349,24 +349,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
                 break;
 
-            case R.id.btn_loginGame:
-                /**
-                 * 上传游戏登陆日志接口
-                 * 用于数据统计，在游戏登录成功（非sdk登录成功，玩家登录成功且经过选区服及创建角色或选择角色，完全进入游戏后）后调用
-                 */
-                Map<String, String> playerInfo = new HashMap<String, String>();
-                playerInfo.put(ESConstant.PLAYER_NAME, "哈哈哈哈哈哈"); // 游戏角色名称
-                playerInfo.put(ESConstant.PLAYER_LEVEL, "9"); // 游戏角色等级
-                playerInfo.put(ESConstant.PLAYER_ID, mPlayId.getText().toString()); // 游戏角色id
-                playerInfo.put(ESConstant.PLAYER_SERVER_ID, "1"); // 游戏区服id
-                playerInfo.put(ESConstant.LEVEL_NICK_NAME, "hahaha");
-                playerInfo.put(ESConstant.SERVER_NAME, "hahaha");
-                playerInfo.put(ESConstant.PROJECTMARK, "ka");
-                playerInfo.put(ESConstant.CREATEDTIME, String.valueOf(System.currentTimeMillis()));
-                Starter.getInstance().startGameLoginLog(playerInfo);
-                // demo演示代码
-                break;
-
             default:
                 break;
         }

@@ -133,7 +133,6 @@ public class Starter {
         mProductId = mPayInfo.optString(ESConstant.PRODUCT_ID);
         mPayCallBack = callback;
         mTradeId = mPayInfo.optString(ESConstant.TRADE_ID);
-        ;
         initBilling(mActivity);
     }
 
@@ -477,7 +476,6 @@ public class Starter {
         info.put("userId", CommonUtils.getUserId(Starter.mActivity));
         ESUserWebActivity.clientToJS(Constant.YSTOJS_GAME_LOGINOROUTLOG, info);
     }
-
 
     /**
      * 初始化SDK，获取oaid，判断是否为模拟器

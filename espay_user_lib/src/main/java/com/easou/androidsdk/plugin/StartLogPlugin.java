@@ -23,16 +23,6 @@ import java.util.Map;
 
 public class StartLogPlugin {
 
-
-    /**
-     * 应用启动日志
-     */
-    public static void startAppLoadLog() {
-
-        HttpLogHelper.sendHttpRequest(Constant.MAIN_URL + Tools.getHostName() + Constant.APP_LOAD_URL,
-                getSendParam(1, null, null));
-    }
-
     //上传游戏角色数据日志
     public static void gamePlayerDataLog(Map<String, String> info, boolean isTurnExt) {
         try {
@@ -117,52 +107,6 @@ public class StartLogPlugin {
     }
 
     /**
-     * 游戏订购日志
-     */
-    public static void startGameOrderLog(String money) {
-        HttpLogHelper.sendHttpRequest(Constant.MAIN_URL + Tools.getHostName() + Constant.GAME_ORDER_URL,
-                getSendParam(3, null, money));
-    }
-
-    //转端热云日志 游戏购买
-    public static void startGamePayLog(String money, String time) {
-        ReYunLogHelper.sendHttpRequest(Constant.MAIN_URL + Tools.getHostName() + Constant.REYUN_ADD_PAY_LOG,
-                getGamePayInfo(money, time));
-    }
-
-    private static JSONObject getGamePayInfo(String money, String time) {
-        JSONObject player = new JSONObject();
-        try {
-            player.put("appId", Integer.valueOf(CommonUtils.readPropertiesValue(Starter.mActivity, Constant.APP_ID)));
-            player.put("qn", CommonUtils.readPropertiesValue(Starter.mActivity, Constant.QN));
-            player.put("accountId", Constant.ESDK_USERID);
-            player.put("amount", money);
-            player.put("orderNo", "");
-            player.put("cpOrderNo", "");
-            player.put("playerId", Constant.playerId);
-            player.put("playerLevel", Constant.playerLevel);
-            player.put("playerName", Constant.playerName);
-            player.put("serverId", Constant.serverId);
-            player.put("payTime", time);
-            player.put("userId", Constant.IMEI);
-            player.put("logSource", "1");
-        } catch (Exception e) {
-
-        }
-        return player;
-    }
-
-    /**
-     * SDK登录日志
-     */
-    public static void startSdkLoginLog(String esId, String userName) {
-
-        HttpLogHelper.sendHttpRequest(Constant.MAIN_URL + Tools.getHostName() + Constant.SDK_LOGIN_URL,
-                getSendParam(4, null, null));
-    }
-
-
-    /**
      * 设置日志所需参数
      */
     private static String getSendParam(int type, Map<String, String> playerInfo, String money) {
@@ -214,30 +158,5 @@ public class StartLogPlugin {
             localException.printStackTrace();
         }
         return "";
-    }
-
-    private static String getPlayerDataParams(Map<String, String> playerInfo) {
-        String qn = CommonUtils.readPropertiesValue(Starter.mActivity, Constant.QN);
-        String param = "projectMark=" + qn.substring(0, 2) +
-                "&playerId=" + playerInfo.get(ESConstant.PLAYER_ID) +
-                "&serverId=" + playerInfo.get(ESConstant.PLAYER_SERVER_ID) +
-                "&esAppId=" + CommonUtils.readPropertiesValue(Starter.mActivity, Constant.APP_ID) +
-                "&accountId=" + Constant.ESDK_USERID +
-                "&playerLevel=" + playerInfo.get(ESConstant.PLAYER_LEVEL) +
-                "&levelNickname=" + playerInfo.get(ESConstant.LEVEL_NICK_NAME) +
-                "&playerName=" + playerInfo.get(ESConstant.PLAYER_NAME) +
-                "&serverName=" + playerInfo.get(ESConstant.SERVER_NAME) +
-                "&field1=" + Integer.valueOf(playerInfo.get("field1")) +
-                "&field2=" + Integer.valueOf(playerInfo.get("field2")) +
-                "&field3=" + Integer.valueOf(playerInfo.get("field3")) +
-                "&field4=" + Integer.valueOf(playerInfo.get("field4")) +
-                "&field5=" + Integer.valueOf(playerInfo.get("field5")) +
-                "&field6=" + playerInfo.get("field6") +
-                "&field7=" + playerInfo.get("field7") +
-                "&field8=" + playerInfo.get("field8") +
-                "&field9=" + playerInfo.get("field9") +
-                "&field10=" + playerInfo.get("field10") +
-                "&createdPlayerTime=" + playerInfo.get(ESConstant.CREATEDTIME);
-        return param;
     }
 }
