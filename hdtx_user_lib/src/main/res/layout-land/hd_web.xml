@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <WebView
-        android:id="@+id/easou_id_WebView"
+        android:id="@+id/hd_id_WebView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
 </LinearLayout>

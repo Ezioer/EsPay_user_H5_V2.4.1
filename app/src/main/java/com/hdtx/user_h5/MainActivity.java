@@ -384,7 +384,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 playerInfo.put(HDConstant.SERVER_NAME, "hahaha");
                 playerInfo.put(HDConstant.PROJECTMARK, "ka");
                 playerInfo.put(HDConstant.CREATEDTIME, String.valueOf(System.currentTimeMillis()));
-                Starter.getInstance().startGameLoginLog(playerInfo);
+//                Starter.getInstance().startGameLoginLog(playerInfo);
 
                 // demo演示代码
                 enterGame(View.VISIBLE);

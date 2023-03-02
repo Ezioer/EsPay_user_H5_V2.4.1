@@ -62,10 +62,10 @@ public class StartHdPayPlugin {
 
         String token = Constant.ESDK_TOKEN;
 
-        if (TextUtils.isEmpty(token)) {
+       /* if (TextUtils.isEmpty(token)) {
             HDSdkLog.d("请先登录，token为空");
             return;
-        }
+        }*/
         map.put(Constant.EASOUTGC, token);
 
         if (getValue(map)) {

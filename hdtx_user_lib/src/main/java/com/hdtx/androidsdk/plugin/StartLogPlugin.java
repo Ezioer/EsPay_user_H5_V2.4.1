@@ -23,16 +23,6 @@ import java.util.Map;
 
 public class StartLogPlugin {
 
-
-    /**
-     * 应用启动日志
-     */
-    public static void startAppLoadLog() {
-
-        HttpLogHelper.sendHttpRequest(Constant.MAIN_URL + Tools.getHostName() + Constant.APP_LOAD_URL,
-                getSendParam(1, null, null));
-    }
-
     //上传游戏角色数据日志
     public static void gamePlayerDataLog(Map<String, String> info, boolean isTurnExt) {
         try {

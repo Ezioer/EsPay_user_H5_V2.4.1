@@ -58,7 +58,7 @@ public class HDPayWebActivity extends Activity implements OnClickListener {
     /**
      * 回调通知
      */
-    private com.hdtx.androidsdk.ui.HDPayWebActivity mActivity;
+    private HDPayWebActivity mActivity;
     private static int back_num;
     private static String layoutType;
     private static Context mContext;
@@ -74,7 +74,7 @@ public class HDPayWebActivity extends Activity implements OnClickListener {
 
         setContentView(getApplication().getResources().getIdentifier("hd_web", "layout",
                 getApplication().getPackageName()));
-        mWebView = (WebView) findViewById(getApplication().getResources().getIdentifier("easou_id_WebView", "id",
+        mWebView = (WebView) findViewById(getApplication().getResources().getIdentifier("hd_id_WebView", "id",
                 getApplication().getPackageName()));
 
         room_url = intent.getStringExtra("room_url");

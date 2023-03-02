@@ -41,6 +41,7 @@ import com.hdtx.androidsdk.http.EAPayImp;
 import com.hdtx.androidsdk.http.EAPayInter;
 import com.hdtx.androidsdk.http.HttpAsyncTask;
 import com.hdtx.androidsdk.http.HttpAsyncTaskImp;
+import com.hdtx.androidsdk.plugin.StartHdPayPlugin;
 import com.hdtx.androidsdk.plugin.StartLogPlugin;
 import com.hdtx.androidsdk.plugin.StartOtherPlugin;
 import com.hdtx.androidsdk.util.CommonUtils;
@@ -622,7 +623,8 @@ public class HDPayCenterActivity extends BaseActivity {
             map.put(Constant.PAYCHANNEL, Constant.ZKXHGALIPAY);
         }*/
 
-        map.put(Constant.PAYCHANNEL, CommonUtils.getPayAliObject(mActivity));
+//        map.put(Constant.PAYCHANNEL, CommonUtils.getPayAliObject(mActivity));
+        map.put(Constant.PAYCHANNEL, "ALIPAY2NEW");
 
         HttpAsyncTaskImp aliTask = new HttpAsyncTaskImp(mActivity, map, easoutgc, key, FeeType.ALIPAY);
         aliTask.setDataFinishListener(new HttpAsyncTaskImp.DataFinishListener() {
@@ -699,7 +701,7 @@ public class HDPayCenterActivity extends BaseActivity {
 
 
         String room_view_url = Constant.DOMAIN + Tools.getHostName() + Constant.WEB_SERVER_URL
-                + com.hdtx.androidsdk.plugin.StartHdPayPlugin.getParam(mActivity, inputMap, key);
+                + StartHdPayPlugin.getParam(mActivity, inputMap, key);
         String back_url = returnUrl;
         Intent intent = new Intent();
         intent.putExtra("room_url", room_view_url);//

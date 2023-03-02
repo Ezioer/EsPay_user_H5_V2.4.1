@@ -6,6 +6,7 @@ import com.hdtx.androidsdk.data.Constant;
 import com.hdtx.androidsdk.data.HDConstant;
 import com.hdtx.androidsdk.data.ErrorResult;
 import com.hdtx.androidsdk.data.FeeType;
+import com.hdtx.androidsdk.ui.HDPayCenterActivity;
 import com.hdtx.androidsdk.ui.HDToast;
 import com.hdtx.androidsdk.ui.UIHelper;
 import com.hdtx.androidsdk.util.DialogerUtils;
@@ -78,7 +79,7 @@ public class HttpAsyncTaskImp extends HttpAsyncTask<Void, Void, String[]> {
         DialogerUtils.dismiss(mContext);
         JSONObject json = new JSONObject();
         if (result == null) {
-            com.hdtx.androidsdk.ui.HDPayCenterActivity.onFailedCallBack(ErrorResult.ESPAY_NETWORK_ERROR, "网络异常，请稍后重试");
+            HDPayCenterActivity.onFailedCallBack(ErrorResult.ESPAY_NETWORK_ERROR, "网络异常，请稍后重试");
             return;
         }
         if (result[1] != null
@@ -176,7 +177,7 @@ public class HttpAsyncTaskImp extends HttpAsyncTask<Void, Void, String[]> {
         } else {
             UIHelper.isClicked = false;
             if (result[0] != null && !result[0].equals("")) {
-                com.hdtx.androidsdk.ui.HDPayCenterActivity.onFailedCallBack(ErrorResult.ESPAY_NETWORK_ERROR, result[0]);
+                HDPayCenterActivity.onFailedCallBack(ErrorResult.ESPAY_NETWORK_ERROR, result[0]);
                 HDToast.getInstance().ToastShow(mContext, result[0]);
             }
         }
