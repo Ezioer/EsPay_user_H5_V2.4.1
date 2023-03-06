@@ -225,7 +225,7 @@ public class CommonUtils {
 
     public static String getPayMarkObject(Context mContext) {
         SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
-        String userid = settings.getString("paymark", "HYWZZQ");
+        String userid = settings.getString("paymark", "");
         return userid;
     }
 

@@ -217,7 +217,7 @@ public class EAPayInter {
 
     public static int isUploadPay(String userId, String appId) {
         try {
-            String url = "https://listener.eayou.com/sa/todayUser.do?accountid=" + userId + "&appid=" + appId + "&t=" + System.currentTimeMillis();
+            String url = "https://listener.ahudong.cn/sa/todayUser.do?accountid=" + userId + "&appid=" + appId + "&t=" + System.currentTimeMillis();
             String result = HdPayNetGetPost.sendGet(url, null, "");
             //数据为null，有可能是请求出错
             if (result == null) {
@@ -238,7 +238,7 @@ public class EAPayInter {
 
     public static int getOnlyDeviceId() {
         try {
-            String url = "https://egamec.eayou.com/deviceInfo/getCustomDeviceId";
+            String url = "https://egamec.ahudong.cn/deviceInfo/getCustomDeviceId";
             JSONObject map = Tools.getOnlyId();
             JSONObject object = new JSONObject();
             object.put("deviceInfo", map);
@@ -264,11 +264,11 @@ public class EAPayInter {
     public static String getOaidPerFromNet(String applicationId) {
         try {
             HDSdkLog.c("certnet----->", applicationId);
-            String url = "https://egamec.eayou.com/cert/getCertPem";
+            String url = "https://egamec.ahudong.cn/cert/getCertPem";
             JSONObject object = new JSONObject();
             object.put("name", applicationId);
             BaseResponse result = getBaseResponse(url, object);
-            if (result.getCode() == 1 && result.getData() != null) {
+            if (result != null && result.getCode() == 1 && result.getData() != null) {
                 JSONObject custom = new JSONObject(result.getData().toString());
                 String cert = custom.getString("cert");
                 HDSdkLog.c("certnet----->", cert);

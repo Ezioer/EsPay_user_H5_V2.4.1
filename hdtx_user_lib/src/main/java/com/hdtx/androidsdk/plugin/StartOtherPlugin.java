@@ -219,7 +219,9 @@ public class StartOtherPlugin {
      */
     public static void getOaid(final Context mContext, String cert) {
         HDSdkLog.d("调用了联盟SDK获取oaid接口");
-
+        if (cert.isEmpty()) {
+            return;
+        }
         try {
             OaidHelper helper = new OaidHelper(new OaidHelper.AppIdsUpdater() {
                 @Override

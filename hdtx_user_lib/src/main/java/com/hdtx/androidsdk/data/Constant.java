@@ -92,8 +92,7 @@ public class Constant {
     public static String HOST_NAME = "";
     public static String HOST_NAME_DEFAULT = "ahudong.cn";
 
-    //    public static String DOMAIN = "http://lab.pay.tjqzqkj.com";
-    public static String DOMAIN = "https://pay.";
+    public static String DOMAIN = "http://pay.";
 
     public static final String[] DOMAIN_HOST = {"domain.ahudong.cn",
             "domain.game.ahudong.cn",
@@ -111,9 +110,7 @@ public class Constant {
     /**
      * 热云日志URL
      */
-    public static final String MAIN_URL = "https://reyun.";
-//    public static final String MAIN_URL = "http://lab.reyun.tjqzqkj.com";
-//    public static final String MAIN_URL = "http://192.168.1.139:8083";
+    public static final String MAIN_URL = "http://reyun.";
 
     /**
      * 上传日志URL
