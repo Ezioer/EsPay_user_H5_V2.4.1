@@ -181,15 +181,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    mSwitch.setText("线上环境");
-                    Constant.DOMAIN = Constant.domain_release;
-                    Constant.SSO_URL = Constant.sso_release;
-                } else {
-                    mSwitch.setText("测试环境");
-                    Constant.DOMAIN = Constant.domain_test;
-                    Constant.SSO_URL = Constant.sso_test;
-                }
             }
         });
     }

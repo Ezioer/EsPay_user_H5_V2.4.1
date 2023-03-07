@@ -63,33 +63,7 @@
     <methods>;
 }
 
--keep class com.easou.androidsdk.data.PayItem{
-    <fields>;
-    <methods>;
-}
-
-
 -keep class com.easou.androidsdk.util.FileHelper{
-    <fields>;
-    <methods>;
-}
-
--keep class com.easou.androidsdk.sso.AuthBean {
-    <fields>;
-    <methods>;
-}
-
--keep class com.easou.androidsdk.sso.EucToken {
-    <fields>;
-    <methods>;
-}
-
--keep class com.easou.androidsdk.sso.JUser {
-    <fields>;
-    <methods>;
-}
-
--keep class com.easou.androidsdk.sso.EucUCookie{
     <fields>;
     <methods>;
 }

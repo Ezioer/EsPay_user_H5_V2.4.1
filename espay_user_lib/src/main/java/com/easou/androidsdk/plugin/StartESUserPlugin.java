@@ -1,6 +1,5 @@
 package com.easou.androidsdk.plugin;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Looper;
@@ -13,16 +12,12 @@ import com.easou.androidsdk.ui.FloatView;
 import com.easou.androidsdk.util.AES;
 import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESdkLog;
-import com.easou.androidsdk.util.FileHelper;
-import com.easou.androidsdk.util.HostRequestUtils;
 import com.easou.androidsdk.util.NetworkUtils;
-import com.easou.androidsdk.util.ReplaceCallBack;
 import com.easou.androidsdk.util.ThreadPoolManager;
 import com.easou.androidsdk.util.Tools;
 
 import java.net.URLEncoder;
 import java.util.HashMap;
-import java.util.Map;
 
 public class StartESUserPlugin {
 
@@ -30,9 +25,6 @@ public class StartESUserPlugin {
      * 登陆接口
      */
     public static void loginSdk() {
-       /* if (CommonUtils.readPropertiesValue(Starter.mActivity, "isTurnExt").equals("0")) {
-            Constant.isTurnExt = 1;
-        }*/
         //设置支付渠道
         ThreadPoolManager.getInstance().addTask(new Runnable() {
             @Override
@@ -40,7 +32,6 @@ public class StartESUserPlugin {
                 Looper.prepare();
                 if (!Constant.IS_LOGINED) {
                     startH5Login();
-//                    startRequestHost(Starter.mActivity, false, null);
                 }
                 Looper.loop();
             }
@@ -70,14 +61,6 @@ public class StartESUserPlugin {
      */
     public static void getH5UserInfo() {
         ESUserWebActivity.clientToJS(Constant.YSTOJS_GET_USERINFO, null);
-    }
-
-    /**
-     * 每隔5分钟去请求服务器更新用户游玩时长
-     */
-    public static void postTime() {
-        ESUserWebActivity.clientToJS(Constant.YSTOJS_UPLOAD_TIME, null);
-        ESUserWebActivity.clientToJS(Constant.YSTOJS_GAME_INTOFOREGROUND, null);
     }
 
     //登录google账号
@@ -120,15 +103,6 @@ public class StartESUserPlugin {
     public static void changeAccount() {
         showSdkView();
         ESUserWebActivity.clientToJS(Constant.YSTOJS_GAME_LOGOUT, null);
-    }
-
-    /**
-     * 游戏登录日志
-     */
-    public static void startGameLoginLog(Map<String, String> playerInfo) {
-        StartLogPlugin.startGameLoginLog(playerInfo, CommonUtils.readPropertiesValue(Starter.mActivity, "isTurnExt").equals("0"));
-        //传游戏角色给h5
-//		ESUserWebActivity.clientToJS(Constant.YSTOJS_GAME_LOGIN_LOG, playerInfo);
     }
 
     /**
@@ -184,11 +158,6 @@ public class StartESUserPlugin {
         if (Starter.mActivity.getPackageName().contains("fhzj")) {
             param = param + "&sdkType=fhzj";
         }
-        //红包版本需要加红包，非红包版本注释掉就可以
-//        param = param + "&sdkVersion=hongbao";
-       /* if (CommonUtils.getTestMoney(Starter.mActivity) == 1) {
-            param = param + "&sdkVersion=hongbao";
-        }*/
         ESdkLog.d("上传的oaid：" + Constant.OAID);
         System.out.println("param：" + param);
         return param;
@@ -214,28 +183,6 @@ public class StartESUserPlugin {
      */
     public static void hideFloatView() {
         FloatView.close();
-    }
-
-    /**
-     * 请求host信息
-     */
-    public static void startRequestHost(final Activity activity, boolean isReplaceSso, ReplaceCallBack callBack) {
-
-        try {
-            // 读取存储的host信息
-            String jsonData = FileHelper.readFile(Constant.getHostInfoFile(activity));
-            if (jsonData == null) {
-                jsonData = FileHelper.readFile(Constant.getSDHostInfoFile());
-            }
-
-            if (jsonData == null || jsonData.equals("")) {
-                HostRequestUtils.requestHostInfo(activity, false, isReplaceSso, callBack);
-            } else {
-                HostRequestUtils.requestHostInfo(activity, true, isReplaceSso, callBack);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /**

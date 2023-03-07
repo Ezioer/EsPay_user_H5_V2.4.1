@@ -1,6 +1,5 @@
 package com.easou.androidsdk.util;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
@@ -21,12 +20,8 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import androidx.collection.ArrayMap;
-
 import com.easou.androidsdk.Starter;
 import com.easou.androidsdk.data.Constant;
-import com.easou.androidsdk.sso.AuthBean;
-import com.easou.androidsdk.ui.UIHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,18 +39,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CommonUtils {
-
-    public static AuthBean getAuthBean(Context context, String appid) {
-        String gsonStr = FileHelper
-                .readFile(Constant.getLoginInfoFile(context));
-        if (null == gsonStr || "".equals(gsonStr)) {
-            gsonStr = FileHelper.readFile(Constant.getSLoginInfoFile(appid));
-            if (null == gsonStr || "".equals(gsonStr))
-                return null;
-        }
-        AuthBean bean = GsonUtil.fromJson(gsonStr, AuthBean.class);
-        return bean;
-    }
 
     public static String getTokenFromSD(String appid) {
         try {
@@ -273,36 +256,6 @@ public class CommonUtils {
             return false;
         }
     }
-
-    /**
-     * 判断当前是否有网络
-     *
-     * @param context
-     * @return
-     */
-    public static boolean isNetworkUseable(Context context) {
-        // ConnectivityManager cm = (ConnectivityManager) context
-        // .getSystemService(Context.CONNECTIVITY_SERVICE);
-        // if (cm == null)
-        // return false;
-        // NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        // if (networkInfo != null && networkInfo.isAvailable() &&
-        // networkInfo.isConnectedOrConnecting()) {
-        // return true;
-        // }
-        // return false;
-
-        ConnectivityManager cm = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm == null)
-            return false;
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        if (networkInfo == null || !networkInfo.isAvailable()) {
-            return false;
-        }
-        return true;
-    }
-
     /**
      * 是否挂载了sdcard
      *
@@ -394,27 +347,6 @@ public class CommonUtils {
             @Override
             public void run() {
                 Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    /**
-     * 显示自定义位置的Toast
-     *
-     * @param context
-     * @param msg
-     * @param handler
-     * @param gravity
-     */
-    public static void postShowMsg(final Context context, final String msg,
-                                   Handler handler, final int gravity) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast t = Toast.makeText(context, msg, Toast.LENGTH_SHORT);
-                t.setView(UIHelper.createToastView(context, msg));
-                t.setGravity(gravity, 0, 50);
-                t.show();
             }
         });
     }

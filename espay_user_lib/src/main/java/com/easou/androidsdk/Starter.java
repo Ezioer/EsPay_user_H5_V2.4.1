@@ -39,16 +39,13 @@ import com.easou.androidsdk.data.ESConstant;
 import com.easou.androidsdk.http.BaseResponse;
 import com.easou.androidsdk.http.EAPayInter;
 import com.easou.androidsdk.plugin.StartESUserPlugin;
-import com.easou.androidsdk.plugin.StartLogPlugin;
 import com.easou.androidsdk.romutils.RomHelper;
 import com.easou.androidsdk.romutils.RomUtils;
-import com.easou.androidsdk.ui.ESUserWebActivity;
 import com.easou.androidsdk.util.AESUtil;
 import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESdkLog;
 import com.easou.androidsdk.util.ThreadPoolManager;
 import com.easou.androidsdk.util.Tools;
-import com.easou.espay_user_lib.R;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -72,9 +69,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class Starter {
@@ -83,9 +78,6 @@ public class Starter {
     public static Activity mActivity;
 
     public volatile static Starter mSingleton = null;
-    //    private SignInClient oneTapClient;
-//    private BeginSignInRequest signInRequest;
-//    private BeginSignInRequest signUpRequest;
     private String mProductId = "";
     private String mTradeId = "";
     private ESdkPayCallback mPayCallBack;
@@ -93,10 +85,7 @@ public class Starter {
     private BillingClient billingClient;
     private CallbackManager callbackManager;
     public static final String TAG = "GoogleAndFBLog";
-    //    public static final int REQ_ONE_TAP = 10;
-//    public static final int REQ_ONE_TAP2 = 11;
     public static final int SIGN_LOGIN = 13;
-    //    private static final String AF_DEV_KEY = "CKrrrbztntPYFpSXe86MJb";
     private static String googleID = "364910254975-u909v8v674q8p341kr0k7lg1l7lh92hm.apps.googleusercontent.com";
     private static String ADJUSTKEY = "g51ej45btr7k";
     private AppEventsLogger logger = null;
@@ -379,16 +368,6 @@ public class Starter {
      * 宜搜SDK登陆接口
      */
     public void login(final Activity activity, ESdkCallback mCallback) {
-       /* ThreadPoolManager.getInstance().addTask(new Runnable() {
-            @Override
-            public void run() {
-                Looper.prepare();
-                StartOtherPlugin.getCert(activity);
-                Looper.loop();
-            }
-        });*/
-      /*  AppsFlyerLib.getInstance().setCollectIMEI(true);
-        AppsFlyerLib.getInstance().setCollectAndroidID(true);*/
         Starter.mCallback = mCallback;
         Starter.mActivity = activity;
         // 获取deviceID
@@ -444,45 +423,6 @@ public class Starter {
         StartESUserPlugin.hideFloatView();
     }
 
-    /**
-     * 上传游戏登录日志
-     *
-     * @param playerInfo 游戏角色信息
-     */
-    @Deprecated
-    public void startGameLoginLog(Map<String, String> playerInfo) {
-        try {
-            StartESUserPlugin.startGameLoginLog(playerInfo);
-            //游戏角色数据上传
-            StartLogPlugin.gamePlayerDataLog(playerInfo, CommonUtils.readPropertiesValue(Starter.mActivity, "isTurnExt").equals("0"));
-            //游戏角色上线日志上传
-            Map info = new HashMap();
-            info.put("bt", "1");
-            info.put("deviceId", Constant.IMEI);
-            info.put("userId", Constant.ESDK_USERID);
-            ESUserWebActivity.clientToJS(Constant.YSTOJS_GAME_LOGINOROUTLOG, info);
-        } catch (Exception e) {
-        }
-    }
-
-    /**
-     * 上传游戏下线日志
-     */
-    public void startGameLogoutLog() {
-        //游戏角色下线日志上传
-        Map info = new HashMap();
-        info.put("bt", "0");
-        info.put("deviceId", Tools.getDeviceImei(Starter.mActivity));
-        info.put("userId", CommonUtils.getUserId(Starter.mActivity));
-        ESUserWebActivity.clientToJS(Constant.YSTOJS_GAME_LOGINOROUTLOG, info);
-    }
-
-    /**
-     * 初始化SDK，获取oaid，判断是否为模拟器
-     */
-    public void initEntry(Context mContext) {
-//        StartOtherPlugin.checkSimulator(mContext);
-    }
 
     /**
      * 从Properties文件中读取配置信息
@@ -497,41 +437,6 @@ public class Starter {
         if (callbackManager != null) {
             callbackManager.onActivityResult(requestCode, resultCode, data);
         }
-        /*if (requestCode == REQ_ONE_TAP) {
-            try {
-                SignInCredential credential = oneTapClient.getSignInCredentialFromIntent(data);
-                String idToken = credential.getGoogleIdToken();
-                String username = credential.getId();
-                String password = credential.getPassword();
-                if (idToken != null) {
-                    // Got an ID token from Google. Use it to authenticate
-                    // with your backend.
-                    Log.d(TAG, "Got ID token.");
-                } else if (password != null) {
-                    // Got a saved username and password. Use them to authenticate
-                    // with your backend.
-                    Log.d(TAG, "Got password.");
-                }
-            } catch (ApiException e) {
-                if (e.getStatusCode() == CommonStatusCodes.CANCELED) {
-                    //用户拒绝一键登录
-                    Log.d(TAG, "用户拒绝一键登录");
-                }
-            }
-        } else if (requestCode == REQ_ONE_TAP2) {
-            try {
-                SignInCredential credential = oneTapClient.getSignInCredentialFromIntent(data);
-                String idToken = credential.getGoogleIdToken();
-                if (idToken != null) {
-                    // Got an ID token from Google. Use it to authenticate
-                    // with your backend.
-                    Log.d(TAG, "Got ID token.");
-                }
-            } catch (ApiException e) {
-                //用户拒绝一键创建账号，使用常规账号创建
-                Log.d(TAG, "用户拒绝一键创建账号，使用常规账号创建");
-            }
-        } else*/
         if (requestCode == SIGN_LOGIN) {
             Log.d(TAG, "setActivityResultGoogle");
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
@@ -571,40 +476,16 @@ public class Starter {
         } catch (PackageManager.NameNotFoundException e) {
         }
         Tools.getAndroidId(mContext);
-      /*  if (CommonUtils.readPropertiesValue(mContext, "adjust").equals("0")) {
-            Constant.adjust = false;
-        } else {
-            Constant.adjust = true;*/
         String environment = AdjustConfig.ENVIRONMENT_PRODUCTION;
         AdjustConfig config = new AdjustConfig(mContext, ADJUSTKEY, environment);
         config.setLogLevel(LogLevel.VERBOSE);
         config.setSendInBackground(true);
         Adjust.onCreate(config);
         ((Application) mContext).registerActivityLifecycleCallbacks(activityLifecycleCallbacks);
-//        }
-      /*  if (CommonUtils.readPropertiesValue(mContext, "facebook").equals("0")) {
-            Constant.facebook = false;
-        } else {
-            Constant.facebook = true;*/
         logger = AppEventsLogger.newLogger(mContext);
         FacebookSdk.setIsDebugEnabled(true);
         FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
-      /*  }
-        if (CommonUtils.readPropertiesValue(mContext, "firebase").equals("0")) {
-            Constant.firebase = false;
-        } else {
-            Constant.firebase = true;*/
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(mContext);
-//        }
-      /*  AppsFlyerLib.getInstance().waitForCustomerUserId(true);
-        AppsFlyerLib.getInstance().init(AF_DEV_KEY, null, mContext);
-        AppsFlyerLib.getInstance().start(mContext);
-        String cuid = CommonUtils.readPropertiesValue(mContext, Constant.CUID);
-        //        AppsFlyerLib.getInstance().setCustomerUserId(cuid);
-//        String cuid = AppsFlyerProperties.getInstance().getString(AppsFlyerProperties.APP_USER_ID);
-//        AppTimeWatcher.getInstance().registerWatcher((Application) mContext);
-        AppsFlyerLib.getInstance().setDebugLog(true);
-        AppsFlyerLib.getInstance().setCustomerIdAndLogSession(cuid, mContext);*/
     }
 
     private Application.ActivityLifecycleCallbacks activityLifecycleCallbacks = new Application.ActivityLifecycleCallbacks() {
@@ -692,98 +573,11 @@ public class Starter {
                     .build();
             mGoogleSignInClient = GoogleSignIn.getClient(mActivity, gso);
         }
-        /*mGoogleSignInClient.silentSignIn()
-                .addOnCompleteListener(mActivity,
-                        new OnCompleteListener<GoogleSignInAccount>() {
-                            @Override
-                            public void onComplete(@NonNull Task<GoogleSignInAccount> task) {
-                                if (task != null) {
-                                    GoogleSignInAccount account = null;
-                                    try {
-                                        account = task.getResult(ApiException.class);
-                                        String idToken = account.getIdToken();
-                                        Log.d(TAG, "用户已登录google账号--->" + idToken);
-//                                        StartESUserPlugin.loginGoogle(idToken);
-                                    } catch (ApiException e) {
-                                        beginLogin();
-                                    }
-                                } else {
-                                    beginLogin();
-                                }
-                            }
-                        });
-        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(mActivity);
-        oneTapClient = Identity.getSignInClient(mActivity);
-        signInRequest = BeginSignInRequest.builder()
-                .setPasswordRequestOptions(BeginSignInRequest.PasswordRequestOptions.builder()
-                        .setSupported(true)
-                        .build())
-                .setGoogleIdTokenRequestOptions(BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-                        .setSupported(true)
-                        // Your server's client ID, not your Android client ID.
-                        .setServerClientId("846876477691-gjefh1ll8fdq72pb5htugj4459kls3nr.apps.googleusercontent.com")
-                        // Only show accounts previously used to sign in.
-                        .setFilterByAuthorizedAccounts(true)
-                        .build())
-                // Automatically sign in when exactly one credential is retrieved.
-                .setAutoSelectEnabled(true)
-                .build();
-        signUpRequest = BeginSignInRequest.builder()
-                .setGoogleIdTokenRequestOptions(BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-                        .setSupported(true)
-                        // Your server's client ID, not your Android client ID.
-                        .setServerClientId("846876477691-gjefh1ll8fdq72pb5htugj4459kls3nr.apps.googleusercontent.com")
-                        // Show all accounts on the device.
-                        .setFilterByAuthorizedAccounts(false)
-                        .build())
-                .build();*/
     }
 
     public void initGoogleLogin(boolean isBind) {
         isBindGoogle = isBind;
         mActivity.startActivityForResult(getGoogleIntent(), SIGN_LOGIN);
-        /*oneTapClient.beginSignIn(signInRequest)
-                .addOnSuccessListener(mActivity, new OnSuccessListener<BeginSignInResult>() {
-                    @Override
-                    public void onSuccess(BeginSignInResult result) {
-                        try {
-                            mActivity.startIntentSenderForResult(
-                                    result.getPendingIntent().getIntentSender(), REQ_ONE_TAP,
-                                    null, 0, 0, 0);
-                        } catch (IntentSender.SendIntentException e) {
-                            Log.e(TAG, "Couldn't start One Tap UI: " + e.getLocalizedMessage());
-                        }
-                    }
-                })
-                .addOnFailureListener(mActivity, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // No saved credentials found. Launch the One Tap sign-up flow, or
-                        // do nothing and continue presenting the signed-out UI.
-                        Log.d(TAG, "Couldn't find credentials:" + e.getLocalizedMessage());
-                        //使用一键创建账号
-                        oneTapClient.beginSignIn(signUpRequest)
-                                .addOnSuccessListener(mActivity, new OnSuccessListener<BeginSignInResult>() {
-                                    @Override
-                                    public void onSuccess(BeginSignInResult result) {
-                                        try {
-                                            mActivity.startIntentSenderForResult(
-                                                    result.getPendingIntent().getIntentSender(), REQ_ONE_TAP,
-                                                    null, 0, 0, 0);
-                                        } catch (IntentSender.SendIntentException e) {
-                                            Log.e(TAG, "Couldn't start One Tap UI: " + e.getLocalizedMessage());
-                                        }
-                                    }
-                                })
-                                .addOnFailureListener(mActivity, new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        // No Google Accounts found. Just continue presenting the signed-out UI.
-                                        Log.d(TAG, "Couldnt find google account" + e.getLocalizedMessage());
-                                    }
-                                });
-                    }
-                });*/
     }
 
     public Intent getGoogleIntent() {
@@ -814,70 +608,6 @@ public class Starter {
                     }
                 });
     }
-
-    /*//appsflyer平台接入接口
-
-    //添加到心愿清单
-    public void appsFlyerAddToWishList(float price, String id) {
-        StartOtherPlugin.appsFlyerAddToWishList(5.0f, "1321");
-    }
-
-    //添加到购物车
-    public void appsFlyerAddToCar(float price, String id) {
-        StartOtherPlugin.appsFlyerAddToCar(6.0f, "111");
-    }
-
-    //广告点击
-    public void appsFlyerADClick(String type) {
-        //banner, screen,video,dialog
-        StartOtherPlugin.appsFlyerADClick(type);
-    }
-
-    //更新
-    public void appsFlyerUpdate(String oldVersion, String newVersion) {
-        StartOtherPlugin.appsFlyerUpdate("1.0", "2.0");
-    }
-
-    //分享
-    public void appsFlyerShare(String name, String platform) {
-        StartOtherPlugin.appsFlyerShare("分享个好玩的游戏", "google");
-    }
-
-    //搜索
-    public void appsFlyerSearch(String key) {
-        StartOtherPlugin.appsFlyerSearch("搜索内容");
-    }
-
-    //邀请
-    public void appsFlyerInvite(String content) {
-        StartOtherPlugin.appsFlyerInvite("邀请你来玩游戏");
-    }
-
-    //从通知中打开app
-    public void appsFlyerOFPN(String id) {
-        StartOtherPlugin.appsFlyerOFPN("111");
-    }
-
-    //完成教程
-    public void appsFlyerCompTutorial() {
-        StartOtherPlugin.appsFlyerCompTutorial();
-    }
-
-    //游戏通关
-    public void appsFlyerAchievedLevel(String level) {
-        StartOtherPlugin.appsFlyerAchievedLevel("7");
-    }
-
-    //成就解锁
-    public void appsFlyerAchUnlock(String id, String name) {
-        StartOtherPlugin.appsFlyerAchUnlock("111", "达到宗师级别");
-    }
-
-    //广告浏览
-    public void appsFlyerADView(String type) {
-        //banner, screen,video,dialog
-        StartOtherPlugin.appsFlyerADView(type);
-    }*/
 
     //facebook媒体事件接入
 

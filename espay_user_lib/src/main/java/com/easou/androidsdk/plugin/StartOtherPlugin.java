@@ -49,24 +49,6 @@ public class StartOtherPlugin {
             getOaid(context, cert);
         }
     }
-    /* ================================== 模拟器判断 ================================== */
-
-    /**
-     * 获取系统是否为模拟器
-     */
-   /* public static void checkSimulator(Context mContext) {
-        try {
-            String flag = CommonUtils.readPropertiesValue(mContext, "use_checkSimulator");
-            if (!TextUtils.isEmpty(flag) && flag.equals("1")) {
-                return;
-            }
-
-            ESdkLog.d("调用了是否为模拟器接口");
-            SimulatorUtils.checkSimulator(mContext);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
 
     /* ================================== appsflyer ================================== */
 
