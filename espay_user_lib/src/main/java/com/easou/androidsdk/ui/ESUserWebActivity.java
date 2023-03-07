@@ -135,7 +135,9 @@ public class ESUserWebActivity extends Activity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mWebView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
-
+      /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mWebView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
+        }*/
         mWebView.requestFocus();
         mWebView.requestFocusFromTouch();
 
@@ -156,17 +158,24 @@ public class ESUserWebActivity extends Activity {
             @Override
             public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(ESUserWebActivity.this);
-                builder.setMessage(mActivity.getApplication().getResources()
-                        .getIdentifier("es_sslerror", "string", getApplication().getPackageName()));
-                builder.setPositiveButton(mActivity.getApplication().getResources()
-                        .getIdentifier("es_ok", "string", getApplication().getPackageName()), new DialogInterface.OnClickListener() {
+                builder.setMessage(mActivity.getApplication().getResources().
+                        getIdentifier("es_sslerror", "string", getApplication().
+                                getPackageName()));
+                builder.setPositiveButton(mActivity.getApplication().
+                        getResources().
+                        getIdentifier("es_ok", "string", getApplication().
+
+                                getPackageName()), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         handler.proceed();
                     }
                 });
-                builder.setNegativeButton(mActivity.getApplication().getResources()
-                        .getIdentifier("es_cancel", "string", getApplication().getPackageName()), new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(mActivity.getApplication().
+                        getResources().
+                        getIdentifier("es_cancel", "string", getApplication().
+
+                                getPackageName()), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         handler.cancel();
@@ -197,7 +206,9 @@ public class ESUserWebActivity extends Activity {
                 }
                 return super.shouldOverrideUrlLoading(view, url);
             }
-        };
+        }
+
+        ;
 
         Constant.ua = mWebView.getSettings().getUserAgentString();
         mWebView.setWebViewClient(mWebViewClient);
@@ -757,6 +768,7 @@ public class ESUserWebActivity extends Activity {
 
             return true;
         }
+
     }
 
     /**
