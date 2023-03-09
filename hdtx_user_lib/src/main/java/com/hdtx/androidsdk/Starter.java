@@ -107,7 +107,7 @@ public class Starter {
                 }
             }
         }, 2000);
-//        StartHDUserPlugin.loginSdk();
+        StartHDUserPlugin.loginSdk();
     }
 
     /**

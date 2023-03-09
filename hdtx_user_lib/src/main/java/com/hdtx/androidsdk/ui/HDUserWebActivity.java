@@ -164,7 +164,7 @@ public class HDUserWebActivity extends Activity {
                         StartHDUserPlugin.startRequestHost(mActivity, true, new ReplaceCallBack() {
                             @Override
                             public void replaceSuccess() {
-                                if (Constant.SSO_URL.startsWith("https")) {
+                                if (Constant.SSO_URL.startsWith("http")) {
                                     view.loadUrl(Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + mParams);
                                 } else {
                                     view.loadUrl(Constant.SSO_URL + mParams);
@@ -206,7 +206,7 @@ public class HDUserWebActivity extends Activity {
         if (!TextUtils.isEmpty(CommonUtils.getIsReplaceSso(mActivity))) {
             Constant.URL_BACKUP = url_backup;
         }
-        if (Constant.SSO_URL.startsWith("https")) {
+        if (Constant.SSO_URL.startsWith("http")) {
             mWebView.loadUrl(Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + mParams);
         } else {
             mWebView.loadUrl(Constant.SSO_URL + mParams);
@@ -676,7 +676,7 @@ public class HDUserWebActivity extends Activity {
                             StartHDUserPlugin.startRequestHost(mActivity, true, new ReplaceCallBack() {
                                 @Override
                                 public void replaceSuccess() {
-                                    if (Constant.SSO_URL.startsWith("https")) {
+                                    if (Constant.SSO_URL.startsWith("http")) {
                                         view.loadUrl(Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + mParams);
                                     } else {
                                         view.loadUrl(Constant.SSO_URL + mParams);
