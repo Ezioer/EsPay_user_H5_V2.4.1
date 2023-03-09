@@ -213,6 +213,7 @@ public class Starter {
                                                         Log.d(TAG, "验证失败，核销订单失败........" + 1002);
                                                         mPayCallBack.onPayFail(code);
                                                     }
+                                                    Log.d(TAG, "验证失败，该订单已被验证........" + 1002);
                                                 }
                                             });
                                         }
@@ -331,7 +332,7 @@ public class Starter {
                                         JSONObject content = new JSONObject(data);
                                         mESOrder = content.optString("orderNo");
 //                                        StartOtherPlugin.appsFlyerCheckout(Float.valueOf(mPrice), mNcy, mProductId, mESOrder);
-                                        adjustCheckOut(Float.valueOf(mPrice), mNcy, mESOrder);
+                                        adjustCheckOut(Float.valueOf(mPrice));
                                         fbCheckOut(Float.valueOf(mPrice), mProductId, mNcy, mESOrder);
                                     } catch (Exception e) {
                                     }
@@ -997,11 +998,9 @@ public class Starter {
     }
 
     //adjust 下单事件
-    public void adjustCheckOut(float price, String ncy, String orderId) {
+    public void adjustCheckOut(float price) {
         AdjustEvent event = generateEvent("3f7zfy");
         event.addCallbackParameter("easou_hk_price", String.valueOf(price));
-        event.setRevenue(price, ncy);
-        event.setOrderId(orderId);
         Adjust.trackEvent(event);
     }
 

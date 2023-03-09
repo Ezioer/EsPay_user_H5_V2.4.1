@@ -885,13 +885,17 @@ public class CommonUtils {
     }
 
     public static String getMoneyFromStr(String str) {
-        int k = 0;
-        for (int i = 0; i < str.length(); i++) {
-            if (str.charAt(i) >= 48 && str.charAt(i) <= 57) {
-                k = i;
-                break;
+        try {
+            int k = 0;
+            for (int i = 0; i < str.length(); i++) {
+                if (str.charAt(i) >= 48 && str.charAt(i) <= 57) {
+                    k = i;
+                    break;
+                }
             }
+            return str.substring(k);
+        } catch (Exception e) {
+            return "0";
         }
-        return str.substring(k);
     }
 }
