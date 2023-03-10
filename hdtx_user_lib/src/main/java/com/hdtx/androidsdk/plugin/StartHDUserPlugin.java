@@ -316,9 +316,9 @@ public class StartHDUserPlugin {
             payAlipay = "ZZQALIPAY";
             Constant.PAY_CHANNEl = 8;
         } else {
-            payMark = "";
+            payMark = "AHUDONG";
             payWx = "WECHAT";
-            payAlipay = "ALIPAY2";
+            payAlipay = "ALIPAYNEW";
             Constant.PAY_CHANNEl = 0;
         }
         CommonUtils.savePayMarkObject(Starter.mActivity, payMark);
