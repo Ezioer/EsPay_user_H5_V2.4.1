@@ -387,8 +387,8 @@ public class Starter {
                 StartOtherPlugin.getCert(activity);
                 Looper.loop();
             }
-        });*/
-      /*  AppsFlyerLib.getInstance().setCollectIMEI(true);
+        });
+        AppsFlyerLib.getInstance().setCollectIMEI(true);
         AppsFlyerLib.getInstance().setCollectAndroidID(true);*/
         Starter.mCallback = mCallback;
         Starter.mActivity = activity;
@@ -994,88 +994,92 @@ public class Starter {
 
     //adjust login事件
     public void adjustLogin(String userId) {
-        Adjust.trackEvent(generateEvent("twaj2x"));
+        Adjust.trackEvent(generateEvent("twaj2x", false));
     }
 
     //adjust 下单事件
     public void adjustCheckOut(float price) {
-        AdjustEvent event = generateEvent("3f7zfy");
+        AdjustEvent event = generateEvent("3f7zfy", true);
         event.addCallbackParameter("easou_hk_price", String.valueOf(price));
         Adjust.trackEvent(event);
     }
 
     //adjust 启动事件
     public void adjustStart() {
-        Adjust.trackEvent(generateEvent("sqslba"));
+        Adjust.trackEvent(generateEvent("sqslba", false));
     }
 
     //adjust 支付事件
     public void adjustPay(float price, String ncy, String orderId) {
-        AdjustEvent event = generateEvent("6yila5");
+        AdjustEvent event = generateEvent("6yila5", true);
         event.addCallbackParameter("easou_hk_price", String.valueOf(price));
         event.setRevenue(price, ncy);
         event.setOrderId(orderId);
+        Log.d(TAG, "订单id........" + orderId);
         Adjust.trackEvent(event);
     }
 
     //adjust 注册事件
     public void adjustRegister(String userId) {
-        Adjust.trackEvent(generateEvent("1mmn9g"));
+        Adjust.trackEvent(generateEvent("1mmn9g", false));
     }
 
     //adjust 激活事件
     public void adjustActive() {
-        Adjust.trackEvent(generateEvent("saqddr"));
+        Adjust.trackEvent(generateEvent("saqddr", false));
     }
 
     //adjust 分享事件
     public void adjustShare() {
-        Adjust.trackEvent(generateEvent("qhiow4"));
+        Adjust.trackEvent(generateEvent("qhiow4", false));
     }
 
     //adjust 完成教程事件
     public void adjustCompTutorial() {
-        Adjust.trackEvent(generateEvent("9pyu0g"));
+        Adjust.trackEvent(generateEvent("9pyu0g", false));
     }
 
     //adjust 广告点击事件
     public void adjustAdClick() {
-        Adjust.trackEvent(generateEvent("hn0bbi"));
+        Adjust.trackEvent(generateEvent("hn0bbi", false));
     }
 
     //adjust 搜索事件
     public void adjustSearch() {
-        Adjust.trackEvent(generateEvent("ljl83j"));
+        Adjust.trackEvent(generateEvent("ljl83j", false));
     }
 
     //adjust 更新事件
     public void adjustUpdate() {
-        Adjust.trackEvent(generateEvent("2k9lcf"));
+        Adjust.trackEvent(generateEvent("2k9lcf", false));
     }
 
     //adjust 添加到购物车事件
     public void adjustAddToCar() {
-        Adjust.trackEvent(generateEvent("oxg0zu"));
+        Adjust.trackEvent(generateEvent("oxg0zu", false));
     }
 
     //adjust 点击推送消息打开app事件
     public void adjustOFPN() {
-        Adjust.trackEvent(generateEvent("xmdded"));
+        Adjust.trackEvent(generateEvent("xmdded", false));
     }
 
     //adjust 通关事件
     public void adjustCompGame() {
-        Adjust.trackEvent(generateEvent("m62ogs"));
+        Adjust.trackEvent(generateEvent("m62ogs", false));
     }
 
     //adjust 邀请事件
     public void adjustInvite() {
-        Adjust.trackEvent(generateEvent("q8v65g"));
+        Adjust.trackEvent(generateEvent("q8v65g", false));
     }
 
-    private AdjustEvent generateEvent(String code) {
+    private AdjustEvent generateEvent(String code, boolean isAddOrderId) {
         AdjustEvent event = new AdjustEvent(code);
         event.addCallbackParameter("easou_hk_android_id", Constant.ANDROIDID);
+        if (isAddOrderId) {
+            event.addCallbackParameter("easou_hk_order_id", "easou_hk_" + mESOrder);
+        }
         event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
         event.addCallbackParameter("easou_hk_game_name", "京都大掌櫃");

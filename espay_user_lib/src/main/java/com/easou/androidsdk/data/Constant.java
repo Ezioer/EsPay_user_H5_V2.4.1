@@ -15,7 +15,7 @@ public class Constant {
     /**
      * SDK版本号，更新版本记得改版本号
      */
-    public static final String SDK_VERSION = "1.2";
+    public static final String SDK_VERSION = "1.2.1";
     public static final String SDK_PHONEOS = "Android";
 
     /**

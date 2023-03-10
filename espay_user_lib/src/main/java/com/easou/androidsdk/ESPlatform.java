@@ -65,13 +65,13 @@ public class ESPlatform {
             e.printStackTrace();
         }
 //        StartOtherPlugin.appsFlyerLogin(userId);
+        Constant.ESDK_USERID = userId;
         Starter.getInstance().adjustLogin(userId);
         CommonUtils.saveIsAutoCount(Starter.mActivity, isAdult);
         CommonUtils.saveH5Token(Starter.mActivity, token);
         CommonUtils.saveH5TokenToCard(token, CommonUtils.readPropertiesValue(Starter.mActivity, Constant.APP_ID));
         CommonUtils.saveUserId(Starter.mActivity, userId);
         Constant.IS_LOGINED = true;
-        Constant.ESDK_USERID = userId;
         Constant.ESDK_TOKEN = token;
         isShowWebView = false;
 //        AppTimeWatcher.isLogOut = false;
@@ -189,6 +189,7 @@ public class ESPlatform {
         try {
             JSONObject jsonObj = new JSONObject(param);
             userId = jsonObj.getString(ESConstant.SDK_USER_ID);
+            Constant.ESDK_USERID = userId;
             CommonUtils.saveUserId(Starter.mActivity, userId);
             userName = jsonObj.getString(ESConstant.SDK_USER_NAME);
             CommonUtils.saveIsAutoCount(Starter.mActivity, "0");
