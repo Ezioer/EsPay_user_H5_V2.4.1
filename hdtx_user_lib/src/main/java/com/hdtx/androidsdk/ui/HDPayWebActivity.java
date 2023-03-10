@@ -79,13 +79,13 @@ public class HDPayWebActivity extends Activity implements OnClickListener {
 
         room_url = intent.getStringExtra("room_url");
         back_url = intent.getStringExtra("back_url");
-        token = intent.getStringExtra(Constant.EASOUTGC);
+        token = intent.getStringExtra(Constant.TGC);
 
         CookieSyncManager.createInstance(mContext);
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
         cookieManager.removeAllCookie();
-        cookieManager.setCookie(room_url, Constant.EASOUTGC + "=" + token);//cookies是在HttpClient中获得的cookie
+        cookieManager.setCookie(room_url, Constant.TGC + "=" + token);//cookies是在HttpClient中获得的cookie
         CookieSyncManager.getInstance().sync();
 
         mWebView.getSettings().setSupportZoom(true);
@@ -224,7 +224,7 @@ public class HDPayWebActivity extends Activity implements OnClickListener {
                 CookieManager cookieManager = CookieManager.getInstance();
                 cookieManager.setAcceptCookie(true);
 //			    cookieManager.removeSessionCookie();//移除  
-                cookieManager.setCookie(url, Constant.EASOUTGC + "=" + token);//cookies是在HttpClient中获得的cookie
+                cookieManager.setCookie(url, Constant.TGC + "=" + token);//cookies是在HttpClient中获得的cookie
                 CookieSyncManager.getInstance().sync();
 
                 HDPayLog.d("url:" + url);

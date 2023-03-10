@@ -21,7 +21,7 @@ public class EAPayInter {
     public static String queryUserEB(String token, String appId) {
 
         String url = "/basePay/getUserBalance.e";
-        String param = Constant.EASOUTGC + "=" + token + "&appId=" + appId;
+        String param = Constant.TGC + "=" + token + "&appId=" + appId;
         String result = HttpGroupUtils.sendGet(domain + url, param, token);
         String[] result_arr = new String[13];
         try {

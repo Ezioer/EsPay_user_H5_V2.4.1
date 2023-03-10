@@ -56,7 +56,7 @@ public class HdPayNetGetPost {
                 //我的账号
 
 //				conn.setRequestProperty("Cookie", "EASOUTGC=TGT-24223-DQgPrydRnzcfxnb16RTPyLJCQsJjGPFdmMHVwTUZPOAaa6RUnA-sso");
-                conn.setRequestProperty("Cookie", Constant.EASOUTGC + "=" + token);
+                conn.setRequestProperty("Cookie", Constant.TGC + "=" + token);
 
             }
             // 设置通用的请求属性

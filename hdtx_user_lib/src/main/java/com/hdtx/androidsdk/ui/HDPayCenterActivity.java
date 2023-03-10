@@ -205,7 +205,7 @@ public class HDPayCenterActivity extends BaseActivity {
         needChannels = mBundle.getString(HDConstant.NEED_CHANNELS);
         key = mBundle.getString(Constant.KEY);
         partnerId = mBundle.getString(Constant.PARTENER_ID);
-        easoutgc = mBundle.getString(Constant.EASOUTGC);
+        easoutgc = mBundle.getString(Constant.TGC);
         productName = mBundle.getString(Constant.PRODUCT_NAME);
         page = 1;
         payList = new LinkedList<PayItem>();
@@ -706,7 +706,7 @@ public class HDPayCenterActivity extends BaseActivity {
         Intent intent = new Intent();
         intent.putExtra("room_url", room_view_url);//
         intent.putExtra("back_url", back_url);
-        intent.putExtra(Constant.EASOUTGC, easoutgc);
+        intent.putExtra(Constant.TGC, easoutgc);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setClass(mActivity, HDPayWebActivity.class);
         mActivity.startActivity(intent);

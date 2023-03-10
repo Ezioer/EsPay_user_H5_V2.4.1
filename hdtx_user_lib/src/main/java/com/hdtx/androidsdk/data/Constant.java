@@ -268,7 +268,7 @@ public class Constant {
     public static final String MODULE = "MODULE";
     public static final String TRADEMODE = "tradeMode";
     public static final String PAYCHANNEL = "payChannel";
-    public static final String EASOUTGC = "EASOUTGC";
+    public static final String TGC = "TGC";
     public static final String INCLUDE_CHANNELS = "includeChannels";
     public static final String PRODUCT_NAME = "productName";
     public static final String AMOUNT = "amount";

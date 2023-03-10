@@ -66,7 +66,7 @@ public class StartHdPayPlugin {
             HDSdkLog.d("请先登录，token为空");
             return;
         }
-        map.put(Constant.EASOUTGC, token);
+        map.put(Constant.TGC, token);
 
         if (getValue(map)) {
 
@@ -80,7 +80,7 @@ public class StartHdPayPlugin {
             mBundle.putString(HDConstant.MONEY, map.get(HDConstant.MONEY));
             mBundle.putString(HDConstant.NOTIFY_URL, notifyUrl);
             mBundle.putString(HDConstant.REDIRECT_URL, redirectUrl);
-            mBundle.putString(Constant.EASOUTGC, token);
+            mBundle.putString(Constant.TGC, token);
             mBundle.putString(Constant.PRODUCT_NAME, map.get(HDConstant.TRADE_NAME));
             mBundle.putString(Constant.INCLUDE_CHANNELS, "");
             mBundle.putString(HDConstant.NEED_CHANNELS, map.get(HDConstant.NEED_CHANNELS));
