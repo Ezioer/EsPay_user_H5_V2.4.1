@@ -3,7 +3,7 @@ package com.hdtx.androidsdk.data;
 import java.io.Serializable;
 
 /**
- * 订单信息，应存储在接入方的服务器中，有服务器生成订单信息后传递给客户端，再由客户端传递给宜搜SDK
+ * 订单信息，应存储在接入方的服务器中，有服务器生成订单信息后传递给客户端，再由客户端传递给SDK
  *
  * @author Erica
  */

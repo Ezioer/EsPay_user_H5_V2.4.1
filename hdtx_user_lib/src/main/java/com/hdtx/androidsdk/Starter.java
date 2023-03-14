@@ -42,7 +42,7 @@ public class Starter {
     }
 
     /**
-     * 宜搜SDK单例
+     * SDK单例
      */
     public static Starter getInstance() {
         if (mSingleton == null) {
@@ -57,7 +57,7 @@ public class Starter {
 
 
     /**
-     * 宜搜SDK支付接口
+     * SDK支付接口
      *
      * @param mHandler 回调
      * @param map      参数
@@ -70,7 +70,7 @@ public class Starter {
 
 
     /**
-     * 宜搜SDK登陆接口
+     * SDK登陆接口
      */
     public void login(final Activity activity, HDSdkCallback mCallback) {
         ThreadPoolManager.getInstance().addTask(new Runnable() {

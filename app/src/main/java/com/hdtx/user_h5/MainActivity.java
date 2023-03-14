@@ -3,7 +3,9 @@ package com.hdtx.user_h5;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -384,7 +386,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 playerInfo.put(HDConstant.SERVER_NAME, "hahaha");
                 playerInfo.put(HDConstant.PROJECTMARK, "ka");
                 playerInfo.put(HDConstant.CREATEDTIME, String.valueOf(System.currentTimeMillis()));
-//                Starter.getInstance().startGameLoginLog(playerInfo);
+                Starter.getInstance().startGameLoginLog(playerInfo);
 
                 // demo演示代码
                 enterGame(View.VISIBLE);

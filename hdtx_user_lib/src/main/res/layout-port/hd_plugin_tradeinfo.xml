@@ -3,7 +3,7 @@
     style="@style/hdtx_head_linear">
 
     <LinearLayout
-        android:id="@+id/easou_id_HeadLayout"
+        android:id="@+id/hd_id_HeadLayout"
         style="@style/hdtx_head">
 
         <LinearLayout style="@style/hdtx_linear">

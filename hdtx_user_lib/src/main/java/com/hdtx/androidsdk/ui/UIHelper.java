@@ -376,7 +376,7 @@ public class UIHelper {
                 context.getResources().getIdentifier("hd_payfail", "layout", context.getPackageName()), null);
 
         navBar = convertView.findViewById(
-                context.getResources().getIdentifier("easou_id_HeadLayout", "id", context.getPackageName()));
+                context.getResources().getIdentifier("hd_id_HeadLayout", "id", context.getPackageName()));
 
         tv_title = (TextView) navBar.findViewById(
                 context.getResources().getIdentifier("espay_navbar_title", "id", context.getPackageName()));
@@ -452,11 +452,11 @@ public class UIHelper {
                 null);
 
         navBar = convertView.findViewById(
-                context.getResources().getIdentifier("easou_id_HeadLayout", "id", context.getPackageName()));
+                context.getResources().getIdentifier("hd_id_HeadLayout", "id", context.getPackageName()));
 
         tv_title = (TextView) navBar.findViewById(
                 context.getResources().getIdentifier("espay_navbar_title", "id", context.getPackageName()));
-        tv_title.setText("宜支付收银台");
+        tv_title.setText("收银台");
         tv_title.setOnLongClickListener(new OnLongClickListener() {
 
             @Override
@@ -495,7 +495,7 @@ public class UIHelper {
 
         // 微信
         wxLayout = convertView.findViewById(
-                context.getResources().getIdentifier("easou_id_wxChannelLayout", "id", context.getPackageName()));
+                context.getResources().getIdentifier("hd_id_wxChannelLayout", "id", context.getPackageName()));
         wxLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -512,7 +512,7 @@ public class UIHelper {
 
         // 支付宝
         aliLayout = convertView.findViewById(
-                context.getResources().getIdentifier("easou_id_aliChannelLayout", "id", context.getPackageName()));
+                context.getResources().getIdentifier("hd_id_aliChannelLayout", "id", context.getPackageName()));
         aliLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -529,7 +529,7 @@ public class UIHelper {
 
         //积分兑换
        /* jfLayout = convertView.findViewById(
-                context.getResources().getIdentifier("easou_id_jfChannelLayout", "id", context.getPackageName()));
+                context.getResources().getIdentifier("hd_id_jfChannelLayout", "id", context.getPackageName()));
         jfLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -546,7 +546,7 @@ public class UIHelper {
 
         // 银联
         ylLayout = convertView.findViewById(
-                context.getResources().getIdentifier("easou_id_ylChannelLayout", "id", context.getPackageName()));
+                context.getResources().getIdentifier("hd_id_ylChannelLayout", "id", context.getPackageName()));
         ylLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -563,9 +563,9 @@ public class UIHelper {
 
         // 更多支付方式
         moreLayout = convertView.findViewById(
-                context.getResources().getIdentifier("easou_id_moreChannelLayout", "id", context.getPackageName()));
+                context.getResources().getIdentifier("hd_id_moreChannelLayout", "id", context.getPackageName()));
         tv_morePayment = (TextView) convertView.findViewById(
-                context.getResources().getIdentifier("easou_id_moreChannelText", "id", context.getPackageName()));
+                context.getResources().getIdentifier("hd_id_moreChannelText", "id", context.getPackageName()));
         moreLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -581,7 +581,7 @@ public class UIHelper {
         // 网页
         // String needWeb = mBundle.getString(Constant.NEEDWEB);
         webLayout = convertView.findViewById(
-                context.getResources().getIdentifier("easou_id_webChannelLayout", "id", context.getPackageName()));
+                context.getResources().getIdentifier("hd_id_webChannelLayout", "id", context.getPackageName()));
         webLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -600,17 +600,17 @@ public class UIHelper {
             webLayout.setVisibility(View.VISIBLE);
         }
         wxImageViewid = (ImageView) convertView.findViewById(
-                context.getResources().getIdentifier("easou_id_wxChannelid", "id", context.getPackageName()));
+                context.getResources().getIdentifier("hd_id_wxChannelid", "id", context.getPackageName()));
         ylImageViewid = (ImageView) convertView.findViewById(
-                context.getResources().getIdentifier("easou_id_ylChannelid", "id", context.getPackageName()));
+                context.getResources().getIdentifier("hd_id_ylChannelid", "id", context.getPackageName()));
         aliImageViewid = (ImageView) convertView.findViewById(
-                context.getResources().getIdentifier("easou_id_aliChannelid", "id", context.getPackageName()));
+                context.getResources().getIdentifier("hd_id_aliChannelid", "id", context.getPackageName()));
         webImageViewid = (ImageView) convertView.findViewById(
-                context.getResources().getIdentifier("easou_id_webChannelid", "id", context.getPackageName()));
+                context.getResources().getIdentifier("hd_id_webChannelid", "id", context.getPackageName()));
         moreImageViewid = (ImageView) convertView.findViewById(
-                context.getResources().getIdentifier("easou_id_moreChannelid", "id", context.getPackageName()));
+                context.getResources().getIdentifier("hd_id_moreChannelid", "id", context.getPackageName()));
         jfImageViewId = (ImageView) convertView.findViewById(
-                context.getResources().getIdentifier("easou_id_jfChannelid", "id", context.getPackageName()));
+                context.getResources().getIdentifier("hd_id_jfChannelid", "id", context.getPackageName()));
         wxLayout.setVisibility(View.GONE);
         wxImageViewid.setVisibility(View.GONE);
         ylLayout.setVisibility(View.GONE);
@@ -623,19 +623,19 @@ public class UIHelper {
         moreImageViewid.setVisibility(View.GONE);
 
         weixinLineImageView = (ImageView) convertView.findViewById(
-                context.getResources().getIdentifier("easou_id_wxChannelid", "id", context.getPackageName()));
+                context.getResources().getIdentifier("hd_id_wxChannelid", "id", context.getPackageName()));
         weixinLineImageView.setVisibility(View.GONE);
 
         unipayLineImageView = (ImageView) convertView.findViewById(
-                context.getResources().getIdentifier("easou_id_ylChannelid", "id", context.getPackageName()));
+                context.getResources().getIdentifier("hd_id_ylChannelid", "id", context.getPackageName()));
         unipayLineImageView.setVisibility(View.GONE);
 
         alipayLineImageView = (ImageView) convertView.findViewById(
-                context.getResources().getIdentifier("easou_id_aliChannelid", "id", context.getPackageName()));
+                context.getResources().getIdentifier("hd_id_aliChannelid", "id", context.getPackageName()));
         alipayLineImageView.setVisibility(View.GONE);
 
         moreLineImageView = (ImageView) convertView.findViewById(
-                context.getResources().getIdentifier("easou_id_moreChannelid", "id", context.getPackageName()));
+                context.getResources().getIdentifier("hd_id_moreChannelid", "id", context.getPackageName()));
         moreLineImageView.setVisibility(View.GONE);
 
         needChannels = map.get(HDConstant.NEED_CHANNELS);

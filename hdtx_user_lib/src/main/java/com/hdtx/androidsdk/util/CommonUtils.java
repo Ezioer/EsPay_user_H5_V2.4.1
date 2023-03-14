@@ -811,7 +811,7 @@ public class CommonUtils {
     }
 
     /**
-     * 得到宜支付的App-Agent
+     * 得到支付的App-Agent
      *
      * @return
      */

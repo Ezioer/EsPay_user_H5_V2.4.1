@@ -13,7 +13,7 @@
         <include layout="@layout/hd_plugin_tradeinfo" />
 
         <com.hdtx.androidsdk.ui.APScrollView
-            android:id="@+id/easou_id_ScrollView"
+            android:id="@+id/hd_id_ScrollView"
             style="@style/hdtx_fill"
             android:fillViewport="true">
 
@@ -37,18 +37,18 @@
                 </LinearLayout>
 
                 <ImageView
-                    android:id="@+id/easou_id_wxChannelid"
+                    android:id="@+id/hd_id_wxChannelid"
                     style="@style/hdtx_dash" />
 
                 <LinearLayout
-                    android:id="@+id/easou_id_RecoChannleLayout"
+                    android:id="@+id/hd_id_RecoChannleLayout"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/hdtx_drawable_itembtn"
                     android:gravity="center_vertical">
 
                     <GridView
-                        android:id="@+id/easou_id_ChannelReco"
+                        android:id="@+id/hd_id_ChannelReco"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:cacheColorHint="@android:color/transparent"
@@ -57,11 +57,11 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/easou_id_wxChannelLayout"
+                    android:id="@+id/hd_id_wxChannelLayout"
                     style="@style/hdtx_itemchannel">
 
                     <ImageView
-                        android:id="@+id/easou_id_wxChannelIcon"
+                        android:id="@+id/hd_id_wxChannelIcon"
                         style="@style/hdtx_wrap.wxchannel" />
 
                     <LinearLayout
@@ -70,7 +70,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/easou_id_wxChannelText"
+                            android:id="@+id/hd_id_wxChannelText"
                             style="@style/hdtx_text"
                             android:text="@string/hd_wx_pay" />
                     </LinearLayout>
@@ -79,15 +79,15 @@
                 </LinearLayout>
 
                 <ImageView
-                    android:id="@+id/easou_id_list_title"
+                    android:id="@+id/hd_id_list_title"
                     style="@style/hdtx_dash" />
 
                 <LinearLayout
-                    android:id="@+id/easou_id_aliChannelLayout"
+                    android:id="@+id/hd_id_aliChannelLayout"
                     style="@style/hdtx_itemchannel">
 
                     <ImageView
-                        android:id="@+id/easou_id_aliChannelIcon"
+                        android:id="@+id/hd_id_aliChannelIcon"
                         style="@style/hdtx_wrap.alichannel" />
 
                     <LinearLayout
@@ -96,7 +96,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/easou_id_aliChannelText"
+                            android:id="@+id/hd_id_aliChannelText"
                             style="@style/hdtx_text"
                             android:text="@string/hd_ali_pay" />
                     </LinearLayout>
@@ -105,16 +105,16 @@
                 </LinearLayout>
 
                 <ImageView
-                    android:id="@+id/easou_id_aliChannelid"
+                    android:id="@+id/hd_id_aliChannelid"
                     style="@style/hdtx_dash" />
 
                 <LinearLayout
                     android:visibility="gone"
-                    android:id="@+id/easou_id_jfChannelLayout"
+                    android:id="@+id/hd_id_jfChannelLayout"
                     style="@style/hdtx_itemchannel">
 
                     <ImageView
-                        android:id="@+id/easou_id_jfChannelIcon"
+                        android:id="@+id/hd_id_jfChannelIcon"
                         style="@style/hdtx_wrap.ydchannel" />
 
                     <LinearLayout
@@ -123,7 +123,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/easou_id_jfChannelText"
+                            android:id="@+id/hd_id_jfChannelText"
                             style="@style/hdtx_text"
                             android:text="@string/hd_jf_pay" />
                     </LinearLayout>
@@ -133,16 +133,16 @@
 
                 <ImageView
                     android:visibility="gone"
-                    android:id="@+id/easou_id_jfChannelid"
+                    android:id="@+id/hd_id_jfChannelid"
                     style="@style/hdtx_dash" />
 
                 <LinearLayout
                     android:visibility="gone"
-                    android:id="@+id/easou_id_ylChannelLayout"
+                    android:id="@+id/hd_id_ylChannelLayout"
                     style="@style/hdtx_itemchannel">
 
                     <ImageView
-                        android:id="@+id/easou_id_ylChannelIcon"
+                        android:id="@+id/hd_id_ylChannelIcon"
                         style="@style/hdtx_wrap.ylchannel" />
 
                     <LinearLayout
@@ -151,7 +151,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/easou_id_ylChannelText"
+                            android:id="@+id/hd_id_ylChannelText"
                             style="@style/hdtx_text"
                             android:text="@string/hd_yl_pay" />
                     </LinearLayout>
@@ -161,12 +161,12 @@
 
                 <ImageView
                     android:visibility="gone"
-                    android:id="@+id/easou_id_ylChannelid"
+                    android:id="@+id/hd_id_ylChannelid"
                     style="@style/hdtx_dash" />
 
 
                 <LinearLayout
-                    android:id="@+id/easou_id_moreChannelLayout"
+                    android:id="@+id/hd_id_moreChannelLayout"
                     style="@style/hdtx_itemchannel">
 
 
@@ -185,7 +185,7 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/easou_id_moreChannelText"
+                        android:id="@+id/hd_id_moreChannelText"
                         android:layout_marginRight="10dip"
                         android:layout_marginTop="5dip"
                         android:layout_marginBottom="5dip"
@@ -194,17 +194,17 @@
                 </LinearLayout>
 
                 <ImageView
-                    android:id="@+id/easou_id_moreChannelid"
+                    android:id="@+id/hd_id_moreChannelid"
                     style="@style/hdtx_dash" />
 
 
                 <LinearLayout
-                    android:id="@+id/easou_id_webChannelLayout"
+                    android:id="@+id/hd_id_webChannelLayout"
                     style="@style/hdtx_itemchannel"
                     android:visibility="gone">
 
                     <ImageView
-                        android:id="@+id/easou_id_webChannelIcon"
+                        android:id="@+id/hd_id_webChannelIcon"
                         style="@style/hdtx_wrap.webchannel" />
 
                     <LinearLayout
@@ -213,7 +213,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/easou_id_webChannelText"
+                            android:id="@+id/hd_id_webChannelText"
                             style="@style/hdtx_text"
                             android:text="@string/hd_web_pay" />
                     </LinearLayout>
@@ -222,7 +222,7 @@
                 </LinearLayout>
 
                 <ImageView
-                    android:id="@+id/easou_id_webChannelid"
+                    android:id="@+id/hd_id_webChannelid"
                     style="@style/hdtx_clear" />
             </LinearLayout>
         </com.hdtx.androidsdk.ui.APScrollView>

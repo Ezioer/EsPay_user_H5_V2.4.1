@@ -1,5 +1,7 @@
 package com.hdtx.androidsdk;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Handler;
 import android.webkit.JavascriptInterface;
 
@@ -9,6 +11,7 @@ import com.hdtx.androidsdk.data.HDConstant;
 import com.hdtx.androidsdk.plugin.StartHDUserPlugin;
 import com.hdtx.androidsdk.plugin.StartOtherPlugin;
 import com.hdtx.androidsdk.romutils.RomHelper;
+import com.hdtx.androidsdk.ui.HDUserWebActivity;
 import com.hdtx.androidsdk.util.CommonUtils;
 import com.hdtx.androidsdk.util.HDSdkLog;
 
@@ -22,10 +25,10 @@ public class HDPlatform {
 
     public static boolean isBackground = false;
     private boolean isShowWebView = false;
-    private static com.hdtx.androidsdk.ui.HDUserWebActivity mActivity;
+    private static HDUserWebActivity mActivity;
 
     @JavascriptInterface
-    public static void init(com.hdtx.androidsdk.ui.HDUserWebActivity activity) {
+    public static void init(HDUserWebActivity activity) {
         mActivity = activity;
     }
 
@@ -326,8 +329,18 @@ public class HDPlatform {
      */
     @JavascriptInterface
     public void esGetCustomDeviceId(final String param) {
-
         mActivity.clientToJS(Constant.YSTOJS_GET_CUSTOMDEVICE, null);
+    }
+
+    @JavascriptInterface
+    public void esJumpToQQ(final String param) {
+        try {
+            JSONObject jsonObj = new JSONObject(param);
+            String num = jsonObj.getString("qq");
+            String url = "mqqwpa://im/chat?chat_type=wpa&uin=" + num;
+            mActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+        } catch (Exception e) {
+        }
     }
 
     /**

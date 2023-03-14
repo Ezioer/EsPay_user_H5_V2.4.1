@@ -317,7 +317,7 @@ public class StartHDUserPlugin {
             Constant.PAY_CHANNEl = 8;
         } else {
             payMark = "AHUDONG";
-            payWx = "WECHAT";
+            payWx = "WECHATNEW";
             payAlipay = "ALIPAYNEW";
             Constant.PAY_CHANNEl = 0;
         }

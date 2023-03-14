@@ -51,7 +51,7 @@ public class Constant {
      */
     public static String OAID = "0";
     public static String qnChannel = "";
-    public static final int isTTVersion = 1;
+    public static final int isTTVersion = 0;
     /**
      * 记录是否为模拟器 0为真机，1为模拟器
      */
@@ -82,7 +82,7 @@ public class Constant {
      */
     public static Map<String, String> PAY_LIMIT_INFO_MAP;
     /**
-     * 收款方 0 默认宜搜，1为大华通，2为易游,3为ZKX，4为WZ支付
+     * 收款方 0 默认，1为大华通，2为易游,3为ZKX，4为WZ支付
      */
     public static int PAY_CHANNEl = 0;
 
@@ -193,7 +193,7 @@ public class Constant {
     public static final int HANDLER_PAYLIST_SHOW_VIEW = 9;
     public static final int HANDLER_PAY_MAIN_NORMAL_VIEW = 10;
     /**
-     * 宜支付收银台界面
+     * 收银台界面
      */
     public static final int HANDLER_PAY_MAIN_BUY_VIEW = 11;
 
