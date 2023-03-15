@@ -73,14 +73,18 @@ public class Starter {
      * SDK登陆接口
      */
     public void login(final Activity activity, HDSdkCallback mCallback) {
-        ThreadPoolManager.getInstance().addTask(new Runnable() {
-            @Override
-            public void run() {
-                Looper.prepare();
-                StartOtherPlugin.getCert(activity);
-                Looper.loop();
-            }
-        });
+        try {
+            ThreadPoolManager.getInstance().addTask(new Runnable() {
+                @Override
+                public void run() {
+                    Looper.prepare();
+                    StartOtherPlugin.getCert(activity);
+                    Looper.loop();
+                }
+            });
+        } catch (Exception e) {
+        }
+
         Starter.mCallback = mCallback;
         Starter.mActivity = activity;
         StartOtherPlugin.onLaunchApp();
@@ -97,10 +101,10 @@ public class Starter {
         if (Constant.isTTVersion == 1) {
             Constant.qnChannel = HumeSDK.getChannel(activity);
         }
-        new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-//                ESdkLog.d("快手sdk激活");
+                HDSdkLog.d("快手sdk激活");
                 StartOtherPlugin.logKSActionAppActive();
                 if (!Constant.AQY_SDK) {
                     StartOtherPlugin.initAQY(activity);

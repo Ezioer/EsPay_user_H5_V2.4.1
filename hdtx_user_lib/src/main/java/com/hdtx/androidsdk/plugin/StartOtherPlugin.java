@@ -254,8 +254,10 @@ public class StartOtherPlugin {
         HDSdkLog.c("certnet----->", "cache-->" + cert);
         if (cert.isEmpty()) {
             String temp = EAPayInter.getOaidPerFromNet(context.getApplicationInfo().packageName);
-            getOaid(context, temp);
-            CommonUtils.saveCert(context, temp);
+            if (!temp.isEmpty()) {
+                getOaid(context, temp);
+                CommonUtils.saveCert(context, temp);
+            }
             HDSdkLog.c("certnet----->", "netvalue-->" + temp);
         } else {
             getOaid(context, cert);

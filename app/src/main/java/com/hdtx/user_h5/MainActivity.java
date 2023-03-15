@@ -33,6 +33,7 @@ import com.hdtx.androidsdk.data.Constant;
 import com.hdtx.androidsdk.data.HDConstant;
 import com.hdtx.androidsdk.util.CommonUtils;
 import com.hdtx.androidsdk.util.HDSdkLog;
+import com.hdtx.androidsdk.util.ThreadPoolManager;
 import com.hdtx.androidsdk.util.Tools;
 
 import java.text.DecimalFormat;
@@ -254,6 +255,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
          * isPortrait：游戏横竖屏界面，true：竖屏游戏，false：横屏游戏
          * LoginCallBack：登录、注册、登出、获取用户信息、实名认证回调
          */
+
         Starter.getInstance().login(MainActivity.this, new HDSdkCallback() {
 
             @Override
@@ -484,6 +486,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     payInfo.put(HDConstant.TRADE_ID, tradeId); // 游戏订单号
                     payInfo.put(HDConstant.TRADE_NAME, tradeName); // 购买商品名称，根据支付金额对应修改，如6元对应600金币，98元对应9800金币
                     payInfo.put(HDConstant.NEED_CHANNELS, needChannels); // 支付方式
+                    payInfo.put(HDConstant.NOTIFY_URL, ""); // 支付回调地址
 
                     /**
                      * 支付接口

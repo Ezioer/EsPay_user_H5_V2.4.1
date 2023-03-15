@@ -215,6 +215,10 @@ public class StartHdPayPlugin {
         appId = CommonUtils.readPropertiesValue(mActivity, Constant.APP_ID);
         partnerId = CommonUtils.readPropertiesValue(mActivity, Constant.PARTENER_ID);
         notifyUrl = CommonUtils.readPropertiesValue(mActivity, HDConstant.NOTIFY_URL);
+        String tempUrl = params.get(HDConstant.NOTIFY_URL);
+        if (tempUrl != null && !tempUrl.isEmpty()) {
+            notifyUrl = tempUrl;
+        }
         redirectUrl = CommonUtils.readPropertiesValue(mActivity, HDConstant.REDIRECT_URL);
 
         if (qn == null || qn.equals("")) {
