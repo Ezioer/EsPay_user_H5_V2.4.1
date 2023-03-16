@@ -957,7 +957,7 @@ public class Starter {
     //激活app
     public void fbActApp() {
         if (logger != null) {
-            logger.logEvent(AppEventsConstants.EVENT_NAME_ACTIVATED_APP);
+//            logger.logEvent(AppEventsConstants.EVENT_NAME_ACTIVATED_APP);
         }
     }
 
