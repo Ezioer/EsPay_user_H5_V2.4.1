@@ -102,7 +102,7 @@ public class Starter {
     private AppEventsLogger logger = null;
     private String mESOrder = "";
     private String mNcy = "";
-    private String mPrice = "";
+    private double mPrice = 0f;
     private boolean isBindGoogle = false;
     private boolean isBindFacebook = false;
     private JSONObject mPayInfo;
@@ -132,6 +132,8 @@ public class Starter {
         mPayInfo = info;
         mProductId = mPayInfo.optString(ESConstant.PRODUCT_ID);
         mPayCallBack = callback;
+        int money = mPayInfo.optInt(ESConstant.MONEY);
+        mPrice = Double.valueOf(money) / 100;
         mTradeId = mPayInfo.optString(ESConstant.TRADE_ID);
         initBilling(mActivity);
     }
@@ -160,7 +162,7 @@ public class Starter {
                                     //购买商品的数量
                                     final int num = purchase.getQuantity();
                                     String appId = CommonUtils.readPropertiesValue(Starter.mActivity, "appId");
-                                    final BaseResponse result = EAPayInter.verGooglePlayOrder(purchase.getPurchaseToken(), mESOrder, appId, Float.valueOf(mPrice) * num, num);
+                                    final BaseResponse result = EAPayInter.verGooglePlayOrder(purchase.getPurchaseToken(), mESOrder, appId, mPrice * num, num);
                                     if (result != null && result.getCode() == 0) {
                                         //订单确认状态 0 待确认 1 已确认
                                         int acknowledgementState = 0;
@@ -182,8 +184,9 @@ public class Starter {
                                             //服务器验证成功，核销订单
                                             Log.d(TAG, "验证成功，核销订单中........");
 //                                            StartOtherPlugin.appsFlyerPurchase(Float.valueOf(mPrice) * num, mNcy, mProductId, mESOrder);
-                                            adjustPay(Float.valueOf(mPrice), mNcy, mESOrder);
-                                            fbPurchased(Float.valueOf(mPrice), mNcy, mProductId, mESOrder);
+                                            Log.d(TAG, "购买成功日志 fb........" + mPrice + mESOrder);
+                                            adjustPay(mPrice, mNcy, mESOrder);
+                                            fbPurchased(mPrice, mNcy, mProductId, mESOrder);
                                             consumePurchase(purchase.getPurchaseToken());
                                             //可重复购买的内购商品核销，回调购买给游戏处理
                                             if (mPayCallBack != null) {
@@ -319,7 +322,6 @@ public class Starter {
                                 BaseResponse result = EAPayInter.checkOrder(mTradeId, mProductId, list.get(0).getPrice(), list.get(0).getPriceAmountMicros(), mNcy,
                                         CommonUtils.getCheckOutParams(), mPayInfo);
                                 if (result != null && result.getCode() == 0) {
-                                    mPrice = CommonUtils.getMoneyFromStr(list.get(0).getPrice());
                                     mActivity.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
@@ -332,8 +334,9 @@ public class Starter {
                                         JSONObject content = new JSONObject(data);
                                         mESOrder = content.optString("orderNo");
 //                                        StartOtherPlugin.appsFlyerCheckout(Float.valueOf(mPrice), mNcy, mProductId, mESOrder);
-                                        adjustCheckOut(Float.valueOf(mPrice));
-                                        fbCheckOut(Float.valueOf(mPrice), mProductId, mNcy, mESOrder);
+                                        Log.d(TAG, "下单成功日志 fb........" + mPrice + mESOrder);
+                                        adjustCheckOut(mPrice);
+                                        fbCheckOut(mPrice, mProductId, mNcy, mESOrder);
                                     } catch (Exception e) {
                                     }
                                 } else {
@@ -883,24 +886,24 @@ public class Starter {
     //facebook媒体事件接入
 
     //购买
-    public void fbPurchased(float price, String ncy, String productId, String orderId) {
+    public void fbPurchased(double price, String ncy, String productId, String orderId) {
         Bundle params = new Bundle();
-        params.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, ncy);
+        params.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, "USD");
         params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, productId);
         params.putString(AppEventsConstants.EVENT_PARAM_ORDER_ID, orderId);
         if (logger != null) {
-            logger.logEvent(AppEventsConstants.EVENT_NAME_PURCHASED, price, params);
+//            logger.logEvent(AppEventsConstants.EVENT_NAME_PURCHASED, price, params);
         }
     }
 
     //下单
-    public void fbCheckOut(float price, String ncy, String productId, String orderId) {
+    public void fbCheckOut(Double price, String ncy, String productId, String orderId) {
         Bundle params = new Bundle();
-        params.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, ncy);
+        params.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, "USD");
         params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, productId);
         params.putString(AppEventsConstants.EVENT_PARAM_ORDER_ID, orderId);
         if (logger != null) {
-            logger.logEvent(AppEventsConstants.EVENT_NAME_INITIATED_CHECKOUT, price, params);
+//            logger.logEvent(AppEventsConstants.EVENT_NAME_INITIATED_CHECKOUT, price, params);
         }
     }
 
@@ -998,7 +1001,7 @@ public class Starter {
     }
 
     //adjust 下单事件
-    public void adjustCheckOut(float price) {
+    public void adjustCheckOut(Double price) {
         AdjustEvent event = generateEvent("3f7zfy", true);
         event.addCallbackParameter("easou_hk_price", String.valueOf(price));
         Adjust.trackEvent(event);
@@ -1010,10 +1013,10 @@ public class Starter {
     }
 
     //adjust 支付事件
-    public void adjustPay(float price, String ncy, String orderId) {
+    public void adjustPay(Double price, String ncy, String orderId) {
         AdjustEvent event = generateEvent("6yila5", true);
         event.addCallbackParameter("easou_hk_price", String.valueOf(price));
-        event.setRevenue(price, ncy);
+        event.setRevenue(price, "USD");
         event.setOrderId(orderId);
         Log.d(TAG, "订单id........" + orderId);
         Adjust.trackEvent(event);

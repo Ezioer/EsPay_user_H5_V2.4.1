@@ -15,7 +15,7 @@ import java.util.Map;
 public class EAPayInter {
 
     //海外支付验证交易
-    public static BaseResponse verGooglePlayOrder(String token, String orderNo, String appId, float totalAmount, int num) {
+    public static BaseResponse verGooglePlayOrder(String token, String orderNo, String appId, Double totalAmount, int num) {
         try {
             JSONObject object = new JSONObject();
             JSONObject data = new JSONObject();

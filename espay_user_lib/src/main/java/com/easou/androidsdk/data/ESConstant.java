@@ -14,6 +14,7 @@ public class ESConstant {
     public static final String PRODUCT_NAME = "productName";
     public static final String TRADE_NAME = "tradeName";
     public static final String MONEY = "money";
+    public static final String NCY = "NCY";
     public static final String NOTIFY_URL = "notifyUrl";
     public static final String REDIRECT_URL = "redirectUrl";
     public static final String NEED_CHANNELS = "needChannels";

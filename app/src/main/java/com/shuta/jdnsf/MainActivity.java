@@ -1,6 +1,7 @@
 package com.shuta.jdnsf;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -8,10 +9,13 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.text.InputFilter;
+import android.text.InputType;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -33,6 +37,7 @@ import com.easou.androidsdk.util.Tools;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         mPlayId = (EditText) findViewById(R.id.tv_playerId);
         getSupportActionBar().hide();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -312,42 +316,63 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                  * 支付接口
                  * Activity：当前activity
                  */
-                tradeId = System.currentTimeMillis() + "";
-                JSONObject payInfo = new JSONObject();
-                try {
-                    payInfo.put(ESConstant.PRODUCT_ID, productId);
-                    payInfo.put(ESConstant.TRADE_ID, tradeId);
-                    payInfo.put(ESConstant.APP_ID, "2898");
-                    payInfo.put(ESConstant.ACCOUNT_ID, "es.9");
-                    payInfo.put(ESConstant.PLAYER_SERVER_ID, "1");
-                    payInfo.put(ESConstant.SERVER_NAME, "hahaha");
-                    payInfo.put(ESConstant.QN, "jdau2898_10054_001");
-                    payInfo.put(ESConstant.PLAYER_ID, "111");
-                    payInfo.put(ESConstant.PLAYER_NAME, "ka");
-                    payInfo.put(ESConstant.PLAYER_LEVEL, "1");
-                    payInfo.put(ESConstant.MONEY, 100);
-                    payInfo.put(ESConstant.PRODUCT_NAME, "宝石");
-                } catch (JSONException e) {
-                }
-                Starter.getInstance().pay(MainActivity.this, payInfo, new ESdkPayCallback() {
 
-                    @Override
-                    public void onPaySuccess(int num) {
-                        // num为用户购买此件商品的数量
-                        Toast.makeText(MainActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
-                    }
+                final EditText inputAmount = new EditText(MainActivity.this);
+                inputAmount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                inputAmount.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
 
-                    @Override
-                    public void onPayFail(int code) {
-                        //1000用户取消支付
-                        //1001支付失败
-                        //1002服务器验证交易失败，等验证成功后会继续回调支付成功接口
-                        //1003已拥有该商品
-                        //1004宜搜下单失败
-                        Toast.makeText(MainActivity.this, "支付失败" + code, Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("输入支付金额").setView(inputAmount)
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        String mPayAmount = inputAmount.getText().toString();
+                        tradeId = System.currentTimeMillis() + "";
+                        JSONObject payInfo = new JSONObject();
+                        try {
+                            payInfo.put(ESConstant.PRODUCT_ID, productId);
+                            payInfo.put(ESConstant.TRADE_ID, tradeId);
+                            payInfo.put(ESConstant.APP_ID, "2898");
+                            payInfo.put(ESConstant.ACCOUNT_ID, "es.9");
+                            payInfo.put(ESConstant.PLAYER_SERVER_ID, "1");
+                            payInfo.put(ESConstant.SERVER_NAME, "hahaha");
+                            payInfo.put(ESConstant.QN, "jdau2898_10054_001");
+                            payInfo.put(ESConstant.PLAYER_ID, "111");
+                            payInfo.put(ESConstant.PLAYER_NAME, "ka");
+                            payInfo.put(ESConstant.PLAYER_LEVEL, "1");
+                            payInfo.put(ESConstant.MONEY, Integer.valueOf(mPayAmount));
+                            payInfo.put(ESConstant.PRODUCT_NAME, "宝石");
+                        } catch (JSONException e) {
+                        }
+                        Starter.getInstance().pay(MainActivity.this, payInfo, new ESdkPayCallback() {
+
+                            @Override
+                            public void onPaySuccess(int num) {
+                                // num为用户购买此件商品的数量
+                                Toast.makeText(MainActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onPayFail(int code) {
+                                //1000用户取消支付
+                                //1001支付失败
+                                //1002服务器验证交易失败，等验证成功后会继续回调支付成功接口
+                                //1003已拥有该商品
+                                //1004宜搜下单失败
+                                Toast.makeText(MainActivity.this, "支付失败" + code, Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                 });
+                builder.show();
                 break;
+
 
             default:
                 break;
