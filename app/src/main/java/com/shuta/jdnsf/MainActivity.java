@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final int PERMISSIONCODE = 1;
     private static String tradeId; // 游戏订单号
-    private static String productId = "yisou_128";
+    private static String productId = "yisou_18";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

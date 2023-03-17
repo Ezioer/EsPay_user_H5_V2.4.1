@@ -2,6 +2,7 @@ package com.easou.androidsdk;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -43,8 +44,10 @@ import com.easou.androidsdk.plugin.StartLogPlugin;
 import com.easou.androidsdk.romutils.RomHelper;
 import com.easou.androidsdk.romutils.RomUtils;
 import com.easou.androidsdk.ui.ESUserWebActivity;
+import com.easou.androidsdk.ui.LoadingDialog;
 import com.easou.androidsdk.util.AESUtil;
 import com.easou.androidsdk.util.CommonUtils;
+import com.easou.androidsdk.util.DialogerUtils;
 import com.easou.androidsdk.util.ESdkLog;
 import com.easou.androidsdk.util.ThreadPoolManager;
 import com.easou.androidsdk.util.Tools;
@@ -325,6 +328,7 @@ public class Starter {
                                     mActivity.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
+                                            hideDialog();
                                             BillingResult billingFlow = billingClient.launchBillingFlow(mActivity, billingFlowParams);
                                         }
                                     });
@@ -368,6 +372,7 @@ public class Starter {
     };
 
     private void initBilling(Activity mActivity) {
+        showDialog();
         if (billingClient == null) {
             billingClient = BillingClient.newBuilder(mActivity)
                     .setListener(purchasesUpdatedListener)
@@ -1091,5 +1096,28 @@ public class Starter {
             event.addCallbackParameter("app_version", mActivity.getApplicationInfo().packageName);
         }
         return event;
+    }
+
+    private static ProgressDialog progressDialog = null;
+
+    private void showDialog() {
+        try {
+            if (progressDialog == null) {
+                progressDialog = new ProgressDialog(mActivity);
+            }
+            progressDialog.setMessage("Loading......");
+//            progressDialog.setTitle(R.string.es_loading);
+         /*   progressDialog.setTitle(mActivity.getApplication().getResources()
+                    .getIdentifier("es_loading", "string", getApplication().getPackageName()));*/
+            progressDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void hideDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 }
