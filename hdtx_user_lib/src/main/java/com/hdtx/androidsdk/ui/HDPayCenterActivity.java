@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -599,7 +600,7 @@ public class HDPayCenterActivity extends BaseActivity {
         }).start();*/
 
 
-        StartLogPlugin.startGameOrderLog(money);
+//        StartLogPlugin.startGameOrderLog(money);
 
 //		ESUserWebActivity.clientToJS(Constant.YSTOJS_GAME_ORDER_LOG, map);
     }
@@ -943,8 +944,16 @@ public class HDPayCenterActivity extends BaseActivity {
 
     public static boolean isTencentAvilible(Context context, String bundleName) {
         final PackageManager packageManager = context.getPackageManager();// 获取packagemanager
-        List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);// 获取所有已安装程序的包信息
-        if (pinfo != null) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setPackage("com.tencent.mm");
+        List<ResolveInfo> resolveInfoList = packageManager.queryIntentActivities(intent, 0);
+        if (resolveInfoList.size() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+//        List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);// 获取所有已安装程序的包信息
+       /* if (pinfo != null) {
             for (int i = 0; i < pinfo.size(); i++) {
                 String pn = pinfo.get(i).packageName;
                 if (pn.equals("com.tencent." + bundleName)) {
@@ -952,7 +961,7 @@ public class HDPayCenterActivity extends BaseActivity {
                 }
             }
         }
-        return false;
+        return false;*/
     }
 
 

@@ -483,10 +483,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     // 设置调用支付接口所需的Map参数
                     payInfo = new HashMap<String, String>();
                     payInfo.put(HDConstant.MONEY, mPayAmount); // 支付金额
-                    payInfo.put(HDConstant.TRADE_ID, tradeId); // 游戏订单号
-                    payInfo.put(HDConstant.TRADE_NAME, tradeName); // 购买商品名称，根据支付金额对应修改，如6元对应600金币，98元对应9800金币
+                    payInfo.put(HDConstant.TRADE_ID, "10130093-aaaf3002_10054_001-1-hycn-hycn_1-hyys-3-comgokuildexm1-3002-20230316153030"); // 游戏订单号
+                    payInfo.put(HDConstant.TRADE_NAME, "普通充值6元"); // 购买商品名称，根据支付金额对应修改，如6元对应600金币，98元对应9800金币
                     payInfo.put(HDConstant.NEED_CHANNELS, needChannels); // 支付方式
-                    payInfo.put(HDConstant.NOTIFY_URL, ""); // 支付回调地址
+                    payInfo.put(HDConstant.NOTIFY_URL, "http://sdk_rzcs.ahudong.cn/sdk/hyys/pay-android"); // 支付回调地址
 
                     /**
                      * 支付接口
@@ -494,7 +494,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                      * Map<String, String>：支付所需的Map参数
                      * Handler：支付回调
                      */
-                    Starter.getInstance().pay(MainActivity.this, payInfo, mHandler);
+                    ThreadPoolManager.getInstance().addTask(new Runnable() {
+                        @Override
+                        public void run() {
+                            Starter.getInstance().pay(MainActivity.this, payInfo, mHandler);
+                        }
+                    });
+
                 }
             }
         });
