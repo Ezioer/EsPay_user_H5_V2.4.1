@@ -65,8 +65,8 @@ public class StartESUserPlugin {
         if (!TextUtils.isEmpty(imei.trim())) {
             Constant.IMEI = imei;
         }
-        Constant.NET_IP = Tools.getNetIp();
-
+//        Constant.NET_IP = Tools.getNetIp();
+        Constant.NET_IP = "";
         enterH5View();
     }
 
@@ -293,7 +293,7 @@ public class StartESUserPlugin {
             payAlipay = "ZKXHGALIPAY";
             Constant.PAY_CHANNEl = 3;
         } else if (channel.equals("JHHY")) {
-            payMark = "HYWJHHY";
+            payMark = "WZWECHATTEST";
             payWx = "WECHAT_JHHY";
             payAlipay = "JHHYALIPAY";
             Constant.PAY_CHANNEl = 4;

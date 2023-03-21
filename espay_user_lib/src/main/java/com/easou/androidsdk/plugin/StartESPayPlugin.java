@@ -99,7 +99,7 @@ public class StartESPayPlugin {
             String userType = "0";
 
             try {
-                payStatus = Constant.PAY_LIMIT_INFO_MAP.get(Constant.SDK_PAY_STATUS);
+//                payStatus = Constant.PAY_LIMIT_INFO_MAP.get(Constant.SDK_PAY_STATUS);
                 userType = Constant.PAY_LIMIT_INFO_MAP.get(Constant.SDK_USER_TYPE);
             } catch (Exception e) {
             }

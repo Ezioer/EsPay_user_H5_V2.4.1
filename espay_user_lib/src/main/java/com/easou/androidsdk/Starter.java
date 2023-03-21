@@ -99,7 +99,7 @@ public class Starter {
         if (Constant.isTTVersion == 1) {
             Constant.qnChannel = HumeSDK.getChannel(activity);
         }
-        new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
 //                ESdkLog.d("快手sdk激活");
