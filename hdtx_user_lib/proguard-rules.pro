@@ -434,7 +434,8 @@ native <methods>;
 
 -keep class com.bytedance.applog.picker.DomSender { public *; }
 -keep class com.bytedance.applog.tracker.WebViewUtil { public *; }
-
+-keep class com.bytedance.applog.convert.ClickIdProvider {public *; }
+-keep class com.bytedance.applog.convert.IPIDProvider {public *; }
 # 排除混淆webview的loadUrl
 -keepclassmembers class * {
     public void loadUrl(java.lang.String);
