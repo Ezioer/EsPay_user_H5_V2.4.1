@@ -92,7 +92,8 @@ public class Constant {
     public static String HOST_NAME = "";
     public static String HOST_NAME_DEFAULT = "mtianshitong.com";
 
-    public static String DOMAIN = "http://lab.pay.tjqzqkj.com";
+//    public static String DOMAIN = "http://lab.pay.tjqzqkj.com";
+public static String DOMAIN = "http://10.104.51.200:8000/";
     //public static String DOMAIN = "https://service.pay.";
 
     public static final String[] DOMAIN_HOST = {"domain.game.mtianshitong.com",
