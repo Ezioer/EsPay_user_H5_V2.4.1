@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.text.TextUtils;
 
 import com.hdtx.androidsdk.Starter;
+import com.hdtx.androidsdk.callback.AppTimeWatcher;
 import com.hdtx.androidsdk.data.Constant;
 import com.hdtx.androidsdk.http.EAPayInter;
 import com.hdtx.androidsdk.ui.HDUserWebActivity;
@@ -65,7 +66,7 @@ public class StartHDUserPlugin {
             Constant.IMEI = imei;
         }
         Constant.NET_IP = Tools.getNetIp().trim();
-
+        HDSdkLog.d("完成sdk登录准备工作......");
         enterH5View();
     }
 
@@ -224,11 +225,17 @@ public class StartHDUserPlugin {
     public static void showFloatView() {
 
         if (Constant.IS_LOGINED) {
+            HDSdkLog.d("resume---->logined");
             FloatView.show(Starter.mActivity);
         } else {
             if (Constant.IS_ENTERED_SDK) {
                 // 未登陆显示用户中心
+                HDSdkLog.d("resume---->entered");
                 StartHDUserPlugin.enterH5View();
+            } else {
+                if (AppTimeWatcher.isChangeBack) {
+                    StartHDUserPlugin.enterH5View();
+                }
             }
         }
     }

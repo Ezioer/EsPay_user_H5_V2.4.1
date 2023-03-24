@@ -87,7 +87,7 @@ public class HDUserWebActivity extends Activity {
         hideBottomUIMenu();
         setContentView(getApplication().getResources().getIdentifier("hd_web_user", "layout",
                 getApplication().getPackageName()));
-
+        HDSdkLog.d("进入sdk登录界面");
         mActivity = this;
         Constant.IS_ENTERED_SDK = true;
 

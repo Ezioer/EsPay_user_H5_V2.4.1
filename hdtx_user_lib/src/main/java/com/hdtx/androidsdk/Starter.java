@@ -84,7 +84,7 @@ public class Starter {
             });
         } catch (Exception e) {
         }
-
+        HDSdkLog.d("进入sdk登录流程");
         Starter.mCallback = mCallback;
         Starter.mActivity = activity;
         StartOtherPlugin.onLaunchApp();
@@ -374,6 +374,9 @@ public class Starter {
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             builder.detectFileUriExposure();
             StrictMode.setVmPolicy(builder.build());
+        }
+        if (getPropertiesValue(mContext, "isTTVersion").equals("0")) {
+            Constant.isTTVersion = 1;
         }
         System.loadLibrary("msaoaidsec");
         /** 百度初始化 */

@@ -35,6 +35,7 @@ public class AppTimeWatcher {
     private boolean isCancel = false;
     private boolean mBeginWork = false;
     public static boolean isLogOut = false;
+    public static boolean isChangeBack = false;
 
     public void onEnterForeground() {
         HDSdkLog.d("app is in foreground");
@@ -137,6 +138,7 @@ public class AppTimeWatcher {
             mActivityCount--;
             HDSdkLog.d("stop----->activitycount=" + mActivityCount);
             if (mActivityCount == 0) {
+                isChangeBack = true;
                 HDPlatform.isBackground = true;
                 onEnterBackground();
             }

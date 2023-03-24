@@ -52,6 +52,23 @@
 
     <!--    <uses-permission android:name="${applicationId}.permission.xenv.RECEIVE" />-->
 
+    <!-- asus -->
+    <uses-permission android:name="com.asus.msa.SupplementaryDID.ACCESS" />
+    <!-- freeme -->
+    <uses-permission android:name="freemme.permission.msa" />
+    <!--<queries>
+
+        &lt;!&ndash; freeme &ndash;&gt;
+        <package android:name="com.android.creator" />
+        &lt;!&ndash; zte &ndash;&gt;
+        <package android:name="com.mdid.msa" />
+        &lt;!&ndash; samsung &ndash;&gt;
+        <package android:name="com.samsung.android.deviceidservice" />
+        &lt;!&ndash; coolpad &ndash;&gt;
+        <package android:name="com.coolpad.deviceidsupport" />
+        &lt;!&ndash; oppo &ndash;&gt;
+        <package android:name="com.heytap.openid" />
+    </queries>-->
     <application
         android:usesCleartextTraffic="true"
         android:allowBackup="true"
@@ -66,6 +83,9 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+        <!--     <meta-data
+                 android:name="com.huawei.hms.client.service.name:ads-identifier"
+                 android:value="ads-identifier:3.4.39.302" />-->
         <provider
             android:name="com.qq.gdt.action.GDTInitProvider"
             android:authorities="${applicationId}.GDTInitProvider"
