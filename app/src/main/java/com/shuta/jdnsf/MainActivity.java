@@ -32,6 +32,7 @@ import com.easou.androidsdk.callback.ESdkPayCallback;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.data.ESConstant;
 import com.easou.androidsdk.util.CommonUtils;
+import com.easou.androidsdk.util.RSAUtil;
 import com.easou.androidsdk.util.Tools;
 
 import org.json.JSONException;
@@ -70,6 +71,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // 初始化demo演示UI
         initUI();
+        try {
+            String encData = "hello world";
+            String data = "L9hYztU1Rtk71+l1Eb2sI+0icsFpgbFjzLat37yijlw9/RVphDhqMWgrmHqypiI9PHK2itX7pg+rDjxLgqSyUQ==";
+            String priKey = "MIIBVAIBADANBgkqhkiG9w0BAQEFAASCAT4wggE6AgEAAkEAhsQ7a2p0L572LR7s9UcvNGSHrQcIYAOaxN0GPnRFE2HOjld21GyXecmnsIhladNT8D" +
+                    "+0YtoF" +
+                    "/A1O6sXQOdwxNwIDAQABAkB/LTO9vGoEfohmMCcBmLmNQclfmaFnqj8lxEaeLW76SBLYeQ084UKK6XcH7fCERgkeBSe6y6IGCYT/e1uV8o4BAiEA0/zX1jN022wO9bozNGr9Z/clWVoz+zSTsEv1MzF9hLcCIQCivxTChZJZP1wP+hIZe7doxexgjCx97ZEiiUGBL683gQIhAJ9toMWvnUsIUZfsmWXqsPnnnWc9t6pNOGV2OspthgCxAiASuAu5PAfTQBhktgyy5an44RsJF9ZePZ796++e3k83AQIgVrqMASrd8mIUYzUuAofI/VzU6NomPH0C/10FVh4YHkE=";
+
+            String pubKey = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAIbEO2tqdC+e9i0e7PVHLzRkh60HCGADmsTdBj50RRNhzo5XdtRsl3nJp7CIZWnTU/A" +
+                    "/tGLaBfwNTurF0DncMTcCAwEAAQ==";
+            String content = RSAUtil.decrypt(data, RSAUtil.getPrivateKey(priKey));
+//            String content = RSAUtil.encrypt(encData, RSAUtil.getPublicKey(pubKey));
+            int i = 9;
+        } catch (Exception e) {
+            int i = 9;
+        }
         checkRunTimePermission();
     }
 
