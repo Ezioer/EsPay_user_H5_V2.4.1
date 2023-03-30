@@ -293,7 +293,7 @@ public class StartESUserPlugin {
             payAlipay = "ZKXHGALIPAY";
             Constant.PAY_CHANNEl = 3;
         } else if (channel.equals("JHHY")) {
-            payMark = "WZWECHATTEST";
+            payMark = "HYWJHHY";
             payWx = "WECHAT_JHHY";
             payAlipay = "JHHYALIPAY";
             Constant.PAY_CHANNEl = 4;
