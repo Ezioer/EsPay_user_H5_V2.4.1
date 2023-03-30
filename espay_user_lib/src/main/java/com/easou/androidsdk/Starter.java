@@ -1021,6 +1021,7 @@ public class Starter {
     public void adjustPay(Double price, String ncy, String orderId) {
         AdjustEvent event = generateEvent("6yila5", true);
         event.addCallbackParameter("easou_hk_price", String.valueOf(price));
+        event.addCallbackParameter("easou_hk_orderid", orderId);
         event.setRevenue(price, "USD");
         event.setOrderId(orderId);
         Log.d(TAG, "订单id........" + orderId);
