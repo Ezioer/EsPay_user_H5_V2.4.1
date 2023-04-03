@@ -195,6 +195,7 @@ public static String DOMAIN = "https://service.pay.";
     public static final String DEVICE_ID = "deviceId";
     public static final String CLIENT_IP = "clientIp";
     public static final String APP_ID = "appId";
+    public static String APPID = "";
     public static final String PARTENER_ID = "partnerId";
     public static final String KEY = "key";
     public static final String QN = "qn";

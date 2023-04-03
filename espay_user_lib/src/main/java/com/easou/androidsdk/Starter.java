@@ -328,7 +328,6 @@ public class Starter {
                                     mActivity.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            hideDialog();
                                             BillingResult billingFlow = billingClient.launchBillingFlow(mActivity, billingFlowParams);
                                         }
                                     });
@@ -372,7 +371,6 @@ public class Starter {
     };
 
     private void initBilling(Activity mActivity) {
-        showDialog();
         if (billingClient == null) {
             billingClient = BillingClient.newBuilder(mActivity)
                     .setListener(purchasesUpdatedListener)
@@ -580,6 +578,7 @@ public class Starter {
         } catch (PackageManager.NameNotFoundException e) {
         }
         Tools.getAndroidId(mContext);
+        Constant.APPID = getPropertiesValue(mContext, "appId");
       /*  if (CommonUtils.readPropertiesValue(mContext, "adjust").equals("0")) {
             Constant.adjust = false;
         } else {
@@ -969,7 +968,9 @@ public class Starter {
     //完成注册
     public void fbCompRegister() {
         if (logger != null) {
-            logger.logEvent(AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION);
+            Bundle bundle = new Bundle();
+            bundle.putString("fb_content_id", "1");
+//            logger.logEvent(AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION);
         }
     }
 
@@ -1009,6 +1010,7 @@ public class Starter {
     public void adjustCheckOut(Double price) {
         AdjustEvent event = generateEvent("3f7zfy", true);
         event.addCallbackParameter("easou_hk_price", String.valueOf(price));
+        event.addPartnerParameter("easou_hk_user_id", Constant.ESDK_USERID);
         Adjust.trackEvent(event);
     }
 
@@ -1021,8 +1023,8 @@ public class Starter {
     public void adjustPay(Double price, String ncy, String orderId) {
         AdjustEvent event = generateEvent("6yila5", true);
         event.addCallbackParameter("easou_hk_price", String.valueOf(price));
-        event.addCallbackParameter("easou_hk_orderid", orderId);
         event.setRevenue(price, "USD");
+        event.addPartnerParameter("easou_hk_user_id", Constant.ESDK_USERID);
         event.setOrderId(orderId);
         Log.d(TAG, "订单id........" + orderId);
         Adjust.trackEvent(event);
@@ -1030,7 +1032,11 @@ public class Starter {
 
     //adjust 注册事件
     public void adjustRegister(String userId) {
-        Adjust.trackEvent(generateEvent("1mmn9g", false));
+        AdjustEvent event = generateEvent("1mmn9g", false);
+        event.addPartnerParameter("easou_hk_user_id", userId);
+        event.addPartnerParameter("easou_hk_version", Constant.SDK_VERSION);
+        event.addPartnerParameter("easou_hk_ver", Constant.SDK_VERSION);
+        Adjust.trackEvent(event);
     }
 
     //adjust 激活事件
@@ -1092,6 +1098,9 @@ public class Starter {
         event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
         event.addCallbackParameter("easou_hk_game_name", "京都大掌櫃");
+        if (mActivity != null) {
+            event.addCallbackParameter("easou_hk_app_id", getPropertiesValue(mActivity, "appId"));
+        }
         event.addCallbackParameter("app_name", Constant.SDK_VERSION);
         if (mActivity != null) {
             event.addCallbackParameter("app_version", mActivity.getApplicationInfo().packageName);
