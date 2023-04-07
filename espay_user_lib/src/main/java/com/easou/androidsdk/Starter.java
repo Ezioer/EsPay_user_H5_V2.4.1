@@ -1010,13 +1010,16 @@ public class Starter {
     public void adjustCheckOut(Double price) {
         AdjustEvent event = generateEvent("3f7zfy", true);
         event.addCallbackParameter("easou_hk_price", String.valueOf(price));
-        event.addPartnerParameter("easou_hk_user_id", Constant.ESDK_USERID);
+//        event.addPartnerParameter("easou_hk_user_id", Constant.ESDK_USERID);
         Adjust.trackEvent(event);
     }
 
     //adjust 启动事件
     public void adjustStart() {
-        Adjust.trackEvent(generateEvent("sqslba", false));
+        AdjustEvent event = generateEvent("sqslba", false);
+//        event.addPartnerParameter("easou_hk_user_id", Constant.APPID);
+//        event.addPartnerParameter("easou_hk_user_id", Constant.IMEI + "|" + System.currentTimeMillis());
+        Adjust.trackEvent(event);
     }
 
     //adjust 支付事件
@@ -1024,7 +1027,7 @@ public class Starter {
         AdjustEvent event = generateEvent("6yila5", true);
         event.addCallbackParameter("easou_hk_price", String.valueOf(price));
         event.setRevenue(price, "USD");
-        event.addPartnerParameter("easou_hk_user_id", Constant.ESDK_USERID);
+//        event.addPartnerParameter("easou_hk_user_id", Constant.ESDK_USERID);
         event.setOrderId(orderId);
         Log.d(TAG, "订单id........" + orderId);
         Adjust.trackEvent(event);
@@ -1033,9 +1036,8 @@ public class Starter {
     //adjust 注册事件
     public void adjustRegister(String userId) {
         AdjustEvent event = generateEvent("1mmn9g", false);
+//        event.addPartnerParameter("easou_hk_user_id", Constant.IMEI + "|" + System.currentTimeMillis());
         event.addPartnerParameter("easou_hk_user_id", userId);
-        event.addPartnerParameter("easou_hk_version", Constant.SDK_VERSION);
-        event.addPartnerParameter("easou_hk_ver", Constant.SDK_VERSION);
         Adjust.trackEvent(event);
     }
 
@@ -1105,6 +1107,11 @@ public class Starter {
         if (mActivity != null) {
             event.addCallbackParameter("app_version", mActivity.getApplicationInfo().packageName);
         }
+        return event;
+    }
+
+    private AdjustEvent generatePartnerEvent(AdjustEvent event) {
+        event.addPartnerParameter("easou_hk_description", Constant.IMEI + "|" + System.currentTimeMillis());
         return event;
     }
 
