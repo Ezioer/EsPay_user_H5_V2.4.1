@@ -766,7 +766,7 @@ public class HDPayCenterActivity extends BaseActivity {
 
         HttpAsyncTaskImp wxTask = new HttpAsyncTaskImp(mActivity, map, easoutgc, key, FeeType.WECHAT);
 
-        if (isTencentAvilible(mActivity, "mm")) {
+//        if (isTencentAvilible(mActivity, "mm")) {
             wxTask.setDataFinishListener(new HttpAsyncTaskImp.DataFinishListener() {
 
                 @Override
@@ -785,11 +785,11 @@ public class HDPayCenterActivity extends BaseActivity {
                 }
             });
             wxTask.executeProxy();
-        } else {
+     /*   } else {
             DialogerUtils.dismiss(mContext);
             Toast.makeText(mActivity, "请安装微信客户端", Toast.LENGTH_SHORT).show();
             onFailedCallBack(ErrorResult.ESPAY_FEE_ERROR, "支付失败");
-        }
+        }*/
     }
 
     public void zwxPay() {
@@ -799,7 +799,7 @@ public class HDPayCenterActivity extends BaseActivity {
 
         HttpAsyncTaskImp wfTask = new HttpAsyncTaskImp(mActivity, map, easoutgc, key, FeeType.ZWXESWECHAT);
 
-        if (isTencentAvilible(mActivity, "mm")) {
+//        if (isTencentAvilible(mActivity, "mm")) {
             wfTask.setDataFinishListener(new HttpAsyncTaskImp.DataFinishListener() {
 
                 @Override
@@ -839,11 +839,11 @@ public class HDPayCenterActivity extends BaseActivity {
                 }
             });
             wfTask.executeProxy();
-        } else {
+       /* } else {
             DialogerUtils.dismiss(mContext);
             Toast.makeText(mActivity, "请安装微信客户端", Toast.LENGTH_SHORT).show();
             onFailedCallBack(ErrorResult.ESPAY_FEE_ERROR, "支付失败");
-        }
+        }*/
     }
 
 //	public void wftPay() {

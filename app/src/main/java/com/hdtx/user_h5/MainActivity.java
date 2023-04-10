@@ -500,13 +500,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                      * Map<String, String>：支付所需的Map参数
                      * Handler：支付回调
                      */
-                    ThreadPoolManager.getInstance().addTask(new Runnable() {
-                        @Override
-                        public void run() {
-                            Starter.getInstance().pay(MainActivity.this, payInfo, mHandler);
-                        }
-                    });
 
+                    Starter.getInstance().pay(MainActivity.this, payInfo, mHandler);
                 }
             }
         });
