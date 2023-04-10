@@ -65,8 +65,8 @@ public class StartESUserPlugin {
         if (!TextUtils.isEmpty(imei.trim())) {
             Constant.IMEI = imei;
         }
-//        Constant.NET_IP = Tools.getNetIp();
-        Constant.NET_IP = "";
+        Constant.NET_IP = Tools.getNetIp();
+//        Constant.NET_IP = "";
         enterH5View();
     }
 
