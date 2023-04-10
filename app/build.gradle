@@ -9,8 +9,8 @@ android {
 //        applicationId "com.shuta.jdnsf"
         minSdkVersion 19
         targetSdkVersion 31
-        versionCode 4
-        versionName "4.0"
+        versionCode 10016
+        versionName "1.0.1"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
