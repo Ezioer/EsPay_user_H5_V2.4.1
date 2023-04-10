@@ -25,6 +25,7 @@ public class EAPayInter {
             data.put("appId", appId);
             data.put("totalAmount", String.valueOf(totalAmount));
             data.put("buyNums", num);
+//            return handleNetOpera(data, object, appId, Constant.GOOGLEVER);
             return handleNetOpera(data, object, appId, Constant.GOOGLEVER);
         } catch (Exception e) {
             return null;
@@ -40,6 +41,7 @@ public class EAPayInter {
             data.put("orderStatus", orderStatus);
             data.put("ackStatus", ackStatus);
             data.put("consumptionStatus", consumptionStatus);
+//            return handleNetOpera(data, object, appId, Constant.CONSUMPTION);
             return handleNetOpera(data, object, appId, Constant.CONSUMPTION);
         } catch (Exception e) {
             return null;
@@ -74,6 +76,7 @@ public class EAPayInter {
             data.put("playerLevel", info.optString("playerLevel"));
             data.put("money", info.optInt("money"));
             data.put("productName", info.optString("productName"));
+//            return handleNetOpera(data, object, map.get("appId"), Constant.CHECKORDER);
             return handleNetOpera(data, object, map.get("appId"), Constant.CHECKORDER);
         } catch (Exception e) {
             return null;

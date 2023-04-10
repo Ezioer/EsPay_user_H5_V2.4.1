@@ -132,6 +132,7 @@ public class Starter {
      * 宜搜SDK支付接口
      */
     public void pay(Activity mActivity, JSONObject info, ESdkPayCallback callback) {
+        showDialog();
         mPayInfo = info;
         mProductId = mPayInfo.optString(ESConstant.PRODUCT_ID);
         mPayCallBack = callback;
@@ -328,6 +329,7 @@ public class Starter {
                                     mActivity.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
+                                            hideDialog();
                                             BillingResult billingFlow = billingClient.launchBillingFlow(mActivity, billingFlowParams);
                                         }
                                     });
@@ -347,6 +349,7 @@ public class Starter {
                                     mActivity.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
+                                            hideDialog();
                                             mPayCallBack.onPayFail(1004);
                                         }
                                     });
