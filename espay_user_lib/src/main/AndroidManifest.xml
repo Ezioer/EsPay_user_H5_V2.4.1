@@ -52,6 +52,11 @@
         android:label="@string/app_name"
         android:supportsRtl="true">
         <provider
+            android:name="com.qq.gdt.action.GDTInitProvider"
+            android:authorities="${applicationId}.GDTInitProvider"
+            android:exported="false"></provider>
+
+        <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
             android:exported="false"

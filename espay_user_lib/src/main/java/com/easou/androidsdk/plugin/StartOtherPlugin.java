@@ -225,7 +225,9 @@ public class StartOtherPlugin {
      */
     public static void getOaid(final Context mContext, String cert) {
         ESdkLog.d("调用了联盟SDK获取oaid接口");
-
+        if (cert.isEmpty()) {
+            return;
+        }
         try {
             OaidHelper helper = new OaidHelper(new OaidHelper.AppIdsUpdater() {
                 @Override
@@ -258,8 +260,10 @@ public class StartOtherPlugin {
         ESdkLog.c("certnet----->", "cache-->" + cert);
         if (cert.isEmpty()) {
             String temp = EAPayInter.getOaidPerFromNet(context.getApplicationInfo().packageName);
-            getOaid(context, temp);
-            CommonUtils.saveCert(context, temp);
+            if (!temp.isEmpty()) {
+                getOaid(context, temp);
+                CommonUtils.saveCert(context, temp);
+            }
             ESdkLog.c("certnet----->", "netvalue-->" + temp);
         } else {
             getOaid(context, cert);

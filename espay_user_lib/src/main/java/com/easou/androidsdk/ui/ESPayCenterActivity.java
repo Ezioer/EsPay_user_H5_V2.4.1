@@ -768,30 +768,25 @@ public class ESPayCenterActivity extends BaseActivity {
 
         HttpAsyncTaskImp wxTask = new HttpAsyncTaskImp(mActivity, map, easoutgc, key, FeeType.WECHAT);
 
-        if (isTencentAvilible(mActivity, "mm")) {
-            wxTask.setDataFinishListener(new HttpAsyncTaskImp.DataFinishListener() {
 
-                @Override
-                public void setJson(Object object) {
-                    // TODO Auto-generated method stub
-                    json = (JSONObject) object;
-                    try {
-                        String paramStr = json.getString("tid") + "," + json.getString("aid") + "," + json.getString("bn")
-                                + "," + Constant.WECHAT_PAY_TYPE;
-                        HPlugin.pay(mActivity, paramStr);
-                    } catch (JSONException e) {
-                        // TODO Auto-generated catch block
-                        ESPayLog.d(TAG, "解析处理失败！" + e);
-                        e.printStackTrace();
-                    }
+        wxTask.setDataFinishListener(new HttpAsyncTaskImp.DataFinishListener() {
+
+            @Override
+            public void setJson(Object object) {
+                // TODO Auto-generated method stub
+                json = (JSONObject) object;
+                try {
+                    String paramStr = json.getString("tid") + "," + json.getString("aid") + "," + json.getString("bn")
+                            + "," + Constant.WECHAT_PAY_TYPE;
+                    HPlugin.pay(mActivity, paramStr);
+                } catch (JSONException e) {
+                    // TODO Auto-generated catch block
+                    ESPayLog.d(TAG, "解析处理失败！" + e);
+                    e.printStackTrace();
                 }
-            });
-            wxTask.executeProxy();
-        } else {
-            DialogerUtils.dismiss(mContext);
-            Toast.makeText(mActivity, "请安装微信客户端", Toast.LENGTH_SHORT).show();
-            onFailedCallBack(ErrorResult.ESPAY_FEE_ERROR, "支付失败");
-        }
+            }
+        });
+        wxTask.executeProxy();
     }
 
     public void zwxPay() {

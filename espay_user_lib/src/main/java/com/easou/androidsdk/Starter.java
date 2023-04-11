@@ -373,6 +373,9 @@ public class Starter {
             builder.detectFileUriExposure();
             StrictMode.setVmPolicy(builder.build());
         }
+        if (getPropertiesValue(mContext, "isTTVersion").equals("0")) {
+            Constant.isTTVersion = 1;
+        }
         System.loadLibrary("msaoaidsec");
         /** 百度初始化 */
         StartOtherPlugin.initBD(mContext);
