@@ -124,12 +124,12 @@ public static String DOMAIN = "https://service.pay.";
      * 支付 url
      */
     //google验证交易
-    public static final String GOOGLEVER = "http://8.210.195.16:6700/play/checkSign";
+    public static final String GOOGLEVER = "http://test.pay.easou-hk.com/play/checkSign";
     //pay.easou-hk.com
     //海外下单
-    public static final String CHECKORDER = "http://8.210.195.16:6700/play/createOrder";
+    public static final String CHECKORDER = "http://test.pay.easou-hk.com/play/createOrder";
     //同步核销状态
-    public static final String CONSUMPTION = "http://8.210.195.16:6700/play/consumption";
+    public static final String CONSUMPTION = "http://test.pay.easou-hk.com/play/consumption";
     //获取oaid证书
     public static final String GETOAIDCERT = "https://egamec.eayou.com/cert/getCertPem";
     /**
