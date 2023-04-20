@@ -71,7 +71,7 @@ public class HDUserWebActivity extends Activity {
      * js跳转控制
      */
     private static WebViewClient mWebViewClient;
-    private static com.hdtx.androidsdk.ui.HDUserWebActivity mActivity;
+    private static HDUserWebActivity mActivity;
 
     private static final int REQUEST_CODE_PICK_IMAGE = 11;
     private static final int REQUEST_CODE_IMAGE_CAPTURE = 99;

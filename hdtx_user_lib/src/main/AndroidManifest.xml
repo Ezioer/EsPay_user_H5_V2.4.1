@@ -90,6 +90,7 @@
             android:name="com.qq.gdt.action.GDTInitProvider"
             android:authorities="${applicationId}.GDTInitProvider"
             android:exported="false"></provider>
+
         <!-- 银联的 -->
         <!-- 插件入口界面 -->
         <activity
@@ -237,23 +238,23 @@
              android:name="appkey_avscan"
              android:value="100034" />-->
 
-        <service
-            android:name="com.volcengine.onekit.component.ComponentDiscoveryService"
-            android:exported="false">
-            <meta-data
-                android:name="com.bytedance.applog.onekit.AnalyticsComponentRegistrar"
-                android:value="com.volcengine.onekit.component.ComponentRegistrar" />
-            <meta-data
-                android:name="com.bytedance.applog.onekit.DeviceComponentRegistrar"
-                android:value="com.volcengine.onekit.component.ComponentRegistrar" />
-        </service>
+        <!-- <service
+             android:name="com.volcengine.onekit.component.ComponentDiscoveryService"
+             android:exported="false">
+             <meta-data
+                 android:name="com.bytedance.applog.onekit.AnalyticsComponentRegistrar"
+                 android:value="com.volcengine.onekit.component.ComponentRegistrar" />
+             <meta-data
+                 android:name="com.bytedance.applog.onekit.DeviceComponentRegistrar"
+                 android:value="com.volcengine.onekit.component.ComponentRegistrar" />
+         </service>
 
-        <activity android:name="com.bytedance.applog.migrate.MigrateDetectorActivity" />
+         <activity android:name="com.bytedance.applog.migrate.MigrateDetectorActivity" />
 
-        <receiver
-            android:name="com.bytedance.applog.collector.Collector"
-            android:enabled="true"
-            android:exported="false" />
+         <receiver
+             android:name="com.bytedance.applog.collector.Collector"
+             android:enabled="true"
+             android:exported="false" />-->
     </application>
 
 </manifest>

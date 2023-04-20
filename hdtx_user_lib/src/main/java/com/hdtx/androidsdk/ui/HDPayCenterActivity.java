@@ -624,8 +624,7 @@ public class HDPayCenterActivity extends BaseActivity {
             map.put(Constant.PAYCHANNEL, Constant.ZKXHGALIPAY);
         }*/
 
-//        map.put(Constant.PAYCHANNEL, CommonUtils.getPayAliObject(mActivity));
-        map.put(Constant.PAYCHANNEL, "ALIPAY2NEW");
+        map.put(Constant.PAYCHANNEL, CommonUtils.getPayAliObject(mActivity));
 
         HttpAsyncTaskImp aliTask = new HttpAsyncTaskImp(mActivity, map, easoutgc, key, FeeType.ALIPAY);
         aliTask.setDataFinishListener(new HttpAsyncTaskImp.DataFinishListener() {

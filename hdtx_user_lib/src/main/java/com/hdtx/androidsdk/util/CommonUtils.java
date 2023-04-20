@@ -134,13 +134,17 @@ public class CommonUtils {
     }
 
     public static String getH5Token(Context mContext) {
-        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
-        String token = settings.getString(Constant.ES_TOKEN, "").toString();
-        if (token.isEmpty() || null == settings || null == token) {
-            settings = mContext.getSharedPreferences(mContext.getPackageName() + Constant.ES_H5_TOKEN, 0);
-            token = settings.getString(Constant.ES_TOKEN, "").toString();
+        if (mContext != null) {
+            SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+            String token = settings.getString(Constant.ES_TOKEN, "").toString();
+            if (token.isEmpty() || null == settings || null == token) {
+                settings = mContext.getSharedPreferences(mContext.getPackageName() + Constant.ES_H5_TOKEN, 0);
+                token = settings.getString(Constant.ES_TOKEN, "").toString();
+            }
+            return token;
+        } else {
+            return "";
         }
-        return token;
     }
 
     public static void saveH5Token(Context mContext, String token) {
@@ -166,6 +170,19 @@ public class CommonUtils {
         SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString("replacesso", sso);
+        editor.commit();
+    }
+
+    public static int getIsShowPrivate(Context mContext) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        int sso = settings.getInt("showprivate", 0);
+        return sso;
+    }
+
+    public static void saveIsShowPrivate(Context mContext, int sso) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt("showprivate", 1);
         editor.commit();
     }
 

@@ -94,10 +94,12 @@ public class StartHDUserPlugin {
      * 进入H5 SDK页面
      */
     public static void enterH5View() {
-        Intent intent = new Intent();
-        intent.putExtra("params", getNewParam());
-        intent.setClass(Starter.mActivity, HDUserWebActivity.class);
-        Starter.mActivity.startActivity(intent);
+        if (Starter.mActivity != null) {
+            Intent intent = new Intent();
+            intent.putExtra("params", getNewParam());
+            intent.setClass(Starter.mActivity, HDUserWebActivity.class);
+            Starter.mActivity.startActivity(intent);
+        }
     }
 
     /**
@@ -234,7 +236,10 @@ public class StartHDUserPlugin {
                 StartHDUserPlugin.enterH5View();
             } else {
                 if (AppTimeWatcher.isChangeBack) {
-                    StartHDUserPlugin.enterH5View();
+                    try {
+                        StartHDUserPlugin.enterH5View();
+                    } catch (Exception e) {
+                    }
                 }
             }
         }
@@ -322,6 +327,11 @@ public class StartHDUserPlugin {
             payWx = "WECHAT_ZZQ";
             payAlipay = "ZZQALIPAY";
             Constant.PAY_CHANNEl = 8;
+        } else if (channel.equals("CLHY")) {
+            payMark = "CLHY";
+            payWx = "WECHAT_CLHY";
+            payAlipay = "ALIPAY2_CLHY";
+            Constant.PAY_CHANNEl = 9;
         } else {
             payMark = "AHUDONG";
             payWx = "WECHATNEW";

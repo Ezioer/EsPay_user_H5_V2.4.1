@@ -11,6 +11,7 @@ import android.os.StrictMode;
 //import com.baidu.mobads.action.BaiduAction;
 import com.bytedance.hume.readapk.HumeSDK;
 import com.hdtx.androidsdk.callback.AppTimeWatcher;
+import com.hdtx.androidsdk.callback.HDPrivateCallback;
 import com.hdtx.androidsdk.callback.HDSdkCallback;
 import com.hdtx.androidsdk.data.Constant;
 import com.hdtx.androidsdk.plugin.StartHDUserPlugin;
@@ -20,6 +21,7 @@ import com.hdtx.androidsdk.plugin.StartOtherPlugin;
 import com.hdtx.androidsdk.romutils.RomHelper;
 import com.hdtx.androidsdk.romutils.RomUtils;
 import com.hdtx.androidsdk.ui.HDUserWebActivity;
+import com.hdtx.androidsdk.ui.NotiDialog;
 import com.hdtx.androidsdk.util.CommonUtils;
 import com.hdtx.androidsdk.util.HDSdkLog;
 import com.hdtx.androidsdk.util.ThreadPoolManager;
@@ -89,11 +91,11 @@ public class Starter {
         Starter.mActivity = activity;
         StartOtherPlugin.onLaunchApp();
         StartOtherPlugin.initKSSDK(activity);
-        StartOtherPlugin.initTTSDK(activity);
         /** 初始化汇川广告GISM SDK */
         StartOtherPlugin.initGism(activity, false);
         /** 广点通SDK初始化 */
         StartOtherPlugin.initGDTAction(activity);
+        StartOtherPlugin.initTTSDK(activity);
         /** 百度初始化 */
        /* if (Constant.BD_SDK) {
             BaiduAction.setPrivacyStatus(PrivacyStatus.AGREE);
@@ -361,6 +363,22 @@ public class Starter {
         } else {
             BaiduAction.setPrivacyStatus(PrivacyStatus.AGREE);
         }*/
+    }
+
+    public void showPrivateDialog(Activity mActivity, final HDPrivateCallback callback) {
+        if (CommonUtils.getIsShowPrivate(mActivity) == 0) {
+            NotiDialog dialog = new NotiDialog(mActivity);
+            dialog.setAgreeListener(new NotiDialog.AgreeListener() {
+                @Override
+                public void buttonClick(int type) {
+                    //type 0 拒绝 1 同意
+                    callback.privateResult(type == 1);
+                }
+            });
+            dialog.show();
+        } else {
+            callback.privateResult(true);
+        }
     }
 
     /**

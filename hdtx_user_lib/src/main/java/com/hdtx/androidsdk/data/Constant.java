@@ -90,13 +90,16 @@ public class Constant {
      * URL 信息
      */
     public static String HOST_NAME = "";
-    public static String HOST_NAME_DEFAULT = "ahudong.cn";
+    //    public static String HOST_NAME_DEFAULT = "ahudong.cn";
+    public static String HOST_NAME_DEFAULT = "";
 
-    public static String DOMAIN = "http://pay.";
+    //    public static String DOMAIN = "http://pay.";
+    public static String DOMAIN = "http://192.168.1.139:8080";
 
-    public static final String[] DOMAIN_HOST = {"domain.ahudong.cn",
+    public static final String[] DOMAIN_HOST = {};
+  /*  public static final String[] DOMAIN_HOST = {"domain.ahudong.cn",
             "domain.game.ahudong.cn",
-            "ahudong.cn"};
+            "ahudong.cn"};*/
 
 
     //记录游戏角色信息
@@ -139,11 +142,6 @@ public class Constant {
     public static String SSO_URL = "http://login.";
     public static String SSO_REST = "/static/sdk/1.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
 
-    public static String sso_release = "https://h5.pay.mtianshitong.com/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
-    public static String sso_test = "http://lab.pay.appeasou.com:7500/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&payHostName=http://lab.pay.appeasou.com&ssoHostName=http://lab.sso.mtianshitong.com";
-
-    public static String domain_release = "https://service.pay.";
-    public static String domain_test = "http://lab.pay.appeasou.com";
     /**
      * 支付 url
      */
