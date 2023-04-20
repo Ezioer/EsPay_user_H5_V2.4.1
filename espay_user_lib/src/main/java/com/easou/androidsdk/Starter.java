@@ -322,37 +322,39 @@ public class Starter {
                         ThreadPoolManager.getInstance().addTask(new Runnable() {
                             @Override
                             public void run() {
-                                mNcy = list.get(0).getPriceCurrencyCode();
-                                BaseResponse result = EAPayInter.checkOrder(mTradeId, mProductId, list.get(0).getPrice(), list.get(0).getPriceAmountMicros(), mNcy,
-                                        CommonUtils.getCheckOutParams(), mPayInfo);
-                                if (result != null && result.getCode() == 0) {
-                                    mActivity.runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            hideDialog();
-                                            BillingResult billingFlow = billingClient.launchBillingFlow(mActivity, billingFlowParams);
-                                        }
-                                    });
-                                    try {
-                                        JSONObject custom = new JSONObject(result.getData().toString());
-                                        String data = AESUtil.decrypt(custom.optString("content"), Constant.AESKEY);
-                                        JSONObject content = new JSONObject(data);
-                                        mESOrder = content.optString("orderNo");
+                                synchronized (Starter.class) {
+                                    mNcy = list.get(0).getPriceCurrencyCode();
+                                    BaseResponse result = EAPayInter.checkOrder(mTradeId, mProductId, list.get(0).getPrice(), list.get(0).getPriceAmountMicros(), mNcy,
+                                            CommonUtils.getCheckOutParams(), mPayInfo);
+                                    if (result != null && result.getCode() == 0) {
+                                        mActivity.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                hideDialog();
+                                                BillingResult billingFlow = billingClient.launchBillingFlow(mActivity, billingFlowParams);
+                                            }
+                                        });
+                                        try {
+                                            JSONObject custom = new JSONObject(result.getData().toString());
+                                            String data = AESUtil.decrypt(custom.optString("content"), Constant.AESKEY);
+                                            JSONObject content = new JSONObject(data);
+                                            mESOrder = content.optString("orderNo");
 //                                        StartOtherPlugin.appsFlyerCheckout(Float.valueOf(mPrice), mNcy, mProductId, mESOrder);
-                                        Log.d(TAG, "下单成功日志 fb........" + mPrice + mESOrder);
-                                        adjustCheckOut(mPrice);
-                                        fbCheckOut(mPrice, mProductId, mNcy, mESOrder);
-                                    } catch (Exception e) {
-                                    }
-                                } else {
-                                    Log.d(TAG, "下单失败........" + 1004);
-                                    mActivity.runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            hideDialog();
-                                            mPayCallBack.onPayFail(1004);
+                                            Log.d(TAG, "下单成功日志 fb........" + mPrice + mESOrder);
+                                            adjustCheckOut(mPrice);
+                                            fbCheckOut(mPrice, mProductId, mNcy, mESOrder);
+                                        } catch (Exception e) {
                                         }
-                                    });
+                                    } else {
+                                        Log.d(TAG, "下单失败........" + 1004);
+                                        mActivity.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                hideDialog();
+                                                mPayCallBack.onPayFail(1004);
+                                            }
+                                        });
+                                    }
                                 }
                             }
                         });
