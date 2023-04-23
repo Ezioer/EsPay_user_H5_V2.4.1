@@ -90,16 +90,14 @@ public class Constant {
      * URL 信息
      */
     public static String HOST_NAME = "";
-    //    public static String HOST_NAME_DEFAULT = "ahudong.cn";
-    public static String HOST_NAME_DEFAULT = "";
+    public static String HOST_NAME_DEFAULT = "ahudong.cn";
 
-    //    public static String DOMAIN = "http://pay.";
-    public static String DOMAIN = "http://192.168.1.139:8080";
+    public static String DOMAIN = "http://pay.";
+//    public static String DOMAIN = "http://192.168.1.139:8080";
 
-    public static final String[] DOMAIN_HOST = {};
-  /*  public static final String[] DOMAIN_HOST = {"domain.ahudong.cn",
+    public static final String[] DOMAIN_HOST = {"domain.ahudong.cn",
             "domain.game.ahudong.cn",
-            "ahudong.cn"};*/
+            "ahudong.cn"};
 
 
     //记录游戏角色信息
