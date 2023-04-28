@@ -132,7 +132,6 @@ public class Starter {
      * 宜搜SDK支付接口
      */
     public void pay(Activity mActivity, JSONObject info, ESdkPayCallback callback) {
-        showDialog();
         mPayInfo = info;
         mProductId = mPayInfo.optString(ESConstant.PRODUCT_ID);
         mPayCallBack = callback;
@@ -165,6 +164,7 @@ public class Starter {
                                     Log.d(TAG, "购买成功，验证订单中........");
                                     //购买商品的数量
                                     final int num = purchase.getQuantity();
+                                    mESOrder = purchase.getAccountIdentifiers().getObfuscatedAccountId();
                                     String appId = CommonUtils.readPropertiesValue(Starter.mActivity, "appId");
                                     final BaseResponse result = EAPayInter.verGooglePlayOrder(purchase.getPurchaseToken(), mESOrder, appId, mPrice * num, num);
                                     if (result != null && result.getCode() == 0) {
@@ -316,9 +316,6 @@ public class Starter {
                         //list为可用商品的集合
                         //将要购买商品的商品详情配置到参数中
                         Log.d(TAG, "应用内商品数量：" + list.size());
-                        final BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
-                                .setSkuDetails(list.get(0))
-                                .build();
                         ThreadPoolManager.getInstance().addTask(new Runnable() {
                             @Override
                             public void run() {
@@ -327,13 +324,6 @@ public class Starter {
                                     BaseResponse result = EAPayInter.checkOrder(mTradeId, mProductId, list.get(0).getPrice(), list.get(0).getPriceAmountMicros(), mNcy,
                                             CommonUtils.getCheckOutParams(), mPayInfo);
                                     if (result != null && result.getCode() == 0) {
-                                        mActivity.runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                hideDialog();
-                                                BillingResult billingFlow = billingClient.launchBillingFlow(mActivity, billingFlowParams);
-                                            }
-                                        });
                                         try {
                                             JSONObject custom = new JSONObject(result.getData().toString());
                                             String data = AESUtil.decrypt(custom.optString("content"), Constant.AESKEY);
@@ -345,6 +335,17 @@ public class Starter {
                                             fbCheckOut(mPrice, mProductId, mNcy, mESOrder);
                                         } catch (Exception e) {
                                         }
+                                        mActivity.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                hideDialog();
+                                                final BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
+                                                        .setSkuDetails(list.get(0))
+                                                        .setObfuscatedAccountId(mESOrder)
+                                                        .build();
+                                                BillingResult billingFlow = billingClient.launchBillingFlow(mActivity, billingFlowParams);
+                                            }
+                                        });
                                     } else {
                                         Log.d(TAG, "下单失败........" + 1004);
                                         mActivity.runOnUiThread(new Runnable() {
@@ -391,7 +392,7 @@ public class Starter {
      * 宜搜SDK登陆接口
      */
     public void login(final Activity activity, ESdkCallback mCallback) {
-       /* ThreadPoolManager.getInstance().addTask(new Runnable() {
+      /*  ThreadPoolManager.getInstance().addTask(new Runnable() {
             @Override
             public void run() {
                 Looper.prepare();
@@ -1138,11 +1139,11 @@ public class Starter {
     }
 
     private void hideDialog() {
-        try {
+        /*try {
             if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
         } catch (Exception e) {
-        }
+        }*/
     }
 }
