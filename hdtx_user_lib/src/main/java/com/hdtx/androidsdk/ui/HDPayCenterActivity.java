@@ -1129,7 +1129,7 @@ public class HDPayCenterActivity extends BaseActivity {
         // e币支付
 //		refreshUI();
 
-        StartOtherPlugin.logTTActionPurchase(money, productName, payType, true, appId, Constant.ESDK_USERID);
+        StartOtherPlugin.logTTActionPurchase(money, productName, payType, true, appId);
         StartOtherPlugin.logGismActionPurchase(money, productName, payType, true);
         StartOtherPlugin.logGDTActionPurchase(money, productName, true);
         StartOtherPlugin.logKSActionPerchase(money);

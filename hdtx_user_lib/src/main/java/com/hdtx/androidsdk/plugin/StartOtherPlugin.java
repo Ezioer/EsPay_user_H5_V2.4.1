@@ -17,6 +17,7 @@ import com.hdtx.androidsdk.util.CommonUtils;
 import com.hdtx.androidsdk.util.HDSdkLog;
 import com.hdtx.androidsdk.util.OaidHelper;
 import com.hdtx.androidsdk.util.SimulatorUtils;
+import com.hdtx.androidsdk.util.ThreadPoolManager;
 import com.hdtx.androidsdk.util.Tools;
 import com.gism.sdk.GismConfig;
 import com.gism.sdk.GismEventBuilder;
@@ -97,7 +98,7 @@ public class StartOtherPlugin {
     /**
      * 头条SDK上报下单
      */
-    public static void logTTActionOrder(String money, String productName) {
+    public static void logTTActionOrder(final String money, String productName) {
 
         if (Constant.TOUTIAO_SDK) {
             if (money != null) {
@@ -108,7 +109,6 @@ public class StartOtherPlugin {
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
-
                 GameReportHelper.onEventCheckOut("", productName, "",
                         1, true, "", "", true, payMoney);
             }
@@ -147,7 +147,7 @@ public class StartOtherPlugin {
      * 头条SDK上报购买
      */
     public static void logTTActionPurchase(final String money, final String productName, final String payType,
-                                           final boolean status, final String appId, final String userId) {
+                                           final boolean status, final String appId) {
 
         if (Constant.TOUTIAO_SDK) {
             if (money != null) {
@@ -160,33 +160,23 @@ public class StartOtherPlugin {
                     e.printStackTrace();
                 }
                 final int mMoney = payMoney;
-                new Thread(new Runnable() {
+                ThreadPoolManager.getInstance().addTask(new Runnable() {
                     @Override
                     public void run() {
-                        int count = 0;
-                        while (count < 3) {
-                            int result = EAPayInter.isUploadPay(userId, appId);
-                            if (result != -1) {
-                                //1上传头条付费日志，0不上传
-                                if (result == 1) {
-                                    HDSdkLog.d("上传头条付费日志");
-                                    GameReportHelper.onEventPurchase("", productName, "", 1,
-                                            payType, "¥", status, mMoney);
-                                }
-                                //请求成功停止轮询请求
-                                break;
-                            } else {
-                                //-1为接口请求出错，暂停100毫秒轮询三次
-                                count++;
-                                try {
-                                    Thread.sleep(100);
-                                } catch (InterruptedException e) {
-                                    HDSdkLog.d(e.toString());
-                                }
+                        if (Constant.isTTVersion == 1) {
+                            int result = EAPayInter.isUploadPay(String.valueOf(Double.valueOf(money) * 100), appId, Constant.ESDK_USERID);
+                            //1上传头条付费日志，0不上传
+                            if (result == 1) {
+                                HDSdkLog.d("上传头条付费日志");
+                                GameReportHelper.onEventPurchase("", productName, "", 1,
+                                        payType, "¥", status, mMoney);
                             }
+                        } else {
+                            GameReportHelper.onEventPurchase("", productName, "", 1,
+                                    payType, "¥", status, mMoney);
                         }
                     }
-                }).start();
+                });
             }
         }
     }

@@ -4,8 +4,10 @@ import com.hdtx.androidsdk.data.Constant;
 import com.hdtx.androidsdk.data.PayItem;
 import com.hdtx.androidsdk.util.HDPayLog;
 import com.hdtx.androidsdk.util.HDSdkLog;
+import com.hdtx.androidsdk.util.Md5SignUtils;
 import com.hdtx.androidsdk.util.Tools;
 import com.google.gson.Gson;
+import com.ulopay.android.h5_library.utils.MD5Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -215,13 +217,18 @@ public class EAPayInter {
         return null;
     }
 
-    public static int isUploadPay(String userId, String appId) {
+    public static int isUploadPay(String money, String appId, String userId) {
         try {
-            String url = "https://listener.ahudong.cn/sa/todayUser.do?accountid=" + userId + "&appid=" + appId + "&t=" + System.currentTimeMillis();
+            String[] temp = money.split("\\.");
+            String pay = temp[0];
+            long time = System.currentTimeMillis();
+            String sign = Md5SignUtils.digest(appId + "tt" + pay + time + userId);
+            String url = "https://egamec.ahudong.cn/trp/as?a=" + appId + "&c=" + "tt" + "&m=" + pay + "&t=" + time + "&u=" + userId + "&s=" + sign;
+            HDSdkLog.d(url);
             String result = HdPayNetGetPost.sendGet(url, null, "");
             //数据为null，有可能是请求出错
             if (result == null) {
-                return -1;
+                return 1;
             }
 
             //不上传头条付费日志
@@ -232,7 +239,7 @@ public class EAPayInter {
             return 1;
         } catch (Exception e) {
             HDSdkLog.d(e.toString());
-            return -1;
+            return 1;
         }
     }
 
