@@ -1028,6 +1028,7 @@ public class Starter {
         Adjust.trackEvent(event);
     }
 
+
     //adjust 支付事件
     public void adjustPay(Double price, String ncy, String orderId) {
         AdjustEvent event = generateEvent("6yila5", true);
