@@ -75,14 +75,17 @@ public class Starter {
      * 宜搜SDK登陆接口
      */
     public void login(final Activity activity, ESdkCallback mCallback) {
-        ThreadPoolManager.getInstance().addTask(new Runnable() {
-            @Override
-            public void run() {
-                Looper.prepare();
-                StartOtherPlugin.getCert(activity);
-                Looper.loop();
-            }
-        });
+        try {
+            ThreadPoolManager.getInstance().addTask(new Runnable() {
+                @Override
+                public void run() {
+                    Looper.prepare();
+                    StartOtherPlugin.getCert(activity);
+                    Looper.loop();
+                }
+            });
+        } catch (Exception e) {
+        }
         Starter.mCallback = mCallback;
         Starter.mActivity = activity;
         StartOtherPlugin.onLaunchApp();

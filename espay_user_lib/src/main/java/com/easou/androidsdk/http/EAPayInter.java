@@ -225,7 +225,7 @@ public class EAPayInter {
             String result = EsPayNetGetPost.sendGet(url, null, "");
             //数据为null，有可能是请求出错
             if (result == null) {
-                return -1;
+                return 1;
             }
 
             //不上传头条付费日志
@@ -236,7 +236,7 @@ public class EAPayInter {
             return 1;
         } catch (Exception e) {
             ESdkLog.d(e.toString());
-            return -1;
+            return 1;
         }
     }
 

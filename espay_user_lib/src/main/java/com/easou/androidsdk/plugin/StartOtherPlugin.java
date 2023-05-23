@@ -169,29 +169,17 @@ public class StartOtherPlugin {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        int count = 0;
-                        while (count < 3) {
-                            int result = EAPayInter.isUploadPay(userId, appId);
-                            if (result != -1) {
-                                //1上传头条付费日志，0不上传
-                                if (result == 1) {
-                                    ESdkLog.d("上传头条付费日志");
-                                    GameReportHelper.onEventPurchase("", productName, "", 1,
-                                            payType, "¥", status, mMoney);
-                                }
-                                //请求成功停止轮询请求
-                                break;
-                            } else {
-                                //-1为接口请求出错，暂停100毫秒轮询三次
-                                count++;
-                                try {
-                                    Thread.sleep(100);
-                                } catch (InterruptedException e) {
-                                    ESdkLog.d(e.toString());
-                                }
-                            }
+//                        int count = 0;
+//                        while (count < 3) {
+                        int result = EAPayInter.isUploadPay(userId, appId);
+                        //1上传头条付费日志，0不上传
+                        if (result == 1) {
+                            ESdkLog.d("上传头条付费日志");
+                            GameReportHelper.onEventPurchase("", productName, "", 1,
+                                    payType, "¥", status, mMoney);
                         }
                     }
+//                    }
                 }).start();
             }
         }
