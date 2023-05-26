@@ -141,6 +141,7 @@ public class ESUserWebActivity extends Activity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
+                ESdkLog.d("onpagefinished");
                 hideDialog();
             }
 
@@ -158,14 +159,17 @@ public class ESUserWebActivity extends Activity {
             @Override
             public void onReceivedError(final WebView view, int errorCode, String description, String failingUrl) {
                 super.onReceivedError(view, errorCode, description, failingUrl);
+                ESdkLog.d("请求用户中心失败" + failingUrl);
                 ThreadPoolManager.getInstance().addTask(new Runnable() {
                     @Override
                     public void run() {
                         StartESUserPlugin.startRequestHost(mActivity, true, new ReplaceCallBack() {
                             @Override
                             public void replaceSuccess() {
+                                String url = Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + mParams;
+                                ESdkLog.d("替换域名成功" + url);
                                 if (Constant.SSO_URL.startsWith("https")) {
-                                    view.loadUrl(Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + mParams);
+                                    view.loadUrl(url);
                                 } else {
                                     view.loadUrl(Constant.SSO_URL + mParams);
                                 }
@@ -173,6 +177,7 @@ public class ESUserWebActivity extends Activity {
 
                             @Override
                             public void replaceFail() {
+                                ESdkLog.d("替换域名失败");
                                 ViewParent webParentView = (ViewParent) mWebView.getParent();
                                 ((ViewGroup) webParentView).removeAllViews();
                                 showAlert();
@@ -206,8 +211,10 @@ public class ESUserWebActivity extends Activity {
         if (!TextUtils.isEmpty(CommonUtils.getIsReplaceSso(mActivity))) {
             Constant.URL_BACKUP = url_backup;
         }
+        String url = Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + mParams;
+        ESdkLog.d("usercenter->" + url);
         if (Constant.SSO_URL.startsWith("https")) {
-            mWebView.loadUrl(Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + mParams);
+            mWebView.loadUrl(url);
         } else {
             mWebView.loadUrl(Constant.SSO_URL + mParams);
         }
@@ -387,7 +394,7 @@ public class ESUserWebActivity extends Activity {
     }
 
     private void showAlert() {
-
+        ESdkLog.d("个人中心请求错误");
         final AlertDialog.Builder exitDialog = new AlertDialog.Builder(mActivity, AlertDialog.THEME_HOLO_LIGHT);
         exitDialog.setTitle("温馨提示")
                 .setMessage("网络连接错误，请检查网络后重启游戏！")
@@ -417,6 +424,7 @@ public class ESUserWebActivity extends Activity {
     }
 
     private void hideDialog() {
+        ESdkLog.d("close dialog");
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }

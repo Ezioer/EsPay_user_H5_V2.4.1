@@ -65,7 +65,7 @@ public class StartESUserPlugin {
         if (!TextUtils.isEmpty(imei.trim())) {
             Constant.IMEI = imei;
         }
-        Constant.NET_IP = Tools.getNetIp();
+        Constant.NET_IP = Tools.getNetIp().trim();
 //        Constant.NET_IP = "";
         enterH5View();
     }
@@ -215,7 +215,7 @@ public class StartESUserPlugin {
             param = param + "&sdkVersion=hongbao";
         }*/
         ESdkLog.d("上传的oaid：" + Constant.OAID);
-        System.out.println("param：" + param);
+        ESdkLog.d("onlogin" + param);
         return param;
     }
 
@@ -225,9 +225,11 @@ public class StartESUserPlugin {
     public static void showFloatView() {
 
         if (Constant.IS_LOGINED) {
+            ESdkLog.d("onresume login");
             FloatView.show(Starter.mActivity);
         } else {
             if (Constant.IS_ENTERED_SDK) {
+                ESdkLog.d("onresume enter");
                 // 未登陆显示用户中心
                 StartESUserPlugin.enterH5View();
             }

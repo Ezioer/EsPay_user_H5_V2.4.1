@@ -145,6 +145,7 @@ public class Starter {
      * 显示SDK悬浮窗
      */
     public void showFloatView() {
+        ESdkLog.d("onresume");
         if (RomUtils.checkIsVivo()) {
             if (mActivity != null && RomHelper.checkPermission(mActivity)) {
                 StartESUserPlugin.showFloatView();
