@@ -130,6 +130,10 @@ public class OaidHelper implements IIdentifierListener {
         boolean isLimited = supplier.isLimited();
         String oaid = supplier.getOAID();
         Constant.OAID = oaid;
+        if (oaid.isEmpty()) {
+            oaid = "0";
+            Constant.OAID = "0";
+        }
         String vaid = supplier.getVAID();
         String aaid = supplier.getAAID();
 

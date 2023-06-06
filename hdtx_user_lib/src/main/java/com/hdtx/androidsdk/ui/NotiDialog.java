@@ -27,6 +27,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.mobads.action.BaiduAction;
+import com.baidu.mobads.action.PrivacyStatus;
+import com.hdtx.androidsdk.data.Constant;
 import com.hdtx.androidsdk.util.CommonUtils;
 import com.hdtx.hdtx_user_lib.R;
 
@@ -117,10 +120,8 @@ private String mUserService = "http://www.chenglonghuyu.com/prot_hnqz_user.html"
         mWvReplace.getSettings().setBlockNetworkImage(false);
         mKnow = (TextView) mView.findViewById(R.id.tv_know);
         SpannableStringBuilder stringBuilder = new SpannableStringBuilder(mNoti);
-        stringBuilder.setSpan(new TextClick(), 43, 49, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        stringBuilder.setSpan(new TextClick1(), 50, 56, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        AbsoluteSizeSpan absoluteSizeSpan = new AbsoluteSizeSpan(15, true);
-        stringBuilder.setSpan(absoluteSizeSpan, 115, 518, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        stringBuilder.setSpan(new TextClick(), 100, 106, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        stringBuilder.setSpan(new TextClick1(), 107, 113, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         content.setMovementMethod(LinkMovementMethod.getInstance());
         content.setText(stringBuilder);
         mBack.setOnClickListener(new View.OnClickListener() {
@@ -149,6 +150,9 @@ private String mUserService = "http://www.chenglonghuyu.com/prot_hnqz_user.html"
             public void onClick(View view) {
                 if (listener != null) {
                     CommonUtils.saveIsShowPrivate(mContext, 1);
+                    if (Constant.BD_SDK) {
+                        BaiduAction.setPrivacyStatus(PrivacyStatus.AGREE);
+                    }
                     dismiss();
                     listener.buttonClick(1);
                 }
@@ -220,12 +224,9 @@ private String mUserService = "http://www.chenglonghuyu.com/prot_hnqz_user.html"
 
     private String mCantUse = "\n\n\n\n如未确认阅读并同意隐私政策协议，您将无法使用此产品。";
     private String mNoti = "欢迎下载本游戏，我们非常重视个人信息和隐私保护。\n" +
-            "请在使用我们的服务时，详细阅读并同意《用户协议》和《隐私政策》，为了提供完整的游戏体验，我们会向您申请必要的权限和信息。您可以选择同意或拒绝权限申请，如果拒绝可能会影响游戏体验。\n\n" +
-            "1、我们可能会申请SIM卡信息：注册/登录账户时，可能需要验证手机号码及验证码 ，使用App服务时，可提供手机号码作为账户登录名；\n\n" +
-            "2、我们可能会申请CAMERA拍摄：使用拍摄照片和视频、完成扫描二维码；使用场景或目的：客服系统，上传图片拍照时申请使用照相机。\n\n" +
-            "3、我们可能会申请RECORD_AUDIO录音：使用麦克风录制音频；使用场景或目的：语音输入、聊天等；\n\n" +
-            "4、我们可能会申请读写设备上的照片及文件（SD卡）：提供写入外部储存功能；使用场景或目的：允许App写入/下载/保存/修改/删除图片、文件、崩溃日志等信息。\n\n" +
-            "5、我们可能会申请获取设备 IMSI/IMEI 号：提供读取手机设备标识等信息，请您放心该权限无法监听、获取您的任何通话内容与信息；使用场景或目的：读取设备通话状态和识别码，识别手机设备ID，保证运营商网络免流服务，用于完成音视频、信息展示、账号登录、安全保障等主要功能。\n" +
-            "\n" +
+            "为了提供完整的游戏体验，我们会向您申请必要的权限和信息。您可以选择同意或拒绝权限申请，如果拒绝可能会影响游戏体验，请在使用我们的服务时，详细阅读并同意《用户协议》和《隐私政策》。\n" +
+            "1、我们可能会申请SIM卡信息：注册/登录账户时，可能需要验证手机号码及验证码 ，使用App服务时，可提供手机号码作为账户登录名；\n" +
+            "2、我们可能会申请读写设备上的照片及文件（SD卡）：提供写入外部储存功能；使用场景或目的：允许App写入/下载/保存/修改/删除图片、文件、崩溃日志等信息。\n" +
+            "3、我们可能会申请获取设备 IMSI/IMEI 号：提供读取手机设备标识等信息，请您放心该权限无法监听、获取您的任何通话内容与信息；使用场景或目的：读取设备通话状态和识别码，识别手机设备ID，保证运营商网络免流服务，用于完成音视频、信息展示、账号登录、安全保障等主要功能。\n" +
             "我们收集您的信息主要是为了您和其他用户能够更容易和更满意地使用我们的服务。我们的目标是向所有的互联网用户提供安全、刺激、有趣及有教益的上网经历。而这些信息有助于我们实现这一目标。";
 }

@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void privateResult(boolean isAgree) {
                 if (isAgree) {
-                    checkRunTimePermission();
+                   sdkLogin();
                 }
             }
         });

@@ -9,6 +9,8 @@ import android.os.Looper;
 import android.os.StrictMode;
 
 //import com.baidu.mobads.action.BaiduAction;
+import com.baidu.mobads.action.BaiduAction;
+import com.baidu.mobads.action.PrivacyStatus;
 import com.bytedance.hume.readapk.HumeSDK;
 import com.hdtx.androidsdk.callback.AppTimeWatcher;
 import com.hdtx.androidsdk.callback.HDPrivateCallback;
@@ -24,8 +26,11 @@ import com.hdtx.androidsdk.ui.HDUserWebActivity;
 import com.hdtx.androidsdk.ui.NotiDialog;
 import com.hdtx.androidsdk.util.CommonUtils;
 import com.hdtx.androidsdk.util.HDSdkLog;
+import com.hdtx.androidsdk.util.OaidHelper;
 import com.hdtx.androidsdk.util.ThreadPoolManager;
 import com.hdtx.androidsdk.util.Tools;
+import com.kwai.monitor.payload.TurboHelper;
+import com.tencent.vasdolly.helper.ChannelReaderUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -70,38 +75,30 @@ public class Starter {
         StartHdPayPlugin.setPayParams(mActivity, map);
     }
 
-
     /**
      * SDK登陆接口
      */
     public void login(final Activity activity, HDSdkCallback mCallback) {
-        try {
-            ThreadPoolManager.getInstance().addTask(new Runnable() {
-                @Override
-                public void run() {
-                    Looper.prepare();
-                    StartOtherPlugin.getCert(activity);
-                    Looper.loop();
-                }
-            });
-        } catch (Exception e) {
-        }
         HDSdkLog.d("进入sdk登录流程");
         Starter.mCallback = mCallback;
         Starter.mActivity = activity;
         StartOtherPlugin.onLaunchApp();
-        StartOtherPlugin.initKSSDK(activity);
         /** 初始化汇川广告GISM SDK */
         StartOtherPlugin.initGism(activity, false);
         /** 广点通SDK初始化 */
         StartOtherPlugin.initGDTAction(activity);
         StartOtherPlugin.initTTSDK(activity);
-        /** 百度初始化 */
-       /* if (Constant.BD_SDK) {
-            BaiduAction.setPrivacyStatus(PrivacyStatus.AGREE);
-        }*/
         if (Constant.isTTVersion == 1) {
             Constant.qnChannel = HumeSDK.getChannel(activity);
+        }
+        if (CommonUtils.getIsKs(activity)) {
+            Constant.qnChannel = TurboHelper.getChannel(activity);
+        }
+        if (CommonUtils.getIsEnableMedia(activity, "use_GDT")) {
+            String qn = ChannelReaderUtil.getChannel(activity.getApplicationContext());
+            if (qn != null && !qn.equals("")) {
+                Constant.qnChannel = qn;
+            }
         }
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
@@ -344,12 +341,12 @@ public class Starter {
      */
     public void handleBDPermissions(int requestCode,
                                     String permissions[], int[] grantResults) {
-        /*if (!Constant.BD_SDK) {
+        if (!Constant.BD_SDK) {
             return;
         }
-        ESdkLog.d("调用百度授权回调接口");
         boolean isGet = false;
-        for (int i = 0; i < permissions.length; i++) {
+        BaiduAction.onRequestPermissionsResult(requestCode, permissions, grantResults);
+      /*  for (int i = 0; i < permissions.length; i++) {
             String temp = permissions[i];
             if (temp.equals(Manifest.permission.READ_PHONE_STATE)) {
                 // 授权结果回传
@@ -357,11 +354,6 @@ public class Starter {
                 BaiduAction.onRequestPermissionsResult(requestCode, permissions, grantResults);
                 break;
             }
-        }*/
-       /* if (!isGet) {
-            BaiduAction.setPrivacyStatus(PrivacyStatus.DISAGREE);
-        } else {
-            BaiduAction.setPrivacyStatus(PrivacyStatus.AGREE);
         }*/
     }
 
@@ -386,7 +378,7 @@ public class Starter {
      *
      * @param mContext
      */
-    public void dataCollectInit(Context mContext) {
+    public void dataCollectInit(final Context mContext) {
         HDSdkLog.d("初始化媒体接口");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
@@ -397,9 +389,23 @@ public class Starter {
             Constant.isTTVersion = 1;
         }
         System.loadLibrary("msaoaidsec");
+        if (CommonUtils.getIsEnableMedia(mContext, "use_BD") && CommonUtils.getCert(mContext).equals("")) {
+            StartOtherPlugin.getOaid(mContext, OaidHelper.loadPemFromAssetFile(mContext, "com.hyzjfz.hnclhy.cert.pem"));
+        }
+        try {
+            ThreadPoolManager.getInstance().addTask(new Runnable() {
+                @Override
+                public void run() {
+                    Looper.prepare();
+                    StartOtherPlugin.getCert(mContext);
+                    Looper.loop();
+                }
+            });
+        } catch (Exception e) {
+        }
+        AppTimeWatcher.getInstance().registerWatcher((Application) mContext);
         /** 百度初始化 */
         StartOtherPlugin.initBD(mContext);
-        AppTimeWatcher.getInstance().registerWatcher((Application) mContext);
     }
 
     public void pageResume(Activity activity) {

@@ -58,14 +58,17 @@ dependencies {
 //    compile files('libs/encryptor-1.0.1.noasan.jar')
 //    compile files('libs/plugin-aggregation-0.0.1.jar')
     compile files('libs/gism_1.3.3.jar')
-    compile files('libs/GDTActionSDK.min.1.8.5.jar')
-    compile files('libs/monitorsdk-1.0.10.jar')
-//    compile files('libs/Baidu_ocpc_2.5.jar')
+    compile files('libs/GDTActionSDK.min.1.8.6.jar')
+    compile files('libs/monitorsdk-1.0.13.jar')
+    compile files('libs/Baidu_ocpc_action_2_5.jar')
     compile files('libs/humesdk-1.0.0.jar')
+    compile files('libs/channelsdk-0.2.1-beta.jar')
 //    api 'com.alipay.sdk:alipaysdk-android:+@aar'
     compile files('libs/qilintrans2.0.jar')
     // Applog 上报组件（必须）
     implementation 'com.bytedance.applog:RangersAppLog-Lite-cn:6.14.3'
 // 商业化组件（必须） 6.14.2 以上版本商业化组件独立，注：必须接入以免平台限制应用上传
     implementation 'com.bytedance.applog:RangersAppLog-All-convert:6.14.3'
+    implementation 'com.tencent.vasdolly:helper:3.0.4'
+
 }

@@ -24,6 +24,8 @@ import com.hdtx.androidsdk.Starter;
 import com.hdtx.androidsdk.data.Constant;
 import com.hdtx.androidsdk.sso.AuthBean;
 import com.hdtx.androidsdk.ui.UIHelper;
+import com.kwai.monitor.payload.TurboHelper;
+import com.tencent.vasdolly.helper.ChannelReaderUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -500,6 +502,36 @@ public class CommonUtils {
                 HDSdkLog.d("头条分包渠道号:" + qnChannel);
                 return qnChannel;
             }
+        } else if (getIsKs(_context) && key.equals("qn")) {
+            String qnChannel = "";
+            if (Constant.qnChannel.equals("")) {
+                if (Starter.mActivity == null) {
+                    qnChannel = TurboHelper.getChannel(_context);
+                } else {
+                    qnChannel = TurboHelper.getChannel(Starter.mActivity);
+                }
+            } else {
+                qnChannel = Constant.qnChannel;
+            }
+            if (!qnChannel.equals("")) {
+                HDSdkLog.d("快手分包渠道号:" + qnChannel);
+                return qnChannel;
+            }
+        } else if (getIsEnableMedia(_context, "use_GDT") && key.equals("qn")) {
+            String qnChannel = "";
+            if (Constant.qnChannel.equals("")) {
+                if (Starter.mActivity == null) {
+                    qnChannel = ChannelReaderUtil.getChannel(_context.getApplicationContext());
+                } else {
+                    qnChannel = ChannelReaderUtil.getChannel(Starter.mActivity.getApplicationContext());
+                }
+            } else {
+                qnChannel = Constant.qnChannel;
+            }
+            if (qnChannel != null && !qnChannel.equals("")) {
+                HDSdkLog.d("广点通分包渠道号:" + qnChannel);
+                return qnChannel;
+            }
         }
         Properties prop = new Properties();
         InputStream is = null;
@@ -520,6 +552,52 @@ public class CommonUtils {
                 }
             }
             return str;
+        }
+    }
+
+    public static boolean getIsKs(Context mContext) {
+        Properties prop = new Properties();
+        InputStream is = null;
+        String str = "";
+        try {
+            is = mContext.getAssets().open("client.properties");
+            prop.load(is);
+            str = prop.getProperty("use_KS");
+            if (null == str) {
+                str = "";
+            }
+        } catch (IOException e) {
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                }
+            }
+            return str.equals("0");
+        }
+    }
+
+    public static boolean getIsEnableMedia(Context mContext, String media) {
+        Properties prop = new Properties();
+        InputStream is = null;
+        String str = "";
+        try {
+            is = mContext.getAssets().open("client.properties");
+            prop.load(is);
+            str = prop.getProperty(media);
+            if (null == str) {
+                str = "";
+            }
+        } catch (IOException e) {
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                }
+            }
+            return str.equals("0");
         }
     }
 

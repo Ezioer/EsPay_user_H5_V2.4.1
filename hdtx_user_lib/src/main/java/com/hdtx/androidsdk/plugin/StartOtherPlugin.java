@@ -1,14 +1,16 @@
 package com.hdtx.androidsdk.plugin;
 
+import static com.baidu.mobads.action.ActionParam.Key.PURCHASE_MONEY;
+
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.baidu.mobads.action.BaiduAction;
+import com.baidu.mobads.action.PrivacyStatus;
 import com.bytedance.applog.AppLog;
-//import com.bytedance.applog.ILogger;
 import com.bytedance.applog.ILogger;
 import com.bytedance.applog.InitConfig;
-//import com.bytedance.applog.util.UriConstants;
 import com.bytedance.applog.game.GameReportHelper;
 import com.bytedance.applog.util.UriConstants;
 import com.hdtx.androidsdk.data.Constant;
@@ -29,6 +31,7 @@ import com.kwai.monitor.log.TurboAgent;
 import com.kwai.monitor.log.TurboConfig;
 import com.qq.gdt.action.ActionType;
 import com.qq.gdt.action.GDTAction;
+import com.qq.gdt.action.PrivateController;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -164,7 +167,7 @@ public class StartOtherPlugin {
                     @Override
                     public void run() {
                         if (Constant.isTTVersion == 1) {
-                            int result = EAPayInter.isUploadPay(String.valueOf(Double.valueOf(money) * 100), appId, Constant.ESDK_USERID);
+                            int result = EAPayInter.isUploadPay(String.valueOf(Double.valueOf(money) * 100), appId, Constant.ESDK_USERID, "tt");
                             //1上传头条付费日志，0不上传
                             if (result == 1) {
                                 HDSdkLog.d("上传头条付费日志");
@@ -216,21 +219,19 @@ public class StartOtherPlugin {
             OaidHelper helper = new OaidHelper(new OaidHelper.AppIdsUpdater() {
                 @Override
                 public void onIdsValid(final String ids) {
-                    ((Activity) mContext).runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (!Constant.AQY_SDK) {
-                                StartOtherPlugin.initAQY(mContext);
-                            }
-                            HDSdkLog.d("oaid -----> " + ids);
+                    if (!Constant.AQY_SDK) {
+                        StartOtherPlugin.initAQY(mContext);
+                    }
+                    if (Constant.BD_SDK) {
+                        BaiduAction.setOaid(ids);
+                    }
+                    HDSdkLog.d("oaid -----> " + ids);
 //                            StartOtherPlugin.logGDTActionSetOAID(ids);
-                        }
-                    });
                 }
             });
 //            MiitHelper.getOaid(mContext);
             helper.getDeviceIds(mContext, cert);
-
+            StartOtherPlugin.initKSSDK(mContext);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -247,6 +248,8 @@ public class StartOtherPlugin {
             if (!temp.isEmpty()) {
                 getOaid(context, temp);
                 CommonUtils.saveCert(context, temp);
+            } else {
+                StartOtherPlugin.initKSSDK(context);
             }
             HDSdkLog.c("certnet----->", "netvalue-->" + temp);
         } else {
@@ -427,6 +430,19 @@ public class StartOtherPlugin {
             GDTAction.init(mContext, CommonUtils.readPropertiesValue(mContext, "GDT_setId"),
                     CommonUtils.readPropertiesValue(mContext, "GDT_key"),
                     CommonUtils.readPropertiesValue(mContext, "qn"));
+            GDTAction.setPrivateController(new PrivateController() {
+
+                @Override
+                public boolean isCanUsePhoneState() {
+                    return false;
+                }
+
+                @Override
+                public String getDevImei() {
+                    return Constant.IMEI;
+                }
+
+            });
         }
     }
 
@@ -489,26 +505,31 @@ public class StartOtherPlugin {
     /**
      * 广点通SDK上报购买
      */
-    public static void logGDTActionPurchase(String money, String productName, boolean status) {
+    public static void logGDTActionPurchase(String money, final String productName, final boolean status, final String appId) {
 
         if (Constant.GDT_SDK) {
-
             if (money != null) {
-
                 String[] strs = money.split("\\.");
-                int payMoney = 0;
                 try {
-                    payMoney = Integer.parseInt(strs[0]);
-
-                    try {
-                        JSONObject actionParam = new JSONObject();
-                        actionParam.put("value", Integer.valueOf(payMoney) * 100);
-                        actionParam.put("name", productName);
-                        actionParam.put("status", status);
-                        GDTAction.logAction(ActionType.PURCHASE, actionParam);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    final int payMoney = Integer.parseInt(strs[0]);
+                    ThreadPoolManager.getInstance().addTask(new Runnable() {
+                        @Override
+                        public void run() {
+                            int result = EAPayInter.isUploadPay(String.valueOf(payMoney * 100), appId, Constant.ESDK_USERID, "gdt");
+                            //1上传付费日志，0不上传
+                            if (result == 1) {
+                                HDSdkLog.d("上传广点通付费日志");
+                                JSONObject actionParam = new JSONObject();
+                                try {
+                                    actionParam.put("value", Integer.valueOf(payMoney) * 100);
+                                    actionParam.put("name", productName);
+                                    actionParam.put("status", status);
+                                    GDTAction.logAction(ActionType.PURCHASE, actionParam);
+                                } catch (JSONException e) {
+                                }
+                            }
+                        }
+                    });
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
@@ -574,15 +595,24 @@ public class StartOtherPlugin {
     /**
      * 快手SDK付费成功事件
      */
-    public static void logKSActionPerchase(String money) {
+    public static void logKSActionPerchase(String money, final String appId) {
         if (Constant.KS_SDK) {
             if (money != null) {
                 String[] strs = money.split("\\.");
-                int payMoney = 0;
                 try {
-                    payMoney = Integer.parseInt(strs[0]);
-                    TurboAgent.onOrderPayed(payMoney);
-                    TurboAgent.onPay(payMoney);
+                    final int payMoney = Integer.parseInt(strs[0]);
+                    ThreadPoolManager.getInstance().addTask(new Runnable() {
+                        @Override
+                        public void run() {
+                            int result = EAPayInter.isUploadPay(String.valueOf(Double.valueOf(payMoney) * 100), appId, Constant.ESDK_USERID, "ks");
+                            //1上传头条付费日志，0不上传
+                            if (result == 1) {
+                                HDSdkLog.d("上传快手付费日志");
+                                TurboAgent.onOrderPayed(payMoney);
+                                TurboAgent.onPay(payMoney);
+                            }
+                        }
+                    });
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
@@ -756,8 +786,8 @@ public class StartOtherPlugin {
      * @param mContext
      */
     public static void initBD(Context mContext) {
-        /*if (TextUtils.equals(CommonUtils.readPropertiesValue(mContext, "use_BD"), "0")) {
-            ESdkLog.d("初始化百度sdk");
+        if (TextUtils.equals(CommonUtils.readPropertiesValue(mContext, "use_BD"), "0")) {
+            HDSdkLog.d("初始化百度sdk");
             Constant.BD_SDK = true;
 //            System.loadLibrary("msaoaidsec");
             BaiduAction.setPrintLog(true);
@@ -766,65 +796,83 @@ public class StartOtherPlugin {
                 BaiduAction.init(mContext, Long.valueOf(CommonUtils.readPropertiesValue(mContext, "BD_appid")),
                         CommonUtils.readPropertiesValue(mContext, "BD_appSecret"));
             } catch (Exception e) {
-                String s = "1";
             }
             // 设置应用激活的间隔（默认30天）
+            try {
+                String[] permissions = new String[]{};
+                int[] grants = new int[]{0};
+                BaiduAction.onRequestPermissionsResult(1024, permissions, grants);
+            } catch (Exception e) {
+            }
+            if (CommonUtils.getIsShowPrivate(mContext) == 1) {
+                BaiduAction.setPrivacyStatus(PrivacyStatus.AGREE);
+            }
             BaiduAction.setActivateInterval(mContext, 30);
-        }*/
+        }
     }
 
     /**
      * baidu SDK付费成功事件
      */
-    public static void logBDActionPerchase(String money) {
-       /* if (Constant.BD_SDK) {
+    public static void logBDActionPerchase(String money, final String appId) {
+        if (Constant.BD_SDK) {
             if (money != null) {
                 String[] strs = money.split("\\.");
-                int payMoney = 0;
                 try {
-                    payMoney = Integer.parseInt(strs[0]) * 100;
-                    JSONObject actionParam = new JSONObject();
+                    final int payMoney = Integer.parseInt(strs[0]) * 100;
+                    final JSONObject actionParam = new JSONObject();
                     actionParam.put(PURCHASE_MONEY, payMoney);
-                    BaiduAction.logAction(com.baidu.mobads.action.ActionType.PURCHASE, actionParam);
+
+                    ThreadPoolManager.getInstance().addTask(new Runnable() {
+                        @Override
+                        public void run() {
+                            int result = EAPayInter.isUploadPay(String.valueOf(payMoney), appId, Constant.ESDK_USERID, "bd");
+                            //1上传头条付费日志，0不上传
+                            if (result == 1) {
+                                HDSdkLog.d("上传百度付费日志");
+                                BaiduAction.logAction(com.baidu.mobads.action.ActionType.PURCHASE, actionParam);
+                            }
+                        }
+                    });
                 } catch (Exception e) {
-                    ESdkLog.d(e.getMessage());
+                    HDSdkLog.d(e.getMessage());
                 }
             }
-        }*/
+        }
     }
 
     /**
      * baidu sdk注册事件
      */
     public static void logBDRegister() {
-       /* if (Constant.BD_SDK) {
+        if (Constant.BD_SDK) {
             BaiduAction.logAction(com.baidu.mobads.action.ActionType.REGISTER);
-        }*/
+        }
     }
 
     /**
      * baidu sdk登陆事件
      */
     public static void logBDLogin() {
-       /* if (Constant.BD_SDK) {
+        if (Constant.BD_SDK) {
             BaiduAction.logAction(com.baidu.mobads.action.ActionType.LOGIN);
-        }*/
+        }
     }
 
     /**
      * baidu sdk页面浏览事件
      */
     public static void logBDPage() {
-      /*  if (Constant.BD_SDK) {
+        if (Constant.BD_SDK) {
             BaiduAction.logAction(com.baidu.mobads.action.ActionType.PAGE_VIEW);
-        }*/
+        }
     }
 
     /**
      * baidu SDK下单成功事件
      */
     public static void logBDActionOrder(String money) {
-        /*if (Constant.BD_SDK) {
+        if (Constant.BD_SDK) {
             if (money != null) {
                 String[] strs = money.split("\\.");
                 int payMoney = 0;
@@ -836,6 +884,6 @@ public class StartOtherPlugin {
                 } catch (Exception e) {
                 }
             }
-        }*/
+        }
     }
 }

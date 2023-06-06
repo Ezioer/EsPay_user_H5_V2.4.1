@@ -1131,9 +1131,9 @@ public class HDPayCenterActivity extends BaseActivity {
 
         StartOtherPlugin.logTTActionPurchase(money, productName, payType, true, appId);
         StartOtherPlugin.logGismActionPurchase(money, productName, payType, true);
-        StartOtherPlugin.logGDTActionPurchase(money, productName, true);
-        StartOtherPlugin.logKSActionPerchase(money);
-        StartOtherPlugin.logBDActionPerchase(money);
+        StartOtherPlugin.logGDTActionPurchase(money, productName, true, appId);
+        StartOtherPlugin.logKSActionPerchase(money, appId);
+        StartOtherPlugin.logBDActionPerchase(money, appId);
         StartOtherPlugin.purchaseAqyAction(money);
 //        StartLogPlugin.startGamePayLog(money, String.valueOf(System.currentTimeMillis()));
         Message msg = new Message();

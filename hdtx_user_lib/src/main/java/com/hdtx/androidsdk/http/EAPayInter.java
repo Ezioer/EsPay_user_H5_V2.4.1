@@ -217,13 +217,13 @@ public class EAPayInter {
         return null;
     }
 
-    public static int isUploadPay(String money, String appId, String userId) {
+    public static int isUploadPay(String money, String appId, String userId, String channel) {
         try {
             String[] temp = money.split("\\.");
             String pay = temp[0];
             long time = System.currentTimeMillis();
-            String sign = Md5SignUtils.digest(appId + "tt" + pay + time + userId);
-            String url = "https://egamec.ahudong.cn/trp/as?a=" + appId + "&c=" + "tt" + "&m=" + pay + "&t=" + time + "&u=" + userId + "&s=" + sign;
+            String sign = Md5SignUtils.digest(appId + channel + pay + time + userId);
+            String url = "https://egamec.ahudong.cn/trp/as?a=" + appId + "&c=" + channel + "&m=" + pay + "&t=" + time + "&u=" + userId + "&s=" + sign;
             HDSdkLog.d(url);
             String result = HdPayNetGetPost.sendGet(url, null, "");
             //数据为null，有可能是请求出错
