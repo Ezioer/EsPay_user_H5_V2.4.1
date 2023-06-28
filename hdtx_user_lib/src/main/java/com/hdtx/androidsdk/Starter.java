@@ -357,12 +357,26 @@ public class Starter {
         }*/
     }
 
-    public void showPrivateDialog(Activity mActivity, final HDPrivateCallback callback) {
+    public void showPrivateDialog(final Activity mActivity, final HDPrivateCallback callback) {
         if (CommonUtils.getIsShowPrivate(mActivity) == 0) {
             NotiDialog dialog = new NotiDialog(mActivity);
             dialog.setAgreeListener(new NotiDialog.AgreeListener() {
                 @Override
                 public void buttonClick(int type) {
+                    if (type == 1) {
+                        try {
+                            System.loadLibrary("msaoaidsec");
+                            ThreadPoolManager.getInstance().addTask(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Looper.prepare();
+                                    StartOtherPlugin.getCert(mActivity);
+                                    Looper.loop();
+                                }
+                            });
+                        } catch (Exception e) {
+                        }
+                    }
                     //type 0 拒绝 1 同意
                     callback.privateResult(type == 1);
                 }
@@ -388,20 +402,22 @@ public class Starter {
         if (getPropertiesValue(mContext, "isTTVersion").equals("0")) {
             Constant.isTTVersion = 1;
         }
-        System.loadLibrary("msaoaidsec");
         if (CommonUtils.getIsEnableMedia(mContext, "use_BD") && CommonUtils.getCert(mContext).equals("")) {
             StartOtherPlugin.getOaid(mContext, OaidHelper.loadPemFromAssetFile(mContext, "com.hyzjfz.hnclhy.cert.pem"));
         }
-        try {
-            ThreadPoolManager.getInstance().addTask(new Runnable() {
-                @Override
-                public void run() {
-                    Looper.prepare();
-                    StartOtherPlugin.getCert(mContext);
-                    Looper.loop();
-                }
-            });
-        } catch (Exception e) {
+        if (CommonUtils.getIsShowPrivate(mContext) == 1) {
+            System.loadLibrary("msaoaidsec");
+            try {
+                ThreadPoolManager.getInstance().addTask(new Runnable() {
+                    @Override
+                    public void run() {
+                        Looper.prepare();
+                        StartOtherPlugin.getCert(mContext);
+                        Looper.loop();
+                    }
+                });
+            } catch (Exception e) {
+            }
         }
         AppTimeWatcher.getInstance().registerWatcher((Application) mContext);
         /** 百度初始化 */
