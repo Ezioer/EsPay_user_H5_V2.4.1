@@ -68,9 +68,6 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.xsolla.android.login.LoginConfig;
-import com.xsolla.android.login.XLogin;
-import com.xsolla.android.store.XStore;
 
 import org.json.JSONObject;
 
@@ -264,6 +261,7 @@ public class Starter {
     //核销订单
     void consumePurchase(String purchaseToken) {
         if (billingClient != null && billingClient.isReady()) {
+            Log.d(TAG, "核销订单进行中........");
             ConsumeParams consumeParams = ConsumeParams.newBuilder()
                     .setPurchaseToken(purchaseToken)
                     .build();
@@ -539,12 +537,12 @@ public class Starter {
     }
 
     private void initXsolla(Context mContext) {
-        LoginConfig config = new LoginConfig.OauthBuilder()
+    /*    LoginConfig config = new LoginConfig.OauthBuilder()
                 .setProjectId("")
                 .setOauthClientId(0)
                 .build();
         XLogin.init(mContext, config);
-        XStore.init(0, "jwt");
+        XStore.init(0, "jwt");*/
     }
 
     private void initAdjust(Context mContext) {

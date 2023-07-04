@@ -67,7 +67,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
 
     //xsolla
-    implementation 'com.xsolla.android:login:6.0.0'
-    implementation 'com.xsolla.android:payments:1.0.4'
-    implementation 'com.xsolla.android:store:2.3.0'
+//    implementation 'com.xsolla.android:login:6.0.0'
+//    implementation 'com.xsolla.android:payments:1.0.4'
+//    implementation 'com.xsolla.android:store:2.3.0'
 }
