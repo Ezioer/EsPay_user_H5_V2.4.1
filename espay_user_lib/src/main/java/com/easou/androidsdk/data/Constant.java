@@ -148,6 +148,10 @@ public class Constant {
 
     public static String domain_release = "https://service.pay.";
     public static String domain_test = "http://lab.pay.appeasou.com";
+
+    public static String ISUPLOADPAYDATA = "https://listener.eayou.com/sa/todayUser.do?";
+    public static String GENERATEDEVICEID = "https://egamec.eayou.com/deviceInfo/getCustomDeviceId";
+    public static String GETOAIDCERT = "https://egamec.eayou.com/cert/getCertPem";
     /**
      * 支付 url
      */

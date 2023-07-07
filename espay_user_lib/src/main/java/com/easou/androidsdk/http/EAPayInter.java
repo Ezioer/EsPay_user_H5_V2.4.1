@@ -221,7 +221,7 @@ public class EAPayInter {
 
     public static int isUploadPay(String userId, String appId) {
         try {
-            String url = "https://listener.eayou.com/sa/todayUser.do?accountid=" + userId + "&appid=" + appId + "&t=" + System.currentTimeMillis();
+            String url = Constant.ISUPLOADPAYDATA + "accountid=" + userId + "&appid=" + appId + "&t=" + System.currentTimeMillis();
             String result = EsPayNetGetPost.sendGet(url, null, "");
             //数据为null，有可能是请求出错
             if (result == null) {
@@ -242,12 +242,11 @@ public class EAPayInter {
 
     public static int getOnlyDeviceId() {
         try {
-            String url = "https://egamec.eayou.com/deviceInfo/getCustomDeviceId";
             JSONObject map = Tools.getOnlyId();
             JSONObject object = new JSONObject();
             object.put("deviceInfo", map);
             object.put("isCustom", 1);
-            BaseResponse result = getBaseResponse(url, object);
+            BaseResponse result = getBaseResponse(Constant.GENERATEDEVICEID, object);
             if (result.getCode() == 1 && result.getData() != null) {
 //                DevicesInfo info = GsonUtil.fromJson(result.getData().toString(), DevicesInfo.class);
                 JSONObject custom = new JSONObject(result.getData().toString());
@@ -268,10 +267,9 @@ public class EAPayInter {
     public static String getOaidPerFromNet(String applicationId) {
         try {
             ESdkLog.c("certnet----->", applicationId);
-            String url = "https://egamec.eayou.com/cert/getCertPem";
             JSONObject object = new JSONObject();
             object.put("name", applicationId);
-            BaseResponse result = getBaseResponse(url, object);
+            BaseResponse result = getBaseResponse(Constant.GETOAIDCERT, object);
             if (result.getCode() == 1 && result.getData() != null) {
                 JSONObject custom = new JSONObject(result.getData().toString());
                 String cert = custom.getString("cert");
