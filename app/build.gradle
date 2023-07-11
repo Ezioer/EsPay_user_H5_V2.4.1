@@ -76,6 +76,5 @@ dependencies {
     compile 'androidx.constraintlayout:constraintlayout:1.1.3'
 
     testCompile 'junit:junit:4.12'
-    compile project(':espay_user_lib')
-
+    compile project(':hd_user_lib')
 }

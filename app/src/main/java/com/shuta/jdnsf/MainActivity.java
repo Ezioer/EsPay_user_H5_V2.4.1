@@ -20,27 +20,24 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.easou.androidsdk.Starter;
-import com.easou.androidsdk.callback.ESdkCallback;
-import com.easou.androidsdk.callback.ESdkPayCallback;
-import com.easou.androidsdk.data.Constant;
-import com.easou.androidsdk.data.ESConstant;
-import com.easou.androidsdk.util.CommonUtils;
-import com.easou.androidsdk.util.RSAUtil;
-import com.easou.androidsdk.util.Tools;
+import hdtx.androidsdk.Starter;
+import hdtx.androidsdk.callback.ESdkCallback;
+import hdtx.androidsdk.callback.ESdkPayCallback;
+import hdtx.androidsdk.data.Constant;
+import hdtx.androidsdk.data.ESConstant;
+import hdtx.androidsdk.util.CommonUtils;
+import hdtx.androidsdk.util.RSAUtil;
+import hdtx.androidsdk.util.Tools;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -197,21 +194,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnChangeAccount.setOnClickListener(this);
         btnCallSdk.setOnClickListener(this);
         btnLoginGame.setOnClickListener(this);
-
-        mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    mSwitch.setText("线上环境");
-                    Constant.DOMAIN = Constant.domain_release;
-                    Constant.SSO_URL = Constant.sso_release;
-                } else {
-                    mSwitch.setText("测试环境");
-                    Constant.DOMAIN = Constant.domain_test;
-                    Constant.SSO_URL = Constant.sso_test;
-                }
-            }
-        });
     }
 
     public void sdkLogin() {
@@ -362,7 +344,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             payInfo.put(ESConstant.PLAYER_ID, "111");
                             payInfo.put(ESConstant.PLAYER_NAME, "ka");
                             payInfo.put(ESConstant.PLAYER_LEVEL, "1");
-                            payInfo.put(ESConstant.MONEY, Integer.valueOf(mPayAmount));
+                            payInfo.put(ESConstant.MONEY, 2.99);
                             payInfo.put(ESConstant.PRODUCT_NAME, "宝石");
                         } catch (JSONException e) {
                         }

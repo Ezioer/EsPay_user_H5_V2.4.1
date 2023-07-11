@@ -3,7 +3,7 @@ package com.shuta.jdnsf;
 import android.app.Application;
 import android.content.Context;
 
-import com.easou.androidsdk.Starter;
+import hdtx.androidsdk.Starter;
 
 public class EsApplication extends Application {
     @Override
