@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    <string name="app_name">espay_user_lib</string>-->
+
+    <string name="es_neterror">網絡錯誤,請重啟遊戲</string>
+    <string name="es_loginerror">登錄出錯啦</string>
+    <string name="es_notice">提示</string>
+    <string name="es_ok">確定</string>
+    <string name="es_loading">加載中...請稍等</string>
+    <string name="es_sslerror">SSL authentication failed，continue？</string>
+    <string name="es_go">去設置</string>
+    <string name="es_allowfloat">需要您設置允許「顯示懸浮窗」的權限，否則將無法使用賬戶中心功能！</string>
+    <string name="es_nomorenotice">不再提示</string>
+    <string name="es_cancel">取消</string>
+    <string name="es_areusure">您確定不使用賬戶中心功能嗎？沒有懸浮窗您將不能進行切換賬號等操作哦</string>
+    <string name="es_settingfloat">請到「設置-權限管理」中允許顯示懸浮窗！</string>
+</resources>

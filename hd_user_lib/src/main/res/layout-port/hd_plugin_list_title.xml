@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="10dip"
+    android:paddingLeft="5dip"
+    android:layout_marginTop="25.0dip"
+    android:background="@color/hd_clear_color">
+
+    <LinearLayout
+        android:id="@+id/hd_id_PayTypeLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="20.0dip"
+        android:gravity="center_vertical">
+
+        <TextView
+            style="@style/hd_text"
+            android:gravity="center_vertical"
+            android:text="@string/hd_pay_channel"
+            android:textColor="@color/hd_em4_color" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/hd_bigview_head_land">
+
+    <LinearLayout style="@style/hd_head_land">
+
+        <LinearLayout
+            style="@style/hd_linear"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/hd_text.headtitle"
+                android:text="@string/espay_userId" />
+
+            <TextView
+                android:id="@+id/hd_userID"
+                style="@style/hd_text.headtitle" />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/hd_linear"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/hd_text.headtitle"
+                android:text="@string/espay_productname" />
+
+            <TextView
+                android:id="@+id/hd_id_tittleOfferName"
+                style="@style/hd_text.headtitle" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/hd_linear"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/hd_text.headtitle"
+                android:text="@string/espay_amount" />
+
+            <TextView
+                android:id="@+id/hd_id_tittleMount"
+                style="@style/hd_text.headtitle" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/hd_id_PriceLayout"
+            style="@style/hd_wrap"
+            android:gravity="bottom">
+
+            <TextView
+                style="@style/hd_text.headtitle"
+                android:text="@string/espay_money" />
+
+            <TextView
+                android:id="@+id/hd_id_tittleAmt"
+                style="@style/hd_text.big"
+                android:textColor="@color/hd_em2_color" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
