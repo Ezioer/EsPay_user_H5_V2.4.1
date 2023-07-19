@@ -753,12 +753,12 @@ public class Starter {
 
     //adjust login事件
     public void adjustLogin(String userId) {
-        Adjust.trackEvent(generateEvent("twaj2x", false));
+        Adjust.trackEvent(generateEvent("71im1d", false));
     }
 
     //adjust 下单事件
     public void adjustCheckOut(Double price) {
-        AdjustEvent event = generateEvent("3f7zfy", true);
+        AdjustEvent event = generateEvent("jl7xod", true);
         event.addCallbackParameter("easou_hk_price", String.valueOf(price));
 //        event.addPartnerParameter("easou_hk_user_id", Constant.ESDK_USERID);
         Adjust.trackEvent(event);
@@ -766,7 +766,7 @@ public class Starter {
 
     //adjust 启动事件
     public void adjustStart() {
-        AdjustEvent event = generateEvent("sqslba", false);
+        AdjustEvent event = generateEvent("fuls7z", false);
 //        event.addPartnerParameter("easou_hk_user_id", Constant.APPID);
 //        event.addPartnerParameter("easou_hk_user_id", Constant.IMEI + "|" + System.currentTimeMillis());
         Adjust.trackEvent(event);
@@ -775,7 +775,7 @@ public class Starter {
 
     //adjust 支付事件
     public void adjustPay(Double price, String ncy, String orderId) {
-        AdjustEvent event = generateEvent("6yila5", true);
+        AdjustEvent event = generateEvent("mp43zt", true);
         event.addCallbackParameter("easou_hk_price", String.valueOf(price));
         event.setRevenue(price, "USD");
 //        event.addPartnerParameter("easou_hk_user_id", Constant.ESDK_USERID);
@@ -786,7 +786,7 @@ public class Starter {
 
     //adjust 注册事件
     public void adjustRegister(String userId) {
-        AdjustEvent event = generateEvent("1mmn9g", false);
+        AdjustEvent event = generateEvent("evqphl", false);
 //        event.addPartnerParameter("easou_hk_user_id", Constant.IMEI + "|" + System.currentTimeMillis());
         event.addPartnerParameter("easou_hk_user_id", userId);
         Adjust.trackEvent(event);
@@ -794,53 +794,53 @@ public class Starter {
 
     //adjust 激活事件
     public void adjustActive() {
-        Adjust.trackEvent(generateEvent("saqddr", false));
+        Adjust.trackEvent(generateEvent("iiivjc", false));
     }
 
     //adjust 分享事件
-    public void adjustShare() {
-        Adjust.trackEvent(generateEvent("qhiow4", false));
-    }
+//    public void adjustShare() {
+//        Adjust.trackEvent(generateEvent("qhiow4", false));
+//    }
 
     //adjust 完成教程事件
     public void adjustCompTutorial() {
-        Adjust.trackEvent(generateEvent("9pyu0g", false));
+        Adjust.trackEvent(generateEvent("l1sltf", false));
     }
 
     //adjust 广告点击事件
-    public void adjustAdClick() {
-        Adjust.trackEvent(generateEvent("hn0bbi", false));
-    }
+//    public void adjustAdClick() {
+//        Adjust.trackEvent(generateEvent("hn0bbi", false));
+//    }
 
     //adjust 搜索事件
-    public void adjustSearch() {
-        Adjust.trackEvent(generateEvent("ljl83j", false));
-    }
+//    public void adjustSearch() {
+//        Adjust.trackEvent(generateEvent("ljl83j", false));
+//    }
 
     //adjust 更新事件
-    public void adjustUpdate() {
-        Adjust.trackEvent(generateEvent("2k9lcf", false));
-    }
+//    public void adjustUpdate() {
+//        Adjust.trackEvent(generateEvent("2k9lcf", false));
+//    }
 
     //adjust 添加到购物车事件
-    public void adjustAddToCar() {
-        Adjust.trackEvent(generateEvent("oxg0zu", false));
-    }
+//    public void adjustAddToCar() {
+//        Adjust.trackEvent(generateEvent("oxg0zu", false));
+//    }
 
     //adjust 点击推送消息打开app事件
-    public void adjustOFPN() {
-        Adjust.trackEvent(generateEvent("xmdded", false));
-    }
+//    public void adjustOFPN() {
+//        Adjust.trackEvent(generateEvent("xmdded", false));
+//    }
 
     //adjust 通关事件
-    public void adjustCompGame() {
-        Adjust.trackEvent(generateEvent("m62ogs", false));
-    }
+//    public void adjustCompGame() {
+//        Adjust.trackEvent(generateEvent("m62ogs", false));
+//    }
 
     //adjust 邀请事件
-    public void adjustInvite() {
-        Adjust.trackEvent(generateEvent("q8v65g", false));
-    }
+//    public void adjustInvite() {
+//        Adjust.trackEvent(generateEvent("q8v65g", false));
+//    }
 
     private AdjustEvent generateEvent(String code, boolean isAddOrderId) {
         AdjustEvent event = new AdjustEvent(code);
