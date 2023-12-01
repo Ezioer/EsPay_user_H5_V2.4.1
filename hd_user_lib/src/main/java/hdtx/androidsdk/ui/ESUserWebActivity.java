@@ -18,8 +18,10 @@ import android.os.Environment;
 import android.provider.MediaStore;
 
 import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 
+import android.provider.Settings;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -51,6 +53,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class ESUserWebActivity extends Activity {
@@ -71,7 +74,8 @@ public class ESUserWebActivity extends Activity {
 
     private static final int REQUEST_CODE_PICK_IMAGE = 11;
     private static final int REQUEST_CODE_IMAGE_CAPTURE = 99;
-    private static final int P_CODE_PERMISSIONS = 101;
+    private static final int P_CODE_PICKIMAGE = 101;
+    private static final int P_CODE_CAMERA = 102;
     private Uri mImageUri;
     private Uri mCropUri;
     private String mParams;
@@ -86,7 +90,6 @@ public class ESUserWebActivity extends Activity {
 
         mActivity = this;
         Constant.IS_ENTERED_SDK = true;
-
         ESPlatform.init(mActivity);
         initView();
     }
@@ -123,7 +126,7 @@ public class ESUserWebActivity extends Activity {
         mWebView.addJavascriptInterface(new JSAndroid(this), "Android");
         mWebView.setBackgroundColor(0); // 设置背景色
         mWebView.getBackground().setAlpha(0); // 设置填充透明度 范围：0-255
-
+        Constant.userAgent = mWebView.getSettings().getUserAgentString();
         fixDirPath();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mWebView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
@@ -181,7 +184,6 @@ public class ESUserWebActivity extends Activity {
             @Override
             public void onReceivedError(final WebView view, int errorCode, String description, String failingUrl) {
                 super.onReceivedError(view, errorCode, description, failingUrl);
-
             }
 
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -199,9 +201,7 @@ public class ESUserWebActivity extends Activity {
                 }
                 return super.shouldOverrideUrlLoading(view, url);
             }
-        }
-
-        ;
+        };
 
         Constant.ua = mWebView.getSettings().getUserAgentString();
         mWebView.setWebViewClient(mWebViewClient);
@@ -213,7 +213,15 @@ public class ESUserWebActivity extends Activity {
      /*   if (Constant.SSO_URL.startsWith("https")) {
             mWebView.loadUrl(Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + mParams);
         } else {*/
-        mWebView.loadUrl(Constant.SSO_URL + mParams);
+//        String language = Locale.getDefault().getLanguage().toLowerCase();
+        mWebView.loadUrl(Constant.ENV_LZ + mParams);
+        /*if (language.equals("en")) {
+            mWebView.loadUrl(Constant.ENV_EN + mParams);
+        } else if (language.equals("vi")){
+            mWebView.loadUrl(Constant.ENV_VN + mParams);
+        } else {
+            mWebView.loadUrl(Constant.ENV_CN + mParams);
+        }*/
 //        }
     }
 
@@ -400,7 +408,7 @@ public class ESUserWebActivity extends Activity {
                     mWebView.post(new Runnable() {
                         @Override
                         public void run() {
-                            ESdkLog.d("facebook登录token和userid：" + token + id);
+                            ESdkLog.d("facebook登录token和userid：" + token + id + isBind);
                             if (isBind.equals("1")) {
                                 mWebView.loadUrl("javascript:EsSdkShell.esFacebookBind({" + token + ", " + id + "})");
                             } else {
@@ -427,7 +435,6 @@ public class ESUserWebActivity extends Activity {
     }
 
     private void showAlert() {
-
         final AlertDialog.Builder exitDialog = new AlertDialog.Builder(mActivity, AlertDialog.THEME_HOLO_LIGHT);
         exitDialog.setTitle(mActivity.getApplication().getResources()
                         .getIdentifier("es_notice", "string", getApplication().getPackageName()))
@@ -453,9 +460,6 @@ public class ESUserWebActivity extends Activity {
                 progressDialog = new ProgressDialog(mActivity);
             }
             progressDialog.setMessage("Loading......");
-//            progressDialog.setTitle(R.string.es_loading);
-         /*   progressDialog.setTitle(mActivity.getApplication().getResources()
-                    .getIdentifier("es_loading", "string", getApplication().getPackageName()));*/
             progressDialog.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -468,7 +472,6 @@ public class ESUserWebActivity extends Activity {
         }
     }
 
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -480,80 +483,36 @@ public class ESUserWebActivity extends Activity {
     public void showOptions() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
         alertDialog.setOnCancelListener(new DialogOnCancelListener());
-        alertDialog.setTitle("请选择操作");
-        String[] options = {"相册", "拍照"};
-        alertDialog.setItems(options, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which == 0) {
-                            if (PermissionUtil.isOverMarshmallow()) {
-                                if (!PermissionUtil.isPermissionValid(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                                    Toast.makeText(mActivity,
-                                            "请去\"设置\"中开启本应用的图片媒体访问权限",
-                                            Toast.LENGTH_SHORT).show();
-
-                                    restoreUploadMsg();
-                                    requestPermissionsAndroidM();
-                                    return;
-                                }
+        alertDialog.setTitle(mActivity.getApplication().getResources()
+                .getIdentifier("es_chooseopera", "string", getApplication().getPackageName()));
+        alertDialog.setItems(mActivity.getApplication().getResources()
+                .getIdentifier("chooseopera", "array", getApplication().getPackageName()), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == 0) {
+                    if (PermissionUtil.isOverMarshmallow()) {
+                        if (!PermissionUtil.isPermissionValid(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                            if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                                goToSettingPre(P_CODE_PICKIMAGE);
+                            } else {
+                                requestPre(P_CODE_PICKIMAGE, true);
                             }
-                            try {
-                                Intent mSourceIntent = ImageUtil.choosePicture();
-                                startActivityForResult(mSourceIntent, REQUEST_CODE_PICK_IMAGE);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Toast.makeText(mActivity,
-                                        "请去\"设置\"中开启本应用的图片媒体访问权限",
-                                        Toast.LENGTH_SHORT).show();
-                                restoreUploadMsg();
+                            return;
+                        }
                             }
-
+                    choosePic();
                         } else {
                             if (PermissionUtil.isOverMarshmallow()) {
-                                if (!PermissionUtil.isPermissionValid(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                                    Toast.makeText(mActivity,
-                                            "请去\"设置\"中开启本应用的图片媒体访问权限",
-                                            Toast.LENGTH_SHORT).show();
-
-                                    restoreUploadMsg();
-                                    requestPermissionsAndroidM();
-                                    return;
-                                }
-
                                 if (!PermissionUtil.isPermissionValid(mActivity, Manifest.permission.CAMERA)) {
-                                    Toast.makeText(mActivity,
-                                            "请去\"设置\"中开启本应用的相机权限",
-                                            Toast.LENGTH_SHORT).show();
-
-                                    restoreUploadMsg();
-                                    requestPermissionsAndroidM();
+                                    if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, Manifest.permission.CAMERA)) {
+                                        goToSettingPre(P_CODE_CAMERA);
+                                    } else {
+                                        requestPre(P_CODE_CAMERA, true);
+                                    }
                                     return;
                                 }
                             }
-
-                            try {
-                                File photoFile = saveFileName();
-                                if (photoFile != null) {
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                        mImageUri = FileProvider.getUriForFile(ESUserWebActivity.this, ESUserWebActivity.this.getPackageName() + ".fileprovider", photoFile);
-                                    } else {
-                                        mImageUri = getDesUri();
-                                    }
-                                    mCropUri = Uri.fromFile(saveFileName());
-                                    Log.d("takephoto", "imageuri-->" + mImageUri);
-                                    Intent mSourceIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                    mSourceIntent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
-                                    mSourceIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
-                                    startActivityForResult(mSourceIntent, REQUEST_CODE_IMAGE_CAPTURE);
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Toast.makeText(mActivity,
-                                        "请去\"设置\"中开启本应用的相机和图片媒体访问权限",
-                                        Toast.LENGTH_SHORT).show();
-
-                                restoreUploadMsg();
-                            }
+                    takePhoto();
                         }
                     }
                 }
@@ -573,7 +532,6 @@ public class ESUserWebActivity extends Activity {
             file.createNewFile();
             filePath = file.getAbsolutePath();
         } catch (Exception e) {
-
         }
         return file;
     }
@@ -589,7 +547,6 @@ public class ESUserWebActivity extends Activity {
     private class DialogOnCancelListener implements DialogInterface.OnCancelListener {
         @Override
         public void onCancel(DialogInterface dialogInterface) {
-
             restoreUploadMsg();
         }
     }
@@ -605,73 +562,99 @@ public class ESUserWebActivity extends Activity {
         }
     }
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
-            case P_CODE_PERMISSIONS:
-                requestResult(permissions, grantResults);
-                restoreUploadMsg();
+            case P_CODE_PICKIMAGE:
+                requestResult(permissions, grantResults, P_CODE_PICKIMAGE);
                 break;
-
+            case P_CODE_CAMERA:
+                requestResult(permissions, grantResults, P_CODE_CAMERA);
+                break;
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 
-    private void requestPermissionsAndroidM() {
+    private void requestPermissionsAndroidM(int type) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             List<String> needPermissionList = new ArrayList<>();
-            needPermissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            needPermissionList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-            needPermissionList.add(Manifest.permission.CAMERA);
-
-            PermissionUtil.requestPermissions(mActivity, P_CODE_PERMISSIONS, needPermissionList);
-
+            if (type == P_CODE_PICKIMAGE) {
+                needPermissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                needPermissionList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+                PermissionUtil.requestPermissions(mActivity, P_CODE_PICKIMAGE, needPermissionList);
+            } else {
+                needPermissionList.add(Manifest.permission.CAMERA);
+                PermissionUtil.requestPermissions(mActivity, P_CODE_CAMERA, needPermissionList);
+            }
         } else {
             return;
         }
     }
 
-    public void requestResult(String[] permissions, int[] grantResults) {
-        ArrayList<String> needPermissions = new ArrayList<String>();
-
-        for (int i = 0; i < grantResults.length; i++) {
-            if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                if (PermissionUtil.isOverMarshmallow()) {
-
-                    needPermissions.add(permissions[i]);
-                }
+    public void requestResult(String[] permissions, int[] grantResults, int type) {
+        boolean isAllGet = true;
+        for (int result : grantResults) {
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                isAllGet = false;
             }
         }
-
-        if (needPermissions.size() > 0) {
-            StringBuilder permissionsMsg = new StringBuilder();
-
-            for (int i = 0; i < needPermissions.size(); i++) {
-                String strPermissons = needPermissions.get(i);
-
-                if (Manifest.permission.WRITE_EXTERNAL_STORAGE.equals(strPermissons)) {
-                    permissionsMsg.append("," + getString(R.string.permission_storage));
-
-                } else if (Manifest.permission.READ_EXTERNAL_STORAGE.equals(strPermissons)) {
-                    permissionsMsg.append("," + getString(R.string.permission_storage));
-
-                } else if (Manifest.permission.CAMERA.equals(strPermissons)) {
-                    permissionsMsg.append("," + getString(R.string.permission_camera));
-
-                }
+        if (type == P_CODE_PICKIMAGE) {
+            //读取相册
+            if (isAllGet) {
+                choosePic();
+            } else {
+                restoreUploadMsg();
+                requestPre(P_CODE_PICKIMAGE, false);
             }
-
-            String strMessage = "请允许使用\"" + permissionsMsg.substring(1).toString() + "\"权限, 以正常使用APP的所有功能.";
-
-            Toast.makeText(mActivity, strMessage, Toast.LENGTH_SHORT).show();
-
         } else {
-            showOptions();
+            //拍照
+            if (isAllGet) {
+                takePhoto();
+            } else {
+                restoreUploadMsg();
+                requestPre(P_CODE_CAMERA, false);
+            }
         }
     }
 
+    private void choosePic() {
+        try {
+            Intent mSourceIntent = ImageUtil.choosePicture();
+            startActivityForResult(mSourceIntent, REQUEST_CODE_PICK_IMAGE);
+        } catch (Exception e) {
+            e.printStackTrace();
+            restoreUploadMsg();
+        }
+    }
+
+    private void takePhoto() {
+        try {
+            File photoFile = saveFileName();
+            if (photoFile != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    mImageUri = FileProvider.getUriForFile(ESUserWebActivity.this, ESUserWebActivity.this.getPackageName() + ".fileprovider", photoFile);
+                } else {
+                    mImageUri = getDesUri();
+                }
+                mCropUri = Uri.fromFile(saveFileName());
+                Log.d("takephoto", "imageuri-->" + mImageUri);
+                Intent mSourceIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                mSourceIntent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+                mSourceIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+                startActivityForResult(mSourceIntent, REQUEST_CODE_IMAGE_CAPTURE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            restoreUploadMsg();
+        }
+    }
+
+    private void requestPre(int type, boolean isContinue) {
+        if (isContinue) {
+            requestPermissionsAndroidM(type);
+        }
+    }
 
     private ValueCallback<Uri> mUploadMessage;
     private ValueCallback<Uri[]> uploadMessageAboveL;
@@ -716,35 +699,12 @@ public class ESUserWebActivity extends Activity {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                 if (title.contains("404") || title.contains("500") || title.contains("Error")
                         || title.contains("找不到网页") || title.contains("网页无法打开")) {
-                    /*ThreadPoolManager.getInstance().addTask(new Runnable() {
-                        @Override
-                        public void run() {
-                            StartESUserPlugin.startRequestHost(mActivity, true, new ReplaceCallBack() {
-                                @Override
-                                public void replaceSuccess() {
-                                    if (Constant.SSO_URL.startsWith("https")) {
-                                        view.loadUrl(Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + mParams);
-                                    } else {
-                                        view.loadUrl(Constant.SSO_URL + mParams);
-                                    }
-                                }
-
-                                @Override
-                                public void replaceFail() {
-                                    ViewParent webParentView = (ViewParent) mWebView.getParent();
-                                    ((ViewGroup) webParentView).removeAllViews();
-                                    showAlert();
-                                }
-                            });
-                        }
-                    });*/
                 }
             }
         }
 
         @Override
         public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
-
             AlertDialog.Builder b2 = new AlertDialog.Builder(mActivity, AlertDialog.THEME_HOLO_LIGHT)
                     .setTitle(mActivity.getApplication().getResources()
                             .getIdentifier("es_notice", "string", getApplication().getPackageName())).setMessage(message)
@@ -758,10 +718,8 @@ public class ESUserWebActivity extends Activity {
             b2.setCancelable(false);
             b2.create();
             b2.show();
-
             return true;
         }
-
     }
 
     /**
@@ -775,6 +733,7 @@ public class ESUserWebActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.i("uploadfileresultcode", "resultCode" + resultCode);
         if (requestCode == REQUEST_CODE_PICK_IMAGE) {
             //从相册选取图片
             if (null == mUploadMessage && null == uploadMessageAboveL) return;
@@ -798,19 +757,27 @@ public class ESUserWebActivity extends Activity {
                 startActivityForResult(intent1, 10);
             }*/
             if (mImageUri != null && mCropUri != null && resultCode == Activity.RESULT_OK) {
-                if (Build.VERSION.SDK_INT >= 30) {
-                    uploadMessageAboveL.onReceiveValue(new Uri[]{mCropUri});
-                    uploadMessageAboveL = null;
-                } else {
-                    uploadMessageAboveL.onReceiveValue(new Uri[]{mImageUri});
-                    uploadMessageAboveL = null;
+                try {
+                    if (Build.VERSION.SDK_INT >= 30) {
+                        uploadMessageAboveL.onReceiveValue(new Uri[]{mCropUri});
+                        uploadMessageAboveL = null;
+                    } else {
+                        uploadMessageAboveL.onReceiveValue(new Uri[]{mImageUri});
+                        uploadMessageAboveL = null;
+                    }
+                } catch (Exception e) {
+                    Log.i("ESUserWeb", e.getMessage());
                 }
             }
+        }
+        if (resultCode == RESULT_CANCELED) {
+            restoreUploadMsg();
         }
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void onActivityResultAboveL(int requestCode, int resultCode, Intent intent) {
+        Log.i("uploadfileresultcode", "resultCode" + resultCode);
         if ((requestCode == REQUEST_CODE_PICK_IMAGE || requestCode == REQUEST_CODE_IMAGE_CAPTURE) && uploadMessageAboveL != null) {
             Uri[] results = null;
             if (resultCode == Activity.RESULT_OK) {
@@ -831,11 +798,56 @@ public class ESUserWebActivity extends Activity {
             uploadMessageAboveL.onReceiveValue(results);
             uploadMessageAboveL = null;
         }
+        if (resultCode == RESULT_CANCELED) {
+            restoreUploadMsg();
+        }
     }
 
     private Uri getDesUri() {
         String fileName = System.currentTimeMillis() + ".jpg";
         File file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
         return Uri.fromFile(file);
+    }
+
+    private void goToSettingPre(int type) {
+        restoreUploadMsg();
+        int res;
+        final int errorRes;
+        if (type == P_CODE_PICKIMAGE) {
+            res = mActivity.getApplication().getResources()
+                    .getIdentifier("es_openpicuse", "string", getApplication().getPackageName());
+            errorRes = mActivity.getApplication().getResources()
+                    .getIdentifier("es_gotopic", "string", getApplication().getPackageName());
+        } else {
+            res = mActivity.getApplication().getResources()
+                    .getIdentifier("es_opencamerause", "string", getApplication().getPackageName());
+            errorRes = mActivity.getApplication().getResources()
+                    .getIdentifier("es_gotocamera", "string", getApplication().getPackageName());
+        }
+        new AlertDialog.Builder(mActivity)
+                .setMessage(res)
+                .setNegativeButton(mActivity.getApplication().getResources()
+                        .getIdentifier("es_cancel", "string", getApplication().getPackageName()), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton(mActivity.getApplication().getResources()
+                        .getIdentifier("es_ok", "string", getApplication().getPackageName()), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            Uri uri = Uri.fromParts("package", getPackageName(), null);
+                            intent.setData(uri);
+                            startActivity(intent);
+                        } catch (Exception e) {
+                            Toast.makeText(mActivity, errorRes, Toast.LENGTH_SHORT).show();
+                        }
+                        dialog.dismiss();
+                    }
+                }).create().show();
+
     }
 }

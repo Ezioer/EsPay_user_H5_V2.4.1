@@ -1,9 +1,10 @@
-package com.shuta.jdnsf;
+package com.zqhy.hyxm;
 
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -16,10 +17,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.text.InputFilter;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -30,20 +33,24 @@ import hdtx.androidsdk.callback.ESdkCallback;
 import hdtx.androidsdk.callback.ESdkPayCallback;
 import hdtx.androidsdk.data.Constant;
 import hdtx.androidsdk.data.ESConstant;
+import hdtx.androidsdk.http.EAPayInter;
+import hdtx.androidsdk.ui.ESPayWebActivity;
 import hdtx.androidsdk.util.CommonUtils;
-import hdtx.androidsdk.util.RSAUtil;
+import hdtx.androidsdk.util.ThreadPoolManager;
 import hdtx.androidsdk.util.Tools;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button btnBuyPort, btnChangeAccount, btnGetUserInfo, btnCallSdk, btnGoogleLogin, btnGoogleLogout, btnLoginGame, btnFacebookLogin, btnFacebookLogout;
     private Switch mSwitch;
+    private CheckBox mPayType;
     private EditText mPlayId;
     /**
      * 特别说明！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
@@ -55,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final int PERMISSIONCODE = 1;
     private static String tradeId; // 游戏订单号
-    private static String productId = "yisou_18";
+    private static String productId = "yisou_6";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // 初始化demo演示UI
         initUI();
-        try {
+        /*try {
             String encData = "hello world";
             String data = "L9hYztU1Rtk71+l1Eb2sI+0icsFpgbFjzLat37yijlw9/RVphDhqMWgrmHqypiI9PHK2itX7pg+rDjxLgqSyUQ==";
             String priKey = "MIIBVAIBADANBgkqhkiG9w0BAQEFAASCAT4wggE6AgEAAkEAhsQ7a2p0L572LR7s9UcvNGSHrQcIYAOaxN0GPnRFE2HOjld21GyXecmnsIhladNT8D" +
@@ -82,8 +89,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             int i = 9;
         } catch (Exception e) {
             int i = 9;
-        }
-        checkRunTimePermission();
+        }*/
+        GetPublicKey.getFBKey(this);
+        String lan = Locale.getDefault().getLanguage();
+        String con = Locale.getDefault().getCountry();
+        Log.d("applanguage---->", lan + "---" + con);
+        sdkLogin();
+//        checkRunTimePermission();
     }
 
     @Override
@@ -110,11 +122,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         PERMISSIONCODE);
             } else {
                 //有相关权限,执行响应操作
-                sdkLogin();
+//                sdkLogin();
             }
         } else {
             //6.0以下不需要申请运行时权限
-            sdkLogin();
+//            sdkLogin();
         }
     }
 
@@ -133,10 +145,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             if (isAllGet) {
                 //用户给了相应的权限后得操作
-                sdkLogin();
+//                sdkLogin();
             } else {
                 //用户拒绝了权限，可以选择再次申请
-                sdkLogin();
+//                sdkLogin();
             }
         }
     }
@@ -152,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initUI() {
         Button btnInfo = (Button) this.findViewById(R.id.btn_info);
         final TextView mInfo = (TextView) this.findViewById(R.id.tv_info);
+        mPayType = this.findViewById(R.id.cb_paytype);
         btnInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (Starter.mActivity.getPackageName().contains("fhzj")) {
                     param = param + "\nsdkType=fhzj";
                 }
-                if (Constant.SSO_URL.startsWith("https")) {
+                if (Constant.ENV_CN.startsWith("https")) {
                     param = param + "\n环境=线上";
                 } else {
                     param = param + "\n环境=测试";
@@ -226,7 +239,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onLogout() {
                 System.out.println("退出登录");
-//                Starter.getInstance().getUserInfo();
                 // demo演示代码
             }
 
@@ -306,6 +318,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.btn_changeAccount:
                 Starter.getInstance().logOut();
+              /*  ThreadPoolManager.getInstance().addTask(new Runnable() {
+                    @Override
+                    public void run() {
+                        String key = CommonUtils.readPropertiesValue(MainActivity.this,"key");
+                        String url = EAPayInter.testPay("2899",0.2,"YEEPAY_H5","jdau2898_10054_001","JSAPI",key,Constant.ESDK_TOKEN);
+                        if (!url.isEmpty()) {
+                            //系统webview打开
+                            Intent intent = new Intent();
+                            intent.putExtra("url", url);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.setClass(MainActivity.this, ESPayWebActivity.class);
+                           startActivity(intent);
+                        }
+                    }
+                });*/
                 break;
 
             case R.id.btn_pay:
@@ -316,11 +343,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                  */
 
                 final EditText inputAmount = new EditText(MainActivity.this);
-                inputAmount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                inputAmount.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
+               /* inputAmount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                inputAmount.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});*/
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("输入支付金额").setView(inputAmount)
+                builder.setTitle("输入商品id").setView(inputAmount)
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -329,43 +356,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         });
                 builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-
-                        String mPayAmount = inputAmount.getText().toString();
+                        if (!inputAmount.getText().toString().isEmpty()) {
+                            productId = inputAmount.getText().toString();
+                        }
                         tradeId = System.currentTimeMillis() + "";
                         JSONObject payInfo = new JSONObject();
                         try {
-                            payInfo.put(ESConstant.PRODUCT_ID, productId);
+                            payInfo.put(ESConstant.PRODUCT_ID, "hudong_6");
+//                            payInfo.put(ESConstant.PRODUCT_ID, "yisou_6");
+                            payInfo.put(ESConstant.APP_ID, "2899");
                             payInfo.put(ESConstant.TRADE_ID, tradeId);
-                            payInfo.put(ESConstant.APP_ID, "2898");
-                            payInfo.put(ESConstant.ACCOUNT_ID, "es.9");
+                            payInfo.put(ESConstant.ACCOUNT_ID, "es_6");
                             payInfo.put(ESConstant.PLAYER_SERVER_ID, "1");
                             payInfo.put(ESConstant.SERVER_NAME, "hahaha");
                             payInfo.put(ESConstant.QN, "jdau2898_10054_001");
                             payInfo.put(ESConstant.PLAYER_ID, "111");
                             payInfo.put(ESConstant.PLAYER_NAME, "ka");
                             payInfo.put(ESConstant.PLAYER_LEVEL, "1");
-                            payInfo.put(ESConstant.MONEY, 2.99);
+                            payInfo.put(ESConstant.MONEY, 29.99);
+                            //支付回调
+                            payInfo.put(ESConstant.NOTIFY_URL, "");
                             payInfo.put(ESConstant.PRODUCT_NAME, "宝石");
+                            payInfo.put("payType", 1);
                         } catch (JSONException e) {
                         }
-                        Starter.getInstance().pay(MainActivity.this, payInfo, new ESdkPayCallback() {
-
+                        ThreadPoolManager.getInstance().addTask(new Runnable() {
                             @Override
-                            public void onPaySuccess(int num) {
-                                // num为用户购买此件商品的数量
-                                Toast.makeText(MainActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
-                            }
+                            public void run() {
+                                Starter.getInstance().pay(MainActivity.this, payInfo, new ESdkPayCallback() {
 
-                            @Override
-                            public void onPayFail(int code) {
-                                //1000用户取消支付
-                                //1001支付失败
-                                //1002服务器验证交易失败，等验证成功后会继续回调支付成功接口
-                                //1003已拥有该商品
-                                //1004宜搜下单失败
-                                Toast.makeText(MainActivity.this, "支付失败" + code, Toast.LENGTH_SHORT).show();
+                                    @Override
+                                    public void onPaySuccess() {
+                                        // num为用户购买此件商品的数量
+                                        Toast.makeText(MainActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    @Override
+                                    public void onPayFail(int code) {
+                                        //1004宜搜下单失败
+                                        Toast.makeText(MainActivity.this, "支付失败" + code, Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                             }
                         });
+
                     }
                 });
                 builder.show();

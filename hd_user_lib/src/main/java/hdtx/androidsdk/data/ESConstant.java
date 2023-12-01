@@ -21,6 +21,7 @@ public class ESConstant {
 
 
     public static final String PLAYER_NAME = "playerName";
+    public static final String ISGOOGLE = "isgoogle";
     public static final String PLAYER_LEVEL = "playerLevel";
     public static final String PLAYER_ID = "playerId";
     public static final String PLAYER_SERVER_ID = "serverId";

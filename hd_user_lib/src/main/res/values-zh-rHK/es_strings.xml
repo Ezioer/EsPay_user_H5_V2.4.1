@@ -7,11 +7,19 @@
     <string name="es_notice">提示</string>
     <string name="es_ok">確定</string>
     <string name="es_loading">加載中...請稍等</string>
-    <string name="es_sslerror">SSL authentication failed，continue？</string>
+    <string name="es_sslerror">SSL驗證失敗，繼續加載嗎？</string>
     <string name="es_go">去設置</string>
     <string name="es_allowfloat">需要您設置允許「顯示懸浮窗」的權限，否則將無法使用賬戶中心功能！</string>
     <string name="es_nomorenotice">不再提示</string>
     <string name="es_cancel">取消</string>
+    <string name="paycenter">返回游戲</string>
     <string name="es_areusure">您確定不使用賬戶中心功能嗎？沒有懸浮窗您將不能進行切換賬號等操作哦</string>
     <string name="es_settingfloat">請到「設置-權限管理」中允許顯示懸浮窗！</string>
+    <string name="es_openpicuse">需要開啟媒體訪問權限才能使用該功能</string>
+    <string name="es_opencamerause">需要開啟相機權限才能使用該功能</string>
+    <string name="es_gotopic">請到「設置-權限管理」中開啟媒體訪問權限</string>
+    <string name="es_gotocamera">請到「設置-權限管理」中開啟相機權限</string>
+    <string name="es_chooseopera">請選擇操作</string>
+    <string name="es_pic">相冊</string>
+    <string name="es_camera">拍照</string>
 </resources>

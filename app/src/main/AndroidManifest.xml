@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.shuta.jdnsf">
+    package="com.zqhy.hyxm">
 
     <application
-        android:name="com.shuta.jdnsf.EsApplication"
+        android:name="com.zqhy.hyxm.EsApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"
@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.shuta.jdnsf.MainActivity"
+            android:name="com.zqhy.hyxm.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,15 +21,16 @@
             </intent-filter>
         </activity>
 
+        <!--        以下为测试数据-->
         <meta-data
             android:name="g_clientId"
-            android:value="364910254975-u909v8v674q8p341kr0k7lg1l7lh92hm.apps.googleusercontent.com" />
+            android:value="846876477691-gjefh1ll8fdq72pb5htugj4459kls3nr.apps.googleusercontent.com" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="fb462019716121167" />
+            android:value="fb1018958942766450" />
         <meta-data
             android:name="com.facebook.sdk.ClientToken"
-            android:value="bb37c4727e4e9c39bc69329ce9b3c027" />
+            android:value="06d710751edaa83209b6555cebc96587" />
         <!--  <meta-data
               android:name="g_clientId"
               android:value="875676869372-ql7c3bi8a7nbo08ofd4f9a69kgi94mfu.apps.googleusercontent.com" />

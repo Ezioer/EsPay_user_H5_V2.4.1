@@ -99,7 +99,7 @@
 native <methods>;
 }
 
--keep class com.hd.androidsdk.callback.** {*;}
+-keep class hdtx.androidsdk.callback.** {*;}
 
 ## Android architecture components: Lifecycle
 # LifecycleObserver's empty constructor is considered to be unused by proguard

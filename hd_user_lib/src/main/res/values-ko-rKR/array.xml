@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="chooseopera">
+        <item>사진 앨범</item>
+        <item>카메라</item>
+    </string-array>
+</resources>

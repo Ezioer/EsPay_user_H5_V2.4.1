@@ -28,7 +28,10 @@ public class RSAUtil {
      * RSA最大解密密文大小
      */
     private static final int MAX_DECRYPT_BLOCK = 128;
-    public static String publicKey = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAMcpLi8L/HjPAUnedRptN/g82rZdkICvxy07Iznwv0NdUXGNFc58jyK6n4iPV6JbU21GsHDO2jfhxVCGI0d8o3sCAwEAAQ==";
+    //线上
+    public static String publicKey = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKsqi1v0ydducp0d8SUzbjdNsUtJwh3vIMXMNFuOve42UUVBzlwD9tGxj8GHdJx+mYV3fF6gmeKXJBEk6JrVfcsCAwEAAQ==";
+    //测试
+//    public static String publicKey = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKXGgX4R/kVesrjZz6QD6WnR5bPWNyddXihYY1rofZctJtWBqe41ckU+Sk33w9QbUkZOmhiUAndIKvCO8BlyIq8CAwEAAQ==";
 
     /**
      * 获取私钥

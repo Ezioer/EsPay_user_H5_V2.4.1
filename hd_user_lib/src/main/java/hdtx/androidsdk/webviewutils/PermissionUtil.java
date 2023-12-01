@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
@@ -99,13 +100,18 @@ public class PermissionUtil {
             return;
 
         } else {
-            List<String> deniedPermissionList = findDeniedPermissions(activity, mListPermissions);
+
+            ActivityCompat.requestPermissions(activity,
+                    mListPermissions.toArray(new String[mListPermissions.size()]),
+                    requestCode);
+
+            /*List<String> deniedPermissionList = findDeniedPermissions(activity, mListPermissions);
 
             if (deniedPermissionList != null && deniedPermissionList.size() > 0) {
                 activity.requestPermissions(deniedPermissionList.toArray(new String[deniedPermissionList.size()]),
                         requestCode);
 
-            }
+            }*/
         }
 
     }

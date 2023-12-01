@@ -1,20 +1,30 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">espay_user_lib</string>
-    <!--    <string name="facebook_app_id">889510188880340</string>-->
-    <string name="fb_login_protocol_scheme">fb462019716121167</string>
-    <!--    <string name="facebook_client_token">3af809ced2ef8ca25d2e70ffe8c19048</string>-->
+    <!--    商道-->
+    <!--    <string name="fb_login_protocol_scheme">fb462019716121167</string>-->
+    <string name="fb_login_protocol_scheme">fb1018958942766450</string>
 
     <string name="es_neterror">网络错误,请重启游戏</string>
     <string name="es_loginerror">登录出错啦</string>
     <string name="es_notice">提示</string>
-    <string name="es_sslerror">SSL驗證失敗，繼續加載嗎？</string>
+    <string name="es_sslerror">SSL验证失败，继续加载吗？</string>
     <string name="es_ok">确定</string>
     <string name="es_loading">加载中...请稍等</string>
     <string name="es_allowfloat">需要您设置允许“显示悬浮窗”的权限，否则将无法使用账户中心功能</string>
     <string name="es_go">去设置</string>
     <string name="es_nomorenotice">不再提示</string>
     <string name="es_cancel">取消</string>
+    <string name="paycenter">返回游戏</string>
 
     <string name="es_areusure">您确定不使用账户中心功能吗？没有悬浮窗您将不能进行切换账号等操作哦！</string>
-    <string name="es_settingfloat">請到「設置-權限管理」中允許顯示懸浮窗！</string>
+    <string name="es_settingfloat">请到[设置-权限管理]中允许显示悬浮窗！</string>
+
+    <string name="es_openpicuse">需要开启媒体访问权限才能使用该功能</string>
+    <string name="es_opencamerause">需要开启相机权限才能使用该功能</string>
+
+    <string name="es_gotopic">请到[设置-权限管理]中开启媒体访问权限</string>
+    <string name="es_gotocamera">请到[设置-权限管理]中开启相机权限</string>
+    <string name="es_chooseopera">请选择操作</string>
+    <string name="es_pic">相册</string>
+    <string name="es_camera">拍照</string>
 </resources>

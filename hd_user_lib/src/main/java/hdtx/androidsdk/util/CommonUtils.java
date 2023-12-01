@@ -458,13 +458,13 @@ public class CommonUtils {
     public static String readPropertiesValue(Context _context, String key) {
         Properties prop = new Properties();
         InputStream is = null;
-        String str = "ZKX";
+        String str = "";
         try {
             is = _context.getAssets().open("client.properties");
             prop.load(is);
             str = prop.getProperty(key);
             if (null == str) {
-                str = "ZKX";
+                str = "";
             }
         } catch (IOException e) {
         } finally {
@@ -870,13 +870,15 @@ public class CommonUtils {
         return priceStr;
     }
 
-    public static Map getCheckOutParams() {
+    public static Map getCheckOutParams(String packageName) {
         String appId = CommonUtils.readPropertiesValue(Starter.mActivity, "appId");
         String qn = CommonUtils.readPropertiesValue(Starter.mActivity, "qn");
         String notifyUrl = CommonUtils.readPropertiesValue(Starter.mActivity, "notifyUrl");
+        String redirectUrl = "app://xpayment." + packageName;
         Map<String, String> map = new HashMap();
         map.put("appId", appId);
         map.put("qn", qn);
+        map.put("redirectUrl", redirectUrl);
         map.put("notifyUrl", notifyUrl);
         return map;
     }

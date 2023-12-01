@@ -2,10 +2,12 @@ package hdtx.androidsdk;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -34,6 +36,7 @@ import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
+import com.facebook.FacebookAuthorizationException;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
@@ -62,6 +65,7 @@ import hdtx.androidsdk.plugin.StartESUserPlugin;
 import hdtx.androidsdk.plugin.StartLogPlugin;
 import hdtx.androidsdk.romutils.RomHelper;
 import hdtx.androidsdk.romutils.RomUtils;
+import hdtx.androidsdk.ui.ESPayWebActivity;
 import hdtx.androidsdk.ui.ESUserWebActivity;
 import hdtx.androidsdk.util.AESUtil;
 import hdtx.androidsdk.util.CommonUtils;
@@ -71,10 +75,12 @@ import hdtx.androidsdk.util.Tools;
 
 import org.json.JSONObject;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -92,8 +98,10 @@ public class Starter {
     private CallbackManager callbackManager;
     public static final String TAG = "GoogleAndFBLog";
     public static final int SIGN_LOGIN = 13;
-    private static String googleID = "364910254975-u909v8v674q8p341kr0k7lg1l7lh92hm.apps.googleusercontent.com";
-    private static String ADJUSTKEY = "g51ej45btr7k";
+    //测试参数
+    private static String googleID = "846876477691-gjefh1ll8fdq72pb5htugj4459kls3nr.apps.googleusercontent.com";
+    private static String ADJUSTKEY = "y2vss2p6tedc";
+    private String fbAppId = "";
     private AppEventsLogger logger = null;
     private String mESOrder = "";
     private String mNcy = "";
@@ -119,17 +127,69 @@ public class Starter {
         return mSingleton;
     }
 
-
     /**
      * 宜搜SDK支付接口
      */
     public void pay(Activity mActivity, JSONObject info, ESdkPayCallback callback) {
+        if (mActivity != null) {
+            showDialog(mActivity);
+        }
+        mPayCallBack = callback;
+        if (info == null) {
+            throw new RuntimeException("Payment parameter is necessary");
+        }
         mPayInfo = info;
         mProductId = mPayInfo.optString(ESConstant.PRODUCT_ID);
-        mPayCallBack = callback;
         mPrice = mPayInfo.optInt(ESConstant.MONEY);
         mTradeId = mPayInfo.optString(ESConstant.TRADE_ID);
-        initBilling(mActivity);
+        int payType = 0;
+        try {
+            payType = mPayInfo.optInt("payType");
+        } catch (Exception e) {
+        }
+        Log.i("hdpay", info.toString());
+        if (payType == 0) {
+            initBilling(mActivity);
+        } else {
+            xsollaCreateOrder();
+        }
+    }
+
+    private void xsollaCreateOrder() {
+        ThreadPoolManager.getInstance().addTask(new Runnable() {
+            @Override
+            public void run() {
+                BaseResponse result = EAPayInter.checkOrder(mTradeId, mProductId, String.valueOf(mPrice), 110l, mNcy,
+                        CommonUtils.getCheckOutParams(mActivity.getApplicationInfo().packageName), mPayInfo);
+                JSONObject custom = null;
+                String payUrl = "";
+                if (result != null && result.getCode() == 0) {
+                    try {
+                        custom = new JSONObject(result.getData().toString());
+                        String data = AESUtil.decrypt(custom.optString("content"), Constant.AESKEY);
+                        JSONObject content = new JSONObject(data);
+                        mESOrder = content.optString("orderNo");
+                        String payType = content.optString("isWebView");
+                        payUrl = URLDecoder.decode(content.optString("payUrl"));
+                        adjustCheckOut(mPrice);
+                        fbCheckOut(mPrice, mProductId, mNcy, mESOrder);
+                        final String finalPayUrl = payUrl;
+                        final String type = payType;
+                        mActivity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                hideDialog();
+                                xsollaPay(type, finalPayUrl);
+                            }
+                        });
+                    } catch (Exception e) {
+                        payFailAndHideDialog();
+                    }
+                } else {
+                    payFailAndHideDialog();
+                }
+            }
+        });
     }
 
     private PurchasesUpdatedListener purchasesUpdatedListener = new PurchasesUpdatedListener() {
@@ -184,7 +244,7 @@ public class Starter {
                                                     @Override
                                                     public void run() {
                                                         Log.d(TAG, "验证成功，发放用户权益");
-                                                        mPayCallBack.onPaySuccess(num);
+                                                        mPayCallBack.onPaySuccess();
                                                     }
                                                 });
                                             }
@@ -307,38 +367,53 @@ public class Starter {
                             @Override
                             public void run() {
                                 synchronized (Starter.class) {
-                                    mNcy = list.get(0).getPriceCurrencyCode();
-                                    BaseResponse result = EAPayInter.checkOrder(mTradeId, mProductId, list.get(0).getPrice(), list.get(0).getPriceAmountMicros(), mNcy,
-                                            CommonUtils.getCheckOutParams(), mPayInfo);
+                                    String googleStorePrice = String.valueOf(mPrice);
+                                    long priceMicro = 0L;
+                                    if (list.size() > 0) {
+                                        mNcy = list.get(0).getPriceCurrencyCode();
+                                        googleStorePrice = list.get(0).getPrice();
+                                        priceMicro = list.get(0).getPriceAmountMicros();
+                                    }
+                                    BaseResponse result = EAPayInter.checkOrder(mTradeId, mProductId, googleStorePrice, priceMicro, mNcy,
+                                            CommonUtils.getCheckOutParams(mActivity.getApplicationInfo().packageName), mPayInfo);
+                                    JSONObject custom = null;
+                                    String payUrl = "";
                                     if (result != null && result.getCode() == 0) {
                                         try {
-                                            JSONObject custom = new JSONObject(result.getData().toString());
+                                            custom = new JSONObject(result.getData().toString());
                                             String data = AESUtil.decrypt(custom.optString("content"), Constant.AESKEY);
                                             JSONObject content = new JSONObject(data);
                                             mESOrder = content.optString("orderNo");
+                                            String isGooglePay = content.optString("isGooglePay");
                                             Log.d(TAG, "下单成功日志 fb........" + mPrice + mESOrder);
                                             adjustCheckOut(mPrice);
                                             fbCheckOut(mPrice, mProductId, mNcy, mESOrder);
+                                            if (isGooglePay.equals("false")) {
+                                                String payType = content.optString("isWebView");
+                                                payUrl = URLDecoder.decode(content.optString("payUrl"));
+                                                final String finalPayUrl = payUrl;
+                                                final String type = payType;
+                                                mActivity.runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        hideDialog();
+                                                        xsollaPay(type, finalPayUrl);
+                                                    }
+                                                });
+                                            } else {
+                                                mActivity.runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        hideDialog();
+                                                        launchGooglePay(list.get(0));
+                                                    }
+                                                });
+                                            }
                                         } catch (Exception e) {
                                         }
-                                        mActivity.runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                final BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
-                                                        .setSkuDetails(list.get(0))
-                                                        .setObfuscatedAccountId(mESOrder)
-                                                        .build();
-                                                BillingResult billingFlow = billingClient.launchBillingFlow(mActivity, billingFlowParams);
-                                            }
-                                        });
                                     } else {
                                         Log.d(TAG, "下单失败........" + 1004);
-                                        mActivity.runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                mPayCallBack.onPayFail(1004);
-                                            }
-                                        });
+                                        payFailAndHideDialog();
                                     }
                                 }
                             }
@@ -509,20 +584,26 @@ public class Starter {
      * @param mContext
      */
     public void dataCollectInit(Context mContext) {
+        ESdkLog.d("初始化sdk,sdk版本v" + Constant.SDK_VERSION);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             builder.detectFileUriExposure();
             StrictMode.setVmPolicy(builder.build());
         }
+
         try {
             ApplicationInfo info = mContext.getPackageManager().getApplicationInfo(mContext.getPackageName(), PackageManager.GET_META_DATA);
             googleID = info.metaData.getString("g_clientId");
+            fbAppId = info.metaData.getString("com.facebook.sdk.ApplicationId");
+            if (fbAppId != null && fbAppId.length() > 2) {
+                fbAppId = fbAppId.substring(2);
+            }
             CommonUtils.saveKey(mContext, Constant.unuselessdata);
             CommonUtils.saveBase(mContext, Constant.unuselessvalue);
         } catch (PackageManager.NameNotFoundException e) {
         }
         Tools.getAndroidId(mContext);
-        Constant.APPID = getPropertiesValue(mContext, "appId");
+//        Constant.APPID = getPropertiesValue(mContext, "appId");
         initXsolla(mContext);
         initAdjust(mContext);
         initFb(mContext);
@@ -531,7 +612,7 @@ public class Starter {
 
     private void initFb(Context mContext) {
         logger = AppEventsLogger.newLogger(mContext);
-        FacebookSdk.setIsDebugEnabled(true);
+//        FacebookSdk.setIsDebugEnabled(true);
         FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
     }
 
@@ -544,11 +625,54 @@ public class Starter {
         XStore.init(0, "jwt");*/
     }
 
+    private void xsollaPay(String type, String payUrl) {
+        if (type.equals("false")) {
+            //系统浏览器打开
+            Uri uri = Uri.parse(payUrl);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            mActivity.startActivity(intent);
+        } else {
+            //系统webview打开
+            Intent intent = new Intent();
+            intent.putExtra("url", payUrl);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setClass(mActivity, ESPayWebActivity.class);
+            mActivity.startActivity(intent);
+        }
+    }
+
+    private void launchGooglePay(SkuDetails skuDetails) {
+        final BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
+                .setSkuDetails(skuDetails)
+                .setObfuscatedAccountId(mESOrder)
+                .build();
+        BillingResult billingFlow = billingClient.launchBillingFlow(mActivity, billingFlowParams);
+    }
+
+    private void payFailAndHideDialog() {
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                hideDialog();
+                mPayCallBack.onPayFail(1004);
+            }
+        });
+    }
+
     private void initAdjust(Context mContext) {
-        String environment = AdjustConfig.ENVIRONMENT_PRODUCTION;
+        //测试为沙箱模式，正式版需切换到生产模式
+        String environment = AdjustConfig.ENVIRONMENT_SANDBOX;
+       /* if (Locale.getDefault().getLanguage().toLowerCase().equals("vi")) {
+            ADJUSTKEY = "h12a6xxd1dkw";
+        } else if (Locale.getDefault().getLanguage().toLowerCase().equals("es")) {
+            ADJUSTKEY = "o8rk94yswvls";
+        } else {
+            ADJUSTKEY = "wr31h0sikr28";
+        }*/
         AdjustConfig config = new AdjustConfig(mContext, ADJUSTKEY, environment);
         config.setLogLevel(LogLevel.VERBOSE);
         config.setSendInBackground(true);
+        config.setFbAppId(fbAppId);
         Adjust.onCreate(config);
         ((Application) mContext).registerActivityLifecycleCallbacks(new ActivityLifecycleWrapper());
     }
@@ -563,6 +687,7 @@ public class Starter {
 
     //初始化facebook登录
     public void initFacebook(boolean isBind) {
+        Log.d(TAG, "进入facebook" + isBind);
         isBindFacebook = isBind;
         callbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(callbackManager,
@@ -585,6 +710,11 @@ public class Starter {
                     public void onError(FacebookException exception) {
                         // App code
                         Log.d(TAG, "Facebook error------>>" + exception.toString());
+                        if (exception instanceof FacebookAuthorizationException) {
+                            if (AccessToken.getCurrentAccessToken() != null) {
+                                LoginManager.getInstance().logOut();
+                            }
+                        }
                     }
                 });
 
@@ -600,6 +730,26 @@ public class Starter {
                     .requestIdToken(googleID)
                     .build();
             mGoogleSignInClient = GoogleSignIn.getClient(mActivity, gso);
+        }
+    }
+
+    public void payCallback(int type) {
+        if (mPayCallBack != null) {
+            if (type == 0) {
+                Log.d(TAG, "web支付成功.......");
+                adjustPay(mPrice, mNcy, mESOrder);
+                fbPurchased(mPrice, mNcy, mProductId, mESOrder);
+                mPayCallBack.onPaySuccess();
+            } else if (type == 1) {
+                Log.d(TAG, "web支付失败......." + type);
+                mPayCallBack.onPayFail(1001);
+            } else if (type == 2) {
+                Log.d(TAG, "web支付异常......." + type);
+                mPayCallBack.onPayFail(1001);
+            } else if (type == 3) {
+                Log.d(TAG, "用户取消web支付......." + type);
+                mPayCallBack.onPayFail(1000);
+            }
         }
     }
 
@@ -716,10 +866,10 @@ public class Starter {
     }
 
     //完成注册
-    public void fbCompRegister() {
+    public void fbCompRegister(String id) {
         if (logger != null) {
             Bundle bundle = new Bundle();
-            bundle.putString("fb_content_id", "1");
+            bundle.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, id);
 //            logger.logEvent(AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION);
         }
     }
@@ -753,12 +903,12 @@ public class Starter {
 
     //adjust login事件
     public void adjustLogin(String userId) {
-        Adjust.trackEvent(generateEvent("71im1d", false));
+        Adjust.trackEvent(generateEvent("tlw0ta", false));
     }
 
     //adjust 下单事件
     public void adjustCheckOut(Double price) {
-        AdjustEvent event = generateEvent("jl7xod", true);
+        AdjustEvent event = generateEvent("x72bxt", true);
         event.addCallbackParameter("easou_hk_price", String.valueOf(price));
 //        event.addPartnerParameter("easou_hk_user_id", Constant.ESDK_USERID);
         Adjust.trackEvent(event);
@@ -766,7 +916,7 @@ public class Starter {
 
     //adjust 启动事件
     public void adjustStart() {
-        AdjustEvent event = generateEvent("fuls7z", false);
+        AdjustEvent event = generateEvent("9wf987", false);
 //        event.addPartnerParameter("easou_hk_user_id", Constant.APPID);
 //        event.addPartnerParameter("easou_hk_user_id", Constant.IMEI + "|" + System.currentTimeMillis());
         Adjust.trackEvent(event);
@@ -775,7 +925,7 @@ public class Starter {
 
     //adjust 支付事件
     public void adjustPay(Double price, String ncy, String orderId) {
-        AdjustEvent event = generateEvent("mp43zt", true);
+        AdjustEvent event = generateEvent("6rqmip", true);
         event.addCallbackParameter("easou_hk_price", String.valueOf(price));
         event.setRevenue(price, "USD");
 //        event.addPartnerParameter("easou_hk_user_id", Constant.ESDK_USERID);
@@ -786,7 +936,7 @@ public class Starter {
 
     //adjust 注册事件
     public void adjustRegister(String userId) {
-        AdjustEvent event = generateEvent("evqphl", false);
+        AdjustEvent event = generateEvent("dkp32e", false);
 //        event.addPartnerParameter("easou_hk_user_id", Constant.IMEI + "|" + System.currentTimeMillis());
         event.addPartnerParameter("easou_hk_user_id", userId);
         Adjust.trackEvent(event);
@@ -794,7 +944,7 @@ public class Starter {
 
     //adjust 激活事件
     public void adjustActive() {
-        Adjust.trackEvent(generateEvent("iiivjc", false));
+        Adjust.trackEvent(generateEvent("hcib0n", false));
     }
 
     //adjust 分享事件
@@ -808,14 +958,14 @@ public class Starter {
     }
 
     //adjust 广告点击事件
-//    public void adjustAdClick() {
-//        Adjust.trackEvent(generateEvent("hn0bbi", false));
-//    }
+    public void adjustAdClick() {
+        Adjust.trackEvent(generateEvent("k9d50o", false));
+    }
 
     //adjust 搜索事件
-//    public void adjustSearch() {
-//        Adjust.trackEvent(generateEvent("ljl83j", false));
-//    }
+    public void adjustSearch() {
+        Adjust.trackEvent(generateEvent("tt8tle", false));
+    }
 
     //adjust 更新事件
 //    public void adjustUpdate() {
@@ -823,9 +973,9 @@ public class Starter {
 //    }
 
     //adjust 添加到购物车事件
-//    public void adjustAddToCar() {
-//        Adjust.trackEvent(generateEvent("oxg0zu", false));
-//    }
+    public void adjustAddToCar() {
+        Adjust.trackEvent(generateEvent("k190re", false));
+    }
 
     //adjust 点击推送消息打开app事件
 //    public void adjustOFPN() {
@@ -850,7 +1000,7 @@ public class Starter {
         }
         event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
-        event.addCallbackParameter("easou_hk_game_name", "京都大掌櫃");
+        event.addCallbackParameter("easou_hk_game_name", "龙珠");
         if (mActivity != null) {
             event.addCallbackParameter("easou_hk_app_id", getPropertiesValue(mActivity, "appId"));
         }
@@ -864,5 +1014,25 @@ public class Starter {
     private AdjustEvent generatePartnerEvent(AdjustEvent event) {
         event.addPartnerParameter("easou_hk_description", Constant.IMEI + "|" + System.currentTimeMillis());
         return event;
+    }
+
+    private ProgressDialog progressDialog = null;
+
+    private void showDialog(Activity mActivity) {
+        try {
+            if (progressDialog == null) {
+                progressDialog = new ProgressDialog(mActivity);
+            }
+            progressDialog.setMessage("Loading......");
+            progressDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void hideDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 }

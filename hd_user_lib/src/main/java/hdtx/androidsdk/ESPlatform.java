@@ -197,7 +197,7 @@ public class ESPlatform {
             e.printStackTrace();
         }
 //        StartOtherPlugin.appsFlyerRegister(userId);
-        Starter.getInstance().fbCompRegister();
+        Starter.getInstance().fbCompRegister(userId);
         Starter.getInstance().adjustRegister(userId);
         CommonUtils.saveIsAutoCount(Starter.mActivity, "0");
         Map<String, String> result = new HashMap<String, String>();

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">espay_user_lib</string>
+
+    <string name="es_neterror">Lỗi mạng, vui lòng khởi động lại trò chơi</string>
+    <string name="es_loginerror">lỗi đăng nhập</string>
+    <string name="es_notice">gợi ý</string>
+    <string name="es_sslerror">Xác minh SSL không thành công, tiếp tục tải？</string>
+    <string name="es_ok">Chắc chắn</string>
+    <string name="es_loading">Tải vui lòng đợi</string>
+    <string name="es_allowfloat">Bạn cần đặt quyền cho phép "hiển thị cửa sổ nổi", nếu không bạn sẽ không thể sử dụng chức năng trung tâm tài khoản</string>
+    <string name="es_go">đi tới cài đặt</string>
+    <string name="es_nomorenotice">Đừng nhắc lại</string>
+    <string name="es_cancel">Hủy bỏ</string>
+    <string name="paycenter">Trở lại với trò chơi</string>
+
+    <string name="es_areusure">Bạn có chắc chắn không muốn sử dụng chức năng Trung tâm tài khoản không? Nếu không có cửa sổ nổi, bạn sẽ không thể thực hiện các thao tác như chuyển đổi tài khoản.！</string>
+    <string name="es_settingfloat">Vui lòng vào "Cài đặt-Quản lý đặc quyền" để cho phép hiển thị cửa sổ nổi！</string>
+
+    <string name="es_openpicuse">Cần phải bật quyền truy cập phương tiện để sử dụng tính năng này</string>
+    <string name="es_opencamerause">Bạn cần cấp quyền cho camera để sử dụng chức năng này</string>
+
+    <string name="es_gotopic">Vui lòng đi tới "Cài đặt-Quản lý quyền" để bật quyền truy cập phương tiện</string>
+    <string name="es_gotocamera">Vui lòng đi tới "Cài đặt-Quản lý quyền" để bật quyền camera</string>
+    <string name="es_chooseopera">Vui lòng chọn một hành động</string>
+    <string name="es_pic">album ảnh</string>
+    <string name="es_camera">ảnh chụp</string>
+</resources>

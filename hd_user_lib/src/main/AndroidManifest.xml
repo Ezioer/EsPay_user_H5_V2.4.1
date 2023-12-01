@@ -8,9 +8,10 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!--    <uses-permission android:name="android.permission.READ_PHONE_STATE" />-->
     <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
     <!--    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />-->
     <!--    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />-->
@@ -18,7 +19,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <!--    <uses-permission android:name="android.permission.GET_TASKS" />-->
-    <!--    <uses-permission android:name="android.permission.RECORD_AUDIO" />-->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.webkit.permission.PLUGIN" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
@@ -48,7 +49,11 @@
             android:value="oneteststore" />
         <meta-data
             android:name="com.google.android.play.billingclient.version"
-            android:value="4.1.0" />
+            android:value="5.2.1" />
+        <!--        facebook停用自动记录事件-->
+        <!--  <meta-data
+              android:name="com.facebook.sdk.AutoLogAppEventsEnabled"
+              android:value="false" />-->
 
         <activity
             android:name="com.android.billingclient.api.ProxyBillingActivity"
@@ -67,9 +72,6 @@
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
-        <!--  <meta-data
-              android:name="com.facebook.sdk.AutoLogAppEventsEnabled"
-              android:value="false" />-->
 
         <activity
             android:name="com.facebook.FacebookActivity"
@@ -99,6 +101,11 @@
             android:taskAffinity="com.hd.usersdk"
             android:theme="@style/hd_translucent_notitle" />
 
+        <activity
+            android:name="hdtx.androidsdk.ui.ESPayWebActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="behind"
+            android:theme="@android:style/Theme.NoTitleBar" />
         <activity
             android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
             android:excludeFromRecents="true"

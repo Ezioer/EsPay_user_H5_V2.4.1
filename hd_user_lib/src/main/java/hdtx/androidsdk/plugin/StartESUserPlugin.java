@@ -198,14 +198,24 @@ public class StartESUserPlugin {
      * 显示悬浮窗
      */
     public static void showFloatView() {
-
         if (Constant.IS_LOGINED) {
+            ESdkLog.d("resume---->logined");
             FloatView.show(Starter.mActivity);
         } else {
             if (Constant.IS_ENTERED_SDK) {
                 // 未登陆显示用户中心
+                ESdkLog.d("resume---->entered");
                 StartESUserPlugin.enterH5View();
             }
+            /*else {
+                if (AppTimeWatcher.isChangeBack) {
+                    try {
+                        ESdkLog.d("resume---->enter usercenter page");
+                        StartESUserPlugin.enterH5View();
+                    } catch (Exception e) {
+                    }
+                }
+            }*/
         }
     }
 

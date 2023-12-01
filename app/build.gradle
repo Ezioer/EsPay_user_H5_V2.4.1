@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 android {
-    compileSdkVersion 31
+    compileSdkVersion 33
     buildToolsVersion "30.0.3"
     defaultConfig {
-//        applicationId "com.easou.espay_user_h5"
-        applicationId "com.jddzg.yisouf"
-//        applicationId "com.shuta.jdnsf"
+        applicationId "com.lzcsjx.google.cl"
+//        applicationId "com.jddzg.yisouf"
+//        applicationId "com.zqhy.hyxm"
         minSdkVersion 19
-        targetSdkVersion 31
+        targetSdkVersion 33
         versionCode 10016
         versionName "1.0.1"
         vectorDrawables.useSupportLibrary = true

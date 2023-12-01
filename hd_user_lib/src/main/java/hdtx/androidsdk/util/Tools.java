@@ -234,8 +234,6 @@ public class Tools {
                 imsi = deviceImsi;
             }
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         }
         return imsi;
     }

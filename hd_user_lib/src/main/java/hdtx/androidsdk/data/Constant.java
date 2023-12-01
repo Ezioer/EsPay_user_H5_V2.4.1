@@ -16,7 +16,7 @@ public class Constant {
     /**
      * SDK版本号，更新版本记得改版本号
      */
-    public static final String SDK_VERSION = "1.2.1";
+    public static final String SDK_VERSION = "1.5";
     public static final String SDK_PHONEOS = "Android";
 
     /**
@@ -78,6 +78,7 @@ public class Constant {
     public static String ua = "";
     public static int isTurnExt = 0;
     public static int isTurnExtUser = 0;
+    public static String userAgent = "";
 //    public static boolean facebook = true;
 //    public static boolean adjust = true;
 //    public static boolean firebase = true;
@@ -111,20 +112,32 @@ public class Constant {
      */
     public static String URL_BACKUP = "mtianshitong.com";
     //        public static String SSO_URL = "http://lab.h5.tjqzqkj.com/static/sdk/3.0.0/es_sdk3_original.html?1=1&sdkSource=Android-SDK&payHostName=http://lab.pay.appeasou.com&ssoHostName=http://lab.sso.mtianshitong.com";
-    public static String SSO_URL = "https://login.hudong-hk.com/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
+    public static String ENV_EN = "https://login.hudong-en.com/static/sdk/1.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
+    public static String ENV_CN = "https://login.hudong-hk.com/static/sdk/1.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
+    public static String ENV_KR = "https://login.hudong-kr.com/static/sdk/1.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
+    public static String ENV_LZ = "https://login.hudonglz.com/static/sdk/1.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
+    public static String ENV_HZ = "https://login.hudong-hz.com/static/sdk/1.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
+    public static String ENV_VN = "https://login.hudong-vn.com/static/sdk/1.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
     //    public static String SSO_URL = "https://h5.pay.mtianshitong.com/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
     public static String SSO_REST = "/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
 
     /**
      * 支付 url
      */
+    public static final String BASEURL_VN = "https://pay.hudong-vn.com/";
+    public static final String BASEURL_EN = "https://pay.hudong-en.com/";
+    public static final String BASEURL_CN = "https://pay.hudong-hk.com/";
+    public static final String BASEURL_LZ = "https://pay.hudonglz.com/";
+    public static final String BASEURL_HZ = "https://pay.hudong-hz.com/";
+
+    public static final String TESTPAY = "http://lab.test1.tjqzqkj.com/basePay/charge.e?";
     //google验证交易
-    public static final String GOOGLEVER = "https://pay.hudong-hk.com/play/checkSign";
+    public static final String GOOGLEVER = "play/checkSign";
     //pay.easou-hk.com
     //海外下单
-    public static final String CHECKORDER = "https://pay.hudong-hk.com/play/createOrder";
+    public static final String CHECKORDER = "basePay/createOrder";
     //同步核销状态
-    public static final String CONSUMPTION = "https://pay.hudong-hk.com/play/consumption";
+    public static final String CONSUMPTION = "play/consumption";
     //获取oaid证书
     public static final String GETOAIDCERT = "https://egamec.eayou.com/cert/getCertPem";
     /**

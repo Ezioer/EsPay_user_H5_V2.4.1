@@ -1,15 +1,19 @@
 package hdtx.androidsdk.http;
 
+import android.util.Log;
+
 import hdtx.androidsdk.Starter;
 import hdtx.androidsdk.data.Constant;
 import hdtx.androidsdk.util.AESUtil;
 import hdtx.androidsdk.util.CommonUtils;
 import hdtx.androidsdk.util.ESdkLog;
+import hdtx.androidsdk.util.Md5SignUtils;
 import hdtx.androidsdk.util.RSAUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Locale;
 import java.util.Map;
 
 public class EAPayInter {
@@ -56,7 +60,12 @@ public class EAPayInter {
             data.put("qn", map.get("qn"));
             data.put("cpOrderNo", cpOrderNo);
             data.put("accountId", Constant.ESDK_USERID);
-            data.put("cpNotifyUrl", map.get("notifyUrl"));
+            String notify = info.optString("notifyUrl");
+            String notifyUrl = map.get("notifyUrl");
+            if (!notifyUrl.equals("")) {
+                notify = notifyUrl;
+            }
+            data.put("cpNotifyUrl", notify);
             data.put("productId", productId);
             data.put("productPrice", productPrice);
             data.put("productPriceMicros", productPriceMicros);
@@ -64,7 +73,27 @@ public class EAPayInter {
             data.put("deviceId", Constant.IMEI);
             data.put("area", "");
             data.put("ip", Constant.NET_IP);
-            data.put("payType", 1);
+            //线上
+            data.put("payType", 4);
+            //测试
+//            data.put("payType", 4);
+            data.put("redirectUrl", map.get("redirectUrl"));
+            try {
+                //语言 简繁体中文都是zh 英文是es
+                String language = Locale.getDefault().getLanguage().toLowerCase();
+                //国家 简体是cn 繁体是tw或hk，英文是us
+                String code = Locale.getDefault().getCountry().toLowerCase();
+                if (code.equals("tw") || code.equals("hk")) {
+                    language = "tw";
+                } else if (code.equals("cn")) {
+                    language = "cn";
+                } else if (language.equals("es")) {
+                    language = "en";
+                }
+                data.put("language", language);
+            } catch (Exception e) {
+                data.put("language", "tw");
+            }
             //新加的字段
             data.put("tradleId", cpOrderNo);
             data.put("serverId", info.optString("serverId"));
@@ -80,6 +109,28 @@ public class EAPayInter {
         }
     }
 
+    public static String testPay(String appId, double money, String payChannel, String qn, String tradeMode, String key, String token) {
+        try {
+            String pay = String.valueOf(money);
+            String params = "appId=" + appId + "&money=" + pay + "&payChannel=" + payChannel + "&qn=" + qn + "&tradeMode=" + tradeMode;
+            String sign = Md5SignUtils.sign(params, key);
+            String url = Constant.TESTPAY + "appId=" + appId + "&money=" + pay + "&payChannel=" + payChannel + "&qn=" + qn + "&tradeMode=" + tradeMode + "&sign=" + sign;
+            String result = EsPayNetGetPost.sendGet(url, null, token);
+            if (result != null) {
+                JSONObject re = new JSONObject(result);
+                if (re.optString("status").equals("success")) {
+                    return re.optJSONObject("data").optString("payURL");
+                } else {
+                    return "";
+                }
+            } else {
+                return "";
+            }
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
     private static BaseResponse handleNetOpera(JSONObject data, JSONObject object, String appId, String url) {
         try {
             //AES加密数据
@@ -89,10 +140,20 @@ public class EAPayInter {
             }
             String content = AESUtil.encrypt(data.toString(), Constant.AESKEY);
             //RSA加密AES的密钥
-            String key = RSAUtil.encrypt(Constant.AESKEY, RSAUtil.getPublicKey(RSAUtil.publicKey));
+            String key = RSAUtil.encrypt(Constant.AESKEY, RSAUtil.getPublicKey(CommonUtils.readPropertiesValue(Starter.mActivity, "publickey")));
             object.put("content", content);
             object.put("key", key);
             object.put("appId", appId);
+            Log.d("EAPayCheckOut", object.toString());
+          /*  String language = Locale.getDefault().getLanguage().toLowerCase();
+            if (language.equals("vi")) {
+                url = Constant.BASEURL_VN + url;
+            } else if (language.equals("en")) {
+                url = Constant.BASEURL_EN + url;
+            } else {
+                url = Constant.BASEURL_CN + url;
+            }*/
+            url = Constant.BASEURL_LZ + url;
             BaseResponse result = getBaseResponse(url, object);
             return result;
         } catch (Exception e) {
@@ -127,6 +188,7 @@ public class EAPayInter {
 
     private static BaseResponse getBaseResponse(String url, JSONObject map) {
         String result = EucHttpClient.httpPost(url, map);
+        Log.d("EAPayInter", result);
         if (result == null || "".equals(result)) {
             return null;
         }

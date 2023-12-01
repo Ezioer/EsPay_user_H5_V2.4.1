@@ -32,8 +32,8 @@ public class Md5SignUtils {
             return sb.toString();
         } catch (Exception e) {
             e.printStackTrace();
+            return "";
         }
-        return null;
     }
 
     /*获取待签名字符串*/

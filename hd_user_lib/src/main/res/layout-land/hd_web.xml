@@ -5,8 +5,33 @@
     android:background="#90000000"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/hd_pay_title"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <ImageView
+            android:id="@+id/hd_pay_back"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:src="@drawable/ic_arrow_back_white_24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:text="@string/paycenter"
+            android:id="@+id/hd_pay_back_title"
+            android:textColor="@color/white"
+            android:gravity="center_vertical"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
     <WebView
         android:id="@+id/hd_id_WebView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="0dp" />
 </LinearLayout>

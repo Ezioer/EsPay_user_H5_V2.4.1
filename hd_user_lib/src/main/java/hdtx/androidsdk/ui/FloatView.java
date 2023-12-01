@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import hdtx.androidsdk.plugin.StartESUserPlugin;
+import hdtx.androidsdk.util.ESdkLog;
 
 public class FloatView extends View {
 
@@ -93,7 +94,6 @@ public class FloatView extends View {
 
         mWManager = (WindowManager) activity.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
         displayMetrics = new DisplayMetrics();
-        ;
         if (Build.VERSION.SDK_INT > 17) {
             mWManager.getDefaultDisplay().getRealMetrics(displayMetrics);
         } else {
@@ -183,6 +183,7 @@ public class FloatView extends View {
             floatView.showFloatview();
 
         } catch (Exception e) {
+            ESdkLog.d("showfloatview error" + e.getMessage());
             e.printStackTrace();
         }
     }

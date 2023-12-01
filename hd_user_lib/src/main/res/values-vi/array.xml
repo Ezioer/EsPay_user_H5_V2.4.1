@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="chooseopera">
+        <item>album ảnh</item>
+        <item>ảnh chụp</item>
+    </string-array>
+</resources>
