@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "809399028357",
-    "project_id": "csjx-be6af",
-    "storage_bucket": "csjx-be6af.appspot.com"
+    "project_number": "977352499505",
+    "project_id": "saiyazhishen",
+    "storage_bucket": "saiyazhishen.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:809399028357:android:e79b223a941d8a9c3837ec",
+        "mobilesdk_app_id": "1:977352499505:android:dac08f1e083ad88c1c5010",
         "android_client_info": {
-          "package_name": "com.lzcsjx.google.cl"
+          "package_name": "com.syzs.google.gp"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyANvjsaU-U6lU6hqY4ph0vXTISZE03izqk"
+          "current_key": "AIzaSyC9incHMgeVm9fecAn3BreBEnFjd9-Q79I"
         }
       ],
       "services": {

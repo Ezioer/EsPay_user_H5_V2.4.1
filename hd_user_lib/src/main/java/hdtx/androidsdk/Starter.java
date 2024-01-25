@@ -53,12 +53,14 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.hd.espay_user_lib.R;
 
 import hdtx.androidsdk.callback.ActivityLifecycleWrapper;
 import hdtx.androidsdk.callback.ESdkCallback;
 import hdtx.androidsdk.callback.ESdkPayCallback;
 import hdtx.androidsdk.data.Constant;
 import hdtx.androidsdk.data.ESConstant;
+import hdtx.androidsdk.data.FBInfo;
 import hdtx.androidsdk.http.BaseResponse;
 import hdtx.androidsdk.http.EAPayInter;
 import hdtx.androidsdk.plugin.StartESUserPlugin;
@@ -100,8 +102,7 @@ public class Starter {
     public static final int SIGN_LOGIN = 13;
     //测试参数
     private static String googleID = "846876477691-gjefh1ll8fdq72pb5htugj4459kls3nr.apps.googleusercontent.com";
-    private static String ADJUSTKEY = "y2vss2p6tedc";
-    private String fbAppId = "";
+    private static String ADJUSTKEY = "gvm8idmkuha8";
     private AppEventsLogger logger = null;
     private String mESOrder = "";
     private String mNcy = "";
@@ -590,14 +591,38 @@ public class Starter {
             builder.detectFileUriExposure();
             StrictMode.setVmPolicy(builder.build());
         }
-
+        ThreadPoolManager.getInstance().addTask(new Runnable() {
+            @Override
+            public void run() {
+                FBInfo info = EAPayInter.getFBInfo(getPropertiesValue(mContext, "partnerId"), getPropertiesValue(mContext, "appId"),
+                        getPropertiesValue(mContext, "qn"),getPropertiesValue(mContext,"key"));
+                String fbAppId = "";
+                if (info == null) {
+                    ApplicationInfo applicationInfo = null;
+                    try {
+                        applicationInfo = mContext.getPackageManager().getApplicationInfo(mContext.getPackageName(), PackageManager.GET_META_DATA);
+                        ESdkLog.d("get fb info failed");
+                        fbAppId = applicationInfo.metaData.getString("com.facebook.sdk.ApplicationId");
+                        if (fbAppId != null && fbAppId.length() > 2) {
+                            fbAppId = fbAppId.substring(2);
+                        }
+                    } catch (PackageManager.NameNotFoundException e) {
+                    }
+                } else {
+                    ESdkLog.d("get fb info success" + info.getFbAppId());
+                    FacebookSdk.setClientToken(info.getFbToken());
+                    FacebookSdk.setApplicationId("fb"+info.getFbAppId());
+                    FacebookSdk.setApplicationName(info.getFbName());
+                    fbAppId = info.getFbAppId();
+                    ESdkLog.d("after set fbappid" + FacebookSdk.getApplicationId());
+                }
+                initFb(mContext);
+                initAdjust(mContext,fbAppId);
+            }
+        });
         try {
             ApplicationInfo info = mContext.getPackageManager().getApplicationInfo(mContext.getPackageName(), PackageManager.GET_META_DATA);
             googleID = info.metaData.getString("g_clientId");
-            fbAppId = info.metaData.getString("com.facebook.sdk.ApplicationId");
-            if (fbAppId != null && fbAppId.length() > 2) {
-                fbAppId = fbAppId.substring(2);
-            }
             CommonUtils.saveKey(mContext, Constant.unuselessdata);
             CommonUtils.saveBase(mContext, Constant.unuselessvalue);
         } catch (PackageManager.NameNotFoundException e) {
@@ -605,14 +630,11 @@ public class Starter {
         Tools.getAndroidId(mContext);
 //        Constant.APPID = getPropertiesValue(mContext, "appId");
         initXsolla(mContext);
-        initAdjust(mContext);
-        initFb(mContext);
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(mContext);
     }
 
     private void initFb(Context mContext) {
         logger = AppEventsLogger.newLogger(mContext);
-//        FacebookSdk.setIsDebugEnabled(true);
         FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
     }
 
@@ -659,9 +681,9 @@ public class Starter {
         });
     }
 
-    private void initAdjust(Context mContext) {
+    private void initAdjust(Context mContext,String fbAppId) {
         //测试为沙箱模式，正式版需切换到生产模式
-        String environment = AdjustConfig.ENVIRONMENT_SANDBOX;
+        String environment = AdjustConfig.ENVIRONMENT_PRODUCTION;
        /* if (Locale.getDefault().getLanguage().toLowerCase().equals("vi")) {
             ADJUSTKEY = "h12a6xxd1dkw";
         } else if (Locale.getDefault().getLanguage().toLowerCase().equals("es")) {
@@ -695,6 +717,7 @@ public class Starter {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
                         // App code
+                        ESdkLog.d("after set fbappid login" + FacebookSdk.getApplicationId());
                         AccessToken accessToken = loginResult.getAccessToken();
                         Log.d(TAG, "Facebook------>>" + "token:" + accessToken.getToken() + "|userid:" + accessToken.getUserId());
                         StartESUserPlugin.loginFacebook(accessToken.getToken(), accessToken.getUserId(), isBindFacebook);
@@ -903,12 +926,12 @@ public class Starter {
 
     //adjust login事件
     public void adjustLogin(String userId) {
-        Adjust.trackEvent(generateEvent("tlw0ta", false));
+        Adjust.trackEvent(generateEvent("l53rfd", false));
     }
 
     //adjust 下单事件
     public void adjustCheckOut(Double price) {
-        AdjustEvent event = generateEvent("x72bxt", true);
+        AdjustEvent event = generateEvent("j995py", true);
         event.addCallbackParameter("easou_hk_price", String.valueOf(price));
 //        event.addPartnerParameter("easou_hk_user_id", Constant.ESDK_USERID);
         Adjust.trackEvent(event);
@@ -916,7 +939,7 @@ public class Starter {
 
     //adjust 启动事件
     public void adjustStart() {
-        AdjustEvent event = generateEvent("9wf987", false);
+        AdjustEvent event = generateEvent("dnhuoq", false);
 //        event.addPartnerParameter("easou_hk_user_id", Constant.APPID);
 //        event.addPartnerParameter("easou_hk_user_id", Constant.IMEI + "|" + System.currentTimeMillis());
         Adjust.trackEvent(event);
@@ -925,7 +948,7 @@ public class Starter {
 
     //adjust 支付事件
     public void adjustPay(Double price, String ncy, String orderId) {
-        AdjustEvent event = generateEvent("6rqmip", true);
+        AdjustEvent event = generateEvent("4ugnay", true);
         event.addCallbackParameter("easou_hk_price", String.valueOf(price));
         event.setRevenue(price, "USD");
 //        event.addPartnerParameter("easou_hk_user_id", Constant.ESDK_USERID);
@@ -936,7 +959,7 @@ public class Starter {
 
     //adjust 注册事件
     public void adjustRegister(String userId) {
-        AdjustEvent event = generateEvent("dkp32e", false);
+        AdjustEvent event = generateEvent("49k5ny", false);
 //        event.addPartnerParameter("easou_hk_user_id", Constant.IMEI + "|" + System.currentTimeMillis());
         event.addPartnerParameter("easou_hk_user_id", userId);
         Adjust.trackEvent(event);
@@ -944,7 +967,7 @@ public class Starter {
 
     //adjust 激活事件
     public void adjustActive() {
-        Adjust.trackEvent(generateEvent("hcib0n", false));
+        Adjust.trackEvent(generateEvent("yoq1fj", false));
     }
 
     //adjust 分享事件
@@ -1000,7 +1023,7 @@ public class Starter {
         }
         event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
-        event.addCallbackParameter("easou_hk_game_name", "龙珠");
+        event.addCallbackParameter("easou_hk_game_name", "龙珠2（賽亞之神）");
         if (mActivity != null) {
             event.addCallbackParameter("easou_hk_app_id", getPropertiesValue(mActivity, "appId"));
         }

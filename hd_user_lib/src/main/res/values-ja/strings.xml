@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">espay_user_lib</string>
+    <string name="es_neterror">ネットワークエラー。ゲームを再起動してください</string>
+    <string name="es_loginerror">ログインエラー</string>
+    <string name="es_notice">ヒント</string>
+    <string name="es_sslerror">SSL 検証に失敗しました。読み込みを続けますか?</string>
+    <string name="es_ok">もちろん</string>
+    <string name="es_loading">読み込み中...お待ちください</string>
+    <string name="es_allowfloat">「フローティングウィンドウの表示」を許可する権限を設定する必要があります。そうしないと、アカウントセンター機能が使用できなくなります。</string>
+    <string name="es_go">設定に移動</string>
+    <string name="es_nomorenotice">二度と思い出させないでください</string>
+    <string name="es_cancel">キャンセル</string>
+    <string name="paycenter">ゲームに戻る</string>
+    <string name="es_areusure">アカウント センター機能を使用しなくてもよろしいですか? フローティングウィンドウがないとアカウントの切り替えなどの操作ができません！</string>
+    <string name="es_settingfloat">[設定-権限管理]でフローティングウィンドウの表示を許可してください！</string>
+    <string name="es_openpicuse">この機能を使用するにはメディア アクセスを有効にする必要があります</string>
+    <string name="es_opencamerause">この機能を使用するにはカメラの許可を有効にする必要があります</string>
+    <string name="es_gotopic">[設定-権限管理]に移動して、メディアアクセス権限を有効にしてください。</string>
+    <string name="es_gotocamera">[設定 - 権限管理] に移動してカメラの権限を有効にしてください。</string>
+    <string name="es_chooseopera">アクションを選択してください</string>
+    <string name="es_pic">フォトアルバム</string>
+    <string name="es_camera">カメラ</string>
+</resources>

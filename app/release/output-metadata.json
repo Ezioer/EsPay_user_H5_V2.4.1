@@ -1,18 +1,20 @@
 {
-  "version": 2,
+  "version": 3,
   "artifactType": {
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.lzfzkp.google.csjx",
-  "variantName": "processReleaseResources",
+  "applicationId": "com.syzs.google.gp",
+  "variantName": "release",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
+      "attributes": [],
       "versionCode": 10016,
       "versionName": "1.0.1",
       "outputFile": "app-release.apk"
     }
-  ]
+  ],
+  "elementType": "File"
 }

@@ -16,7 +16,7 @@ public class Constant {
     /**
      * SDK版本号，更新版本记得改版本号
      */
-    public static final String SDK_VERSION = "1.5";
+    public static final String SDK_VERSION = "1.7";
     public static final String SDK_PHONEOS = "Android";
 
     /**
@@ -118,6 +118,7 @@ public class Constant {
     public static String ENV_LZ = "https://login.hudonglz.com/static/sdk/1.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
     public static String ENV_HZ = "https://login.hudong-hz.com/static/sdk/1.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
     public static String ENV_VN = "https://login.hudong-vn.com/static/sdk/1.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
+    public static String ENV_JA = "http://test-jp.sso.easou.hudonglz.com/static/sdk/1.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
     //    public static String SSO_URL = "https://h5.pay.mtianshitong.com/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
     public static String SSO_REST = "/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
 
@@ -140,6 +141,7 @@ public class Constant {
     public static final String CONSUMPTION = "play/consumption";
     //获取oaid证书
     public static final String GETOAIDCERT = "https://egamec.eayou.com/cert/getCertPem";
+    public static final String FBCHANGE = "https://sso.hudong-hk.com/api2/getFbInfo.json";
     /**
      * @notice 网络连接失败，请检查网络
      */

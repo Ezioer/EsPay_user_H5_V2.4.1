@@ -24,7 +24,7 @@
         <!--        以下为测试数据-->
         <meta-data
             android:name="g_clientId"
-            android:value="846876477691-gjefh1ll8fdq72pb5htugj4459kls3nr.apps.googleusercontent.com" />
+            android:value="301713212014-to8n1rbqu9kabu3gg57ubf2hcc1fjr8i.apps.googleusercontent.com" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="fb1018958942766450" />

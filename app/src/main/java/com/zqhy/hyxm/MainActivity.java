@@ -377,7 +377,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             //支付回调
                             payInfo.put(ESConstant.NOTIFY_URL, "");
                             payInfo.put(ESConstant.PRODUCT_NAME, "宝石");
-                            payInfo.put("payType", 1);
+                            payInfo.put("payType", 0);
                         } catch (JSONException e) {
                         }
                         ThreadPoolManager.getInstance().addTask(new Runnable() {
