@@ -175,7 +175,7 @@ public class EAPayInter {
             } else {
                 url = Constant.BASEURL_CN + url;
             }*/
-            url = Constant.BASEURL_LZ + url;
+            url = Constant.BASEURL_EN + url;
             BaseResponse result = getBaseResponse(url, object);
             return result;
         } catch (Exception e) {
