@@ -106,7 +106,6 @@
                 style="@style/easou_dash"  />
 
             <LinearLayout
-                android:visibility="gone"
                 android:id="@+id/easou_id_ylChannelLayout"
                 style="@style/easou_itemchannel" >
 

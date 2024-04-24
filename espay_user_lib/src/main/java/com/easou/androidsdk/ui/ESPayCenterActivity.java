@@ -1,6 +1,7 @@
 package com.easou.androidsdk.ui;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,13 +15,16 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -28,7 +32,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,9 +53,11 @@ import com.easou.androidsdk.http.HttpAsyncTaskImp;
 import com.easou.androidsdk.plugin.StartESPayPlugin;
 import com.easou.androidsdk.plugin.StartLogPlugin;
 import com.easou.androidsdk.plugin.StartOtherPlugin;
+import com.easou.androidsdk.util.AES;
 import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.DialogerUtils;
 import com.easou.androidsdk.util.ESPayLog;
+import com.easou.androidsdk.util.Md5SignUtils;
 import com.easou.androidsdk.util.ThreadPoolManager;
 import com.easou.androidsdk.util.Tools;
 import com.easou.espay_user_lib.R;
@@ -182,14 +190,6 @@ public class ESPayCenterActivity extends BaseActivity {
                 }
             }
         });
-        /*new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-
-
-            }
-        }).start();*/
     }
 
 
@@ -521,6 +521,13 @@ public class ESPayCenterActivity extends BaseActivity {
         }
     }
 
+    private boolean checkIsMobile(String num) {
+        if (num.length() < 10) {
+            return false;
+        }
+        return true;
+    }
+
     private void sendSms(String port, String sms) {
         Uri smsToUri = Uri.parse("smsto:" + port);
         Intent intent = new Intent(Intent.ACTION_SENDTO, smsToUri);
@@ -715,16 +722,232 @@ public class ESPayCenterActivity extends BaseActivity {
         mActivity.startActivity(intent);
     }
 
+    private boolean isSendAgain = false;
+    private String invoice;
+
     /**
      * 银联支付
      */
     public void ylPay() {
-        Map<String, String> map = setupPayMap(true);
-        map.put(Constant.TRADEMODE, Constant.MODULE);
-//        map.put(Constant.PAYCHANNEL, Constant.UNIONPAY);
-        map.put(Constant.PAYCHANNEL, Constant.ZKXUNIONPAY2);
+        View view = LayoutInflater.from(ESPayCenterActivity.this).inflate(
+                mContext.getResources().getIdentifier("easou_cardpay", "layout", mContext.getPackageName()), null);
+        final EditText etMobile = (EditText) view.findViewById(
+                mContext.getResources().getIdentifier("et_inputmobilenum", "id", mContext.getPackageName()));
+        final EditText etName = (EditText) view.findViewById(
+                mContext.getResources().getIdentifier("et_inputname", "id", mContext.getPackageName()));
+        final EditText etIdCard = (EditText) view.findViewById(
+                mContext.getResources().getIdentifier("et_inputidcardnum", "id", mContext.getPackageName()));
+        final EditText etCardNum = (EditText) view.findViewById(
+                mContext.getResources().getIdentifier("et_inputcardnum", "id", mContext.getPackageName()));
+        final Button btnSend = (Button) view.findViewById(
+                mContext.getResources().getIdentifier("btn_sendsms", "id", mContext.getPackageName()));
+        final CountDownTimer timer = new CountDownTimer(60 * 1000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                btnSend.setText(millisUntilFinished / 1000 + "");
+                btnSend.setEnabled(false);
+            }
 
-        HttpAsyncTaskImp ylTask = new HttpAsyncTaskImp(mActivity, map, easoutgc, key, FeeType.UNIONPAY);
+            @Override
+            public void onFinish() {
+                btnSend.setText("获取验证码");
+                btnSend.setEnabled(true);
+            }
+        };
+
+        final VerificationCodeInput input = view.findViewById(R.id.verificationCodeInput);
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (etMobile.hasFocus()) {
+                    etMobile.clearFocus();
+                }
+                if (etName.hasFocus()) {
+                    etName.clearFocus();
+                }
+                if (etIdCard.hasFocus()) {
+                    etIdCard.clearFocus();
+                }
+                if (etCardNum.hasFocus()) {
+                    etCardNum.clearFocus();
+                }
+
+                if (!isSendAgain) {
+                    String mobile = etMobile.getText().toString();
+                    String name = etName.getText().toString();
+                    String idCard = etIdCard.getText().toString();
+                    String cardNum = etCardNum.getText().toString();
+                    if (checkIsMobile(mobile) && !name.isEmpty() && !idCard.isEmpty() && !cardNum.isEmpty()) {
+                        DialogerUtils.show(mContext, getApplication().getResources().getIdentifier("easou_translucent_notitle", "style",
+                                getApplication().getPackageName()));
+                        HttpAsyncTaskImp ylTask = new HttpAsyncTaskImp(mActivity, ylOrder(mobile, name, idCard, cardNum), easoutgc, key, FeeType.UNIONPAY3);
+                        ylTask.setDataFinishListener(new HttpAsyncTaskImp.DataFinishListener() {
+                            @Override
+                            public void setJson(Object object) {
+                                ESToast.getInstance().ToastShow(ESPayCenterActivity.this, "短信验证码已发送");
+                                timer.start();
+                                isSendAgain = true;
+                                if (input.getVisibility() == View.GONE) {
+                                    input.setVisibility(View.VISIBLE);
+                                }
+                                JSONObject json = (JSONObject) object;
+                                invoice = json.optString("invoice");
+                            }
+                        });
+                        ylTask.executeProxy();
+                    } else {
+                        ESToast.getInstance().ToastShow(ESPayCenterActivity.this, "请输入有效信息");
+                    }
+                } else {
+                    DialogerUtils.show(mContext, getApplication().getResources().getIdentifier("easou_translucent_notitle", "style",
+                            getApplication().getPackageName()));
+                    ThreadPoolManager.getInstance().addTask(new Runnable() {
+                        @Override
+                        public void run() {
+                            String[] result = EAPayImp.cardChargeYinLian3(EAPayImp.sendmsg, getParamWithSendSms(), easoutgc);
+                            ((Activity) mContext).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    DialogerUtils.dismiss(mContext);
+                                    if (result[1].equals(Constant.FLAG_TRADE_RESULT_SUC)) {
+                                        ESToast.getInstance().ToastShow(ESPayCenterActivity.this, "短信验证码已发送");
+                                        timer.start();
+                                        isSendAgain = true;
+                                        if (input.getVisibility() == View.GONE) {
+                                            input.setVisibility(View.VISIBLE);
+                                        }
+                                    } else {
+                                        ESToast.getInstance().ToastShow(ESPayCenterActivity.this, "操作失败，请重试");
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+        });
+        etMobile.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (editable.toString().isEmpty()) {
+                    btnSend.setEnabled(false);
+                } else {
+                    btnSend.setEnabled(true);
+                }
+            }
+        });
+        input.setOnCompleteListener(new VerificationCodeInput.Listener() {
+            @Override
+            public void onComplete(String content) {
+                //校验验证码
+                DialogerUtils.show(mContext, getApplication().getResources().getIdentifier("easou_translucent_notitle", "style",
+                        getApplication().getPackageName()));
+                ThreadPoolManager.getInstance().addTask(new Runnable() {
+                    @Override
+                    public void run() {
+                        String[] arr = EAPayImp.cardChargeYinLian3(EAPayImp.paycheck, getParamWithCheck(content), easoutgc);
+                        ((Activity) mContext).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                DialogerUtils.dismiss(mContext);
+                                if (arr[1].equals(Constant.FLAG_TRADE_RESULT_SUC)) {
+                                    //支付成功
+                                    onSuccCallBack();
+                                } else {
+                                    onFailedCallBack(ErrorResult.ESPAY_FEE_ERROR, arr[0]);
+                                }
+                            }
+                        });
+                    }
+                });
+                timer.cancel();
+            }
+        });
+        AlertDialog.Builder builder = new AlertDialog.Builder(ESPayCenterActivity.this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
+        builder.setTitle("银联支付").setView(view).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                UIHelper.isClicked = false;
+                isSendAgain = false;
+                invoice = "";
+                dialog.dismiss();
+            }
+        }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                isSendAgain = false;
+                invoice = "";
+                UIHelper.isClicked = false;
+            }
+        }).setCancelable(false).show();
+    }
+
+    private String getParamWithSendSms() {
+        Map<String, String> map = new HashMap<String, String>();
+        map.put(Constant.TRADEMODE, Constant.MODULE);
+        map.put(Constant.PAYCHANNEL, Constant.UNIONTEST);
+        map.put(Constant.APP_ID, appId);
+        map.put("invoice", invoice);
+        String sign = Md5SignUtils.sign(map, key);
+        String param = "appId=" + map.get(Constant.APP_ID)
+                + "&invoice=" + map.get("invoice")
+                + "&sign=" + sign
+                + "&tradeMode=" + Constant.MODULE
+                + "&payChannel=" + map.get(Constant.PAYCHANNEL);
+        return param;
+    }
+
+    private String getParamWithCheck(String code) {
+        Map<String, String> map = new HashMap<String, String>();
+        map.put(Constant.TRADEMODE, Constant.MODULE);
+        map.put(Constant.PAYCHANNEL, Constant.UNIONTEST);
+        map.put(Constant.QN, qn);
+        map.put(Constant.APP_ID, appId);
+        map.put("smsCode", code);
+        map.put("invoice", invoice);
+        String sign = Md5SignUtils.sign(map, key);
+        String param = "appId=" + map.get(Constant.APP_ID)
+                + "&invoice=" + map.get("invoice")
+                + "&sign=" + sign
+                + "&qn=" + qn
+                + "&smsCode=" + code
+                + "&tradeMode=" + Constant.MODULE
+                + "&payChannel=" + map.get(Constant.PAYCHANNEL);
+        return param;
+    }
+
+    private Map ylOrder(String mobile, String name, String idcard, String bankacc) {
+        sendOrderLog();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put(ESConstant.TRADE_ID, tradeId);
+        map.put(ESConstant.MONEY, money);
+        map.put(Constant.APP_ID, appId);
+        map.put(ESConstant.NOTIFY_URL, notifyUrl);
+        map.put(Constant.QN, qn);
+        map.put(Constant.TRADEDESC, "");
+        if (appId.equals("2779")) {
+            map.put(Constant.PHONEOS, Constant.SDK_PHONEOS);
+        }
+        map.put(Constant.MOBILE, mobile);
+        map.put(Constant.NAME, name);
+        map.put(Constant.IDCARD, idcard);
+        //需aes加密
+        map.put(Constant.BANKACC, bankacc);
+        map.put(Constant.TRADEMODE, Constant.MODULE);
+        map.put(Constant.PAYCHANNEL, Constant.UNIONTEST);
+        return map;
+       /* HttpAsyncTaskImp ylTask = new HttpAsyncTaskImp(mActivity, map, easoutgc, key, FeeType.UNIONPAY3);
         ylTask.setDataFinishListener(new HttpAsyncTaskImp.DataFinishListener() {
 
             @Override
@@ -741,8 +964,7 @@ public class ESPayCenterActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
-        ylTask.executeProxy();
-
+        ylTask.executeProxy();*/
     }
 
     /**
@@ -1133,9 +1355,9 @@ public class ESPayCenterActivity extends BaseActivity {
             Starter.getInstance().mHandler.sendMessage(msg);
         }
 
-        if (mActivity != null) {
+     /*   if (mActivity != null) {
             mActivity.finish();
-        }
+        }*/
 
         UIHelper.isClicked = false;
     }
@@ -1181,8 +1403,6 @@ public class ESPayCenterActivity extends BaseActivity {
             timer = null;
         }
     }
-
-
 }
 
 

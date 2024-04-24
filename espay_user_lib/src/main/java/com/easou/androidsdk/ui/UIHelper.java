@@ -613,8 +613,8 @@ public class UIHelper {
                 context.getResources().getIdentifier("easou_id_jfChannelid", "id", context.getPackageName()));
         wxLayout.setVisibility(View.GONE);
         wxImageViewid.setVisibility(View.GONE);
-        ylLayout.setVisibility(View.GONE);
-        ylImageViewid.setVisibility(View.GONE);
+//        ylLayout.setVisibility(View.GONE);
+//        ylImageViewid.setVisibility(View.GONE);
         aliLayout.setVisibility(View.GONE);
         aliImageViewid.setVisibility(View.GONE);
         webLayout.setVisibility(View.GONE);
@@ -713,8 +713,8 @@ public class UIHelper {
 
             if (Constant.PAY_CHANNEl == 1 || Constant.PAY_CHANNEl == 2 || Constant.PAY_CHANNEl == 3 || Constant.PAY_CHANNEl == 4
                     || Constant.PAY_CHANNEl == 0 || Constant.PAY_CHANNEl == 5 || Constant.PAY_CHANNEl == 6 || Constant.PAY_CHANNEl == 7) {
-                ylLayout.setVisibility(View.GONE);
-                unipayLineImageView.setVisibility(View.GONE);
+//                ylLayout.setVisibility(View.GONE);
+//                unipayLineImageView.setVisibility(View.GONE);
             }
         }
 

@@ -147,11 +147,14 @@ public class Constant {
     public static String sso_test = "http://lab.pay.appeasou.com:7500/static/sdk/2.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&payHostName=http://lab.pay.appeasou.com&ssoHostName=http://lab.sso.mtianshitong.com";
 
     public static String domain_release = "https://service.pay.";
-    public static String domain_test = "http://lab.pay.appeasou.com";
+    public static String domain_test = "http://lab.pay.tjqzqkj.com";
     /**
      * 支付 url
      */
     public static final String SERVER_URL = "/basePay/charge.e";
+    public static final String SEND_MSG = "/module/sendSmsAgain.e";
+    public static final String PAY_CHECK = "/module/payCheck.e";
+    public static final String COMMONKEY = "MS10Q+qh2Gmgd6iD";
     public static final String CHANNELCONFIG_URL = "/basePay/channelConfig.e";
     public static final String WEB_SERVER_URL = "/basePay/chargePage.e?";
     public static final String UNIPAY_PAYECO_ENVIRONMENT = "01";
@@ -259,6 +262,7 @@ public class Constant {
 
     //易联2.0展科鑫
     public static final String ZKXUNIONPAY2 = "ZKXUNIONPAY2";
+    public static final String UNIONTEST = "UNIONPAY3_TEST";
 
 
     public static final String UNIONPAY = "UNIONPAY2";
@@ -271,6 +275,11 @@ public class Constant {
     public static final String WFTESWECHAT = "WFTESWECHAT";
     public static final String MODULE = "MODULE";
     public static final String TRADEMODE = "tradeMode";
+    public static final String MOBILE = "mobile";
+    public static final String NAME = "name";
+    public static final String IDCARD = "idCard";
+    public static final String BANKACC = "bankAcc";
+    public static final String TRADEDESC = "tradeDesc";
     public static final String PAYCHANNEL = "payChannel";
     public static final String EASOUTGC = "EASOUTGC";
     public static final String INCLUDE_CHANNELS = "includeChannels";

@@ -50,6 +50,9 @@ public class HttpAsyncTaskImp extends HttpAsyncTask<Void, Void, String[]> {
             case UNIONPAY:
                 result = EAPayImp.cardChargeYinLian(getParam(Constant.UNIONPAY), token);
                 break;
+            case UNIONPAY3:
+                result = EAPayImp.cardChargeYinLian3(EAPayImp.order,getParamWithYL(), token);
+                break;
             case ALIPAY:
                 result = EAPayImp.chargeAlipay(getParam(Constant.ALIPAY), token);
                 break;
@@ -142,6 +145,15 @@ public class HttpAsyncTaskImp extends HttpAsyncTask<Void, Void, String[]> {
                         e.printStackTrace();
                     }
                     break;
+                case UNIONPAY3:
+                    try {
+                        // 解析响应数据
+                        json.put("invoice", result[2]);
+                    } catch (JSONException e) {
+                        ESPayLog.d("解析处理失败！" + e);
+                        e.printStackTrace();
+                    }
+                    break;
                 case ALIPAY:
                     try {
                         // 解析响应数据
@@ -223,6 +235,27 @@ public class HttpAsyncTaskImp extends HttpAsyncTask<Void, Void, String[]> {
 				+ "&cardNumber=" + map.get(Constant.CARD_NUM);
 		return param;
 	}
+
+    private String getParamWithYL() {
+        String sign = Md5SignUtils.sign(map, key);
+        String param = "money=" + map.get(ESConstant.MONEY)
+                + "&appId=" + map.get(Constant.APP_ID)
+                + "&tradeId=" + map.get(ESConstant.TRADE_ID)
+                + "&qn=" + map.get(Constant.QN)
+                + "&sign=" + sign
+                + "&notifyUrl=" + map.get(ESConstant.NOTIFY_URL)
+                + "&tradeMode=" + Constant.MODULE
+                + "&payChannel=" + map.get(Constant.PAYCHANNEL)
+                + "&mobile=" + map.get(Constant.MOBILE)
+                + "&name=" + map.get(Constant.NAME)
+                + "&tradeDesc=" + map.get(Constant.TRADEDESC)
+                + "&idCard=" + map.get(Constant.IDCARD)
+                + "&bankAcc=" + map.get(Constant.BANKACC);
+        if (map.get(Constant.APP_ID).equals("2779")) {
+            param = param + "&phoneOs=" + map.get(Constant.PHONEOS);
+        }
+        return param;
+    }
 
     public static interface DataFinishListener {
         void setJson(Object object);

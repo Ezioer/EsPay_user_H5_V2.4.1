@@ -1,5 +1,7 @@
 package com.easou.androidsdk.http;
 
+import android.util.Log;
+
 import java.util.Map;
 import org.json.JSONObject;
 
@@ -13,6 +15,9 @@ import com.easou.androidsdk.util.Tools;
 public class EAPayImp {
 	
 	public static final String domain = Constant.DOMAIN + Tools.getHostName() + Constant.SERVER_URL;
+	public static final String order = Constant.domain_test  + Constant.SERVER_URL;
+	public static final String sendmsg = Constant.domain_test  + Constant.SEND_MSG;
+	public static final String paycheck = Constant.domain_test  + Constant.PAY_CHECK;
 	private static final String TAG = "EAPayImp";
 	
 	/**
@@ -161,6 +166,39 @@ public class EAPayImp {
 		}
 		return result_arr;
 	}
+
+	//易联3.0
+	public static String[] cardChargeYinLian3(String url,String param, String token) {
+		String result = HttpGroupUtils.sendPost(url, param, token);
+		Log.e("unionpay3log",url+"------------>"+result);
+		String[] result_arr = new String[13];
+		try {
+			JSONObject jsonObject = new JSONObject(result);
+			String status = jsonObject.getString("status");
+			if (status.equals(Constant.FLAG_TRADE_RESULT_SUC)) {
+				result_arr[0] = jsonObject.getString("msg");
+				String expire_time = "";
+				if (url.equals(order)) {
+					result_arr[2] = jsonObject.optString("invoice");
+				}
+				try {
+					JSONObject data = jsonObject.optJSONObject("data");
+					expire_time = data.optString("sms_expire_time");
+				}catch(Exception e) {
+				}
+				result_arr[1] = status;
+				ESPayLog.d(TAG , "银联解析完毕。");
+			} else {
+				result_arr[0] = jsonObject.getString("msg");
+				result_arr[1] = status;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			ESPayLog.d(TAG ,e.toString());
+		}
+		return result_arr;
+	}
+
 	/**
 	 * 卡类充值请求
 	 * @param token 废弃，有用户中心需要使用，传null

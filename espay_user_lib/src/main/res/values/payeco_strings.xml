@@ -28,6 +28,7 @@
 	<string name="easou_yl_pay">银行卡快捷支付</string>
 	<string name="easou_jf_pay">移动积分支付</string>
 	<string name="easou_noti">(注：本次支付仅适用于本机移动号码；礼包价值：6元，兑换成功扣除780积分)</string>
+	<string name="easou_sendsms">获取验证码</string>
 	<string name="easou_more_pay">更多支付方式</string>
 	<string name="easou_more_pay_mark">展开</string>
 	<string name="easou_web_pay">页面支付</string>

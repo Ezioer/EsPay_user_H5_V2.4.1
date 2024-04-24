@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ver="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_noti"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:text="@string/easou_noti"
+            android:visibility="gone" />
+
+        <EditText
+            android:id="@+id/et_inputidcardnum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="10dp"
+            android:hint="输入身份证号"
+            android:inputType="number"
+            android:text="232102196903151919"
+            android:textColor="@color/easou_em2_color" />
+
+        <EditText
+            android:id="@+id/et_inputname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="10dp"
+            android:hint="输入姓名"
+            android:text="陈辉"
+            android:textColor="@color/easou_em2_color" />
+
+        <EditText
+            android:id="@+id/et_inputcardnum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="10dp"
+            android:hint="输入银行卡号"
+            android:inputType="number"
+            android:text="6227003328020348457"
+            android:textColor="@color/easou_em2_color" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/et_inputmobilenum"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:hint="输入手机号"
+                android:inputType="number"
+                android:text="13580200200"
+                android:textColor="@color/easou_em2_color" />
+
+            <Button
+                android:id="@+id/btn_sendsms"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="10dp"
+                android:enabled="false"
+                android:gravity="center"
+                android:text="@string/easou_sendsms" />
+        </LinearLayout>
+
+        <com.easou.androidsdk.ui.VerificationCodeInput
+            android:id="@+id/verificationCodeInput"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_margin="10dp"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone"
+            ver:box="6"
+            ver:child_h_padding="5dp"
+            ver:inputType="number" />
+    </LinearLayout>
+</RelativeLayout>
