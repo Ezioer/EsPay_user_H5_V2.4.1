@@ -945,7 +945,7 @@ public class ESPayCenterActivity extends BaseActivity {
         //需aes加密
         map.put(Constant.BANKACC, bankacc);
         map.put(Constant.TRADEMODE, Constant.MODULE);
-        map.put(Constant.PAYCHANNEL, Constant.UNIONTEST);
+        map.put(Constant.PAYCHANNEL, Constant.ZKXUNIONPAY3);
         return map;
        /* HttpAsyncTaskImp ylTask = new HttpAsyncTaskImp(mActivity, map, easoutgc, key, FeeType.UNIONPAY3);
         ylTask.setDataFinishListener(new HttpAsyncTaskImp.DataFinishListener() {

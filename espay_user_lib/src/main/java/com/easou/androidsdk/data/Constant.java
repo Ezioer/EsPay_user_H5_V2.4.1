@@ -263,6 +263,7 @@ public class Constant {
     //易联2.0展科鑫
     public static final String ZKXUNIONPAY2 = "ZKXUNIONPAY2";
     public static final String UNIONTEST = "UNIONPAY3_TEST";
+    public static final String ZKXUNIONPAY3 = "ZKXUNIONPAY3";
 
 
     public static final String UNIONPAY = "UNIONPAY2";
