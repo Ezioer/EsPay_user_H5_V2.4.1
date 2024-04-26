@@ -881,6 +881,7 @@ public class ESPayCenterActivity extends BaseActivity {
                 isSendAgain = false;
                 invoice = "";
                 dialog.dismiss();
+                DialogerUtils.dismiss(mContext);
             }
         }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
             @Override
@@ -889,6 +890,7 @@ public class ESPayCenterActivity extends BaseActivity {
                 isSendAgain = false;
                 invoice = "";
                 UIHelper.isClicked = false;
+                DialogerUtils.dismiss(mContext);
             }
         }).setCancelable(false).show();
     }
@@ -896,7 +898,7 @@ public class ESPayCenterActivity extends BaseActivity {
     private String getParamWithSendSms() {
         Map<String, String> map = new HashMap<String, String>();
         map.put(Constant.TRADEMODE, Constant.MODULE);
-        map.put(Constant.PAYCHANNEL, Constant.UNIONTEST);
+        map.put(Constant.PAYCHANNEL, Constant.ZKXUNIONPAY3);
         map.put(Constant.APP_ID, appId);
         map.put("invoice", invoice);
         String sign = Md5SignUtils.sign(map, key);
@@ -911,7 +913,7 @@ public class ESPayCenterActivity extends BaseActivity {
     private String getParamWithCheck(String code) {
         Map<String, String> map = new HashMap<String, String>();
         map.put(Constant.TRADEMODE, Constant.MODULE);
-        map.put(Constant.PAYCHANNEL, Constant.UNIONTEST);
+        map.put(Constant.PAYCHANNEL, Constant.ZKXUNIONPAY3);
         map.put(Constant.QN, qn);
         map.put(Constant.APP_ID, appId);
         map.put("smsCode", code);

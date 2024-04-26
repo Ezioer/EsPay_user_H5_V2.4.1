@@ -596,9 +596,6 @@ public class UIHelper {
             }
         });
 
-        if (webLayout.getVisibility() == View.GONE) {
-            webLayout.setVisibility(View.VISIBLE);
-        }
         wxImageViewid = (ImageView) convertView.findViewById(
                 context.getResources().getIdentifier("easou_id_wxChannelid", "id", context.getPackageName()));
         ylImageViewid = (ImageView) convertView.findViewById(
@@ -611,40 +608,40 @@ public class UIHelper {
                 context.getResources().getIdentifier("easou_id_moreChannelid", "id", context.getPackageName()));
         jfImageViewId = (ImageView) convertView.findViewById(
                 context.getResources().getIdentifier("easou_id_jfChannelid", "id", context.getPackageName()));
-        wxLayout.setVisibility(View.GONE);
-        wxImageViewid.setVisibility(View.GONE);
+//        wxLayout.setVisibility(View.GONE);
+//        wxImageViewid.setVisibility(View.GONE);
 //        ylLayout.setVisibility(View.GONE);
 //        ylImageViewid.setVisibility(View.GONE);
-        aliLayout.setVisibility(View.GONE);
-        aliImageViewid.setVisibility(View.GONE);
-        webLayout.setVisibility(View.GONE);
-        webImageViewid.setVisibility(View.GONE);
-        moreLayout.setVisibility(View.GONE);
-        moreImageViewid.setVisibility(View.GONE);
+//        aliLayout.setVisibility(View.GONE);
+//        aliImageViewid.setVisibility(View.GONE);
+//        webLayout.setVisibility(View.GONE);
+//        webImageViewid.setVisibility(View.GONE);
+//        moreLayout.setVisibility(View.GONE);
+//        moreImageViewid.setVisibility(View.GONE);
 
         weixinLineImageView = (ImageView) convertView.findViewById(
                 context.getResources().getIdentifier("easou_id_wxChannelid", "id", context.getPackageName()));
-        weixinLineImageView.setVisibility(View.GONE);
+//        weixinLineImageView.setVisibility(View.GONE);
 
         unipayLineImageView = (ImageView) convertView.findViewById(
                 context.getResources().getIdentifier("easou_id_ylChannelid", "id", context.getPackageName()));
-        unipayLineImageView.setVisibility(View.GONE);
+//        unipayLineImageView.setVisibility(View.GONE);
 
         alipayLineImageView = (ImageView) convertView.findViewById(
                 context.getResources().getIdentifier("easou_id_aliChannelid", "id", context.getPackageName()));
-        alipayLineImageView.setVisibility(View.GONE);
+//        alipayLineImageView.setVisibility(View.GONE);
 
         moreLineImageView = (ImageView) convertView.findViewById(
                 context.getResources().getIdentifier("easou_id_moreChannelid", "id", context.getPackageName()));
-        moreLineImageView.setVisibility(View.GONE);
+//        moreLineImageView.setVisibility(View.GONE);
 
         needChannels = map.get(ESConstant.NEED_CHANNELS);
 
         if (TextUtils.isEmpty(needChannels)) {
             wxLayout.setVisibility(View.VISIBLE);
             wxImageViewid.setVisibility(View.VISIBLE);
-//			ylLayout.setVisibility(View.VISIBLE);
-//			ylImageViewid.setVisibility(View.VISIBLE);
+			ylLayout.setVisibility(View.VISIBLE);
+			ylImageViewid.setVisibility(View.VISIBLE);
             aliLayout.setVisibility(View.VISIBLE);
             aliImageViewid.setVisibility(View.VISIBLE);
             webLayout.setVisibility(View.VISIBLE);
@@ -667,8 +664,8 @@ public class UIHelper {
                 aliImageViewid.setVisibility(View.VISIBLE);
             }
             if (needChannels.contains("UNIONPAY2")) {
-//				ylLayout.setVisibility(View.VISIBLE);
-//				ylImageViewid.setVisibility(View.VISIBLE);
+				ylLayout.setVisibility(View.VISIBLE);
+				ylImageViewid.setVisibility(View.VISIBLE);
             }
 
             if (needChannels.contains("WEB")) {
@@ -690,34 +687,7 @@ public class UIHelper {
                     webImageViewid.setVisibility(View.VISIBLE);
                 }
             }
-
-            if (!needChannels.contains("WEB") && !needChannels.contains("CARD_GAME")
-                    && !needChannels.contains("CARD_PHONE") && !needChannels.contains("WFTQQWALLET")) {
-                unipayLineImageView.setVisibility(View.GONE);
-            }
-            if (!needChannels.contains("WEB") && !needChannels.contains("CARD_GAME")
-                    && !needChannels.contains("CARD_PHONE") && !needChannels.contains("WFTQQWALLET")
-                    && !needChannels.contains("UNIONPAY2")) {
-                alipayLineImageView.setVisibility(View.GONE);
-            }
-            if (!needChannels.contains("WEB") && !needChannels.contains("CARD_GAME")
-                    && !needChannels.contains("CARD_PHONE") && !needChannels.contains("WFTQQWALLET")
-                    && !needChannels.contains("UNIONPAY2") && !needChannels.contains("ALIPAY2")) {
-                weixinLineImageView.setVisibility(View.GONE);
-            }
-
-		/*	if (Constant.USE_DHT) {
-				ylLayout.setVisibility(View.GONE);
-				unipayLineImageView.setVisibility(View.GONE);
-			}*/
-
-            if (Constant.PAY_CHANNEl == 1 || Constant.PAY_CHANNEl == 2 || Constant.PAY_CHANNEl == 3 || Constant.PAY_CHANNEl == 4
-                    || Constant.PAY_CHANNEl == 0 || Constant.PAY_CHANNEl == 5 || Constant.PAY_CHANNEl == 6 || Constant.PAY_CHANNEl == 7) {
-//                ylLayout.setVisibility(View.GONE);
-//                unipayLineImageView.setVisibility(View.GONE);
-            }
         }
-
 
         // 用户id
         userID = (TextView) convertView

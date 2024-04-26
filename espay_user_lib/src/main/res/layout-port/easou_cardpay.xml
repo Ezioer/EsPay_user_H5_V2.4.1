@@ -15,8 +15,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:text="@string/easou_noti"
-            android:visibility="gone" />
+            android:layout_marginTop="15dp"
+            android:text="@string/easou_cardnoti" />
 
         <EditText
             android:id="@+id/et_inputidcardnum"
@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
             android:hint="输入身份证号"
             android:inputType="number"
             android:textColor="@color/easou_em2_color" />
