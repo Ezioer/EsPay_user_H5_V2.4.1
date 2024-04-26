@@ -4,8 +4,8 @@ android {
     compileSdkVersion 33
     buildToolsVersion "30.0.3"
     defaultConfig {
-        applicationId "com.syzs.google.gp"
-//        applicationId "com.jddzg.yisouf"
+//        applicationId "com.syzs.google.gp"
+        applicationId "com.jddzg.yisouf"
 //        applicationId "com.zqhy.hyxm"
         minSdkVersion 19
         targetSdkVersion 33
