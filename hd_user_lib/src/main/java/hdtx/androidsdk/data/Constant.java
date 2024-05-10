@@ -113,8 +113,11 @@ public class Constant {
 
     public static String URL_BACKUP = "mtianshitong.com";
     //        public static String SSO_URL = "http://lab.h5.tjqzqkj.com/static/sdk/3.0.0/es_sdk3_original.html?1=1&sdkSource=Android-SDK&payHostName=http://lab.pay.appeasou.com&ssoHostName=http://lab.sso.mtianshitong.com";
+    //正式
     public static String ENV_EN = "https://login.hudong-en.com/static/sdk/1.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
     public static String ENV_CN = "https://login.hudong-hk.com/static/sdk/1.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
+    //test
+//    public static String ENV_EN = "http://test.login.easou.hudonglz.com/static/sdk/1.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
     public static String ENV_KR = "https://login.hudong-kr.com/static/sdk/1.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
     public static String ENV_LZ = "https://login.hudonglz.com/static/sdk/1.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
     public static String ENV_HZ = "https://login.hudong-hz.com/static/sdk/1.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
@@ -127,7 +130,10 @@ public class Constant {
      * 支付 url
      */
     public static final String BASEURL_VN = "https://pay.hudong-vn.com/";
-    public static final String BASEURL_EN = "https://pay.hudong-en.com/";
+    //正式域名
+//    public static final String BASEURL_EN = "https://pay.hudong-en.com/";
+    //测试域名
+    public static final String BASEURL_EN = "http://hy.pay.easoubj.com/";
     public static final String BASEURL_CN = "https://pay.hudong-hk.com/";
     public static final String BASEURL_LZ = "https://pay.hudonglz.com/";
     public static final String BASEURL_LZ_TEST = "http://hy.pay.easoubj.com/";

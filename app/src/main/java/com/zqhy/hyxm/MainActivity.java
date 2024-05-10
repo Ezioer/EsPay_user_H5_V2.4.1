@@ -362,7 +362,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         tradeId = System.currentTimeMillis() + "";
                         JSONObject payInfo = new JSONObject();
                         try {
-                            payInfo.put(ESConstant.PRODUCT_ID, "hudong_6");
+                            payInfo.put(ESConstant.PRODUCT_ID, productId);
 //                            payInfo.put(ESConstant.PRODUCT_ID, "yisou_6");
                             payInfo.put(ESConstant.APP_ID, "2899");
                             payInfo.put(ESConstant.TRADE_ID, tradeId);
