@@ -2,7 +2,7 @@
     <string name="app_name">espay_user_lib</string>
     <!--    商道-->
     <!--    <string name="fb_login_protocol_scheme">fb462019716121167</string>-->
-    <string name="fb_login_protocol_scheme">fb6775671649197625</string>
+    <string name="fb_login_protocol_scheme">fb462019716121167</string>
 
     <string name="es_neterror">网络错误,请重启游戏</string>
     <string name="es_loginerror">登录出错啦</string>

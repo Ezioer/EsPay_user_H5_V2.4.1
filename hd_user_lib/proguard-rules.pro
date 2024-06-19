@@ -63,6 +63,11 @@
     <methods>;
 }
 
+-keep class hdtx.androidsdk.data.FBUser {
+    <fields>;
+    <methods>;
+}
+
 -keep class hdtx.androidsdk.data.PayItem{
     <fields>;
     <methods>;

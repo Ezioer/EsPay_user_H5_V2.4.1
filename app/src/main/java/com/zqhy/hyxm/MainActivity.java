@@ -24,6 +24,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,11 +32,14 @@ import android.widget.Toast;
 import hdtx.androidsdk.Starter;
 import hdtx.androidsdk.callback.ESdkCallback;
 import hdtx.androidsdk.callback.ESdkPayCallback;
+import hdtx.androidsdk.callback.FBFriendsCallback;
 import hdtx.androidsdk.data.Constant;
 import hdtx.androidsdk.data.ESConstant;
+import hdtx.androidsdk.data.FBUser;
 import hdtx.androidsdk.http.EAPayInter;
 import hdtx.androidsdk.ui.ESPayWebActivity;
 import hdtx.androidsdk.util.CommonUtils;
+import hdtx.androidsdk.util.ESdkLog;
 import hdtx.androidsdk.util.ThreadPoolManager;
 import hdtx.androidsdk.util.Tools;
 
@@ -43,6 +47,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -64,11 +69,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static String tradeId; // 游戏订单号
     private static String productId = "yisou_6";
 
+    private FrameLayout frameLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mPlayId = (EditText) findViewById(R.id.tv_playerId);
+        frameLayout = findViewById(R.id.adframe);
         getSupportActionBar().hide();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 //		hideBottomUIMenu();
@@ -94,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String lan = Locale.getDefault().getLanguage();
         String con = Locale.getDefault().getCountry();
         Log.d("applanguage---->", lan + "---" + con);
+        Starter.getInstance().loadBannerAd(MainActivity.this);
         sdkLogin();
 //        checkRunTimePermission();
     }
@@ -233,6 +241,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String userinfo = "用户id：" + userId + "\n用户名：" + userName + "\n用户token：" + token +
                         "\n是否实名认证用户:" + isIdentityUser + "\n用户出生日期：" + userBirthdate +
                         "\n用户是否成年:" + isAdult + "\n当前日期是否国家法定节假日：" + isHoliday;
+                Starter.getInstance().getFbFriends(new FBFriendsCallback() {
+                    @Override
+                    public void success(List<FBUser> users) {
+                        ESdkLog.d(users.toString());
+                    }
+
+                    @Override
+                    public void fail(int code, String message) {
+                        ESdkLog.d(message);
+                    }
+                });
                 Toast.makeText(MainActivity.this, userinfo, Toast.LENGTH_LONG).show();
             }
 
@@ -377,7 +396,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             //支付回调
                             payInfo.put(ESConstant.NOTIFY_URL, "");
                             payInfo.put(ESConstant.PRODUCT_NAME, "宝石");
-                            payInfo.put("payType", 1);
+                            payInfo.put(ESConstant.PAYTYPE, 0);
                         } catch (JSONException e) {
                         }
                         ThreadPoolManager.getInstance().addTask(new Runnable() {

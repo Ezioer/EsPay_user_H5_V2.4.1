@@ -3,6 +3,8 @@ package hdtx.androidsdk;
 import android.os.Handler;
 import android.webkit.JavascriptInterface;
 
+import com.facebook.AccessToken;
+
 import hdtx.androidsdk.data.Constant;
 import hdtx.androidsdk.data.ESConstant;
 import hdtx.androidsdk.plugin.StartESUserPlugin;
@@ -87,7 +89,7 @@ public class ESPlatform {
         if (Constant.isTurnExt == 1) {
             result.put(ESConstant.SDK_OPENID, openId);
         }
-
+//        Starter.getInstance().getFbFriends();
         Starter.mCallback.onLogin(result);
 //        AppTimeWatcher.getInstance().startTimer();
 
@@ -311,7 +313,7 @@ public class ESPlatform {
      */
     @JavascriptInterface
     public void esFacebookLogin(final String param) {
-        Starter.getInstance().initFacebook(false);
+        Starter.getInstance().initFacebook(false,true);
     }
 
 
@@ -328,6 +330,6 @@ public class ESPlatform {
      */
     @JavascriptInterface
     public void esFacebookBind(final String param) {
-        Starter.getInstance().initFacebook(true);
+        Starter.getInstance().initFacebook(true,true);
     }
 }

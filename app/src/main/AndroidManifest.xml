@@ -16,7 +16,6 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -27,10 +26,10 @@
             android:value="301713212014-to8n1rbqu9kabu3gg57ubf2hcc1fjr8i.apps.googleusercontent.com" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="fb1018958942766450" />
+            android:value="fb462019716121167" />
         <meta-data
             android:name="com.facebook.sdk.ClientToken"
-            android:value="06d710751edaa83209b6555cebc96587" />
+            android:value="bb37c4727e4e9c39bc69329ce9b3c027" />
         <!--  <meta-data
               android:name="g_clientId"
               android:value="875676869372-ql7c3bi8a7nbo08ofd4f9a69kgi94mfu.apps.googleusercontent.com" />

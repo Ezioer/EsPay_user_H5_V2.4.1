@@ -131,9 +131,9 @@ public class Constant {
      */
     public static final String BASEURL_VN = "https://pay.hudong-vn.com/";
     //正式域名
-//    public static final String BASEURL_EN = "https://pay.hudong-en.com/";
+    public static final String BASEURL_EN = "https://pay.hudong-en.com/";
     //测试域名
-    public static final String BASEURL_EN = "http://hy.pay.easoubj.com/";
+//    public static final String BASEURL_EN = "http://hy.pay.easoubj.com/";
     public static final String BASEURL_CN = "https://pay.hudong-hk.com/";
     public static final String BASEURL_LZ = "https://pay.hudonglz.com/";
     public static final String BASEURL_LZ_TEST = "http://hy.pay.easoubj.com/";

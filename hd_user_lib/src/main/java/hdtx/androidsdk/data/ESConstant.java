@@ -12,6 +12,7 @@ public class ESConstant {
     public static final String QN = "qn";
     public static final String ACCOUNT_ID = "accountId";
     public static final String PRODUCT_NAME = "productName";
+    public static final String PAYTYPE = "payType";
     public static final String TRADE_NAME = "tradeName";
     public static final String MONEY = "money";
     public static final String NCY = "NCY";

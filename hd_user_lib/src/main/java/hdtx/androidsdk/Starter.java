@@ -1,5 +1,7 @@
 package hdtx.androidsdk;
 
+import static hdtx.androidsdk.util.GAdUtils.getAdSize;
+
 import android.app.Activity;
 import android.app.Application;
 import android.app.ProgressDialog;
@@ -7,16 +9,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.PixelCopy;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.test.espresso.core.internal.deps.guava.collect.ImmutableList;
 
 import com.adjust.sdk.Adjust;
 import com.adjust.sdk.AdjustConfig;
@@ -28,23 +37,38 @@ import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.ConsumeParams;
 import com.android.billingclient.api.ConsumeResponseListener;
+import com.android.billingclient.api.PendingPurchasesParams;
+import com.android.billingclient.api.ProductDetails;
+import com.android.billingclient.api.ProductDetailsResponseListener;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
-import com.android.billingclient.api.SkuDetails;
-import com.android.billingclient.api.SkuDetailsParams;
-import com.android.billingclient.api.SkuDetailsResponseListener;
+import com.android.billingclient.api.QueryProductDetailsParams;
+import com.android.billingclient.api.QueryPurchasesParams;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookAuthorizationException;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.LoggingBehavior;
 import com.facebook.appevents.AppEventsConstants;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.OnUserEarnedRewardListener;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -53,14 +77,18 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.hd.espay_user_lib.R;
+import com.google.gson.reflect.TypeToken;
 
 import hdtx.androidsdk.callback.ActivityLifecycleWrapper;
+import hdtx.androidsdk.callback.BannerAdCallback;
 import hdtx.androidsdk.callback.ESdkCallback;
 import hdtx.androidsdk.callback.ESdkPayCallback;
+import hdtx.androidsdk.callback.FBFriendsCallback;
+import hdtx.androidsdk.callback.GAdsCallback;
 import hdtx.androidsdk.data.Constant;
 import hdtx.androidsdk.data.ESConstant;
 import hdtx.androidsdk.data.FBInfo;
+import hdtx.androidsdk.data.FBUser;
 import hdtx.androidsdk.http.BaseResponse;
 import hdtx.androidsdk.http.EAPayInter;
 import hdtx.androidsdk.plugin.StartESUserPlugin;
@@ -72,9 +100,12 @@ import hdtx.androidsdk.ui.ESUserWebActivity;
 import hdtx.androidsdk.util.AESUtil;
 import hdtx.androidsdk.util.CommonUtils;
 import hdtx.androidsdk.util.ESdkLog;
+import hdtx.androidsdk.util.GsonUtil;
+import hdtx.androidsdk.util.PixelUtil;
 import hdtx.androidsdk.util.ThreadPoolManager;
 import hdtx.androidsdk.util.Tools;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.URLDecoder;
@@ -82,7 +113,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 
@@ -95,6 +125,7 @@ public class Starter {
     private String mProductId = "";
     private String mTradeId = "";
     private ESdkPayCallback mPayCallBack;
+    private FBFriendsCallback mFBFriendsCallBack;
     private GoogleSignInClient mGoogleSignInClient;
     private BillingClient billingClient;
     private CallbackManager callbackManager;
@@ -148,7 +179,7 @@ public class Starter {
             payType = mPayInfo.optInt("payType");
         } catch (Exception e) {
         }
-        Log.i("hdpay", info.toString());
+        ESdkLog.c(TAG, info.toString());
         if (payType == 0) {
             initBilling(mActivity);
         } else {
@@ -210,10 +241,10 @@ public class Starter {
                     public void run() {
                         //购买商品成功
                         synchronized (Starter.class) {
-                            Log.d(TAG, "购买成功，进入验证订单程序........");
+                            ESdkLog.c(TAG, "购买成功，进入验证订单程序........");
                             for (final Purchase purchase : purchases) {
                                 if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
-                                    Log.d(TAG, "购买成功，验证订单中........");
+                                    ESdkLog.c(TAG, "购买成功，验证订单中........");
                                     //购买商品的数量
                                     final int num = purchase.getQuantity();
                                     mESOrder = purchase.getAccountIdentifiers().getObfuscatedAccountId();
@@ -234,8 +265,8 @@ public class Starter {
                                         }
                                         if (acknowledgementState == 0) {
                                             //服务器验证成功，核销订单
-                                            Log.d(TAG, "验证成功，核销订单中........");
-                                            Log.d(TAG, "购买成功日志 fb........" + mPrice + mESOrder);
+                                            ESdkLog.c(TAG, "验证成功，核销订单中........");
+                                            ESdkLog.c(TAG, "购买成功日志 fb........" + mPrice + mESOrder);
                                             adjustPay(mPrice, mNcy, mESOrder);
                                             fbPurchased(mPrice, mNcy, mProductId, mESOrder);
                                             consumePurchase(purchase.getPurchaseToken());
@@ -244,17 +275,17 @@ public class Starter {
                                                 mActivity.runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
-                                                        Log.d(TAG, "验证成功，发放用户权益");
+                                                        ESdkLog.c(TAG, "验证成功，发放用户权益");
                                                         mPayCallBack.onPaySuccess();
                                                     }
                                                 });
                                             }
                                         } else {
                                             if (consumptionState == 0) {
-                                                Log.d(TAG, "验证成功，该订单未核销，执行核销订单........");
+                                                ESdkLog.c(TAG, "验证成功，该订单未核销，执行核销订单........");
                                                 consumePurchase(purchase.getPurchaseToken());
                                             }
-                                            Log.d(TAG, "该订单已经验证并已被核销........");
+                                            ESdkLog.c(TAG, "该订单已经验证并已被核销........");
                                         }
                                     } else {
                                         if (mPayCallBack != null) {
@@ -264,10 +295,10 @@ public class Starter {
                                                     int code = 1002;
                                                     if (result != null && result.getCode() != 9998) {
                                                         //验证失败
-                                                        Log.d(TAG, "验证失败，核销订单失败........" + 1002);
+                                                        ESdkLog.c(TAG, "验证失败，核销订单失败........" + 1002);
                                                         mPayCallBack.onPayFail(code);
                                                     }
-                                                    Log.d(TAG, "验证失败，该订单已被验证........" + 1002);
+                                                    ESdkLog.c(TAG, "验证失败，该订单已被验证........" + 1002);
                                                 }
                                             });
                                         }
@@ -281,21 +312,21 @@ public class Starter {
             case BillingClient.BillingResponseCode.USER_CANCELED:
                 //取消购买
                 if (mPayCallBack != null) {
-                    Log.d(TAG, "验证失败，取消购买........" + 1000);
+                    ESdkLog.c(TAG, "验证失败，取消购买........" + 1000);
                     mPayCallBack.onPayFail(1000);
                 }
                 break;
             case BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED:
                 //用户已拥有
                 if (mPayCallBack != null) {
-                    Log.d(TAG, "验证失败，用户已拥有该产品........" + 1003);
+                    ESdkLog.c(TAG, "验证失败，用户已拥有该产品........" + 1003);
                     mPayCallBack.onPayFail(1003);
                 }
                 break;
             default:
                 //购买失败，具体异常码可以到BillingClient.BillingResponseCode中查看
                 if (mPayCallBack != null) {
-                    Log.d(TAG, "验证失败，核销订单失败........" + 1001);
+                    ESdkLog.c(TAG, "验证失败，核销订单失败........" + 1001);
                     mPayCallBack.onPayFail(1001);
                 }
                 break;
@@ -307,7 +338,7 @@ public class Starter {
         @Override
         public void onConsumeResponse(@NonNull BillingResult billingResult, @NonNull String purchaseToken) {
             //核销完成后回调
-            Log.d(TAG, "核销订单成功........");
+            ESdkLog.c(TAG, "核销订单成功........");
             final String appId = CommonUtils.readPropertiesValue(Starter.mActivity, "appId");
             ThreadPoolManager.getInstance().addTask(new Runnable() {
                 @Override
@@ -321,7 +352,7 @@ public class Starter {
     //核销订单
     void consumePurchase(String purchaseToken) {
         if (billingClient != null && billingClient.isReady()) {
-            Log.d(TAG, "核销订单进行中........");
+            ESdkLog.c(TAG, "核销订单进行中........");
             ConsumeParams consumeParams = ConsumeParams.newBuilder()
                     .setPurchaseToken(purchaseToken)
                     .build();
@@ -349,7 +380,7 @@ public class Starter {
         public void onBillingServiceDisconnected() {
             // Try to restart the connection on the next request to
             // Google Play by calling the startConnection() method.
-            Log.d(TAG, "服务断开，重新连接");
+            ESdkLog.c(TAG, "服务断开，重新连接");
             billingClient.startConnection(this);
         }
 
@@ -358,12 +389,12 @@ public class Starter {
             if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                 // The BillingClient is ready. You can query purchases here.
                 //获取商品详情回调
-                SkuDetailsResponseListener skuDetailsResponseListener = new SkuDetailsResponseListener() {
+                ProductDetailsResponseListener skuDetailsResponseListener = new ProductDetailsResponseListener() {
                     @Override
-                    public void onSkuDetailsResponse(@NonNull BillingResult billingResult, @Nullable final List<SkuDetails> list) {
+                    public void onProductDetailsResponse(@NonNull BillingResult billingResult, @NonNull List<ProductDetails> list) {
                         //list为可用商品的集合
                         //将要购买商品的商品详情配置到参数中
-                        Log.d(TAG, "应用内商品数量：" + list.size());
+                        ESdkLog.c(TAG, "应用内商品数量：" + list.size());
                         ThreadPoolManager.getInstance().addTask(new Runnable() {
                             @Override
                             public void run() {
@@ -371,9 +402,9 @@ public class Starter {
                                     String googleStorePrice = String.valueOf(mPrice);
                                     long priceMicro = 0L;
                                     if (list.size() > 0) {
-                                        mNcy = list.get(0).getPriceCurrencyCode();
-                                        googleStorePrice = list.get(0).getPrice();
-                                        priceMicro = list.get(0).getPriceAmountMicros();
+                                        mNcy = list.get(0).getOneTimePurchaseOfferDetails().getPriceCurrencyCode();
+                                        googleStorePrice = list.get(0).getOneTimePurchaseOfferDetails().getFormattedPrice();
+                                        priceMicro = list.get(0).getOneTimePurchaseOfferDetails().getPriceAmountMicros();
                                     }
                                     BaseResponse result = EAPayInter.checkOrder(mTradeId, mProductId, googleStorePrice, priceMicro, mNcy,
                                             CommonUtils.getCheckOutParams(mActivity.getApplicationInfo().packageName), mPayInfo);
@@ -386,7 +417,7 @@ public class Starter {
                                             JSONObject content = new JSONObject(data);
                                             mESOrder = content.optString("orderNo");
                                             String isGooglePay = content.optString("isGooglePay");
-                                            Log.d(TAG, "下单成功日志 fb........" + mPrice + mESOrder);
+                                            ESdkLog.c(TAG, "下单成功日志 fb........" + mPrice + mESOrder);
                                             adjustCheckOut(mPrice);
                                             fbCheckOut(mPrice, mProductId, mNcy, mESOrder);
                                             if (isGooglePay.equals("false")) {
@@ -413,7 +444,7 @@ public class Starter {
                                         } catch (Exception e) {
                                         }
                                     } else {
-                                        Log.d(TAG, "下单失败........" + 1004);
+                                        ESdkLog.c(TAG, "下单失败........" + 1004);
                                         payFailAndHideDialog();
                                     }
                                 }
@@ -424,14 +455,15 @@ public class Starter {
 
                 //查询内购类型的商品
                 //productId为产品ID(从谷歌后台获取)
-                ArrayList<String> inAppSkuInfo = new ArrayList<>();
-                inAppSkuInfo.add(mProductId);
-                SkuDetailsParams skuParams = SkuDetailsParams.newBuilder()
-                        .setType(BillingClient.SkuType.INAPP)
-                        .setSkusList(inAppSkuInfo)
+                QueryProductDetailsParams skuParams = QueryProductDetailsParams.newBuilder()
+                        .setProductList(ImmutableList.of(
+                                QueryProductDetailsParams.Product.newBuilder()
+                                        .setProductId(mProductId)
+                                        .setProductType(BillingClient.ProductType.INAPP)
+                                        .build()))
                         .build();
-                billingClient.querySkuDetailsAsync(skuParams, skuDetailsResponseListener);
-                Log.d(TAG, "查询后台商品");
+                billingClient.queryProductDetailsAsync(skuParams, skuDetailsResponseListener);
+                ESdkLog.c(TAG, "查询后台商品");
             }
         }
     };
@@ -440,12 +472,12 @@ public class Starter {
         if (billingClient == null) {
             billingClient = BillingClient.newBuilder(mActivity)
                     .setListener(purchasesUpdatedListener)
-                    .enablePendingPurchases()
+                    .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
                     .build();
-            Log.d(TAG, "billingclient 初始化");
+            ESdkLog.c(TAG, "billingclient 初始化");
         }
         billingClient.startConnection(billingClientStateListener);
-        Log.d(TAG, "billingclient 开始连接google play");
+        ESdkLog.c(TAG, "billingclient 开始连接google play");
     }
 
     /**
@@ -529,25 +561,6 @@ public class Starter {
     }
 
     /**
-     * 上传游戏下线日志
-     */
-    public void startGameLogoutLog() {
-        //游戏角色下线日志上传
-        Map info = new HashMap();
-        info.put("bt", "0");
-        info.put("deviceId", Tools.getDeviceImei(Starter.mActivity));
-        info.put("userId", CommonUtils.getUserId(Starter.mActivity));
-        ESUserWebActivity.clientToJS(Constant.YSTOJS_GAME_LOGINOROUTLOG, info);
-    }
-
-    /**
-     * 初始化SDK，获取oaid，判断是否为模拟器
-     */
-    public void initEntry(Context mContext) {
-//        StartOtherPlugin.checkSimulator(mContext);
-    }
-
-    /**
      * 从Properties文件中读取配置信息
      *
      * @param key：参数名称
@@ -561,18 +574,18 @@ public class Starter {
             callbackManager.onActivityResult(requestCode, resultCode, data);
         }
         if (requestCode == SIGN_LOGIN) {
-            Log.d(TAG, "setActivityResultGoogle");
+            ESdkLog.c(TAG, "setActivityResultGoogle");
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             if (task == null) {
-                Log.d(TAG, "task：null");
+                ESdkLog.c(TAG, "task：null");
             }
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 StartESUserPlugin.loginGoogle(account.getIdToken(), account.getId(), isBindGoogle);
-                Log.d(TAG, "Id:" + account.getId() + "|Email:" + account.getEmail() + "|IdToken:" + account.getIdToken());
+                ESdkLog.c(TAG, "Id:" + account.getId() + "|Email:" + account.getEmail() + "|IdToken:" + account.getIdToken());
             } catch (ApiException e) {
                 e.printStackTrace();
-                Log.d(TAG, "ApiException:" + e.getMessage());
+                ESdkLog.c(TAG, "ApiException:" + e.getMessage());
                 Toast.makeText(mActivity, mActivity.getApplication().getResources()
                         .getIdentifier("es_loginerror", "string", mActivity.getApplication().getPackageName()), Toast.LENGTH_SHORT).show();
             }
@@ -591,11 +604,12 @@ public class Starter {
             builder.detectFileUriExposure();
             StrictMode.setVmPolicy(builder.build());
         }
+        initAds(mContext);
         ThreadPoolManager.getInstance().addTask(new Runnable() {
             @Override
             public void run() {
                 FBInfo info = EAPayInter.getFBInfo(getPropertiesValue(mContext, "partnerId"), getPropertiesValue(mContext, "appId"),
-                        getPropertiesValue(mContext, "qn"),getPropertiesValue(mContext,"key"));
+                        getPropertiesValue(mContext, "qn"), getPropertiesValue(mContext, "key"));
                 String fbAppId = "";
                 if (info == null) {
                     ApplicationInfo applicationInfo = null;
@@ -611,13 +625,13 @@ public class Starter {
                 } else {
                     ESdkLog.d("get fb info success" + info.getFbAppId());
                     FacebookSdk.setClientToken(info.getFbToken());
-                    FacebookSdk.setApplicationId("fb"+info.getFbAppId());
+                    FacebookSdk.setApplicationId("fb" + info.getFbAppId());
                     FacebookSdk.setApplicationName(info.getFbName());
                     fbAppId = info.getFbAppId();
                     ESdkLog.d("after set fbappid" + FacebookSdk.getApplicationId());
                 }
                 initFb(mContext);
-                initAdjust(mContext,fbAppId);
+                initAdjust(mContext, fbAppId);
             }
         });
         try {
@@ -636,6 +650,137 @@ public class Starter {
     private void initFb(Context mContext) {
         logger = AppEventsLogger.newLogger(mContext);
         FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
+    }
+
+    private void initAds(Context mContext) {
+        MobileAds.initialize(mContext);
+    }
+    private InterstitialAd mInterstitialAd;
+    //展示插页式广告
+    public void loadInterstitialAd(Activity mActivity) {
+        AdRequest adRequest = new AdRequest.Builder().build();
+        InterstitialAd.load(mActivity,"ca-app-pub-3940256099942544/1033173712", adRequest,
+                new InterstitialAdLoadCallback() {
+                    @Override
+                    public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                        // The mInterstitialAd reference will be null until
+                        // an ad is loaded.
+                        mInterstitialAd = interstitialAd;
+                        setFullAdCallback();
+                        Log.i(TAG, "onAdLoaded");
+                    }
+
+                    @Override
+                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                        // Handle the error
+                        Log.d(TAG, loadAdError.toString());
+                        mInterstitialAd = null;
+                    }
+                });
+    }
+
+    public void showFullScreenAd(Activity mActivity) {
+        if (mInterstitialAd != null) {
+            mInterstitialAd.show(mActivity);
+        } else {
+            Log.d("TAG", "The interstitial ad wasn't ready yet.");
+        }
+    }
+    private void setFullAdCallback() {
+        mInterstitialAd.setFullScreenContentCallback(new GAdsCallback(){
+            @Override
+            public void onAdDismissedFullScreenContent() {
+                // Called when ad is dismissed.
+                // Set the ad reference to null so you don't show the ad a second time.
+                Log.d(TAG, "Ad dismissed fullscreen content.");
+                mInterstitialAd = null;
+            }
+
+            @Override
+            public void onAdFailedToShowFullScreenContent(AdError adError) {
+                // Called when ad fails to show.
+                Log.e(TAG, "Ad failed to show fullscreen content.");
+                mInterstitialAd = null;
+            }
+        });
+    }
+
+    private RewardedAd rewardedAd;
+    public void loadRewardAd(Activity mActivity) {
+        AdRequest adRequest = new AdRequest.Builder().build();
+        RewardedAd.load(mActivity, "ca-app-pub-3940256099942544/5224354917",
+                adRequest, new RewardedAdLoadCallback() {
+                    @Override
+                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                        // Handle the error.
+                        Log.d(TAG, loadAdError.toString());
+                        rewardedAd = null;
+                    }
+
+                    @Override
+                    public void onAdLoaded(@NonNull RewardedAd ad) {
+                        rewardedAd = ad;
+                        setRewardFullScreenCallback();
+                        Log.d(TAG, "Ad was loaded.");
+                    }
+                });
+    }
+    private void setRewardFullScreenCallback() {
+        rewardedAd.setFullScreenContentCallback(new GAdsCallback(){
+            @Override
+            public void onAdDismissedFullScreenContent() {
+                // Called when ad is dismissed.
+                // Set the ad reference to null so you don't show the ad a second time.
+                Log.d(TAG, "Ad dismissed fullscreen content.");
+                rewardedAd = null;
+            }
+
+            @Override
+            public void onAdFailedToShowFullScreenContent(AdError adError) {
+                // Called when ad fails to show.
+                Log.e(TAG, "Ad failed to show fullscreen content.");
+                rewardedAd = null;
+            }
+        });
+    }
+    public void showRewardAd(Activity mActivity) {
+        if (rewardedAd != null) {
+            rewardedAd.show(mActivity, new OnUserEarnedRewardListener() {
+                @Override
+                public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                    // Handle the reward.
+                    Log.d(TAG, "The user earned the reward.");
+                    int rewardAmount = rewardItem.getAmount();
+                    String rewardType = rewardItem.getType();
+                }
+            });
+        } else {
+            Log.d(TAG, "The rewarded ad wasn't ready yet.");
+        }
+    }
+
+    private FrameLayout mAdContainerView;
+    public void loadBannerAd(Activity mActivity) {
+        if (mAdContainerView == null) {
+            mAdContainerView = new FrameLayout(mActivity);
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, 300, Gravity.BOTTOM);
+            mAdContainerView.setLayoutParams(params);
+            ViewGroup rootView = mActivity.findViewById(android.R.id.content);
+            rootView.addView(mAdContainerView);
+        }
+        // Create a new ad view.
+        AdView adView = new AdView(mActivity);
+        adView.setAdSize(getAdSize(mActivity,mAdContainerView));
+        adView.setAdUnitId("ca-app-pub-3940256099942544/9214589741");
+        adView.setAdListener(new BannerAdCallback());
+        // Replace ad container with new ad view.
+        mAdContainerView.removeAllViews();
+        mAdContainerView.addView(adView);
+
+        // Start loading the ad in the background.
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
     }
 
     private void initXsolla(Context mContext) {
@@ -663,12 +808,20 @@ public class Starter {
         }
     }
 
-    private void launchGooglePay(SkuDetails skuDetails) {
+    private void launchGooglePay(ProductDetails productDetails) {
+        ImmutableList<BillingFlowParams.ProductDetailsParams> productDetailsParamsList =
+                ImmutableList.of(
+                        BillingFlowParams.ProductDetailsParams.newBuilder()
+                                .setProductDetails(productDetails)
+                                .build()
+                );
         final BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
-                .setSkuDetails(skuDetails)
+                .setProductDetailsParamsList(productDetailsParamsList)
                 .setObfuscatedAccountId(mESOrder)
                 .build();
-        BillingResult billingFlow = billingClient.launchBillingFlow(mActivity, billingFlowParams);
+        BillingResult billingResult = billingClient.launchBillingFlow(mActivity, billingFlowParams);
+        ESdkLog.c(TAG, "billingclientcode" + billingResult.getResponseCode());
+
     }
 
     private void payFailAndHideDialog() {
@@ -681,7 +834,7 @@ public class Starter {
         });
     }
 
-    private void initAdjust(Context mContext,String fbAppId) {
+    private void initAdjust(Context mContext, String fbAppId) {
         //测试为沙箱模式，正式版需切换到生产模式
         String environment = AdjustConfig.ENVIRONMENT_PRODUCTION;
        /* if (Locale.getDefault().getLanguage().toLowerCase().equals("vi")) {
@@ -703,13 +856,15 @@ public class Starter {
         ESdkLog.d("进入游戏界面接口");
         if (billingClient != null) {
             //内购商品交易查询
-            billingClient.queryPurchasesAsync(BillingClient.SkuType.INAPP, purchasesResponseListener);
+            billingClient.queryPurchasesAsync(QueryPurchasesParams.newBuilder()
+                    .setProductType(BillingClient.ProductType.INAPP)
+                    .build(), purchasesResponseListener);
         }
     }
 
     //初始化facebook登录
-    public void initFacebook(boolean isBind) {
-        Log.d(TAG, "进入facebook" + isBind);
+    public void initFacebook(boolean isBind, boolean isNeedLoginSdk) {
+        ESdkLog.c(TAG, "进入facebook" + isBind);
         isBindFacebook = isBind;
         callbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(callbackManager,
@@ -719,20 +874,24 @@ public class Starter {
                         // App code
                         ESdkLog.d("after set fbappid login" + FacebookSdk.getApplicationId());
                         AccessToken accessToken = loginResult.getAccessToken();
-                        Log.d(TAG, "Facebook------>>" + "token:" + accessToken.getToken() + "|userid:" + accessToken.getUserId());
-                        StartESUserPlugin.loginFacebook(accessToken.getToken(), accessToken.getUserId(), isBindFacebook);
+                        ESdkLog.c(TAG, "Facebook------>>" + "token:" + accessToken.getToken() + "|userid:" + accessToken.getUserId());
+                        if (isNeedLoginSdk) {
+                            StartESUserPlugin.loginFacebook(accessToken.getToken(), accessToken.getUserId(), isBindFacebook);
+                        } else {
+                            graphRequest(accessToken);
+                        }
                     }
 
                     @Override
                     public void onCancel() {
                         // App code
-                        Log.d(TAG, "Facebook cancel");
+                        ESdkLog.c(TAG, "Facebook cancel");
                     }
 
                     @Override
                     public void onError(FacebookException exception) {
                         // App code
-                        Log.d(TAG, "Facebook error------>>" + exception.toString());
+                        ESdkLog.c(TAG, "Facebook error------>>" + exception.toString());
                         if (exception instanceof FacebookAuthorizationException) {
                             if (AccessToken.getCurrentAccessToken() != null) {
                                 LoginManager.getInstance().logOut();
@@ -740,8 +899,52 @@ public class Starter {
                         }
                     }
                 });
-
         LoginManager.getInstance().logIn(mActivity, Arrays.asList("public_profile", "user_friends"));
+    }
+
+    private void graphRequest(AccessToken token) {
+        //获取好友列表
+        String userId = token.getUserId();
+        GraphRequest request = GraphRequest.newGraphPathRequest(token, "/" + userId + "/friends", new GraphRequest.Callback() {
+            @Override
+            public void onCompleted(@NonNull GraphResponse graphResponse) {
+                try {
+                    ESdkLog.d("fbfriends------->" + graphResponse.getRawResponse());
+                    JSONObject jResponse = graphResponse.getJSONObject();
+                    JSONObject jError = jResponse.optJSONObject("error");
+                    if (jError != null) {
+                        ESdkLog.d("fbfriendserror" + jError.optString("message"));
+                        if (mFBFriendsCallBack != null) {
+                            mFBFriendsCallBack.fail(jError.optInt("code"), jError.optString("message"));
+                        }
+                        return;
+                    }
+                    JSONArray jDatas = jResponse.optJSONArray("data");
+                    List<FBUser> fbUser = GsonUtil.fromJson(jDatas.toString(), new TypeToken<List<FBUser>>() {
+                    }.getType());
+                    if (mFBFriendsCallBack != null) {
+                        mFBFriendsCallBack.success(fbUser);
+                    }
+                } catch (Exception e) {
+                    ESdkLog.d("fbfrienderror" + e.getMessage());
+                    if (mFBFriendsCallBack != null) {
+                        mFBFriendsCallBack.fail(101, "unknow error");
+                    }
+                }
+            }
+        });
+        request.executeAsync();
+    }
+
+    public void getFbFriends(FBFriendsCallback callBack) {
+        this.mFBFriendsCallBack = callBack;
+        AccessToken token = AccessToken.getCurrentAccessToken();
+        if (token != null && !token.isExpired()) {
+            graphRequest(token);
+        } else {
+            //需要重新授权登录
+            initFacebook(false, false);
+        }
     }
 
     //初始化google登录
@@ -759,18 +962,18 @@ public class Starter {
     public void payCallback(int type) {
         if (mPayCallBack != null) {
             if (type == 0) {
-                Log.d(TAG, "web支付成功.......");
+                ESdkLog.c(TAG, "web支付成功.......");
                 adjustPay(mPrice, mNcy, mESOrder);
                 fbPurchased(mPrice, mNcy, mProductId, mESOrder);
                 mPayCallBack.onPaySuccess();
             } else if (type == 1) {
-                Log.d(TAG, "web支付失败......." + type);
+                ESdkLog.c(TAG, "web支付失败......." + type);
                 mPayCallBack.onPayFail(1001);
             } else if (type == 2) {
-                Log.d(TAG, "web支付异常......." + type);
+                ESdkLog.c(TAG, "web支付异常......." + type);
                 mPayCallBack.onPayFail(1001);
             } else if (type == 3) {
-                Log.d(TAG, "用户取消web支付......." + type);
+                ESdkLog.c(TAG, "用户取消web支付......." + type);
                 mPayCallBack.onPayFail(1000);
             }
         }
@@ -953,7 +1156,7 @@ public class Starter {
         event.setRevenue(price, "USD");
 //        event.addPartnerParameter("easou_hk_user_id", Constant.ESDK_USERID);
         event.setOrderId(orderId);
-        Log.d(TAG, "订单id........" + orderId);
+        ESdkLog.c(TAG, "订单id........" + orderId);
         Adjust.trackEvent(event);
     }
 

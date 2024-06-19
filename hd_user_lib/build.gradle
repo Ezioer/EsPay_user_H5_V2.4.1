@@ -1,10 +1,10 @@
 apply plugin: 'com.android.library'
 android {
-    compileSdkVersion 33
+    compileSdkVersion 34
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 33
         versionCode 1
         versionName "1.0"
@@ -50,7 +50,7 @@ dependencies {
 //    compile files('libs/installreferrer-2.2.jar')
 //    compile files('libs/play-service-ads-iden-18.0.1.jar')
     implementation 'com.google.android.gms:play-services-auth:20.3.0'
-    implementation "com.android.billingclient:billing:5.2.1"
+    implementation "com.android.billingclient:billing:7.0.0"
     implementation 'com.facebook.android:facebook-login:latest.release'
 
 //    implementation 'com.appsflyer:af-android-sdk:6.9.0'
@@ -67,7 +67,7 @@ dependencies {
     // Add the dependency for the Analytics library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-analytics'
-
+    implementation 'com.google.android.gms:play-services-ads:23.1.0'
     //xsolla
 //    implementation 'com.xsolla.android:login:6.0.0'
 //    implementation 'com.xsolla.android:payments:1.0.4'
