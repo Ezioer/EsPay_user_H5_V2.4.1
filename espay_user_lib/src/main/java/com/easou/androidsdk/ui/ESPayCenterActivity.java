@@ -46,6 +46,7 @@ import com.easou.androidsdk.data.ErrorResult;
 import com.easou.androidsdk.data.FeeType;
 import com.easou.androidsdk.data.PayItem;
 import com.easou.androidsdk.data.PayResult;
+import com.easou.androidsdk.http.BaseResponse;
 import com.easou.androidsdk.http.EAPayImp;
 import com.easou.androidsdk.http.EAPayInter;
 import com.easou.androidsdk.http.HttpAsyncTask;
@@ -54,6 +55,7 @@ import com.easou.androidsdk.plugin.StartESPayPlugin;
 import com.easou.androidsdk.plugin.StartLogPlugin;
 import com.easou.androidsdk.plugin.StartOtherPlugin;
 import com.easou.androidsdk.util.AES;
+import com.easou.androidsdk.util.AESUtil;
 import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.DialogerUtils;
 import com.easou.androidsdk.util.ESPayLog;
@@ -69,6 +71,7 @@ import com.ulopay.android.h5_library.manager.WebViewManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -434,6 +437,9 @@ public class ESPayCenterActivity extends BaseActivity {
                             getApplication().getPackageName()));
                     payType = "Alipay";
                     aliPay();
+                    break;
+                case Constant.HANDLER_XSOLLA:
+                    xsollaCreateOrder();
                     break;
                 case Constant.HANDLER_UNIPAY:
                     DialogerUtils.show(mActivity, getApplication().getResources().getIdentifier("easou_translucent_notitle", "style",
@@ -1011,6 +1017,70 @@ public class ESPayCenterActivity extends BaseActivity {
             }
         });
         wxTask.executeProxy();
+    }
+
+
+    private String mESOrder = "";
+
+    private void xsollaCreateOrder() {
+        ThreadPoolManager.getInstance().addTask(new Runnable() {
+            @Override
+            public void run() {
+                BaseResponse result = EAPayInter.checkOrder(tradeId, "", String.valueOf(money), 110l, "",
+                        CommonUtils.getCheckOutParams(mActivity.getApplicationInfo().packageName), getPayJson());
+                JSONObject custom = null;
+                String payUrl = "";
+                if (result != null && result.getCode() == 0) {
+                    try {
+                        custom = new JSONObject(result.getData().toString());
+                        String data = AESUtil.decrypt(custom.optString("content"), Constant.AESKEY);
+                        JSONObject content = new JSONObject(data);
+                        mESOrder = content.optString("orderNo");
+                        String payType = content.optString("isWebView");
+                        payUrl = URLDecoder.decode(content.optString("payUrl"));
+                        final String finalPayUrl = payUrl;
+                        final String type = payType;
+                        mActivity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                xsollaPay(type, finalPayUrl);
+                            }
+                        });
+                    } catch (Exception e) {
+                        ESPayLog.d(TAG, "支付失败！" + e.getMessage());
+                        onFailedCallBack(ErrorResult.ESPAY_FEE_ERROR, "支付失败");
+                    }
+                } else {
+                    ESPayLog.d(TAG, "支付失败！");
+                    onFailedCallBack(ErrorResult.ESPAY_FEE_ERROR, "支付失败");
+                }
+            }
+        });
+    }
+
+    private JSONObject getPayJson() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("money", money);
+        } catch (JSONException e) {
+        }
+        return jsonObject;
+    }
+
+    private void xsollaPay(String type, String payUrl) {
+        if (type.equals("false")) {
+            //系统浏览器打开
+            Uri uri = Uri.parse(payUrl);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            mActivity.startActivity(intent);
+        } else {
+            //系统webview打开
+            Intent intent = new Intent();
+            intent.putExtra("url", payUrl);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setClass(mActivity, ESPayWebActivity.class);
+            mActivity.startActivity(intent);
+        }
     }
 
     public void zwxPay() {

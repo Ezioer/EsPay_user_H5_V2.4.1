@@ -107,6 +107,13 @@
         <item name="android:background">@drawable/es_pic_channel_icon1</item>
     </style>
 
+    <style name="easou_wrap.xsollachannel" parent="@style/easou_icon">
+        <item name="android:layout_marginRight">10.0dip</item>
+        <item name="android:layout_marginLeft">5.0dip</item>
+        <item name="android:contentDescription">@string/easou_channelicon</item>
+        <item name="android:background">@drawable/xsolla</item>
+    </style>
+
     <style name="easou_wrap.mcchannel" parent="@style/easou_icon">
         <item name="android:layout_marginRight">10.0dip</item>
         <item name="android:layout_marginLeft">5.0dip</item>

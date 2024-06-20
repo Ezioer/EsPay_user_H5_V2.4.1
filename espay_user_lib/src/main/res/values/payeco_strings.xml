@@ -26,6 +26,7 @@
 	 <string name="easou_channelicon">channelicon</string>
 	<string name="easou_wx_pay">微信支付</string>
 	<string name="easou_yl_pay">银行卡快捷支付</string>
+	<string name="easou_xsolla_pay">Xsolla支付</string>
 	<string name="easou_jf_pay">移动积分支付</string>
 	<string name="easou_noti">(注：本次支付仅适用于本机移动号码；礼包价值：6元，兑换成功扣除780积分)</string>
 	<string name="easou_cardnoti">(注：暂不支持农业银行和兴业银行，招商银行仅支持信用卡)</string>

@@ -109,6 +109,12 @@ public class Constant {
     public static String ua = "";
     public static int isTurnExt = 0;
     public static int isTurnExtUser = 0;
+
+    public static String AESKEY = "";
+    public static final String unuselessdata = "ezGW6SrVAFezVftc";
+    public static final String unuselessvalue = "abcdefghijklmnopqrstuvwxyz0123456789";
+    public static final String CHECKORDER = "basePay/createOrder";
+    public static final String BASEURL_CN = "https://pay.hudong-hk.com/";
     /**
      * 热云日志URL
      */
@@ -215,6 +221,7 @@ public class Constant {
 
     public static final int HANDLER_ALIPAY = 18;
     public static final int HANDLER_WECHAT = 19;
+    public static final int HANDLER_XSOLLA = 41;
     public static final int HANDLER_UNIPAY = 20;
     public static final int HANDLER_WEBPAY = 21;
     public static final int HANDLER_JFPAY = 40;

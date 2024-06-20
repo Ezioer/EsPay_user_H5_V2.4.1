@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/easou_fill.wrap_land"
-	android:background="@drawable/es_main_bg" >
+    android:background="@drawable/es_main_bg">
     
     <include layout="@layout/easou_navbar" />
     
@@ -162,7 +163,39 @@
                     android:id="@+id/easou_id_ylChannelid"
                     style="@style/easou_dash" />
 
-                
+
+                <LinearLayout
+                    android:id="@+id/easou_id_xsollaChannelLayout"
+                    style="@style/easou_itemchannel">
+
+                    <com.easou.androidsdk.util.RoundImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:corner_radius="10dp"
+                        app:type="round"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/xsolla"
+                        android:id="@+id/easou_id_xsollaChannelIcon" />
+
+                    <LinearLayout
+                        style="@style/easou_linear"
+                        android:layout_weight="100.0"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/easou_id_xsollaChannelText"
+                            style="@style/easou_text"
+                            android:text="@string/easou_xsolla_pay" />
+                    </LinearLayout>
+
+                    <ImageView style="@style/easou_iconarrow" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/easou_id_xsollaChannelid"
+                    style="@style/easou_dash" />
+
                 <LinearLayout
                 android:id="@+id/easou_id_moreChannelLayout"
                 style="@style/easou_itemchannel" >

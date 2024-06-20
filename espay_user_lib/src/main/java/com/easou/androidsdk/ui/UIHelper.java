@@ -60,7 +60,7 @@ public class UIHelper {
     private static TextView tittleInfo; // 商品数量
     private static TextView tittleAmt; // 支付金额
 
-    private static View moreLayout, wxLayout, ylLayout, aliLayout, webLayout, jfLayout;
+    private static View moreLayout, wxLayout, ylLayout, aliLayout, webLayout, jfLayout, xsollaLayout;
     private static ImageView moreImageViewid, wxImageViewid, ylImageViewid, aliImageViewid, webImageViewid,
             moreLineImageView, weixinLineImageView, unipayLineImageView, jfImageViewId,
             alipayLineImageView;
@@ -510,6 +510,23 @@ public class UIHelper {
             }
         });
 
+        // xsolla
+        xsollaLayout = convertView.findViewById(
+                context.getResources().getIdentifier("easou_id_xsollaChannelLayout", "id", context.getPackageName()));
+        xsollaLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isClicked) {
+                    ESToast.getInstance().ToastShow(context, "请不要频繁操作！");
+                    return;
+                }
+                Message msg = handler.obtainMessage();
+                msg.what = Constant.HANDLER_XSOLLA;
+                msg.sendToTarget();
+                isClicked = true;
+            }
+        });
+
         // 支付宝
         aliLayout = convertView.findViewById(
                 context.getResources().getIdentifier("easou_id_aliChannelLayout", "id", context.getPackageName()));
@@ -640,8 +657,6 @@ public class UIHelper {
         if (TextUtils.isEmpty(needChannels)) {
             wxLayout.setVisibility(View.VISIBLE);
             wxImageViewid.setVisibility(View.VISIBLE);
-			ylLayout.setVisibility(View.VISIBLE);
-			ylImageViewid.setVisibility(View.VISIBLE);
             aliLayout.setVisibility(View.VISIBLE);
             aliImageViewid.setVisibility(View.VISIBLE);
             webLayout.setVisibility(View.VISIBLE);
@@ -650,7 +665,6 @@ public class UIHelper {
             moreImageViewid.setVisibility(View.GONE);
 
             weixinLineImageView.setVisibility(View.VISIBLE);
-            unipayLineImageView.setVisibility(View.VISIBLE);
             alipayLineImageView.setVisibility(View.VISIBLE);
             moreLineImageView.setVisibility(View.GONE);
 
@@ -659,13 +673,13 @@ public class UIHelper {
                 wxLayout.setVisibility(View.VISIBLE);
                 wxImageViewid.setVisibility(View.VISIBLE);
             }
+
+            if (needChannels.contains("XSOLLA")) {
+                xsollaLayout.setVisibility(View.VISIBLE);
+            }
             if (needChannels.contains("ALIPAY2")) {
                 aliLayout.setVisibility(View.VISIBLE);
                 aliImageViewid.setVisibility(View.VISIBLE);
-            }
-            if (needChannels.contains("UNIONPAY2")) {
-				ylLayout.setVisibility(View.VISIBLE);
-				ylImageViewid.setVisibility(View.VISIBLE);
             }
 
             if (needChannels.contains("WEB")) {

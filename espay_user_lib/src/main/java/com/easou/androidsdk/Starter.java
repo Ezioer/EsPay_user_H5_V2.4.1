@@ -377,6 +377,8 @@ public class Starter {
             builder.detectFileUriExposure();
             StrictMode.setVmPolicy(builder.build());
         }
+        CommonUtils.saveKey(mContext, Constant.unuselessdata);
+        CommonUtils.saveBase(mContext, Constant.unuselessvalue);
         if (getPropertiesValue(mContext, "isTTVersion").equals("0")) {
             Constant.isTTVersion = 1;
         }

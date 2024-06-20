@@ -1,7 +1,9 @@
 package com.easou.androidsdk.http;
 
+import com.easou.androidsdk.Starter;
 import com.easou.androidsdk.data.Constant;
 import com.easou.androidsdk.data.PayItem;
+import com.easou.androidsdk.util.AESUtil;
 import com.easou.androidsdk.util.CommonUtils;
 import com.easou.androidsdk.util.ESPayLog;
 import com.easou.androidsdk.util.ESdkLog;
@@ -15,6 +17,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Locale;
 import java.util.Map;
 
 public class EAPayInter {
@@ -293,6 +296,7 @@ public class EAPayInter {
 
     private static BaseResponse getBaseResponse(String url, JSONObject map) {
         String result = EucHttpClient.httpPost(url, map);
+        ESdkLog.d("payresult---->"+result);
         if (result == null || "".equals(result)) {
             return null;
         }
@@ -322,4 +326,93 @@ public class EAPayInter {
         }
         return result;
     }
+
+    //海外支付下单
+    public static BaseResponse checkOrder(String cpOrderNo, String productId, String productPrice,
+                                          Long productPriceMicros, String currencyCode, Map<String, String> map, JSONObject info) {
+        try {
+            JSONObject object = new JSONObject();
+            JSONObject data = new JSONObject();
+            data.put("appId", map.get("appId"));
+            data.put("qn", map.get("qn"));
+            data.put("cpOrderNo", cpOrderNo);
+            data.put("accountId", Constant.ESDK_USERID);
+            String notify = info.optString("notifyUrl");
+            String notifyUrl = map.get("notifyUrl");
+            if (!notifyUrl.equals("")) {
+                notify = notifyUrl;
+            }
+            data.put("cpNotifyUrl", notify);
+            data.put("productId", productId);
+            data.put("productPrice", productPrice);
+            data.put("productPriceMicros", productPriceMicros);
+            data.put("currencyCode", currencyCode);
+            data.put("deviceId", Constant.IMEI);
+            data.put("area", "");
+            data.put("ip", Constant.NET_IP);
+            //线上
+            data.put("payType", 1);
+            //测试
+//            data.put("payType", 4);
+            data.put("redirectUrl", map.get("redirectUrl"));
+            try {
+                //语言 简繁体中文都是zh 英文是es
+                String language = Locale.getDefault().getLanguage().toLowerCase();
+                //国家 简体是cn 繁体是tw或hk，英文是us
+                String code = Locale.getDefault().getCountry().toLowerCase();
+                if (code.equals("tw") || code.equals("hk")) {
+                    language = "tw";
+                } else if (code.equals("cn")) {
+                    language = "cn";
+                } else if (language.equals("es")) {
+                    language = "en";
+                }
+                data.put("language", language);
+            } catch (Exception e) {
+                data.put("language", "tw");
+            }
+            //新加的字段
+            data.put("tradleId", cpOrderNo);
+            data.put("serverId", info.optString("serverId"));
+            data.put("serverName", info.optString("serverName"));
+            data.put("playerId", info.optString("playerId"));
+            data.put("playerName", info.optString("playerName"));
+            data.put("playerLevel", info.optString("playerLevel"));
+            data.put("money", info.optInt("money"));
+            data.put("productName", info.optString("productName"));
+            return handleNetOpera(data, object, map.get("appId"), Constant.CHECKORDER);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    private static BaseResponse handleNetOpera(JSONObject data, JSONObject object, String appId, String url) {
+        try {
+            //AES加密数据
+            if (Constant.AESKEY.isEmpty()) {
+                String aesKey = AESUtil.getRandomString(CommonUtils.getBase(Starter.mActivity));
+                Constant.AESKEY = aesKey;
+            }
+            String content = AESUtil.encrypt(data.toString(), Constant.AESKEY);
+            //RSA加密AES的密钥
+            String key = RSAUtil.encrypt(Constant.AESKEY, RSAUtil.getPublicKey(CommonUtils.readPropertiesValue(Starter.mActivity, "publickey")));
+            object.put("content", content);
+            object.put("key", key);
+            object.put("appId", appId);
+            ESdkLog.c("EAPayCheckOut", object.toString());
+          /*  String language = Locale.getDefault().getLanguage().toLowerCase();
+            if (language.equals("vi")) {
+                url = Constant.BASEURL_VN + url;
+            } else if (language.equals("en")) {
+                url = Constant.BASEURL_EN + url;
+            } else {
+                url = Constant.BASEURL_CN + url;
+            }*/
+            url = Constant.BASEURL_CN + url;
+            BaseResponse result = getBaseResponse(url, object);
+            return result;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }

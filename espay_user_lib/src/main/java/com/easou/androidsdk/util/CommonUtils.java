@@ -869,4 +869,42 @@ public class CommonUtils {
             return 0;
         }
     }
+
+    public static Map getCheckOutParams(String packageName) {
+        String appId = CommonUtils.readPropertiesValue(Starter.mActivity, "appId");
+        String qn = CommonUtils.readPropertiesValue(Starter.mActivity, "qn");
+        String notifyUrl = CommonUtils.readPropertiesValue(Starter.mActivity, "notifyUrl");
+        String redirectUrl = "app://xpayment." + packageName;
+        Map<String, String> map = new HashMap();
+        map.put("appId", appId);
+        map.put("qn", qn);
+        map.put("redirectUrl", redirectUrl);
+        map.put("notifyUrl", notifyUrl);
+        return map;
+    }
+
+    public static void saveKey(Context mContext, String cert) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("unuselessdata", cert);
+        editor.commit();
+    }
+
+    public static String getKey(Context mContext) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        String cert = settings.getString("unuselessdata", "");
+        return cert;
+    }
+    public static void saveBase(Context mContext, String base) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("unuselessvalue", base);
+        editor.commit();
+    }
+
+    public static String getBase(Context mContext) {
+        SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_H5_TOKEN, 0);
+        String cert = settings.getString("unuselessvalue", "");
+        return cert;
+    }
 }
