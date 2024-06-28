@@ -9,25 +9,31 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.StrictMode;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.PixelCopy;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.splashscreen.SplashScreen;
+import androidx.lifecycle.DefaultLifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.test.espresso.core.internal.deps.guava.collect.ImmutableList;
 
 import com.adjust.sdk.Adjust;
+import com.adjust.sdk.AdjustAdRevenue;
 import com.adjust.sdk.AdjustConfig;
 import com.adjust.sdk.AdjustEvent;
 import com.adjust.sdk.LogLevel;
@@ -60,15 +66,21 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdValue;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.OnPaidEventListener;
 import com.google.android.gms.ads.OnUserEarnedRewardListener;
+import com.google.android.gms.ads.initialization.AdapterStatus;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
+import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -80,11 +92,13 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.reflect.TypeToken;
 
 import hdtx.androidsdk.callback.ActivityLifecycleWrapper;
+import hdtx.androidsdk.callback.AppOpenAdManager;
 import hdtx.androidsdk.callback.BannerAdCallback;
 import hdtx.androidsdk.callback.ESdkCallback;
 import hdtx.androidsdk.callback.ESdkPayCallback;
 import hdtx.androidsdk.callback.FBFriendsCallback;
 import hdtx.androidsdk.callback.GAdsCallback;
+import hdtx.androidsdk.callback.OpenAdCallback;
 import hdtx.androidsdk.data.Constant;
 import hdtx.androidsdk.data.ESConstant;
 import hdtx.androidsdk.data.FBInfo;
@@ -95,13 +109,13 @@ import hdtx.androidsdk.plugin.StartESUserPlugin;
 import hdtx.androidsdk.plugin.StartLogPlugin;
 import hdtx.androidsdk.romutils.RomHelper;
 import hdtx.androidsdk.romutils.RomUtils;
+import hdtx.androidsdk.ui.AdDialogFragment;
 import hdtx.androidsdk.ui.ESPayWebActivity;
 import hdtx.androidsdk.ui.ESUserWebActivity;
 import hdtx.androidsdk.util.AESUtil;
 import hdtx.androidsdk.util.CommonUtils;
 import hdtx.androidsdk.util.ESdkLog;
 import hdtx.androidsdk.util.GsonUtil;
-import hdtx.androidsdk.util.PixelUtil;
 import hdtx.androidsdk.util.ThreadPoolManager;
 import hdtx.androidsdk.util.Tools;
 
@@ -592,6 +606,15 @@ public class Starter {
         }
     }
 
+    public interface OnShowAdCompleteListener {
+        void onShowAdComplete();
+
+        void onAppOpenAdShow();
+    }
+
+    private AppOpenAdManager appOpenAdManager = null;
+    private Activity currentActivity;
+
     /**
      * 统一为数据初始化接口
      *
@@ -604,7 +627,16 @@ public class Starter {
             builder.detectFileUriExposure();
             StrictMode.setVmPolicy(builder.build());
         }
-        initAds(mContext);
+        String isEnableGAd = getPropertiesValue(mContext,"isEnableGAd");
+        ((Application) mContext).registerActivityLifecycleCallbacks(new ActivityLifecycleWrapper() {
+            @Override
+            public void onActivityStarted(@NonNull Activity activity) {
+                if (!appOpenAdManager.isShowingAd) {
+                    currentActivity = activity;
+                }
+            }
+        });
+        initAds(mContext,isEnableGAd);
         ThreadPoolManager.getInstance().addTask(new Runnable() {
             @Override
             public void run() {
@@ -652,21 +684,211 @@ public class Starter {
         FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
     }
 
-    private void initAds(Context mContext) {
-        MobileAds.initialize(mContext);
+    public void setGAdCallback(GAdsCallback gAdsCallback) {
+        mGAdCallback = gAdsCallback;
     }
+
+    private boolean noWaitingOpenAd = false;
+    private Handler adHandler = new Handler(Looper.myLooper());
+    private OpenAdCallback openAdCallback;
+    private Runnable timeoutRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (appOpenAdManager != null) {
+                appOpenAdManager.stopAutoShow();
+            }
+            noWaitingOpenAd = true;
+        }
+    };
+
+    private Runnable enterRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (appOpenAdManager != null) {
+                appOpenAdManager.stopAutoShow();
+            }
+            openAdCallback.onAdComplete();
+        }
+    };
+
+    private ViewTreeObserver.OnPreDrawListener preDrawListener = new ViewTreeObserver.OnPreDrawListener() {
+        @Override
+        public boolean onPreDraw() {
+            if (noWaitingOpenAd) {
+                removeListener();
+            }
+            return noWaitingOpenAd;
+        }
+    };
+    private ViewTreeObserver viewTreeObserver;
+    private long lastTime = 0L;
+    private long interval = 4 * 60 * 60 * 1000;
+
+    public void cancelOpenAd() {
+        if (appOpenAdManager != null) {
+            appOpenAdManager.stopAutoShow();
+        }
+    }
+    /**
+     * 加载开屏广告
+     */
+    public void loadOpenAd(Activity mActivity, boolean isDiySplash, OpenAdCallback callback) {
+        if (appOpenAdManager == null) {
+            return;
+        }
+        openAdCallback = callback;
+        if (!isDiySplash) {
+            SplashScreen.installSplashScreen(mActivity);
+            View rootView = mActivity.findViewById(android.R.id.content);
+            viewTreeObserver = rootView.getViewTreeObserver();
+            viewTreeObserver.addOnPreDrawListener(preDrawListener);
+        }
+
+        appOpenAdManager.showAdIfAvailable(mActivity, new OnShowAdCompleteListener() {
+            @Override
+            public void onShowAdComplete() {
+                if (isDiySplash) {
+                    adHandler.removeCallbacks(enterRunnable);
+                } else {
+                    noWaitingOpenAd = true;
+                }
+                openAdCallback.onAdComplete();
+            }
+
+            @Override
+            public void onAppOpenAdShow() {
+                if (isDiySplash) {
+                    adHandler.removeCallbacks(enterRunnable);
+                } else {
+                    adHandler.removeCallbacks(timeoutRunnable);
+                }
+                openAdCallback.onAdShow();
+            }
+        }, true);
+        if (isDiySplash) {
+            adHandler.postDelayed(enterRunnable, 5000);
+        } else {
+            adHandler.postDelayed(timeoutRunnable, 5000);
+        }
+    }
+
+    private void removeListener() {
+        if (viewTreeObserver != null && viewTreeObserver.isAlive()) {
+            viewTreeObserver.removeOnPreDrawListener(preDrawListener);
+            viewTreeObserver = null;
+        }
+    }
+
+    /**
+     * 初始化广告sdk
+     *
+     * @param mContext
+     * @param gAdsCallback 广告回调
+     */
+    private GAdsCallback mGAdCallback;
+
+    public void initAds(Context mContext, String isEnableGAd) {
+        if (isEnableGAd.equals("0")) {
+            appOpenAdManager = new AppOpenAdManager();
+            ThreadPoolManager.getInstance().addTask(new Runnable() {
+                @Override
+                public void run() {
+                    MobileAds.initialize(mContext, initializationStatus -> {
+                        Map<String, AdapterStatus> statusMap =
+                                initializationStatus.getAdapterStatusMap();
+                        for (String adapterClass : statusMap.keySet()) {
+                            AdapterStatus status = statusMap.get(adapterClass);
+                            Log.d(TAG, String.format("Adapter name: %s, Description: %s, Latency: %d", adapterClass, status.getDescription(), status.getLatency()));
+                        }
+                        if (appOpenAdManager != null) {
+                            appOpenAdManager.loadAd(mContext);
+                        }
+                    });
+                }
+            });
+            ProcessLifecycleOwner.get().getLifecycle().addObserver(new DefaultLifecycleObserver() {
+                @Override
+                public void onStart(@NonNull LifecycleOwner owner) {
+                    DefaultLifecycleObserver.super.onStart(owner);
+                    ESdkLog.c("AppOpenAdManager", "Lifecycle-onStart");
+                    if (currentActivity != null) {
+                        if (lastTime == 0L || System.currentTimeMillis() - lastTime > interval) {
+                            if (appOpenAdManager != null) {
+                                ESdkLog.c("AppOpenAdManager", "热启动加载开屏广告");
+                                appOpenAdManager.showAdIfAvailable(currentActivity, new OnShowAdCompleteListener() {
+                                    @Override
+                                    public void onShowAdComplete() {
+
+                                    }
+
+                                    @Override
+                                    public void onAppOpenAdShow() {
+                                        lastTime = System.currentTimeMillis();
+                                    }
+                                },false);
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    /* */
+    /**
+     * LifecycleObserver method that shows the app open ad when the app moves to foreground.
+     *//*
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    protected void onMoveToForeground() {
+        // Show the ad (if available) when the app moves to foreground.
+        appOpenAdManager.showAdIfAvailable(currentActivity);
+    }
+
+    private void loadAd(@NonNull Activity activity) {
+        // We wrap the loadAd to enforce that other classes only interact with MyApplication
+        // class.
+        appOpenAdManager.loadAd(activity);
+    }
+
+    private void showAdIfAvailable(
+            @NonNull Activity activity, @NonNull OnShowAdCompleteListener onShowAdCompleteListener) {
+        // We wrap the showAdIfAvailable to enforce that other classes only interact with MyApplication
+        // class.
+        appOpenAdManager.showAdIfAvailable(activity, onShowAdCompleteListener);
+    }*/
+
     private InterstitialAd mInterstitialAd;
-    //展示插页式广告
+
+    /**
+     * 展示插页式广告
+     *
+     * @param mActivity
+     */
     public void loadInterstitialAd(Activity mActivity) {
+        if (!getPropertiesValue(mActivity,"isEnableGAd").equals("0")) {
+            return;
+        }
         AdRequest adRequest = new AdRequest.Builder().build();
-        InterstitialAd.load(mActivity,"ca-app-pub-3940256099942544/1033173712", adRequest,
+        InterstitialAd.load(mActivity, "ca-app-pub-3940256099942544/1033173712", adRequest,
                 new InterstitialAdLoadCallback() {
                     @Override
                     public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
                         // The mInterstitialAd reference will be null until
                         // an ad is loaded.
                         mInterstitialAd = interstitialAd;
+                        if (mGAdCallback != null) {
+                            mGAdCallback.onAdLoaded();
+                        }
+                        ESdkLog.c(TAG, "adsource=" + interstitialAd.getResponseInfo().getMediationAdapterClassName());
+                        mInterstitialAd.setOnPaidEventListener(new OnPaidEventListener() {
+                            @Override
+                            public void onPaidEvent(@NonNull AdValue adValue) {
+                                adjustADRevenue(adValue.getValueMicros() / 1000000.0, adValue.getCurrencyCode(), mInterstitialAd.getResponseInfo().
+                                        getLoadedAdapterResponseInfo().getAdSourceName());
+                            }
+                        });
                         setFullAdCallback();
+                        showFullScreenAd(mActivity);
                         Log.i(TAG, "onAdLoaded");
                     }
 
@@ -675,6 +897,9 @@ public class Starter {
                         // Handle the error
                         Log.d(TAG, loadAdError.toString());
                         mInterstitialAd = null;
+                        if (mGAdCallback != null) {
+                            mGAdCallback.onAdFailedToLoad();
+                        }
                     }
                 });
     }
@@ -686,14 +911,28 @@ public class Starter {
             Log.d("TAG", "The interstitial ad wasn't ready yet.");
         }
     }
+
+
     private void setFullAdCallback() {
-        mInterstitialAd.setFullScreenContentCallback(new GAdsCallback(){
+        mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+            @Override
+            public void onAdClicked() {
+                // Called when a click is recorded for an ad.
+                Log.d(TAG, "Ad was clicked.");
+                if (mGAdCallback != null) {
+                    mGAdCallback.onAdClicked();
+                }
+            }
+
             @Override
             public void onAdDismissedFullScreenContent() {
                 // Called when ad is dismissed.
                 // Set the ad reference to null so you don't show the ad a second time.
                 Log.d(TAG, "Ad dismissed fullscreen content.");
                 mInterstitialAd = null;
+                if (mGAdCallback != null) {
+                    mGAdCallback.onAdDismissed();
+                }
             }
 
             @Override
@@ -701,12 +940,42 @@ public class Starter {
                 // Called when ad fails to show.
                 Log.e(TAG, "Ad failed to show fullscreen content.");
                 mInterstitialAd = null;
+                if (mGAdCallback != null) {
+                    mGAdCallback.onAdFailedToShow();
+                }
+            }
+
+            @Override
+            public void onAdImpression() {
+                // Called when an impression is recorded for an ad.
+                Log.d(TAG, "Ad recorded an impression.");
+                if (mGAdCallback != null) {
+                    mGAdCallback.onAdImpression();
+                }
+            }
+
+            @Override
+            public void onAdShowedFullScreenContent() {
+                // Called when ad is shown.
+                Log.d(TAG, "Ad showed fullscreen content.");
+                if (mGAdCallback != null) {
+                    mGAdCallback.onAdShowed();
+                }
             }
         });
     }
 
     private RewardedAd rewardedAd;
+
+    /**
+     * 加载激励广告
+     *
+     * @param mActivity
+     */
     public void loadRewardAd(Activity mActivity) {
+        if (!getPropertiesValue(mActivity,"isEnableGAd").equals("0")) {
+            return;
+        }
         AdRequest adRequest = new AdRequest.Builder().build();
         RewardedAd.load(mActivity, "ca-app-pub-3940256099942544/5224354917",
                 adRequest, new RewardedAdLoadCallback() {
@@ -715,24 +984,52 @@ public class Starter {
                         // Handle the error.
                         Log.d(TAG, loadAdError.toString());
                         rewardedAd = null;
+                        if (mGAdCallback != null) {
+                            mGAdCallback.onAdFailedToLoad();
+                        }
                     }
 
                     @Override
                     public void onAdLoaded(@NonNull RewardedAd ad) {
                         rewardedAd = ad;
+                        if (mGAdCallback != null) {
+                            mGAdCallback.onAdLoaded();
+                        }
+                        ESdkLog.c(TAG, "adsource=" + ad.getResponseInfo().getMediationAdapterClassName());
+                        rewardedAd.setOnPaidEventListener(new OnPaidEventListener() {
+                            @Override
+                            public void onPaidEvent(@NonNull AdValue adValue) {
+                                adjustADRevenue(adValue.getValueMicros() / 1000000.0, adValue.getCurrencyCode(), mInterstitialAd.getResponseInfo().
+                                        getLoadedAdapterResponseInfo().getAdSourceName());
+                            }
+                        });
                         setRewardFullScreenCallback();
+                        showRewardAd(mActivity);
                         Log.d(TAG, "Ad was loaded.");
                     }
                 });
     }
+
     private void setRewardFullScreenCallback() {
-        rewardedAd.setFullScreenContentCallback(new GAdsCallback(){
+        rewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+            @Override
+            public void onAdClicked() {
+                // Called when a click is recorded for an ad.
+                Log.d(TAG, "Ad was clicked.");
+                if (mGAdCallback != null) {
+                    mGAdCallback.onAdClicked();
+                }
+            }
+
             @Override
             public void onAdDismissedFullScreenContent() {
                 // Called when ad is dismissed.
                 // Set the ad reference to null so you don't show the ad a second time.
                 Log.d(TAG, "Ad dismissed fullscreen content.");
                 rewardedAd = null;
+                if (mGAdCallback != null) {
+                    mGAdCallback.onAdDismissed();
+                }
             }
 
             @Override
@@ -740,18 +1037,43 @@ public class Starter {
                 // Called when ad fails to show.
                 Log.e(TAG, "Ad failed to show fullscreen content.");
                 rewardedAd = null;
+                if (mGAdCallback != null) {
+                    mGAdCallback.onAdFailedToShow();
+                }
+            }
+
+            @Override
+            public void onAdImpression() {
+                // Called when an impression is recorded for an ad.
+                Log.d(TAG, "Ad recorded an impression.");
+                if (mGAdCallback != null) {
+                    mGAdCallback.onAdImpression();
+                }
+            }
+
+            @Override
+            public void onAdShowedFullScreenContent() {
+                // Called when ad is shown.
+                Log.d(TAG, "Ad showed fullscreen content.");
+                if (mGAdCallback != null) {
+                    mGAdCallback.onAdShowed();
+                }
             }
         });
     }
+
     public void showRewardAd(Activity mActivity) {
         if (rewardedAd != null) {
             rewardedAd.show(mActivity, new OnUserEarnedRewardListener() {
                 @Override
                 public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
                     // Handle the reward.
-                    Log.d(TAG, "The user earned the reward.");
                     int rewardAmount = rewardItem.getAmount();
                     String rewardType = rewardItem.getType();
+                    if (mGAdCallback != null) {
+                        mGAdCallback.onRewardEarned(rewardAmount, rewardType);
+                    }
+                    Log.d(TAG, "The user earned the reward,reward = " + rewardAmount + "-----type=" + rewardType);
                 }
             });
         } else {
@@ -759,21 +1081,168 @@ public class Starter {
         }
     }
 
+    private RewardedInterstitialAd rewardedInterstitialAd = null;
+
+    public void loadRewardInterstitialAd(AppCompatActivity mActivity) {
+        if (!getPropertiesValue(mActivity,"isEnableGAd").equals("0")) {
+            return;
+        }
+        // Use the test ad unit ID to load an ad.
+        RewardedInterstitialAd.load(mActivity, "ca-app-pub-3940256099942544/5354046379",
+                new AdRequest.Builder().build(), new RewardedInterstitialAdLoadCallback() {
+                    @Override
+                    public void onAdLoaded(RewardedInterstitialAd ad) {
+                        Log.d(TAG, "Ad was loaded.");
+                        rewardedInterstitialAd = ad;
+                        RewardItem rewardItem = rewardedInterstitialAd.getRewardItem();
+                        int rewardAmount = rewardItem.getAmount();
+                        String rewardType = rewardItem.getType();
+                        introduceVideoAd(rewardAmount,rewardType,mActivity);
+                    }
+
+                    @Override
+                    public void onAdFailedToLoad(LoadAdError loadAdError) {
+                        Log.d(TAG, loadAdError.toString());
+                        rewardedInterstitialAd = null;
+                    }
+                });
+    }
+
+    private void introduceVideoAd(int rewardAmount, String rewardType, AppCompatActivity mActivity) {
+        AdDialogFragment dialog = AdDialogFragment.newInstance(rewardAmount, rewardType);
+        dialog.setAdDialogInteractionListener(
+                new AdDialogFragment.AdDialogInteractionListener() {
+                    @Override
+                    public void onShowAd() {
+                        Log.d(TAG, "The rewarded interstitial ad is starting.");
+                        setRewardInterFullAdCallback();
+                        showRewardInterstitialAd(mActivity);
+                    }
+
+                    @Override
+                    public void onCancelAd() {
+                        Log.d(TAG, "The rewarded interstitial ad was skipped before it starts.");
+                    }
+                });
+        dialog.show(mActivity.getSupportFragmentManager(),"tag");
+    }
+
+    private void showRewardInterstitialAd(Activity mActivity) {
+        rewardedInterstitialAd.show(mActivity, new OnUserEarnedRewardListener() {
+            @Override
+            public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                // Handle the reward.
+                int rewardAmount = rewardItem.getAmount();
+                String rewardType = rewardItem.getType();
+                Log.d(TAG, "The user earned the reward,reward = " + rewardAmount + "-----type=" + rewardType);
+            }
+        });
+    }
+
+    private void setRewardInterFullAdCallback() {
+        rewardedInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+            @Override
+            public void onAdClicked() {
+                // Called when a click is recorded for an ad.
+                Log.d(TAG, "Ad was clicked.");
+            }
+
+            @Override
+            public void onAdDismissedFullScreenContent() {
+                // Called when ad is dismissed.
+                // Set the ad reference to null so you don't show the ad a second time.
+                Log.d(TAG, "Ad dismissed fullscreen content.");
+                rewardedInterstitialAd = null;
+            }
+
+            @Override
+            public void onAdFailedToShowFullScreenContent(AdError adError) {
+                // Called when ad fails to show.
+                Log.e(TAG, "Ad failed to show fullscreen content.");
+                rewardedInterstitialAd = null;
+            }
+
+            @Override
+            public void onAdImpression() {
+                // Called when an impression is recorded for an ad.
+                Log.d(TAG, "Ad recorded an impression.");
+            }
+
+            @Override
+            public void onAdShowedFullScreenContent() {
+                // Called when ad is shown.
+                Log.d(TAG, "Ad showed fullscreen content.");
+            }
+        });
+    }
+
     private FrameLayout mAdContainerView;
-    public void loadBannerAd(Activity mActivity) {
+
+    /**
+     * 展示横幅广告
+     *
+     * @param mActivity
+     */
+    public void loadBannerAd(Activity mActivity, int gravity) {
+        if (!getPropertiesValue(mActivity,"isEnableGAd").equals("0")) {
+            return;
+        }
         if (mAdContainerView == null) {
             mAdContainerView = new FrameLayout(mActivity);
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, 300, Gravity.BOTTOM);
+                    ViewGroup.LayoutParams.MATCH_PARENT, 300, gravity);
             mAdContainerView.setLayoutParams(params);
             ViewGroup rootView = mActivity.findViewById(android.R.id.content);
             rootView.addView(mAdContainerView);
         }
         // Create a new ad view.
         AdView adView = new AdView(mActivity);
-        adView.setAdSize(getAdSize(mActivity,mAdContainerView));
+        adView.setAdSize(getAdSize(mActivity, mAdContainerView));
         adView.setAdUnitId("ca-app-pub-3940256099942544/9214589741");
-        adView.setAdListener(new BannerAdCallback());
+        adView.setAdListener(new BannerAdCallback() {
+            @Override
+            public void onAdLoaded() {
+                if (mGAdCallback != null) {
+                    mGAdCallback.onAdLoaded();
+                }
+                ESdkLog.c(TAG, "adsource=" + adView.getResponseInfo().getMediationAdapterClassName());
+                adView.setOnPaidEventListener(new OnPaidEventListener() {
+                    @Override
+                    public void onPaidEvent(@NonNull AdValue adValue) {
+                        adjustADRevenue(adValue.getValueMicros() / 1000000.0, adValue.getCurrencyCode(), mInterstitialAd.getResponseInfo().
+                                getLoadedAdapterResponseInfo().getAdSourceName());
+                    }
+                });
+            }
+
+            @Override
+            public void onAdFailedToLoad(LoadAdError adError) {
+                if (mGAdCallback != null) {
+                    mGAdCallback.onAdFailedToLoad();
+                }
+            }
+
+            @Override
+            public void onAdClosed() {
+                if (mGAdCallback != null) {
+                    mGAdCallback.onAdClosed();
+                }
+            }
+
+            @Override
+            public void onAdClicked() {
+                if (mGAdCallback != null) {
+                    mGAdCallback.onAdClicked();
+                }
+            }
+
+            @Override
+            public void onAdOpened() {
+                if (mGAdCallback != null) {
+                    mGAdCallback.onAdOpened();
+                }
+            }
+        });
         // Replace ad container with new ad view.
         mAdContainerView.removeAllViews();
         mAdContainerView.addView(adView);
@@ -781,6 +1250,12 @@ public class Starter {
         // Start loading the ad in the background.
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
+    }
+
+    public void removeBannerAd() {
+        if (mAdContainerView != null) {
+            mAdContainerView.removeAllViews();
+        }
     }
 
     private void initXsolla(Context mContext) {
@@ -1148,6 +1623,13 @@ public class Starter {
         Adjust.trackEvent(event);
     }
 
+    public void adjustADRevenue(Double money, String currencyCode, String network) {
+        Log.d(TAG, "adrevenue,money=" + money + "-----currency=" + currencyCode + "-----network=" + network);
+        AdjustAdRevenue adRevenue = new AdjustAdRevenue(AdjustConfig.AD_REVENUE_ADMOB);
+        adRevenue.setRevenue(money, currencyCode);
+        adRevenue.setAdRevenueNetwork(network);
+        Adjust.trackAdRevenue(adRevenue);
+    }
 
     //adjust 支付事件
     public void adjustPay(Double price, String ncy, String orderId) {

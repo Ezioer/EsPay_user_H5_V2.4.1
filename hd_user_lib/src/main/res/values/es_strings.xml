@@ -27,4 +27,11 @@
     <string name="es_chooseopera">请选择操作</string>
     <string name="es_pic">相册</string>
     <string name="es_camera">拍照</string>
+
+    <string name="video_starting_in_text">广告即将展示 %d…</string>
+    <plurals name="more_coins_text">
+        <item quantity="one">观看一个广告获得 %d 以上奖励</item>
+        <item quantity="other">观看一个广告获得 %d 以上奖励</item>
+    </plurals>
+    <string name="negative_button_text" >No</string>
 </resources>

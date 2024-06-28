@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import hdtx.androidsdk.Starter;
+import hdtx.androidsdk.callback.GAdsCallback;
 
 public class EsApplication extends Application {
     @Override

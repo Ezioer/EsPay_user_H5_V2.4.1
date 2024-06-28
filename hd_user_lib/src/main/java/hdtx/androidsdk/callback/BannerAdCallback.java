@@ -34,12 +34,6 @@ public class BannerAdCallback extends AdListener {
     }
 
     @Override
-    public void onAdLoaded() {
-        // Code to be executed when an ad finishes loading.
-        Log.e(TAG, "Banner Ad load");
-    }
-
-    @Override
     public void onAdOpened() {
         // Code to be executed when an ad opens an overlay that
         // covers the screen.

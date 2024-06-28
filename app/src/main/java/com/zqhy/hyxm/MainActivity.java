@@ -1,6 +1,7 @@
 package com.zqhy.hyxm;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -33,6 +35,8 @@ import hdtx.androidsdk.Starter;
 import hdtx.androidsdk.callback.ESdkCallback;
 import hdtx.androidsdk.callback.ESdkPayCallback;
 import hdtx.androidsdk.callback.FBFriendsCallback;
+import hdtx.androidsdk.callback.GAdsCallback;
+import hdtx.androidsdk.callback.OpenAdCallback;
 import hdtx.androidsdk.data.Constant;
 import hdtx.androidsdk.data.ESConstant;
 import hdtx.androidsdk.data.FBUser;
@@ -53,7 +57,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Button btnBuyPort, btnChangeAccount, btnGetUserInfo, btnCallSdk, btnGoogleLogin, btnGoogleLogout, btnLoginGame, btnFacebookLogin, btnFacebookLogout;
+    private Button btnBuyPort, btnChangeAccount, btnGetUserInfo, btnCallSdk, btnGoogleLogin, btnGoogleLogout, btnLoginGame, btnFacebookLogin, btnFacebookLogout, removeBanner,btnBanner, btnInter, btnReward,btnRewardInter;
     private Switch mSwitch;
     private CheckBox mPayType;
     private EditText mPlayId;
@@ -70,9 +74,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static String productId = "yisou_6";
 
     private FrameLayout frameLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //使用官方splash库加载开屏广告，无需额外添加SplashActivity页面
+        Starter.getInstance().loadOpenAd(MainActivity.this, false, new OpenAdCallback() {
+            @Override
+            public void onAdShow() {
+                //展示开屏广告
+            }
+
+            @Override
+            public void onAdComplete() {
+                //开屏广告展示完毕
+            }
+        });
+
         setContentView(R.layout.activity_main);
         mPlayId = (EditText) findViewById(R.id.tv_playerId);
         frameLayout = findViewById(R.id.adframe);
@@ -101,8 +119,69 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String lan = Locale.getDefault().getLanguage();
         String con = Locale.getDefault().getCountry();
         Log.d("applanguage---->", lan + "---" + con);
-        Starter.getInstance().loadBannerAd(MainActivity.this);
-        sdkLogin();
+        Starter.getInstance().getFbFriends(new FBFriendsCallback() {
+            @Override
+            public void success(List<FBUser> users) {
+
+            }
+
+            @Override
+            public void fail(int code, String message) {
+
+            }
+        });
+        Starter.getInstance().setGAdCallback(new GAdsCallback() {
+            @Override
+            public void onAdLoaded() {
+
+            }
+
+            @Override
+            public void onAdFailedToLoad() {
+
+            }
+
+            @Override
+            public void onAdClicked() {
+
+            }
+
+            @Override
+            public void onAdDismissed() {
+
+            }
+
+            @Override
+            public void onAdShowed() {
+
+            }
+
+            @Override
+            public void onAdImpression() {
+
+            }
+
+            @Override
+            public void onAdFailedToShow() {
+
+            }
+
+            @Override
+            public void onAdOpened() {
+
+            }
+
+            @Override
+            public void onAdClosed() {
+
+            }
+
+            @Override
+            public void onRewardEarned(int rewardAmount, String rewardType) {
+
+            }
+        });
+//        sdkLogin();
 //        checkRunTimePermission();
     }
 
@@ -197,6 +276,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
         btnGetUserInfo = (Button) this.findViewById(R.id.btn_userInfo);
+        btnBanner = (Button) this.findViewById(R.id.btn_banner);
+        removeBanner = (Button) this.findViewById(R.id.btn_removebanner);
+        btnInter = (Button) this.findViewById(R.id.btn_inter);
+        btnReward = (Button) this.findViewById(R.id.btn_reward);
+        btnRewardInter = (Button) this.findViewById(R.id.btn_interreward);
         btnBuyPort = (Button) this.findViewById(R.id.btn_pay);
         btnGoogleLogout = (Button) this.findViewById(R.id.btn_googleLogout);
         btnGoogleLogin = (Button) this.findViewById(R.id.btn_googleLogin);
@@ -207,6 +291,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnLoginGame = (Button) this.findViewById(R.id.btn_loginGame);
         mSwitch = (Switch) this.findViewById(R.id.switch_env);
         btnGetUserInfo.setOnClickListener(this);
+        btnBanner.setOnClickListener(this);
+        btnReward.setOnClickListener(this);
+        removeBanner.setOnClickListener(this);
+        btnInter.setOnClickListener(this);
+        btnRewardInter.setOnClickListener(this);
         btnBuyPort.setOnClickListener(this);
         btnGoogleLogin.setOnClickListener(this);
         btnGoogleLogout.setOnClickListener(this);
@@ -241,7 +330,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String userinfo = "用户id：" + userId + "\n用户名：" + userName + "\n用户token：" + token +
                         "\n是否实名认证用户:" + isIdentityUser + "\n用户出生日期：" + userBirthdate +
                         "\n用户是否成年:" + isAdult + "\n当前日期是否国家法定节假日：" + isHoliday;
-                Starter.getInstance().getFbFriends(new FBFriendsCallback() {
+                /*Starter.getInstance().getFbFriends(new FBFriendsCallback() {
                     @Override
                     public void success(List<FBUser> users) {
                         ESdkLog.d(users.toString());
@@ -251,7 +340,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void fail(int code, String message) {
                         ESdkLog.d(message);
                     }
-                });
+                });*/
                 Toast.makeText(MainActivity.this, userinfo, Toast.LENGTH_LONG).show();
             }
 
@@ -330,6 +419,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
 
         switch (v.getId()) {
+            case R.id.btn_banner:
+                Starter.getInstance().loadBannerAd(MainActivity.this, Gravity.TOP);
+                break;
+            case R.id.btn_removebanner:
+                Starter.getInstance().removeBannerAd();
+                break;
+            case R.id.btn_reward:
+                Starter.getInstance().loadRewardAd(MainActivity.this);
+                break;
+            case R.id.btn_inter:
+                Starter.getInstance().loadInterstitialAd(MainActivity.this);
+                break;
+            case R.id.btn_interreward:
+                Starter.getInstance().loadRewardInterstitialAd(MainActivity.this);
+                break;
             case R.id.btn_userInfo:
                 /** 获取SDK用户信息 */
                 Starter.getInstance().getUserInfo();

@@ -67,7 +67,17 @@ dependencies {
     // Add the dependency for the Analytics library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-analytics'
+
+    //google ads
     implementation 'com.google.android.gms:play-services-ads:23.1.0'
+    implementation  'com.google.ads.mediation:applovin:12.5.0.1'
+    implementation  'com.google.ads.mediation:vungle:7.3.2.0'
+    implementation 'androidx.lifecycle:lifecycle-process:2.7.0'
+
+  /*  implementation "androidx.lifecycle:lifecycle-extensions:2.3.1"
+    implementation "androidx.lifecycle:lifecycle-runtime:2.3.1"
+    annotationProcessor "androidx.lifecycle:lifecycle-compiler:2.3.1"*/
+    implementation("androidx.core:core-splashscreen:1.0.0")
     //xsolla
 //    implementation 'com.xsolla.android:login:6.0.0'
 //    implementation 'com.xsolla.android:payments:1.0.4'

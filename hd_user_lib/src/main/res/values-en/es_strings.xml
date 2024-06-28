@@ -26,4 +26,10 @@
     <string name="es_chooseopera">Choose Operation</string>
     <string name="es_pic">photo album</string>
     <string name="es_camera">camera</string>
+    <string name="video_starting_in_text">Video starting in %d…</string>
+    <plurals name="more_coins_text">
+        <item quantity="one">Watch an ad for %d more coin.</item>
+        <item quantity="other">Watch an ad for %d more coins.</item>
+    </plurals>
+    <string name="negative_button_text" >No, thanks</string>
 </resources>

@@ -147,8 +147,7 @@ public class EAPayInter {
             jHead.put("sign",sign);
             jBean.put("head",jHead);
             jBean.put("body",jBody);
-//            return getFBResponse(Constant.FBCHANGE,jBean);
-            return null;
+            return getFBResponse(Constant.FBCHANGE,jBean);
         } catch (Exception e) {
             return null;
         }

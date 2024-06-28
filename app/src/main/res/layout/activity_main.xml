@@ -126,6 +126,32 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="查看包体信息" />
+    <Button
+        android:id="@+id/btn_banner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="加载banner广告" />
+    <Button
+        android:id="@+id/btn_removebanner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="移除banner广告" />
+    <Button
+        android:id="@+id/btn_reward"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="加载激励广告" />
+    <Button
+        android:id="@+id/btn_inter"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="加载插屏广告" />
+
+    <Button
+        android:id="@+id/btn_interreward"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="加载插屏激励广告" />
 
     <TextView
         android:id="@+id/tv_info"
