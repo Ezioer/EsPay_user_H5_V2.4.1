@@ -1020,10 +1020,29 @@ public class ESPayCenterActivity extends BaseActivity {
     }
 
 
-    private String mESOrder = "";
-
     private void xsollaCreateOrder() {
-        ThreadPoolManager.getInstance().addTask(new Runnable() {
+        Map<String, String> map = setupPayMap(true);
+        map.put(Constant.TRADEMODE, "WEB");
+        map.put(Constant.PAYCHANNEL, "XSOLLA");
+        HttpAsyncTaskImp wxTask = new HttpAsyncTaskImp(mActivity, map, easoutgc, key, FeeType.XSOLLA);
+        wxTask.setDataFinishListener(new HttpAsyncTaskImp.DataFinishListener() {
+
+            @Override
+            public void setJson(Object object) {
+                // TODO Auto-generated method stub
+                json = (JSONObject) object;
+                try {
+                   String url = json.getString("payUrl");
+                   xsollaPay("true",url);
+                } catch (JSONException e) {
+                    // TODO Auto-generated catch block
+                    ESPayLog.d(TAG, "解析处理失败！" + e);
+                    e.printStackTrace();
+                }
+            }
+        });
+        wxTask.executeProxy();
+        /*ThreadPoolManager.getInstance().addTask(new Runnable() {
             @Override
             public void run() {
                 BaseResponse result = EAPayInter.checkOrder(tradeId, "", String.valueOf(money), 110l, "",
@@ -1055,16 +1074,7 @@ public class ESPayCenterActivity extends BaseActivity {
                     onFailedCallBack(ErrorResult.ESPAY_FEE_ERROR, "支付失败");
                 }
             }
-        });
-    }
-
-    private JSONObject getPayJson() {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("money", money);
-        } catch (JSONException e) {
-        }
-        return jsonObject;
+        });*/
     }
 
     private void xsollaPay(String type, String payUrl) {

@@ -56,6 +56,35 @@ public class EAPayImp {
 		}
 		return result_arr;
 	}
+
+	public static String[] chargeXsolla(String param, String token) {
+		//TODO
+		String result = HttpGroupUtils.sendPost(domain, param, token);
+		String[] result_arr = new String[13];
+		try {
+
+			JSONObject jsonObject = new JSONObject(result);
+			String status = jsonObject.getString("status");
+
+			if (status.equals(Constant.FLAG_TRADE_RESULT_SUC)) {
+
+				JSONObject data = jsonObject.getJSONObject("data");
+
+				result_arr[0] = jsonObject.getString("msg");
+				result_arr[1] = status;
+				ESPayLog.d("EAPayInter" , result_arr[0]+"/n" + result_arr[1]+"/n" + result_arr[2]+"/n"
+						+ result_arr[3] +"/n"+ result_arr[4]);
+				ESPayLog.d(TAG , "xsolla解析完毕。");
+			} else {
+				result_arr[0] = jsonObject.getString("msg");
+				result_arr[1] = status;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			ESPayLog.d(TAG , e.toString());
+		}
+		return result_arr;
+	}
 	/**
 	 * 微信支付
 	 * @param param

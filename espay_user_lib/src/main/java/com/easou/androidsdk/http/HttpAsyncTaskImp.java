@@ -47,6 +47,9 @@ public class HttpAsyncTaskImp extends HttpAsyncTask<Void, Void, String[]> {
             case WECHAT:
                 result = EAPayImp.chargeWinXin(getParam(Constant.WECHAT), token);
                 break;
+            case XSOLLA:
+                result = EAPayImp.chargeXsolla(getParam("XSOLLA"), token);
+                break;
             case UNIONPAY:
                 result = EAPayImp.cardChargeYinLian(getParam(Constant.UNIONPAY), token);
                 break;
@@ -129,6 +132,15 @@ public class HttpAsyncTaskImp extends HttpAsyncTask<Void, Void, String[]> {
                         e.printStackTrace();
                     }
                     break;
+                case XSOLLA:
+                    try {
+                        // 解析响应数据
+                        json.put("payUrl","");
+                    } catch (JSONException e) {
+                        ESPayLog.d("解析处理失败！" + e);
+                        e.printStackTrace();
+                    }
+                    break;
                 case UNIONPAY:
                     try {
                         // 解析响应数据
@@ -196,7 +208,10 @@ public class HttpAsyncTaskImp extends HttpAsyncTask<Void, Void, String[]> {
     }
 
     private String getParam(String payChannel) {
-
+        String module = Constant.MODULE;
+        if (payChannel.equals("XSOLLA")) {
+            module = "WEB";
+        }
         String sign = Md5SignUtils.sign(map, key);
         String param = "clientIp=" + map.get(Constant.CLIENT_IP)
                 + "&deviceId=" + map.get(Constant.DEVICE_ID)
@@ -208,7 +223,7 @@ public class HttpAsyncTaskImp extends HttpAsyncTask<Void, Void, String[]> {
                 + "&notifyUrl=" + map.get(ESConstant.NOTIFY_URL)
                 + "&redirectUrl=" + map.get(ESConstant.REDIRECT_URL)
                 + "&partnerId=" + map.get(Constant.PARTENER_ID)
-                + "&tradeMode=" + Constant.MODULE
+                + "&tradeMode=" + module
                 + "&payChannel=" + map.get(Constant.PAYCHANNEL)
                 + "&phoneOs=" + Constant.SDK_PHONEOS
                 + "&esVersion=" + Constant.SDK_VERSION;
