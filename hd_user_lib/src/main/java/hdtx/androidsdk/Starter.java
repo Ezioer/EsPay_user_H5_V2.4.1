@@ -627,7 +627,7 @@ public class Starter {
             builder.detectFileUriExposure();
             StrictMode.setVmPolicy(builder.build());
         }
-        String isEnableGAd = getPropertiesValue(mContext,"isEnableGAd");
+        String isEnableGAd = getPropertiesValue(mContext, "isEnableGAd");
         ((Application) mContext).registerActivityLifecycleCallbacks(new ActivityLifecycleWrapper() {
             @Override
             public void onActivityStarted(@NonNull Activity activity) {
@@ -636,7 +636,7 @@ public class Starter {
                 }
             }
         });
-        initAds(mContext,isEnableGAd);
+        initAds(mContext, isEnableGAd);
         ThreadPoolManager.getInstance().addTask(new Runnable() {
             @Override
             public void run() {
@@ -675,7 +675,6 @@ public class Starter {
         }
         Tools.getAndroidId(mContext);
 //        Constant.APPID = getPropertiesValue(mContext, "appId");
-        initXsolla(mContext);
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(mContext);
     }
 
@@ -729,6 +728,7 @@ public class Starter {
             appOpenAdManager.stopAutoShow();
         }
     }
+
     /**
      * 加载开屏广告
      */
@@ -789,7 +789,14 @@ public class Starter {
 
     public void initAds(Context mContext, String isEnableGAd) {
         if (isEnableGAd.equals("0")) {
-            appOpenAdManager = new AppOpenAdManager();
+            String openAdUnitId = "";
+            try {
+                ApplicationInfo info = mContext.getPackageManager().getApplicationInfo(mContext.getPackageName(), PackageManager.GET_META_DATA);
+                openAdUnitId = info.metaData.getString("open_ad_unitId");
+            } catch (PackageManager.NameNotFoundException e) {
+                Log.i("GoogleAdMobLog", "请在配置文件中添加开屏广告id");
+            }
+            appOpenAdManager = new AppOpenAdManager(openAdUnitId);
             ThreadPoolManager.getInstance().addTask(new Runnable() {
                 @Override
                 public void run() {
@@ -825,12 +832,14 @@ public class Starter {
                                     public void onAppOpenAdShow() {
                                         lastTime = System.currentTimeMillis();
                                     }
-                                },false);
+                                }, false);
                             }
                         }
                     }
                 }
             });
+        } else {
+            Log.i("GoogleAdMobLog", "请在配置文件client.properties中添加isEnableGAd=0开启google广告");
         }
     }
 
@@ -865,11 +874,18 @@ public class Starter {
      * @param mActivity
      */
     public void loadInterstitialAd(Activity mActivity) {
-        if (!getPropertiesValue(mActivity,"isEnableGAd").equals("0")) {
+        if (!getPropertiesValue(mActivity, "isEnableGAd").equals("0")) {
             return;
         }
+        String interstitialAdUnitId = "";
+        try {
+            ApplicationInfo info = mActivity.getPackageManager().getApplicationInfo(mActivity.getPackageName(), PackageManager.GET_META_DATA);
+            interstitialAdUnitId = info.metaData.getString("interstitial_ad_unitId");
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.i("GoogleAdMobLog", "请在配置文件中添加插页式广告id");
+        }
         AdRequest adRequest = new AdRequest.Builder().build();
-        InterstitialAd.load(mActivity, "ca-app-pub-3940256099942544/1033173712", adRequest,
+        InterstitialAd.load(mActivity, interstitialAdUnitId, adRequest,
                 new InterstitialAdLoadCallback() {
                     @Override
                     public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
@@ -973,11 +989,18 @@ public class Starter {
      * @param mActivity
      */
     public void loadRewardAd(Activity mActivity) {
-        if (!getPropertiesValue(mActivity,"isEnableGAd").equals("0")) {
+        if (!getPropertiesValue(mActivity, "isEnableGAd").equals("0")) {
             return;
         }
+        String rewardAdUnitId = "";
+        try {
+            ApplicationInfo info = mActivity.getPackageManager().getApplicationInfo(mActivity.getPackageName(), PackageManager.GET_META_DATA);
+            rewardAdUnitId = info.metaData.getString("reward_ad_unitId");
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.i("GoogleAdMobLog", "请在配置文件中添加激励广告id");
+        }
         AdRequest adRequest = new AdRequest.Builder().build();
-        RewardedAd.load(mActivity, "ca-app-pub-3940256099942544/5224354917",
+        RewardedAd.load(mActivity, rewardAdUnitId,
                 adRequest, new RewardedAdLoadCallback() {
                     @Override
                     public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
@@ -1084,26 +1107,39 @@ public class Starter {
     private RewardedInterstitialAd rewardedInterstitialAd = null;
 
     public void loadRewardInterstitialAd(AppCompatActivity mActivity) {
-        if (!getPropertiesValue(mActivity,"isEnableGAd").equals("0")) {
+        if (!getPropertiesValue(mActivity, "isEnableGAd").equals("0")) {
             return;
         }
+        String rewardedInterstitialAdUnitId = "";
+        try {
+            ApplicationInfo info = mActivity.getPackageManager().getApplicationInfo(mActivity.getPackageName(), PackageManager.GET_META_DATA);
+            rewardedInterstitialAdUnitId = info.metaData.getString("reward_interstitial_ad_unitId");
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.i("GoogleAdMobLog", "请在配置文件中添加插页式激励广告id");
+        }
         // Use the test ad unit ID to load an ad.
-        RewardedInterstitialAd.load(mActivity, "ca-app-pub-3940256099942544/5354046379",
+        RewardedInterstitialAd.load(mActivity, rewardedInterstitialAdUnitId,
                 new AdRequest.Builder().build(), new RewardedInterstitialAdLoadCallback() {
                     @Override
                     public void onAdLoaded(RewardedInterstitialAd ad) {
                         Log.d(TAG, "Ad was loaded.");
                         rewardedInterstitialAd = ad;
                         RewardItem rewardItem = rewardedInterstitialAd.getRewardItem();
+                        if (mGAdCallback != null) {
+                            mGAdCallback.onAdLoaded();
+                        }
                         int rewardAmount = rewardItem.getAmount();
                         String rewardType = rewardItem.getType();
-                        introduceVideoAd(rewardAmount,rewardType,mActivity);
+                        introduceVideoAd(rewardAmount, rewardType, mActivity);
                     }
 
                     @Override
                     public void onAdFailedToLoad(LoadAdError loadAdError) {
                         Log.d(TAG, loadAdError.toString());
                         rewardedInterstitialAd = null;
+                        if (mGAdCallback != null) {
+                            mGAdCallback.onAdFailedToLoad();
+                        }
                     }
                 });
     }
@@ -1114,6 +1150,9 @@ public class Starter {
                 new AdDialogFragment.AdDialogInteractionListener() {
                     @Override
                     public void onShowAd() {
+                        if (mGAdCallback != null) {
+                            mGAdCallback.onShowAdDialog();
+                        }
                         Log.d(TAG, "The rewarded interstitial ad is starting.");
                         setRewardInterFullAdCallback();
                         showRewardInterstitialAd(mActivity);
@@ -1121,19 +1160,32 @@ public class Starter {
 
                     @Override
                     public void onCancelAd() {
+                        if (mGAdCallback != null) {
+                            mGAdCallback.onAdCancel();
+                        }
                         Log.d(TAG, "The rewarded interstitial ad was skipped before it starts.");
                     }
                 });
-        dialog.show(mActivity.getSupportFragmentManager(),"tag");
+        dialog.show(mActivity.getSupportFragmentManager(), "tag");
     }
 
     private void showRewardInterstitialAd(Activity mActivity) {
+        rewardedInterstitialAd.setOnPaidEventListener(new OnPaidEventListener() {
+            @Override
+            public void onPaidEvent(@NonNull AdValue adValue) {
+                adjustADRevenue(adValue.getValueMicros() / 1000000.0, adValue.getCurrencyCode(), mInterstitialAd.getResponseInfo().
+                        getLoadedAdapterResponseInfo().getAdSourceName());
+            }
+        });
         rewardedInterstitialAd.show(mActivity, new OnUserEarnedRewardListener() {
             @Override
             public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
                 // Handle the reward.
                 int rewardAmount = rewardItem.getAmount();
                 String rewardType = rewardItem.getType();
+                if (mGAdCallback != null) {
+                    mGAdCallback.onRewardEarned(rewardAmount, rewardType);
+                }
                 Log.d(TAG, "The user earned the reward,reward = " + rewardAmount + "-----type=" + rewardType);
             }
         });
@@ -1145,6 +1197,9 @@ public class Starter {
             public void onAdClicked() {
                 // Called when a click is recorded for an ad.
                 Log.d(TAG, "Ad was clicked.");
+                if (mGAdCallback != null) {
+                    mGAdCallback.onAdClicked();
+                }
             }
 
             @Override
@@ -1153,6 +1208,9 @@ public class Starter {
                 // Set the ad reference to null so you don't show the ad a second time.
                 Log.d(TAG, "Ad dismissed fullscreen content.");
                 rewardedInterstitialAd = null;
+                if (mGAdCallback != null) {
+                    mGAdCallback.onAdDismissed();
+                }
             }
 
             @Override
@@ -1160,45 +1218,39 @@ public class Starter {
                 // Called when ad fails to show.
                 Log.e(TAG, "Ad failed to show fullscreen content.");
                 rewardedInterstitialAd = null;
+                if (mGAdCallback != null) {
+                    mGAdCallback.onAdFailedToShow();
+                }
             }
 
             @Override
             public void onAdImpression() {
                 // Called when an impression is recorded for an ad.
                 Log.d(TAG, "Ad recorded an impression.");
+                if (mGAdCallback != null) {
+                    mGAdCallback.onAdImpression();
+                }
             }
 
             @Override
             public void onAdShowedFullScreenContent() {
                 // Called when ad is shown.
                 Log.d(TAG, "Ad showed fullscreen content.");
+                if (mGAdCallback != null) {
+                    mGAdCallback.onAdShowed();
+                }
             }
         });
     }
 
-    private FrameLayout mAdContainerView;
-
-    /**
-     * 展示横幅广告
-     *
-     * @param mActivity
-     */
-    public void loadBannerAd(Activity mActivity, int gravity) {
-        if (!getPropertiesValue(mActivity,"isEnableGAd").equals("0")) {
+    private void loadBannerAd(Activity mActivity, FrameLayout layout, String bannerId) {
+        if (!getPropertiesValue(mActivity, "isEnableGAd").equals("0")) {
             return;
-        }
-        if (mAdContainerView == null) {
-            mAdContainerView = new FrameLayout(mActivity);
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, 300, gravity);
-            mAdContainerView.setLayoutParams(params);
-            ViewGroup rootView = mActivity.findViewById(android.R.id.content);
-            rootView.addView(mAdContainerView);
         }
         // Create a new ad view.
         AdView adView = new AdView(mActivity);
-        adView.setAdSize(getAdSize(mActivity, mAdContainerView));
-        adView.setAdUnitId("ca-app-pub-3940256099942544/9214589741");
+        adView.setAdSize(getAdSize(mActivity, layout));
+        adView.setAdUnitId(bannerId);
         adView.setAdListener(new BannerAdCallback() {
             @Override
             public void onAdLoaded() {
@@ -1244,27 +1296,37 @@ public class Starter {
             }
         });
         // Replace ad container with new ad view.
-        mAdContainerView.removeAllViews();
-        mAdContainerView.addView(adView);
+        layout.removeAllViews();
+        layout.addView(adView);
 
         // Start loading the ad in the background.
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
     }
 
-    public void removeBannerAd() {
-        if (mAdContainerView != null) {
-            mAdContainerView.removeAllViews();
+    private FrameLayout mAdContainerView = null;
+    /**
+     * 展示横幅广告
+     *
+     * @param mActivity
+     */
+    public void loadBannerAd(Activity mActivity, int gravity) {
+        if (mAdContainerView == null) {
+            mAdContainerView = new FrameLayout(mActivity);
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, 300, gravity);
+            mAdContainerView.setLayoutParams(params);
+            ViewGroup rootView = mActivity.findViewById(android.R.id.content);
+            rootView.addView(mAdContainerView);
         }
-    }
-
-    private void initXsolla(Context mContext) {
-    /*    LoginConfig config = new LoginConfig.OauthBuilder()
-                .setProjectId("")
-                .setOauthClientId(0)
-                .build();
-        XLogin.init(mContext, config);
-        XStore.init(0, "jwt");*/
+        String bannerAdUnitId = "";
+        try {
+            ApplicationInfo info = mActivity.getPackageManager().getApplicationInfo(mActivity.getPackageName(), PackageManager.GET_META_DATA);
+            bannerAdUnitId = info.metaData.getString("banner_ad_unitId");
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.i("GoogleAdMobLog", "请在配置文件中添加banner广告id");
+        }
+        loadBannerAd(mActivity, mAdContainerView,bannerAdUnitId);
     }
 
     private void xsollaPay(String type, String payUrl) {

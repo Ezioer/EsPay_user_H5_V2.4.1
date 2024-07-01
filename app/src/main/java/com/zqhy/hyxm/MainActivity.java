@@ -180,6 +180,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onRewardEarned(int rewardAmount, String rewardType) {
 
             }
+
+            @Override
+            public void onShowAdDialog() {
+
+            }
+
+            @Override
+            public void onAdCancel() {
+
+            }
         });
 //        sdkLogin();
 //        checkRunTimePermission();
@@ -421,9 +431,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.btn_banner:
                 Starter.getInstance().loadBannerAd(MainActivity.this, Gravity.TOP);
-                break;
-            case R.id.btn_removebanner:
-                Starter.getInstance().removeBannerAd();
                 break;
             case R.id.btn_reward:
                 Starter.getInstance().loadRewardAd(MainActivity.this);

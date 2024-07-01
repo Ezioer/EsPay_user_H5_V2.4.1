@@ -26,4 +26,8 @@ public interface GAdsCallback {
    void onAdClosed();
    //激励广告的奖励
    void onRewardEarned(int rewardAmount,String rewardType);
+   //插页式激励广告弹出弹窗
+   void onShowAdDialog();
+   //插页式激励广告弹窗被取消
+   void onAdCancel();
 }

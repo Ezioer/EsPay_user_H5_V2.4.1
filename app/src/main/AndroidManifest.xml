@@ -37,6 +37,24 @@
         <meta-data
             android:name="com.facebook.sdk.ClientToken"
             android:value="bb37c4727e4e9c39bc69329ce9b3c027" />
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3940256099942544~3347511713"/>
+        <meta-data
+            android:name="banner_ad_unitId"
+            android:value="ca-app-pub-3940256099942544/9214589741"/>
+        <meta-data
+            android:name="open_ad_unitId"
+            android:value="ca-app-pub-3940256099942544/9257395921"/>
+        <meta-data
+            android:name="reward_ad_unitId"
+            android:value="ca-app-pub-3940256099942544/5224354917"/>
+        <meta-data
+            android:name="interstitial_ad_unitId"
+            android:value="ca-app-pub-3940256099942544/1033173712"/>
+        <meta-data
+            android:name="reward_interstitial_ad_unitId"
+            android:value="ca-app-pub-3940256099942544/5354046379"/>
         <!--  <meta-data
               android:name="g_clientId"
               android:value="875676869372-ql7c3bi8a7nbo08ofd4f9a69kgi94mfu.apps.googleusercontent.com" />

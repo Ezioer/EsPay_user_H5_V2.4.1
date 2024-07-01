@@ -21,7 +21,7 @@ import hdtx.androidsdk.util.ThreadPoolManager;
 
 public class AppOpenAdManager {
     private static final String LOG_TAG = "AppOpenAdManager";
-    private static final String AD_UNIT_ID = "ca-app-pub-3940256099942544/9257395921";
+    private static String AD_UNIT_ID = "";
 
     private AppOpenAd appOpenAd = null;
     private boolean isLoadingAd = false;
@@ -35,7 +35,8 @@ public class AppOpenAdManager {
     /**
      * Constructor.
      */
-    public AppOpenAdManager() {
+    public AppOpenAdManager(String unitId) {
+        AD_UNIT_ID = unitId;
     }
 
     /**
