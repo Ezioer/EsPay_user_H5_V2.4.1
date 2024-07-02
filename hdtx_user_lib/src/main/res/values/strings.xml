@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">hdtx_user_lib</string>
+    <string name="hd_xsolla_pay">Xsolla支付</string>
 </resources>

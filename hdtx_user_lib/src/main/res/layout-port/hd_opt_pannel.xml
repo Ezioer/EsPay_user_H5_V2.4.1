@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/hdtx_fill.wrap"
     android:background="@drawable/es_main_bg"
     android:gravity="top">
@@ -131,6 +132,38 @@
                     <ImageView
                         android:visibility="gone"
                         android:id="@+id/hd_id_ylChannelid"
+                        style="@style/hdtx_dash" />
+
+                    <LinearLayout
+                        android:id="@+id/easou_id_xsollaChannelLayout"
+                        style="@style/hdtx_itemchannel">
+
+                        <com.hdtx.androidsdk.util.RoundImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            app:corner_radius="10dp"
+                            app:type="round"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="10dp"
+                            android:src="@drawable/xsolla"
+                            android:id="@+id/easou_id_xsollaChannelIcon" />
+
+                        <LinearLayout
+                            style="@style/hdtx_linear"
+                            android:layout_weight="100.0"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/easou_id_xsollaChannelText"
+                                style="@style/hdtx_text"
+                                android:text="@string/hd_xsolla_pay" />
+                        </LinearLayout>
+
+                        <ImageView style="@style/hdtx_iconarrow" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/easou_id_xsollaChannelid"
                         style="@style/hdtx_dash" />
 
                     <LinearLayout

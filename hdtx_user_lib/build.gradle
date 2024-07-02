@@ -1,12 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 28
     buildToolsVersion "25.0.3"
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         consumerProguardFiles 'proguard-rules.pro'
@@ -35,36 +35,35 @@ android {
     }
 }
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 //    compile 'com.android.support:appcompat-v7:28.0.0'
-    compile 'com.android.support:appcompat-v7:25.+'
+    implementation 'com.android.support:appcompat-v7:25.+'
 //    implementation 'com.bytedance.applog:RangersAppLog-Lite-cn:6.14.1'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.61'
-    testCompile 'junit:junit:4.12'
-    compile files('libs/alipaySdk-15.8.02.jar')
-    compile files('libs/gson-1.5.jar')
-    compile files('libs/HeepaySDK_4.0.5.jar')
-    compile files('libs/locSDK_4.2.jar')
-    compile files('libs/payecoplugin_standard_baidu_3-2.1.12.jar')
-    compile files('libs/ulo5sdk-1.5.2.jar')
-    compile files('libs/oaid_sdk_2.1.0.jar')
+    implementation files('libs/alipaySdk-15.8.02.jar')
+    implementation files('libs/gson-1.5.jar')
+    implementation files('libs/HeepaySDK_4.0.5.jar')
+    implementation files('libs/locSDK_4.2.jar')
+    implementation files('libs/payecoplugin_standard_baidu_3-2.1.12.jar')
+    implementation files('libs/ulo5sdk-1.5.2.jar')
+    implementation files('libs/oaid_sdk_2.1.0.jar')
 //    compile files('libs/RangersAppLog-Lite-cn-6.14.3.jar')
 //    compile files('libs/RangersAppLog-All-convert-6.14.3.jar')
 //    compile files('libs/RangersAppLog-Log-1.0.5.jar')
 //    compile files('libs/if_encryptor-1.0.0-rc.5.jar')
 //    compile files('libs/encryptor-1.0.1.noasan.jar')
 //    compile files('libs/plugin-aggregation-0.0.1.jar')
-    compile files('libs/gism_1.3.3.jar')
-    compile files('libs/GDTActionSDK.min.1.8.6.jar')
-    compile files('libs/monitorsdk-1.0.13.jar')
-    compile files('libs/Baidu_ocpc_action_2_5.jar')
-    compile files('libs/humesdk-1.0.0.jar')
-    compile files('libs/channelsdk-0.2.1-beta.jar')
+    implementation files('libs/gism_1.3.3.jar')
+    implementation files('libs/GDTActionSDK.min.1.8.6.jar')
+    implementation files('libs/monitorsdk-1.0.13.jar')
+    implementation files('libs/Baidu_ocpc_action_2_5.jar')
+    implementation files('libs/humesdk-1.0.0.jar')
+    implementation files('libs/channelsdk-0.2.1-beta.jar')
 //    api 'com.alipay.sdk:alipaysdk-android:+@aar'
-    compile files('libs/qilintrans2.0.jar')
+    implementation files('libs/qilintrans2.0.jar')
     // Applog 上报组件（必须）
     implementation 'com.bytedance.applog:RangersAppLog-Lite-cn:6.14.3'
 // 商业化组件（必须） 6.14.2 以上版本商业化组件独立，注：必须接入以免平台限制应用上传

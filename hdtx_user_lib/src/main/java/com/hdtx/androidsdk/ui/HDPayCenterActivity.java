@@ -59,6 +59,7 @@ import com.ulopay.android.h5_library.manager.WebViewManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -168,8 +169,8 @@ public class HDPayCenterActivity extends BaseActivity {
 
         final Map<String, String> map = setupPayMap(false);
 
-        LoadingDialog.show(mContext, "正在验证订单信息...", false);
-        ThreadPoolManager.getInstance().addTask(new Runnable() {
+//        LoadingDialog.show(mContext, "正在验证订单信息...", false);
+        /*ThreadPoolManager.getInstance().addTask(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -178,7 +179,7 @@ public class HDPayCenterActivity extends BaseActivity {
                     e.printStackTrace();
                 }
             }
-        });
+        });*/
         /*new Thread(new Runnable() {
 
             @Override
@@ -432,6 +433,9 @@ public class HDPayCenterActivity extends BaseActivity {
                     payType = "Alipay";
                     aliPay();
                     break;
+                case Constant.HANDLER_XSOLLA:
+                    xsollaCreateOrder();
+                    break;
                 case Constant.HANDLER_UNIPAY:
                     DialogerUtils.show(mActivity, getApplication().getResources().getIdentifier("hdtx_translucent_notitle", "style",
                             getApplication().getPackageName()));
@@ -449,6 +453,79 @@ public class HDPayCenterActivity extends BaseActivity {
                 default:
                     break;
             }
+        }
+    }
+
+    private void xsollaCreateOrder() {
+        Map<String, String> map = setupPayMap(true);
+        map.put(Constant.TRADEMODE, "WEB");
+        map.put(Constant.PAYCHANNEL, "XSOLLA");
+        HttpAsyncTaskImp wxTask = new HttpAsyncTaskImp(mActivity, map, easoutgc, key, FeeType.XSOLLA);
+        wxTask.setDataFinishListener(new HttpAsyncTaskImp.DataFinishListener() {
+
+            @Override
+            public void setJson(Object object) {
+                // TODO Auto-generated method stub
+                json = (JSONObject) object;
+                try {
+                    String url = json.getString("payUrl");
+                    xsollaPay("false", URLDecoder.decode(url));
+                } catch (JSONException e) {
+                    // TODO Auto-generated catch block
+                    HDPayLog.d(TAG, "解析处理失败！" + e);
+                    e.printStackTrace();
+                }
+            }
+        });
+        wxTask.executeProxy();
+        /*ThreadPoolManager.getInstance().addTask(new Runnable() {
+            @Override
+            public void run() {
+                BaseResponse result = EAPayInter.checkOrder(tradeId, "", String.valueOf(money), 110l, "",
+                        CommonUtils.getCheckOutParams(mActivity.getApplicationInfo().packageName), getPayJson());
+                JSONObject custom = null;
+                String payUrl = "";
+                if (result != null && result.getCode() == 0) {
+                    try {
+                        custom = new JSONObject(result.getData().toString());
+                        String data = AESUtil.decrypt(custom.optString("content"), Constant.AESKEY);
+                        JSONObject content = new JSONObject(data);
+                        mESOrder = content.optString("orderNo");
+                        String payType = content.optString("isWebView");
+                        payUrl = URLDecoder.decode(content.optString("payUrl"));
+                        final String finalPayUrl = payUrl;
+                        final String type = payType;
+                        mActivity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                xsollaPay(type, finalPayUrl);
+                            }
+                        });
+                    } catch (Exception e) {
+                        ESPayLog.d(TAG, "支付失败！" + e.getMessage());
+                        onFailedCallBack(ErrorResult.ESPAY_FEE_ERROR, "支付失败");
+                    }
+                } else {
+                    ESPayLog.d(TAG, "支付失败！");
+                    onFailedCallBack(ErrorResult.ESPAY_FEE_ERROR, "支付失败");
+                }
+            }
+        });*/
+    }
+
+    private void xsollaPay(String type, String payUrl) {
+        if (type.equals("false")) {
+            //系统浏览器打开
+            Uri uri = Uri.parse(payUrl);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            mActivity.startActivity(intent);
+        } else {
+            //系统webview打开
+            Intent intent = new Intent();
+            intent.putExtra("room_url", payUrl);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setClass(mActivity, HDPayWebActivity.class);
+            mActivity.startActivity(intent);
         }
     }
 

@@ -205,6 +205,7 @@ public class Constant {
     public static final int HANDLER_ALIPAY = 18;
     public static final int HANDLER_WECHAT = 19;
     public static final int HANDLER_UNIPAY = 20;
+    public static final int HANDLER_XSOLLA = 41;
     public static final int HANDLER_WEBPAY = 21;
     public static final int HANDLER_JFPAY = 40;
 

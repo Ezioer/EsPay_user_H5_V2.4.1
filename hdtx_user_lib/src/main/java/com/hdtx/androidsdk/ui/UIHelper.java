@@ -60,7 +60,7 @@ public class UIHelper {
     private static TextView tittleInfo; // 商品数量
     private static TextView tittleAmt; // 支付金额
 
-    private static View moreLayout, wxLayout, ylLayout, aliLayout, webLayout, jfLayout;
+    private static View moreLayout, wxLayout, ylLayout, aliLayout, webLayout, jfLayout,xsollaLayout;
     private static ImageView moreImageViewid, wxImageViewid, ylImageViewid, aliImageViewid, webImageViewid,
             moreLineImageView, weixinLineImageView, unipayLineImageView, jfImageViewId,
             alipayLineImageView;
@@ -509,7 +509,22 @@ public class UIHelper {
                 isClicked = true;
             }
         });
-
+        // xsolla
+        xsollaLayout = convertView.findViewById(
+                context.getResources().getIdentifier("easou_id_xsollaChannelLayout", "id", context.getPackageName()));
+        xsollaLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isClicked) {
+                    HDToast.getInstance().ToastShow(context, "请不要频繁操作！");
+                    return;
+                }
+                Message msg = handler.obtainMessage();
+                msg.what = Constant.HANDLER_XSOLLA;
+                msg.sendToTarget();
+                isClicked = true;
+            }
+        });
         // 支付宝
         aliLayout = convertView.findViewById(
                 context.getResources().getIdentifier("hd_id_aliChannelLayout", "id", context.getPackageName()));

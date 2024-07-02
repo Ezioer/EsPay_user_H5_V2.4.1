@@ -8,5 +8,5 @@ public enum FeeType {
     WFTESWECHAT,
     ZWXESWECHAT,
     YDJFDHPAY,
-    ALIPAYTEST
+    XSOLLA, ALIPAYTEST
 }

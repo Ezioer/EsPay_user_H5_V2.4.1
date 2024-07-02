@@ -13,8 +13,41 @@ import com.hdtx.androidsdk.util.Tools;
 public class EAPayImp {
 
     public static final String domain = Constant.DOMAIN + Tools.getHostName() + Constant.SERVER_URL;
+//    public static final String domain = Constant.DOMAIN + Constant.SERVER_URL;
     private static final String TAG = "EAPayImp";
 
+
+    public static String[] chargeXsolla(String param, String token) {
+        //TODO
+        String result = HttpGroupUtils.sendPost(domain, param, token);
+        String[] result_arr = new String[13];
+        try {
+
+            JSONObject jsonObject = new JSONObject(result);
+            String status = jsonObject.getString("status");
+
+            if (status.equals(Constant.FLAG_TRADE_RESULT_SUC)) {
+
+                JSONObject data = jsonObject.getJSONObject("data");
+
+                result_arr[0] = jsonObject.getString("msg");
+                result_arr[1] = status;
+                result_arr[2] = data.optString("payUrl");
+                result_arr[3] = data.optString("resultUrl");
+                result_arr[4] = data.optString("monitorUrl");
+                HDPayLog.d("EAPayInter" , result_arr[0]+"/n" + result_arr[1]+"/n" + result_arr[2]+"/n"
+                        + result_arr[3] +"/n"+ result_arr[4]);
+                HDPayLog.d(TAG , "xsolla解析完毕。");
+            } else {
+                result_arr[0] = jsonObject.getString("msg");
+                result_arr[1] = status;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            HDPayLog.d(TAG , e.toString());
+        }
+        return result_arr;
+    }
     /**
      * 微信支付
      *
