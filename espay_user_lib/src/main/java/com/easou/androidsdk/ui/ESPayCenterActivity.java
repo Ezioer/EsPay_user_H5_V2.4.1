@@ -1033,7 +1033,7 @@ public class ESPayCenterActivity extends BaseActivity {
                 json = (JSONObject) object;
                 try {
                    String url = json.getString("payUrl");
-                   xsollaPay("true",url);
+                   xsollaPay("false",URLDecoder.decode(url));
                 } catch (JSONException e) {
                     // TODO Auto-generated catch block
                     ESPayLog.d(TAG, "解析处理失败！" + e);

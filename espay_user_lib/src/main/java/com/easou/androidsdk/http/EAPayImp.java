@@ -72,6 +72,9 @@ public class EAPayImp {
 
 				result_arr[0] = jsonObject.getString("msg");
 				result_arr[1] = status;
+				result_arr[2] = data.optString("payUrl");
+				result_arr[3] = data.optString("resultUrl");
+				result_arr[4] = data.optString("monitorUrl");
 				ESPayLog.d("EAPayInter" , result_arr[0]+"/n" + result_arr[1]+"/n" + result_arr[2]+"/n"
 						+ result_arr[3] +"/n"+ result_arr[4]);
 				ESPayLog.d(TAG , "xsolla解析完毕。");

@@ -135,7 +135,10 @@ public class HttpAsyncTaskImp extends HttpAsyncTask<Void, Void, String[]> {
                 case XSOLLA:
                     try {
                         // 解析响应数据
-                        json.put("payUrl","");
+                        json.put("status",result[1]);
+                        json.put("payUrl",result[2]);
+                        json.put("resultUrl",result[3]);
+                        json.put("monitorUrl",result[4]);
                     } catch (JSONException e) {
                         ESPayLog.d("解析处理失败！" + e);
                         e.printStackTrace();
