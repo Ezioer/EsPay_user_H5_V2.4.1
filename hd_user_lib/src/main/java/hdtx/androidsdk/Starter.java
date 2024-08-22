@@ -116,6 +116,7 @@ import hdtx.androidsdk.util.AESUtil;
 import hdtx.androidsdk.util.CommonUtils;
 import hdtx.androidsdk.util.ESdkLog;
 import hdtx.androidsdk.util.GsonUtil;
+import hdtx.androidsdk.util.Md5SignUtils;
 import hdtx.androidsdk.util.ThreadPoolManager;
 import hdtx.androidsdk.util.Tools;
 
@@ -127,6 +128,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -188,44 +190,49 @@ public class Starter {
         mProductId = mPayInfo.optString(ESConstant.PRODUCT_ID);
         mPrice = mPayInfo.optInt(ESConstant.MONEY);
         mTradeId = mPayInfo.optString(ESConstant.TRADE_ID);
-        int payType = 0;
+        String notifyUrl = mPayInfo.optString(ESConstant.NOTIFY_URL);
+     /*   int payType = 0;
         try {
             payType = mPayInfo.optInt("payType");
         } catch (Exception e) {
-        }
+        }*/
         ESdkLog.c(TAG, info.toString());
-        if (payType == 0) {
+        xsollaCreateOrder(notifyUrl);
+       /* if (payType == 0) {
             initBilling(mActivity);
         } else {
             xsollaCreateOrder();
-        }
+        }*/
     }
 
-    private void xsollaCreateOrder() {
+    private void xsollaCreateOrder(String notifyUrl) {
         ThreadPoolManager.getInstance().addTask(new Runnable() {
             @Override
             public void run() {
-                BaseResponse result = EAPayInter.checkOrder(mTradeId, mProductId, String.valueOf(mPrice), 110l, mNcy,
-                        CommonUtils.getCheckOutParams(mActivity.getApplicationInfo().packageName), mPayInfo);
+                String appId = CommonUtils.readPropertiesValue(Starter.mActivity, "appId");
+                String qn = CommonUtils.readPropertiesValue(Starter.mActivity, "qn");
+                String redirectUrl = CommonUtils.readPropertiesValue(Starter.mActivity, "redirectUrl");
+                String packName = mActivity.getApplicationInfo().packageName;
+                BaseResponse result = EAPayInter.GetOrderToken(appId, packName, Constant.ESDK_USERID, Constant.ESDK_TOKEN, qn, mProductId, notifyUrl, mTradeId);
                 JSONObject custom = null;
-                String payUrl = "";
                 if (result != null && result.getCode() == 0) {
                     try {
                         custom = new JSONObject(result.getData().toString());
-                        String data = AESUtil.decrypt(custom.optString("content"), Constant.AESKEY);
-                        JSONObject content = new JSONObject(data);
-                        mESOrder = content.optString("orderNo");
-                        String payType = content.optString("isWebView");
-                        payUrl = URLDecoder.decode(content.optString("payUrl"));
+                        String dataToken = AESUtil.decrypt(custom.optString("content"), Constant.AESKEY);
+//                        JSONObject content = new JSONObject(data);
+//                        mESOrder = content.optString("orderNo");
+//                        String payType = content.optString("isWebView");
+//                        payUrl = URLDecoder.decode(content.optString("payUrl"));
                         adjustCheckOut(mPrice);
                         fbCheckOut(mPrice, mProductId, mNcy, mESOrder);
-                        final String finalPayUrl = payUrl;
-                        final String type = payType;
+//                        final String finalPayUrl = payUrl;
+//                        final String type = payType;
                         mActivity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 hideDialog();
-                                xsollaPay(type, finalPayUrl);
+                                tokenWebView(dataToken, appId, mProductId, mTradeId, qn, notifyUrl, redirectUrl);
+//                                xsollaPay(type, finalPayUrl);
                             }
                         });
                     } catch (Exception e) {
@@ -236,6 +243,48 @@ public class Starter {
                 }
             }
         });
+    }
+
+    private void tokenWebView(String dataToken, String appId, String mProductId, String mTradeId, String qn, String notifyUrl, String redirectUrl) {
+        //系统webview打开
+        Intent intent = new Intent();
+        intent.putExtra("url", Constant.BASE_URL_PAYWEB + "?" + getParams(dataToken, appId, mProductId, mTradeId, qn, notifyUrl, redirectUrl));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setClass(mActivity, ESPayWebActivity.class);
+        mActivity.startActivity(intent);
+    }
+
+    private String getParams(String dataToken, String appId, String mProductId, String mTradeId, String qn, String notifyUrl, String redirectUrl) {
+        String language = "tw";
+        try {
+            //语言 简繁体中文都是zh 英文是es
+            language = Locale.getDefault().getLanguage().toLowerCase();
+            //国家 简体是cn 繁体是tw或hk，英文是us
+            String code = Locale.getDefault().getCountry().toLowerCase();
+            if (code.equals("tw") || code.equals("hk")) {
+                language = "tw";
+            } else if (code.equals("cn")) {
+                language = "cn";
+            } else if (language.equals("es")) {
+                language = "en";
+            }
+        } catch (Exception e) {
+            language = "tw";
+        }
+        String serviceId = mPayInfo.optString(ESConstant.PLAYER_SERVER_ID);
+        String serviceName = mPayInfo.optString(ESConstant.SERVER_NAME);
+        String playerId = mPayInfo.optString(ESConstant.PLAYER_ID);
+        String playerName = mPayInfo.optString(ESConstant.PLAYER_NAME);
+        String playerlevel = mPayInfo.optString(ESConstant.PLAYER_LEVEL);
+        String productName = mPayInfo.optString(ESConstant.PRODUCT_NAME);
+        String key = CommonUtils.readPropertiesValue(Starter.mActivity, "key");
+        String params = "token=" + dataToken + "&accountId=" + Constant.ESDK_USERID +
+                "&tradeId=" + mTradeId + "&productId=" + mProductId + "&appId=" + appId + "&cpOrderNo=" + mTradeId +
+                "&qn=" + qn + "&cpNotifyUrl=" + notifyUrl + "&money=" + mPrice + "&language=" + language + "&deviceId=" + Constant.IMEI +
+                "&ip=" + Constant.NET_IP + "&redirectUrl=" + redirectUrl + "&serviceId=" + serviceId + "&playerId=" + playerId + "&serviceName=" + serviceName +
+                "&playerName=" + playerName + "&playerLevel=" + playerlevel + "&productName=" + productName;
+        String sign = Md5SignUtils.sign(params, key);
+        return params + "&sign=" + sign;
     }
 
     private PurchasesUpdatedListener purchasesUpdatedListener = new PurchasesUpdatedListener() {
@@ -1305,6 +1354,7 @@ public class Starter {
     }
 
     private FrameLayout mAdContainerView = null;
+
     /**
      * 展示横幅广告
      *
@@ -1326,7 +1376,7 @@ public class Starter {
         } catch (PackageManager.NameNotFoundException e) {
             Log.i("GoogleAdMobLog", "请在配置文件中添加banner广告id");
         }
-        loadBannerAd(mActivity, mAdContainerView,bannerAdUnitId);
+        loadBannerAd(mActivity, mAdContainerView, bannerAdUnitId);
     }
 
     private void xsollaPay(String type, String payUrl) {

@@ -130,6 +130,8 @@ public class Constant {
      * 支付 url
      */
     public static final String BASEURL_VN = "https://pay.hudong-vn.com/";
+    public static final String BASE_URL_TOKEN = "http://192.168.1.139:6800/auth/createToken";
+    public static final String BASE_URL_PAYWEB = "http://192.168.1.95:5173/#/index";
     //正式域名
     public static final String BASEURL_EN = "https://pay.hudong-en.com/";
     //测试域名

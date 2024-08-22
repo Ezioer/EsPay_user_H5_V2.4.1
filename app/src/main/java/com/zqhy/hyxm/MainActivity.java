@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String lan = Locale.getDefault().getLanguage();
         String con = Locale.getDefault().getCountry();
         Log.d("applanguage---->", lan + "---" + con);
-        Starter.getInstance().getFbFriends(new FBFriendsCallback() {
+        /*Starter.getInstance().getFbFriends(new FBFriendsCallback() {
             @Override
             public void success(List<FBUser> users) {
 
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void fail(int code, String message) {
 
             }
-        });
+        });*/
         Starter.getInstance().setGAdCallback(new GAdsCallback() {
             @Override
             public void onAdLoaded() {
@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
-//        sdkLogin();
+        sdkLogin();
 //        checkRunTimePermission();
     }
 
@@ -494,12 +494,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         try {
                             payInfo.put(ESConstant.PRODUCT_ID, productId);
 //                            payInfo.put(ESConstant.PRODUCT_ID, "yisou_6");
-                            payInfo.put(ESConstant.APP_ID, "2899");
+//                            payInfo.put(ESConstant.APP_ID, "2899");
                             payInfo.put(ESConstant.TRADE_ID, tradeId);
-                            payInfo.put(ESConstant.ACCOUNT_ID, "es_6");
+//                            payInfo.put(ESConstant.ACCOUNT_ID, "es_6");
                             payInfo.put(ESConstant.PLAYER_SERVER_ID, "1");
                             payInfo.put(ESConstant.SERVER_NAME, "hahaha");
-                            payInfo.put(ESConstant.QN, "jdau2898_10054_001");
+//                            payInfo.put(ESConstant.QN, "jdau2898_10054_001");
                             payInfo.put(ESConstant.PLAYER_ID, "111");
                             payInfo.put(ESConstant.PLAYER_NAME, "ka");
                             payInfo.put(ESConstant.PLAYER_LEVEL, "1");
@@ -507,7 +507,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             //支付回调
                             payInfo.put(ESConstant.NOTIFY_URL, "");
                             payInfo.put(ESConstant.PRODUCT_NAME, "宝石");
-                            payInfo.put(ESConstant.PAYTYPE, 0);
+//                            payInfo.put(ESConstant.PAYTYPE, 0);
                         } catch (JSONException e) {
                         }
                         ThreadPoolManager.getInstance().addTask(new Runnable() {

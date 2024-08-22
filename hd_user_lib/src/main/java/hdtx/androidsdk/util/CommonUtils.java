@@ -127,7 +127,6 @@ public class CommonUtils {
     }
 
     public static void saveEsDeviceID(Context mContext, String devID) {
-
         SharedPreferences settings = mContext.getSharedPreferences(Constant.ES_DEVICE_ID, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString(Constant.ES_DEV_ID, devID);

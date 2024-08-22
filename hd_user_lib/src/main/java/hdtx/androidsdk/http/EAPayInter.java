@@ -51,6 +51,23 @@ public class EAPayInter {
         }
     }
 
+    public static BaseResponse GetOrderToken(String appId,String packName,String userId,String ssoToken,String qn,String productId,String notifyUrl,String tradleId) {
+        try {
+            JSONObject object = new JSONObject();
+            JSONObject data = new JSONObject();
+            data.put("appId", appId);
+            data.put("packageName", packName);
+            data.put("accountId", userId);
+            data.put("ssoToken", ssoToken);
+            data.put("qn", qn);
+            data.put("cpOrderNo", tradleId);
+            data.put("productId", productId);
+            data.put("notifyUrl", notifyUrl);
+            return handleNetOpera(data, object, appId, Constant.BASE_URL_TOKEN);
+        } catch (Exception e) {
+            return null;
+        }
+    }
     //海外支付下单
     public static BaseResponse checkOrder(String cpOrderNo, String productId, String productPrice,
                                           Long productPriceMicros, String currencyCode, Map<String, String> map, JSONObject info) {
@@ -175,7 +192,7 @@ public class EAPayInter {
             } else {
                 url = Constant.BASEURL_CN + url;
             }*/
-            url = Constant.BASEURL_EN + url;
+//            url = Constant.BASEURL_EN + url;
             BaseResponse result = getBaseResponse(url, object);
             return result;
         } catch (Exception e) {
