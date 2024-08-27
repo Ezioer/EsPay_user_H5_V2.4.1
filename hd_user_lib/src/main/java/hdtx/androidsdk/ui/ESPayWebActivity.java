@@ -347,4 +347,12 @@ public class ESPayWebActivity extends Activity implements OnClickListener {
         super.onDestroy();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (mWebView.canGoBack()) {
+            mWebView.goBack();
+        } else {
+            finish();
+        }
+    }
 }

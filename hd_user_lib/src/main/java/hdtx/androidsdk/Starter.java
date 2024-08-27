@@ -247,10 +247,9 @@ public class Starter {
 
     private void tokenWebView(String dataToken, String appId, String mProductId, String mTradeId, String qn, String notifyUrl, String redirectUrl) {
         //系统webview打开
-        Intent intent = new Intent();
-        intent.putExtra("url", Constant.BASE_URL_PAYWEB + "?" + getParams(dataToken, appId, mProductId, mTradeId, qn, notifyUrl, redirectUrl));
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setClass(mActivity, ESPayWebActivity.class);
+        String url = Constant.BASE_URL_PAYWEB + "?" + getParams(dataToken, appId, mProductId, mTradeId, qn, notifyUrl, redirectUrl);
+        Uri uri = Uri.parse(url);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         mActivity.startActivity(intent);
     }
 
@@ -283,7 +282,27 @@ public class Starter {
                 "&qn=" + qn + "&cpNotifyUrl=" + notifyUrl + "&money=" + mPrice + "&language=" + language + "&deviceId=" + Constant.IMEI +
                 "&ip=" + Constant.NET_IP + "&redirectUrl=" + redirectUrl + "&serviceId=" + serviceId + "&playerId=" + playerId + "&serviceName=" + serviceName +
                 "&playerName=" + playerName + "&playerLevel=" + playerlevel + "&productName=" + productName;
-        String sign = Md5SignUtils.sign(params, key);
+        Map<String,String> mapValue = new HashMap<>();
+        mapValue.put("token",dataToken);
+        mapValue.put("accountId",Constant.ESDK_USERID);
+        mapValue.put("tradeId",mTradeId);
+        mapValue.put("productId",mProductId);
+        mapValue.put("appId",appId);
+        mapValue.put("cpOrderNo",mTradeId);
+        mapValue.put("qn",qn);
+        mapValue.put("cpNotifyUrl",notifyUrl);
+        mapValue.put("money",String.valueOf(mPrice));
+        mapValue.put("language",language);
+        mapValue.put("deviceId",Constant.IMEI);
+        mapValue.put("ip",Constant.NET_IP );
+        mapValue.put("redirectUrl",redirectUrl);
+        mapValue.put("serviceId",serviceId);
+        mapValue.put("playerId",playerId);
+        mapValue.put("serviceName",serviceName);
+        mapValue.put("playerName",playerName);
+        mapValue.put("playerLevel",playerlevel);
+        mapValue.put("productName",productName);
+        String sign = Md5SignUtils.sign(mapValue, key);
         return params + "&sign=" + sign;
     }
 
