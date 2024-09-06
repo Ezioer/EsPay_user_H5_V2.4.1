@@ -165,6 +165,7 @@
 
 
                 <LinearLayout
+                    android:visibility="gone"
                     android:id="@+id/easou_id_xsollaChannelLayout"
                     style="@style/easou_itemchannel">
 
@@ -193,6 +194,7 @@
                 </LinearLayout>
 
                 <ImageView
+                    android:visibility="gone"
                     android:id="@+id/easou_id_xsollaChannelid"
                     style="@style/easou_dash" />
 

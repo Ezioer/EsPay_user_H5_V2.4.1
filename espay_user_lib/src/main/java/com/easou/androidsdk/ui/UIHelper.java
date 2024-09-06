@@ -61,9 +61,8 @@ public class UIHelper {
     private static TextView tittleAmt; // 支付金额
 
     private static View moreLayout, wxLayout, ylLayout, aliLayout, webLayout, jfLayout, xsollaLayout;
-    private static ImageView moreImageViewid, wxImageViewid, ylImageViewid, aliImageViewid, webImageViewid,
-            moreLineImageView, weixinLineImageView, unipayLineImageView, jfImageViewId,
-            alipayLineImageView;
+    private static ImageView moreImageViewid, wxImageViewid, ylImageViewid, aliImageViewid, webImageViewid,xsollaImageViewid,
+            unipayLineImageView, jfImageViewId;
 
     private static Button button, tradeHistory;
     private static final int backgroundColor = 0xffdcdcdc, TEXT_COLOR_GRAY = 0xff9b9797, TEXT_COLOR_RED = 0xffff632c,
@@ -615,6 +614,8 @@ public class UIHelper {
 
         wxImageViewid = (ImageView) convertView.findViewById(
                 context.getResources().getIdentifier("easou_id_wxChannelid", "id", context.getPackageName()));
+        xsollaImageViewid = (ImageView) convertView.findViewById(
+                context.getResources().getIdentifier("easou_id_xsollaChannelid", "id", context.getPackageName()));
         ylImageViewid = (ImageView) convertView.findViewById(
                 context.getResources().getIdentifier("easou_id_ylChannelid", "id", context.getPackageName()));
         aliImageViewid = (ImageView) convertView.findViewById(
@@ -636,20 +637,20 @@ public class UIHelper {
 //        moreLayout.setVisibility(View.GONE);
 //        moreImageViewid.setVisibility(View.GONE);
 
-        weixinLineImageView = (ImageView) convertView.findViewById(
-                context.getResources().getIdentifier("easou_id_wxChannelid", "id", context.getPackageName()));
+       /* weixinLineImageView = (ImageView) convertView.findViewById(
+                context.getResources().getIdentifier("easou_id_wxChannelid", "id", context.getPackageName()));*/
 //        weixinLineImageView.setVisibility(View.GONE);
 
-        unipayLineImageView = (ImageView) convertView.findViewById(
-                context.getResources().getIdentifier("easou_id_ylChannelid", "id", context.getPackageName()));
+      /*  unipayLineImageView = (ImageView) convertView.findViewById(
+                context.getResources().getIdentifier("easou_id_ylChannelid", "id", context.getPackageName()));*/
 //        unipayLineImageView.setVisibility(View.GONE);
 
-        alipayLineImageView = (ImageView) convertView.findViewById(
-                context.getResources().getIdentifier("easou_id_aliChannelid", "id", context.getPackageName()));
+        /*alipayLineImageView = (ImageView) convertView.findViewById(
+                context.getResources().getIdentifier("easou_id_aliChannelid", "id", context.getPackageName()));*/
 //        alipayLineImageView.setVisibility(View.GONE);
 
-        moreLineImageView = (ImageView) convertView.findViewById(
-                context.getResources().getIdentifier("easou_id_moreChannelid", "id", context.getPackageName()));
+       /* moreLineImageView = (ImageView) convertView.findViewById(
+                context.getResources().getIdentifier("easou_id_moreChannelid", "id", context.getPackageName()));*/
 //        moreLineImageView.setVisibility(View.GONE);
 
         needChannels = map.get(ESConstant.NEED_CHANNELS);
@@ -663,10 +664,8 @@ public class UIHelper {
             webImageViewid.setVisibility(View.VISIBLE);
             moreLayout.setVisibility(View.GONE);
             moreImageViewid.setVisibility(View.GONE);
-
-            weixinLineImageView.setVisibility(View.VISIBLE);
-            alipayLineImageView.setVisibility(View.VISIBLE);
-            moreLineImageView.setVisibility(View.GONE);
+            xsollaLayout.setVisibility(View.VISIBLE);
+            xsollaImageViewid.setVisibility(View.VISIBLE);
 
         } else {
             if (needChannels.contains("WECHAT")) {
@@ -676,6 +675,7 @@ public class UIHelper {
 
             if (needChannels.contains("XSOLLA")) {
                 xsollaLayout.setVisibility(View.VISIBLE);
+                xsollaImageViewid.setVisibility(View.VISIBLE);
             }
             if (needChannels.contains("ALIPAY2")) {
                 aliLayout.setVisibility(View.VISIBLE);
@@ -688,7 +688,7 @@ public class UIHelper {
             }
 
             if (!isShowingMore) {
-                moreLineImageView.setVisibility(View.GONE);
+                moreImageViewid.setVisibility(View.GONE);
             }
 
             if (!needChannels.contains("WFTQQWALLET") && !needChannels.contains("WECHAT")
@@ -751,7 +751,7 @@ public class UIHelper {
         }
 
         tv_morePayment.setText("收起");
-        moreLineImageView.setVisibility(View.VISIBLE);
+        moreImageViewid.setVisibility(View.VISIBLE);
     }
 
     public static void hideMorePayment() {
@@ -764,7 +764,7 @@ public class UIHelper {
         }
 
         tv_morePayment.setText("展开");
-        moreLineImageView.setVisibility(View.GONE);
+        moreImageViewid.setVisibility(View.GONE);
     }
 
     /**
