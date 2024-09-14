@@ -15,7 +15,7 @@ public class Constant {
     /**
      * SDK版本号，更新版本记得改版本号
      */
-    public static final String SDK_VERSION = "2.8.7";
+    public static final String SDK_VERSION = "2.9.0";
     public static final String SDK_PHONEOS = "Android";
 
     public static final String API_SOURCE = "30";
@@ -90,10 +90,11 @@ public class Constant {
      * URL 信息
      */
     public static String HOST_NAME = "";
-    public static String HOST_NAME_DEFAULT = "ahudong.cn";
+    public static String HOST_NAME_DEFAULT = "payv2.szzkxkj.com";
 //    public static String HOST_NAME_DEFAULT = "";
 
-    public static String DOMAIN = "http://pay.";
+    public static String DOMAIN = "http://service.";
+//    public static String DOMAIN = "http://pay.";
 //    public static String DOMAIN = "http://192.168.1.139:8080";
 
     public static final String[] DOMAIN_HOST = {"domain.ahudong.cn",
@@ -136,9 +137,12 @@ public class Constant {
     /**
      * H5 SDK url
      */
-    public static String URL_BACKUP = "ahudong.cn";
-    public static String SSO_URL = "http://login.";
-    public static String SSO_REST = "/static/sdk/1.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
+//    public static String URL_BACKUP = "ahudong.cn";
+    public static String URL_BACKUP = "szzkxkj.com";
+    //https://login.szzkxkj.com/static/sdk/2.0.0/es_sdk.html
+    public static String SSO_URL = "https://login.";
+//    public static String SSO_REST = "/static/sdk/3.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
+    public static String SSO_REST = "/static/sdk/2.0.0/es_sdk.html?1=1&sdkSource=Android-SDK&";
 
     /**
      * 支付 url

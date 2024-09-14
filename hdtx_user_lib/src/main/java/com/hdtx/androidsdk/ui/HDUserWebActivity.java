@@ -6,6 +6,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ClipData;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -26,6 +28,8 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.JsResult;
 import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
@@ -38,9 +42,11 @@ import android.widget.Toast;
 
 import com.hdtx.androidsdk.HDPlatform;
 import com.hdtx.androidsdk.data.Constant;
+import com.hdtx.androidsdk.data.ErrorResult;
 import com.hdtx.androidsdk.data.HDConstant;
 import com.hdtx.androidsdk.plugin.StartHDUserPlugin;
 import com.hdtx.androidsdk.util.CommonUtils;
+import com.hdtx.androidsdk.util.HDPayLog;
 import com.hdtx.androidsdk.util.HDSdkLog;
 import com.hdtx.androidsdk.util.ReplaceCallBack;
 import com.hdtx.androidsdk.util.ThreadPoolManager;
@@ -67,6 +73,7 @@ public class HDUserWebActivity extends Activity {
      * 需要包装网页的控件
      */
     public static WebView mWebView;
+    private static boolean isShowedMsg;
     /**
      * js跳转控制
      */
@@ -164,7 +171,7 @@ public class HDUserWebActivity extends Activity {
                         StartHDUserPlugin.startRequestHost(mActivity, true, new ReplaceCallBack() {
                             @Override
                             public void replaceSuccess() {
-                                if (Constant.SSO_URL.startsWith("http")) {
+                                if (Constant.SSO_URL.startsWith("https")) {
                                     view.loadUrl(Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + mParams);
                                 } else {
                                     view.loadUrl(Constant.SSO_URL + mParams);
@@ -185,17 +192,99 @@ public class HDUserWebActivity extends Activity {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                view.loadUrl(request.getUrl().toString());
-                return true;
+                CookieManager cookieManager = CookieManager.getInstance();
+                cookieManager.setAcceptCookie(true);
+//			    cookieManager.removeSessionCookie();//移除
+//                cookieManager.setCookie(url, Constant.TGC + "=" + token);//cookies是在HttpClient中获得的cookie
+                CookieSyncManager.getInstance().sync();
+                String url = request.getUrl().toString();
+                HDPayLog.d("url:" + url);
+                if (url.startsWith("http:") || url.startsWith("https:")) {
+                    return super.shouldOverrideUrlLoading(view, url);
+                } else {
+                    try {
+                        if (url.contains("alipays")) {
+                            if (checkAliPayInstalled(mActivity)) {
+                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                                startActivity(intent);
+                            } else {
+                                return super.shouldOverrideUrlLoading(view, url);
+                            }
+                        } else {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                            startActivity(intent);
+                        }
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        if (isShowedMsg == false) {
+                            if (url.contains("weixin")) {
+                                Toast.makeText(mActivity, "请安装微信客户端", Toast.LENGTH_SHORT).show();
+                                isShowedMsg = true;
+                                return true;
+                            } else if (url.contains("mqqapi")) {
+                                Toast.makeText(mActivity, "请安装QQ客户端", Toast.LENGTH_SHORT).show();
+                                isShowedMsg = true;
+                                return true;
+                            }
+                        }
+
+                        HDPayCenterActivity.onFailedCallBack(ErrorResult.ESPAY_FEE_ERROR, "支付失败");
+                        mActivity.finish();
+                    }
+                    return true;
+                }
+               /* view.loadUrl(request.getUrl().toString());
+                return true;*/
             }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                CookieManager cookieManager = CookieManager.getInstance();
+                cookieManager.setAcceptCookie(true);
+//			    cookieManager.removeSessionCookie();//移除
+//                cookieManager.setCookie(url, Constant.TGC + "=" + token);//cookies是在HttpClient中获得的cookie
+                CookieSyncManager.getInstance().sync();
+
+                HDPayLog.d("url:" + url);
+                if (url.startsWith("http:") || url.startsWith("https:")) {
+                    return super.shouldOverrideUrlLoading(view, url);
+                } else {
+                    try {
+                        if (url.contains("alipays")) {
+                            if (checkAliPayInstalled(mActivity)) {
+                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                                startActivity(intent);
+                            } else {
+                                return super.shouldOverrideUrlLoading(view, url);
+                            }
+                        } else {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                            startActivity(intent);
+                        }
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        if (isShowedMsg == false) {
+                            if (url.contains("weixin")) {
+                                Toast.makeText(mActivity, "请安装微信客户端", Toast.LENGTH_SHORT).show();
+                                isShowedMsg = true;
+                                return true;
+                            } else if (url.contains("mqqapi")) {
+                                Toast.makeText(mActivity, "请安装QQ客户端", Toast.LENGTH_SHORT).show();
+                                isShowedMsg = true;
+                                return true;
+                            }
+                        }
+
+                        HDPayCenterActivity.onFailedCallBack(ErrorResult.ESPAY_FEE_ERROR, "支付失败");
+                        mActivity.finish();
+                    }
+                    return true;
+                }
+             /*   if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                     view.loadUrl(url);
                     return true;
                 }
-                return super.shouldOverrideUrlLoading(view, url);
+                return super.shouldOverrideUrlLoading(view, url);*/
             }
         };
 
@@ -206,13 +295,19 @@ public class HDUserWebActivity extends Activity {
         if (!TextUtils.isEmpty(CommonUtils.getIsReplaceSso(mActivity))) {
             Constant.URL_BACKUP = url_backup;
         }
-        if (Constant.SSO_URL.startsWith("http")) {
+        if (Constant.SSO_URL.startsWith("https")) {
             mWebView.loadUrl(Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + mParams);
         } else {
             mWebView.loadUrl(Constant.SSO_URL + mParams);
         }
     }
 
+    public static boolean checkAliPayInstalled(Context context) {
+        Uri uri = Uri.parse("alipays://platformapi/startApp");
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        ComponentName componentName = intent.resolveActivity(context.getPackageManager());
+        return componentName != null;
+    }
     public static void clientToJS(int type, final Map<String, String> params) {
         switch (type) {
             case Constant.YSTOJS_GAME_LOGINOROUTLOG:
@@ -676,7 +771,7 @@ public class HDUserWebActivity extends Activity {
                             StartHDUserPlugin.startRequestHost(mActivity, true, new ReplaceCallBack() {
                                 @Override
                                 public void replaceSuccess() {
-                                    if (Constant.SSO_URL.startsWith("http")) {
+                                    if (Constant.SSO_URL.startsWith("https")) {
                                         view.loadUrl(Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + mParams);
                                     } else {
                                         view.loadUrl(Constant.SSO_URL + mParams);

@@ -33,8 +33,8 @@ public class HostRequestUtils {
 
                 if (tempInfo[2].contains(".com") || tempInfo[2].contains(".cn")) {
 
-                    Constant.HOST_NAME = tempInfo[2];
                     if (isReplaceSso) {
+                        Constant.HOST_NAME = tempInfo[2];
                         //是否需要替换个人中心的域名
                         Constant.URL_BACKUP = tempInfo[2];
                         //更换成功后记录有效的域名，下次直接使用新域名
