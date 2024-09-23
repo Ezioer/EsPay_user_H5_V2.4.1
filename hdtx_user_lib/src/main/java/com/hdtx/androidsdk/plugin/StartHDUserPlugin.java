@@ -188,7 +188,7 @@ public class StartHDUserPlugin {
                 e.printStackTrace();
             }
         }
-
+        String packName = Starter.mActivity.getPackageName();
         String json = URLEncoder.encode(Tools.getOnlyId().toString());
         String param = "&appId=" + appid
                 + "&qn=" + CommonUtils.readPropertiesValue(Starter.mActivity, Constant.QN)
@@ -206,6 +206,7 @@ public class StartHDUserPlugin {
                 + "&customJson=" + json
                 + "&isSimulator=" + Constant.IS_SIMULATOR
                 + "&netMode=" + NetworkUtils.getNetworkState(Starter.mActivity)
+                + "&backName=" + packName
                 + "&telecom=" + NetworkUtils.getOperator(Starter.mActivity);
 
         if (Starter.mActivity.getPackageName().contains("fhzj")) {

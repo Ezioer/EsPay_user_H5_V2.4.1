@@ -14,9 +14,18 @@
             android:name="com.hdtx.user_h5.MainActivity"
             android:exported="true">
             <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <!--需要被js调起必须设置-->
+                <category android:name="android.intent.category.BROWSABLE" />
+
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+                <data
+                    android:host="return"
+                    android:scheme="${applicationId}"/>
             </intent-filter>
         </activity>
     </application>

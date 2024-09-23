@@ -308,6 +308,7 @@ public class HDUserWebActivity extends Activity {
         ComponentName componentName = intent.resolveActivity(context.getPackageManager());
         return componentName != null;
     }
+
     public static void clientToJS(int type, final Map<String, String> params) {
         switch (type) {
             case Constant.YSTOJS_GAME_LOGINOROUTLOG:
@@ -461,6 +462,18 @@ public class HDUserWebActivity extends Activity {
                         @Override
                         public void run() {
                             mWebView.loadUrl("javascript:EsSdkShell.esUserOnlineTimer()");
+                        }
+                    });
+                }
+                break;
+            case Constant.YSTOJS_BACK:
+                if (mWebView != null) {
+                    mWebView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mWebView.canGoBack()) {
+                                mWebView.goBack();
+                            }
                         }
                     });
                 }
@@ -883,5 +896,12 @@ public class HDUserWebActivity extends Activity {
         String fileName = System.currentTimeMillis() + ".jpg";
         File file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
         return Uri.fromFile(file);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mWebView.canGoBack()) {
+            mWebView.goBack();
+        }
     }
 }

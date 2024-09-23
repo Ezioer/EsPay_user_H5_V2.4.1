@@ -122,6 +122,10 @@ public class HDPlatform {
             }
         }
     }
+    @JavascriptInterface
+    public void webViewBack(final String param) {
+        mActivity.clientToJS(Constant.YSTOJS_BACK, null);
+    }
 
     //js隐藏或显示悬浮图标，1为显示，0为隐藏
     @JavascriptInterface

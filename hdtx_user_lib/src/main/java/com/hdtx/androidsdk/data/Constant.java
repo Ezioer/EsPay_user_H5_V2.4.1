@@ -142,7 +142,7 @@ public class Constant {
     //https://login.szzkxkj.com/static/sdk/2.0.0/es_sdk.html
     public static String SSO_URL = "https://login.";
 //    public static String SSO_REST = "/static/sdk/3.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
-    public static String SSO_REST = "/static/sdk/2.0.0/es_sdk.html?1=1&sdkSource=Android-SDK&";
+    public static String SSO_REST = "/static/sdk/3.0.0/es_sdk2_online.html?1=1&sdkSource=Android-SDK&";
 
     /**
      * 支付 url
@@ -222,6 +222,7 @@ public class Constant {
     public static final int YSTOJS_GET_OAID = 28;
     public static final int YSTOJS_GET_CUSTOMDEVICE = 34;
     public static final int YSTOJS_GET_PAY_LIMIT_INFO = 29;
+    public static final int YSTOJS_BACK = 36;
     public static final int YSTOJS_UPLOAD_TIME = 30;
     public static final int YSTOJS_GAME_LOGIN_DATA = 31;
     public static final int YSTOJS_GAME_LOGINOROUTLOG = 32;
