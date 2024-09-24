@@ -85,7 +85,8 @@ public class HDUserWebActivity extends Activity {
     private static final int P_CODE_PERMISSIONS = 101;
     private Uri mImageUri;
     private Uri mCropUri;
-    private String mParams;
+    private static String mParams;
+    private static int mStepToHome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,6 +148,9 @@ public class HDUserWebActivity extends Activity {
 
             @Override
             public void onPageFinished(WebView view, String url) {
+                mStepToHome = mWebView.copyBackForwardList().getCurrentIndex();
+             /*   if (url.contains("https://login.szzkxkj.com/static/sdk/common/pay_callback.html")) {
+                }*/
                 super.onPageFinished(view, url);
                 hideDialog();
             }
@@ -471,9 +475,11 @@ public class HDUserWebActivity extends Activity {
                     mWebView.post(new Runnable() {
                         @Override
                         public void run() {
-                            if (mWebView.canGoBack()) {
+//                            mWebView.goBackOrForward(-2);
+                          /*  if (mWebView.canGoBack()) {
                                 mWebView.goBack();
-                            }
+                            }*/
+                            mWebView.loadUrl(Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + mParams);
                         }
                     });
                 }

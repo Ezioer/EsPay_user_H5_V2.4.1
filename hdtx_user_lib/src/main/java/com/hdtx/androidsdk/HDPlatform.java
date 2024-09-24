@@ -106,8 +106,9 @@ public class HDPlatform {
         new Handler().postDelayed(new Runnable() {
             public void run() {
                 mActivity.moveTaskToBack(false);
-                RomHelper.checkFloatWindowPermission(Starter.mActivity);
-                Starter.getInstance().showFloatView();
+//                RomHelper.checkFloatWindowPermission(Starter.mActivity);
+                //纯h5去掉悬浮窗
+//                Starter.getInstance().showFloatView();
             }
         }, 300);
     }
@@ -123,7 +124,7 @@ public class HDPlatform {
         }
     }
     @JavascriptInterface
-    public void webViewBack(final String param) {
+    public void webViewBack() {
         mActivity.clientToJS(Constant.YSTOJS_BACK, null);
     }
 

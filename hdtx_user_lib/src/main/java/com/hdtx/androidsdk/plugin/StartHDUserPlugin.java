@@ -229,7 +229,8 @@ public class StartHDUserPlugin {
 
         if (Constant.IS_LOGINED) {
             HDSdkLog.d("resume---->logined");
-            FloatView.show(Starter.mActivity);
+            //纯H5隐藏悬浮窗
+//            FloatView.show(Starter.mActivity);
         } else {
             if (Constant.IS_ENTERED_SDK) {
                 // 未登陆显示用户中心
