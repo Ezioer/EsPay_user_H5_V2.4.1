@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.test.espresso.core.internal.deps.guava.collect.ImmutableList;
 
 import com.adjust.sdk.Adjust;
 import com.adjust.sdk.AdjustConfig;
@@ -28,9 +29,13 @@ import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.ConsumeParams;
 import com.android.billingclient.api.ConsumeResponseListener;
+import com.android.billingclient.api.PendingPurchasesParams;
+import com.android.billingclient.api.ProductDetails;
+import com.android.billingclient.api.ProductDetailsResponseListener;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
+import com.android.billingclient.api.QueryProductDetailsParams;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
@@ -358,9 +363,9 @@ public class Starter {
             if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                 // The BillingClient is ready. You can query purchases here.
                 //获取商品详情回调
-                SkuDetailsResponseListener skuDetailsResponseListener = new SkuDetailsResponseListener() {
+                ProductDetailsResponseListener skuDetailsResponseListener = new ProductDetailsResponseListener() {
                     @Override
-                    public void onSkuDetailsResponse(@NonNull BillingResult billingResult, @Nullable final List<SkuDetails> list) {
+                    public void onProductDetailsResponse(@NonNull BillingResult billingResult, @Nullable final List<ProductDetails> list) {
                         //list为可用商品的集合
                         //将要购买商品的商品详情配置到参数中
                         Log.d(TAG, "应用内商品数量：" + list.size());
@@ -371,9 +376,9 @@ public class Starter {
                                     String googleStorePrice = String.valueOf(mPrice);
                                     long priceMicro = 0L;
                                     if (list.size() > 0) {
-                                        mNcy = list.get(0).getPriceCurrencyCode();
-                                        googleStorePrice = list.get(0).getPrice();
-                                        priceMicro = list.get(0).getPriceAmountMicros();
+                                        mNcy = list.get(0).getOneTimePurchaseOfferDetails().getPriceCurrencyCode();
+                                        googleStorePrice = list.get(0).getOneTimePurchaseOfferDetails().getFormattedPrice();
+                                        priceMicro = list.get(0).getOneTimePurchaseOfferDetails().getPriceAmountMicros();
                                     }
                                     BaseResponse result = EAPayInter.checkOrder(mTradeId, mProductId, googleStorePrice, priceMicro, mNcy,
                                             CommonUtils.getCheckOutParams(mActivity.getApplicationInfo().packageName), mPayInfo);
@@ -424,14 +429,15 @@ public class Starter {
 
                 //查询内购类型的商品
                 //productId为产品ID(从谷歌后台获取)
-                ArrayList<String> inAppSkuInfo = new ArrayList<>();
-                inAppSkuInfo.add(mProductId);
-                SkuDetailsParams skuParams = SkuDetailsParams.newBuilder()
-                        .setType(BillingClient.SkuType.INAPP)
-                        .setSkusList(inAppSkuInfo)
+                QueryProductDetailsParams skuParams = QueryProductDetailsParams.newBuilder()
+                        .setProductList(ImmutableList.of(
+                                QueryProductDetailsParams.Product.newBuilder()
+                                        .setProductId(mProductId)
+                                        .setProductType(BillingClient.ProductType.INAPP)
+                                        .build()))
                         .build();
-                billingClient.querySkuDetailsAsync(skuParams, skuDetailsResponseListener);
-                Log.d(TAG, "查询后台商品");
+                billingClient.queryProductDetailsAsync(skuParams, skuDetailsResponseListener);
+                ESdkLog.c(TAG, "查询后台商品");
             }
         }
     };
@@ -440,12 +446,12 @@ public class Starter {
         if (billingClient == null) {
             billingClient = BillingClient.newBuilder(mActivity)
                     .setListener(purchasesUpdatedListener)
-                    .enablePendingPurchases()
+                    .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
                     .build();
-            Log.d(TAG, "billingclient 初始化");
+            ESdkLog.c(TAG, "billingclient 初始化");
         }
         billingClient.startConnection(billingClientStateListener);
-        Log.d(TAG, "billingclient 开始连接google play");
+        ESdkLog.c(TAG, "billingclient 开始连接google play");
     }
 
     /**
@@ -584,7 +590,7 @@ public class Starter {
      *
      * @param mContext
      */
-    public void dataCollectInit(Context mContext) {
+    public void dataCollectInit(final Context mContext) {
         ESdkLog.d("初始化sdk,sdk版本v" + Constant.SDK_VERSION);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
@@ -663,12 +669,20 @@ public class Starter {
         }
     }
 
-    private void launchGooglePay(SkuDetails skuDetails) {
+    private void launchGooglePay(ProductDetails productDetails) {
+        ImmutableList<BillingFlowParams.ProductDetailsParams> productDetailsParamsList =
+                ImmutableList.of(
+                        BillingFlowParams.ProductDetailsParams.newBuilder()
+                                .setProductDetails(productDetails)
+                                .build()
+                );
         final BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
-                .setSkuDetails(skuDetails)
+                .setProductDetailsParamsList(productDetailsParamsList)
                 .setObfuscatedAccountId(mESOrder)
                 .build();
-        BillingResult billingFlow = billingClient.launchBillingFlow(mActivity, billingFlowParams);
+        BillingResult billingResult = billingClient.launchBillingFlow(mActivity, billingFlowParams);
+        ESdkLog.c(TAG, "billingclientcode" + billingResult.getResponseCode());
+
     }
 
     private void payFailAndHideDialog() {

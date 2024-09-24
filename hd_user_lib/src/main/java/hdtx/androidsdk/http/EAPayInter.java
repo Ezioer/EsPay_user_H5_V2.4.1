@@ -4,6 +4,7 @@ import android.util.Log;
 
 import hdtx.androidsdk.Starter;
 import hdtx.androidsdk.data.Constant;
+import hdtx.androidsdk.data.FBInfo;
 import hdtx.androidsdk.util.AESUtil;
 import hdtx.androidsdk.util.CommonUtils;
 import hdtx.androidsdk.util.ESdkLog;
@@ -153,7 +154,7 @@ public class EAPayInter {
             } else {
                 url = Constant.BASEURL_CN + url;
             }*/
-            url = Constant.BASEURL_LZ + url;
+            url = Constant.BASEURL_CN + url;
             BaseResponse result = getBaseResponse(url, object);
             return result;
         } catch (Exception e) {
@@ -215,4 +216,48 @@ public class EAPayInter {
         }
         return result;
     }
+
+    public static FBInfo getFBInfo(String partnerId,String appId,String qn,String key) {
+        try {
+            JSONObject jBean = new JSONObject();
+            JSONObject jHead = new JSONObject();
+            JSONObject jBody = new JSONObject();
+            jHead.put("flowCode",String.valueOf(System.currentTimeMillis()));
+            jHead.put("partnerId",partnerId);
+            jHead.put("appId",appId);
+            jHead.put("qn",qn);
+            jHead.put("source","33");
+            jBody.put("appId",appId);
+            String sign = Md5SignUtils.sign("appId="+appId,key);
+            jHead.put("sign",sign);
+            jBean.put("head",jHead);
+            jBean.put("body",jBody);
+            return getFBResponse(Constant.FBCHANGE,jBean);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    private static FBInfo getFBResponse(String url, JSONObject map) {
+        String result = EucHttpClient.httpPost(url, map);
+        Log.d("EAPayInterfb", result);
+        if (result == null || "".equals(result)) {
+            return null;
+        }
+        try {
+            JSONObject object = new JSONObject(result);
+            JSONObject head = object.optJSONObject("head");
+            if (head.optString("ret").equals("0")){
+                JSONObject body = object.getJSONObject("body");
+                String token = body.optString("fbToken");
+                String appId = body.optString("fbAppId");
+                String fbName = body.optString("fbName");
+                return new FBInfo(appId,fbName,token);
+            } else {
+                return null;
+            }
+        } catch (JSONException e) {
+            return null;
+        }
+    }
+
 }

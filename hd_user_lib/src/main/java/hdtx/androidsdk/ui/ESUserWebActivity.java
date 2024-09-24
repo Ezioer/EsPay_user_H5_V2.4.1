@@ -214,7 +214,7 @@ public class ESUserWebActivity extends Activity {
             mWebView.loadUrl(Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + mParams);
         } else {*/
 //        String language = Locale.getDefault().getLanguage().toLowerCase();
-        mWebView.loadUrl(Constant.ENV_LZ + mParams);
+        mWebView.loadUrl(Constant.ENV_CN + mParams);
         /*if (language.equals("en")) {
             mWebView.loadUrl(Constant.ENV_EN + mParams);
         } else if (language.equals("vi")){
