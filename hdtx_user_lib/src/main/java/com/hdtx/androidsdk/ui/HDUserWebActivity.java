@@ -87,6 +87,7 @@ public class HDUserWebActivity extends Activity {
     private Uri mCropUri;
     private static String mParams;
     private static int mStepToHome;
+    private static int back_num;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +99,7 @@ public class HDUserWebActivity extends Activity {
         HDSdkLog.d("进入sdk登录界面");
         mActivity = this;
         Constant.IS_ENTERED_SDK = true;
-
+        back_num = 0;
         HDPlatform.init(mActivity);
         initView();
     }
@@ -152,6 +153,21 @@ public class HDUserWebActivity extends Activity {
              /*   if (url.contains("https://login.szzkxkj.com/static/sdk/common/pay_callback.html")) {
                 }*/
                 super.onPageFinished(view, url);
+                HDPayLog.d("finishUrl:" + url);
+                if (url.contains("https://login.szzkxkj.com/static/sdk/common/pay_callback.html")) {
+                    String status = Tools.getParam(url, "status");
+                    HDPayLog.d("status:" + status);
+                    if (back_num == 0) {
+                        if ("success".equals(status)) {
+                            HDPayCenterActivity.onSuccCallBack();
+                        } else if ("fail".equals(status)) {
+                            HDToast.getInstance().ToastShow(mActivity, "支付失败");
+                            HDPayCenterActivity.onFailedCallBack(ErrorResult.ESPAY_FEE_ERROR, "支付失败");
+                        }
+                        back_num = 1;
+                    }
+                    return;
+                }
                 hideDialog();
             }
 
@@ -231,9 +247,7 @@ public class HDUserWebActivity extends Activity {
                                 return true;
                             }
                         }
-
                         HDPayCenterActivity.onFailedCallBack(ErrorResult.ESPAY_FEE_ERROR, "支付失败");
-                        mActivity.finish();
                     }
                     return true;
                 }
@@ -280,7 +294,6 @@ public class HDUserWebActivity extends Activity {
                         }
 
                         HDPayCenterActivity.onFailedCallBack(ErrorResult.ESPAY_FEE_ERROR, "支付失败");
-                        mActivity.finish();
                     }
                     return true;
                 }

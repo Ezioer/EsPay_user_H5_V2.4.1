@@ -97,12 +97,16 @@ public class Tools {
     }
 
     public static String getParam(String url, String paramName) {
-        Map<String, String> map = URLRequest(url);
-        String paramValue = "";
-        if (!TextUtils.isEmpty(map.get(paramName))) {
-            paramValue = map.get(paramName);
+        try {
+            Map<String, String> map = URLRequest(url);
+            String paramValue = "";
+            if (!TextUtils.isEmpty(map.get(paramName))) {
+                paramValue = map.get(paramName);
+            }
+            return paramValue;
+        } catch (Exception e) {
+            return "";
         }
-        return paramValue;
     }
 
     public static String getNetIp() {
