@@ -1,10 +1,9 @@
-package com.zqhy.hyxm;
+package com.cyld.fzgj.google;
 
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -15,8 +14,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.text.InputFilter;
-import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -28,13 +25,13 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cyld.fzgj.google.R;
+
 import hdtx.androidsdk.Starter;
 import hdtx.androidsdk.callback.ESdkCallback;
 import hdtx.androidsdk.callback.ESdkPayCallback;
 import hdtx.androidsdk.data.Constant;
 import hdtx.androidsdk.data.ESConstant;
-import hdtx.androidsdk.http.EAPayInter;
-import hdtx.androidsdk.ui.ESPayWebActivity;
 import hdtx.androidsdk.util.CommonUtils;
 import hdtx.androidsdk.util.ThreadPoolManager;
 import hdtx.androidsdk.util.Tools;

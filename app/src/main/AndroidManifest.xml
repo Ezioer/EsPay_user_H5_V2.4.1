@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.zqhy.hyxm">
+    package="com.cyld.fzgj.google">
 
     <application
-        android:name="com.zqhy.hyxm.EsApplication"
+        android:name="com.cyld.fzgj.google.EsApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"
@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.zqhy.hyxm.MainActivity"
+            android:name="com.cyld.fzgj.google.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,13 +24,13 @@
         <!--        以下为测试数据-->
         <meta-data
             android:name="g_clientId"
-            android:value="301713212014-to8n1rbqu9kabu3gg57ubf2hcc1fjr8i.apps.googleusercontent.com" />
+            android:value="996288321830-hd57fn4ojl05rghcsmofnbu2hv8i12ke.apps.googleusercontent.com" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="fb1018958942766450" />
+            android:value="fb1993737701086386" />
         <meta-data
             android:name="com.facebook.sdk.ClientToken"
-            android:value="06d710751edaa83209b6555cebc96587" />
+            android:value="139af20137362dce3aea8c74588b0702" />
         <!--  <meta-data
               android:name="g_clientId"
               android:value="875676869372-ql7c3bi8a7nbo08ofd4f9a69kgi94mfu.apps.googleusercontent.com" />

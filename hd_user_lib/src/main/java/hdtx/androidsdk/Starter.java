@@ -107,8 +107,8 @@ public class Starter {
     public static final String TAG = "GoogleAndFBLog";
     public static final int SIGN_LOGIN = 13;
     //测试参数
-    private static String googleID = "846876477691-gjefh1ll8fdq72pb5htugj4459kls3nr.apps.googleusercontent.com";
-    private static String ADJUSTKEY = "gvm8idmkuha8";
+    private static String googleID = "996288321830-hd57fn4ojl05rghcsmofnbu2hv8i12ke.apps.googleusercontent.com";
+    private static String ADJUSTKEY = "tlmlcjhhbytc";
     private AppEventsLogger logger = null;
     private String mESOrder = "";
     private String mNcy = "";
@@ -604,7 +604,7 @@ public class Starter {
                 FBInfo info = EAPayInter.getFBInfo(getPropertiesValue(mContext, "partnerId"), getPropertiesValue(mContext, "appId"),
                         getPropertiesValue(mContext, "qn"),getPropertiesValue(mContext,"key"));
                 String fbAppId = "";
-                if (info == null) {
+                if (info == null || info.getFbAppId().equals("")) {
                     ApplicationInfo applicationInfo = null;
                     try {
                         applicationInfo = mContext.getPackageManager().getApplicationInfo(mContext.getPackageName(), PackageManager.GET_META_DATA);
@@ -758,7 +758,7 @@ public class Starter {
                     }
                 });
 
-        LoginManager.getInstance().logIn(mActivity, Arrays.asList("public_profile", "user_friends"));
+        LoginManager.getInstance().logIn(mActivity, Arrays.asList("public_profile"));
     }
 
     //初始化google登录
@@ -943,12 +943,12 @@ public class Starter {
 
     //adjust login事件
     public void adjustLogin(String userId) {
-        Adjust.trackEvent(generateEvent("l53rfd", false));
+        Adjust.trackEvent(generateEvent("jkisr3", false));
     }
 
     //adjust 下单事件
     public void adjustCheckOut(Double price) {
-        AdjustEvent event = generateEvent("j995py", true);
+        AdjustEvent event = generateEvent("qtd6r9", true);
         event.addCallbackParameter("easou_hk_price", String.valueOf(price));
 //        event.addPartnerParameter("easou_hk_user_id", Constant.ESDK_USERID);
         Adjust.trackEvent(event);
@@ -956,7 +956,7 @@ public class Starter {
 
     //adjust 启动事件
     public void adjustStart() {
-        AdjustEvent event = generateEvent("dnhuoq", false);
+        AdjustEvent event = generateEvent("e631ed", false);
 //        event.addPartnerParameter("easou_hk_user_id", Constant.APPID);
 //        event.addPartnerParameter("easou_hk_user_id", Constant.IMEI + "|" + System.currentTimeMillis());
         Adjust.trackEvent(event);
@@ -965,7 +965,7 @@ public class Starter {
 
     //adjust 支付事件
     public void adjustPay(Double price, String ncy, String orderId) {
-        AdjustEvent event = generateEvent("4ugnay", true);
+        AdjustEvent event = generateEvent("oh7b70", true);
         event.addCallbackParameter("easou_hk_price", String.valueOf(price));
         event.setRevenue(price, "USD");
 //        event.addPartnerParameter("easou_hk_user_id", Constant.ESDK_USERID);
@@ -976,7 +976,7 @@ public class Starter {
 
     //adjust 注册事件
     public void adjustRegister(String userId) {
-        AdjustEvent event = generateEvent("49k5ny", false);
+        AdjustEvent event = generateEvent("gz9l09", false);
 //        event.addPartnerParameter("easou_hk_user_id", Constant.IMEI + "|" + System.currentTimeMillis());
         event.addPartnerParameter("easou_hk_user_id", userId);
         Adjust.trackEvent(event);
@@ -984,7 +984,7 @@ public class Starter {
 
     //adjust 激活事件
     public void adjustActive() {
-        Adjust.trackEvent(generateEvent("yoq1fj", false));
+        Adjust.trackEvent(generateEvent("jx6yz0", false));
     }
 
     //adjust 分享事件

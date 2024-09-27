@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "977352499505",
-    "project_id": "saiyazhishen",
-    "storage_bucket": "saiyazhishen.appspot.com"
+    "project_number": "364721645211",
+    "project_id": "ciyuanluandou",
+    "storage_bucket": "ciyuanluandou.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:977352499505:android:dac08f1e083ad88c1c5010",
+        "mobilesdk_app_id": "1:364721645211:android:1474237956f6802dd6083e",
         "android_client_info": {
-          "package_name": "com.syzs.google.gp"
+          "package_name": "com.cyld.fzgj.google"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyC9incHMgeVm9fecAn3BreBEnFjd9-Q79I"
+          "current_key": "AIzaSyArqI1pwLtWLu4JEFmc_96USM_oy9VMo-k"
         }
       ],
       "services": {
