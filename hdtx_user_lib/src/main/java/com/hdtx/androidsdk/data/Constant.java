@@ -144,6 +144,7 @@ public class Constant {
 //    public static String SSO_REST = "/static/sdk/3.0.0/es_sdk2_original.html?1=1&sdkSource=Android-SDK&";
     public static String SSO_REST = "/static/sdk/3.0.0/es_sdk2_online.html?1=1&sdkSource=Android-SDK&";
 
+    public static String GAME_URL = "https://yxgl-cdn.guangka.com/yxgl/h5/index.html?p=gk&ya_game=ylyhH2&ya_sn=yisouc_h5&ya_sv=5.3&ya_ssv=V1_4";
     /**
      * 支付 url
      */

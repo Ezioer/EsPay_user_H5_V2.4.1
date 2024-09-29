@@ -843,24 +843,24 @@ public class HDPayCenterActivity extends BaseActivity {
         HttpAsyncTaskImp wxTask = new HttpAsyncTaskImp(mActivity, map, easoutgc, key, FeeType.WECHAT);
 
 //        if (isTencentAvilible(mActivity, "mm")) {
-            wxTask.setDataFinishListener(new HttpAsyncTaskImp.DataFinishListener() {
+        wxTask.setDataFinishListener(new HttpAsyncTaskImp.DataFinishListener() {
 
-                @Override
-                public void setJson(Object object) {
-                    // TODO Auto-generated method stub
-                    json = (JSONObject) object;
-                    try {
-                        String paramStr = json.getString("tid") + "," + json.getString("aid") + "," + json.getString("bn")
-                                + "," + Constant.WECHAT_PAY_TYPE;
-                        HPlugin.pay(mActivity, paramStr);
-                    } catch (JSONException e) {
-                        // TODO Auto-generated catch block
-                        HDPayLog.d(TAG, "解析处理失败！" + e);
-                        e.printStackTrace();
-                    }
+            @Override
+            public void setJson(Object object) {
+                // TODO Auto-generated method stub
+                json = (JSONObject) object;
+                try {
+                    String paramStr = json.getString("tid") + "," + json.getString("aid") + "," + json.getString("bn")
+                            + "," + Constant.WECHAT_PAY_TYPE;
+                    HPlugin.pay(mActivity, paramStr);
+                } catch (JSONException e) {
+                    // TODO Auto-generated catch block
+                    HDPayLog.d(TAG, "解析处理失败！" + e);
+                    e.printStackTrace();
                 }
-            });
-            wxTask.executeProxy();
+            }
+        });
+        wxTask.executeProxy();
      /*   } else {
             DialogerUtils.dismiss(mContext);
             Toast.makeText(mActivity, "请安装微信客户端", Toast.LENGTH_SHORT).show();
@@ -876,24 +876,24 @@ public class HDPayCenterActivity extends BaseActivity {
         HttpAsyncTaskImp wfTask = new HttpAsyncTaskImp(mActivity, map, easoutgc, key, FeeType.ZWXESWECHAT);
 
 //        if (isTencentAvilible(mActivity, "mm")) {
-            wfTask.setDataFinishListener(new HttpAsyncTaskImp.DataFinishListener() {
+        wfTask.setDataFinishListener(new HttpAsyncTaskImp.DataFinishListener() {
 
-                @Override
-                public void setJson(Object object) {
-                    // TODO Auto-generated method stub
-                    json = (JSONObject) object;
-                    try {
-                        prepay_url = json.getString("payUrl") + "&type=android";
-                        String monitorUrl = json.getString("monitorUrl");
-                        String resultUrl = json.getString("resultUrl");
-                        prepay_id = json.getString("prepay_id");
+            @Override
+            public void setJson(Object object) {
+                // TODO Auto-generated method stub
+                json = (JSONObject) object;
+                try {
+                    prepay_url = json.getString("payUrl") + "&type=android";
+                    String monitorUrl = json.getString("monitorUrl");
+                    String resultUrl = json.getString("resultUrl");
+                    prepay_id = json.getString("prepay_id");
 
 //						String str = payUrl.substring(payUrl.indexOf("prepay_id="),payUrl.indexOf("&type="));
 //						prepay_id = str.replace("prepay_id=", "");
 
-                        new WebViewManager(mActivity, true).showWeiXinView(prepay_url);
-                        //标记正在支付中，用来判断是否进行支付状态查询
-                        isPaying = true;
+                    new WebViewManager(mActivity, true).showWeiXinView(prepay_url);
+                    //标记正在支付中，用来判断是否进行支付状态查询
+                    isPaying = true;
 
 //						Intent intent = new Intent();
 //						intent.putExtra("room_url", payUrl);
@@ -903,18 +903,18 @@ public class HDPayCenterActivity extends BaseActivity {
 //						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //						intent.setClass(mActivity, ESPayWebActivity.class);
 //						mActivity.startActivity(intent);
-                    } catch (Exception e) {
-                        // TODO Auto-generated catch block
-                        HDPayLog.d(TAG, "解析处理失败！" + e);
-                        e.printStackTrace();
-                    } catch (Throwable e) {
-                        // TODO Auto-generated catch block
-                        HDPayLog.d(TAG, "支付失败！" + e);
-                        e.printStackTrace();
-                    }
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    HDPayLog.d(TAG, "解析处理失败！" + e);
+                    e.printStackTrace();
+                } catch (Throwable e) {
+                    // TODO Auto-generated catch block
+                    HDPayLog.d(TAG, "支付失败！" + e);
+                    e.printStackTrace();
                 }
-            });
-            wfTask.executeProxy();
+            }
+        });
+        wfTask.executeProxy();
        /* } else {
             DialogerUtils.dismiss(mContext);
             Toast.makeText(mActivity, "请安装微信客户端", Toast.LENGTH_SHORT).show();
@@ -1206,12 +1206,16 @@ public class HDPayCenterActivity extends BaseActivity {
         // e币支付
 //		refreshUI();
 
-        StartOtherPlugin.logTTActionPurchase(money, productName, payType, true, appId);
-        StartOtherPlugin.logGismActionPurchase(money, productName, payType, true);
-        StartOtherPlugin.logGDTActionPurchase(money, productName, true, appId);
-        StartOtherPlugin.logKSActionPerchase(money, appId);
-        StartOtherPlugin.logBDActionPerchase(money, appId);
-        StartOtherPlugin.purchaseAqyAction(money);
+        try {
+            StartOtherPlugin.logTTActionPurchase(money, productName, payType, true, appId);
+            StartOtherPlugin.logGismActionPurchase(money, productName, payType, true);
+            StartOtherPlugin.logGDTActionPurchase(money, productName, true, appId);
+            StartOtherPlugin.logKSActionPerchase(money, appId);
+            StartOtherPlugin.logBDActionPerchase(money, appId);
+            StartOtherPlugin.purchaseAqyAction(money);
+        } catch (Exception e) {
+        }
+
 //        StartLogPlugin.startGamePayLog(money, String.valueOf(System.currentTimeMillis()));
         Message msg = new Message();
         msg.what = HDConstant.ESPAY_SUC;

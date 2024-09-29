@@ -14,6 +14,7 @@ import com.hdtx.androidsdk.romutils.RomHelper;
 import com.hdtx.androidsdk.ui.HDUserWebActivity;
 import com.hdtx.androidsdk.util.CommonUtils;
 import com.hdtx.androidsdk.util.HDSdkLog;
+import com.hdtx.androidsdk.util.ThreadPoolManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -123,9 +124,54 @@ public class HDPlatform {
             }
         }
     }
+
     @JavascriptInterface
     public void webViewBack() {
         mActivity.clientToJS(Constant.YSTOJS_BACK, null);
+    }
+
+    @JavascriptInterface
+    public void orderEvent(final String param) {
+        JSONObject jsonObj = null;
+        try {
+            jsonObj = new JSONObject(param);
+            String money = jsonObj.getString("money");
+            String productName = jsonObj.getString("product");
+            ThreadPoolManager.getInstance().addTask(new Runnable() {
+                @Override
+                public void run() {
+                    StartOtherPlugin.logTTActionOrder(money, productName);
+                    StartOtherPlugin.logGismActionOrder(money, productName);
+                    StartOtherPlugin.logGDTActionOrder(money);
+                    StartOtherPlugin.orderAqyAction(money);
+                    StartOtherPlugin.logKSActionOrderSubmit(money);
+                    StartOtherPlugin.logBDActionOrder(money);
+                }
+            });
+        } catch (Exception e) {
+
+        }
+
+    }
+
+    @JavascriptInterface
+    public void purchaseEvent(final String param) {
+        JSONObject jsonObj = null;
+        try {
+            jsonObj = new JSONObject(param);
+            String money = jsonObj.getString("money");
+            String productName = jsonObj.getString("product");
+            String payType = jsonObj.getString("payType");
+            String appId = CommonUtils.readPropertiesValue(mActivity, "appId");
+            StartOtherPlugin.logTTActionPurchase(money, productName, payType, true, appId);
+            StartOtherPlugin.logGismActionPurchase(money, productName, payType, true);
+            StartOtherPlugin.logGDTActionPurchase(money, productName, true, appId);
+            StartOtherPlugin.logKSActionPerchase(money, appId);
+            StartOtherPlugin.logBDActionPerchase(money, appId);
+            StartOtherPlugin.purchaseAqyAction(money);
+        } catch (Exception e) {
+        }
+
     }
 
     //js隐藏或显示悬浮图标，1为显示，0为隐藏

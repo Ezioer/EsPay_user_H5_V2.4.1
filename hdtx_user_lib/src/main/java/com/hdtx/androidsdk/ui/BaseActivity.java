@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.hdtx.androidsdk.data.Constant;
 import com.hdtx.androidsdk.http.EAPayInter;
 import com.hdtx.androidsdk.util.Tools;
 
-public class BaseActivity extends Activity {
+public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -78,7 +78,7 @@ public class Starter {
     /**
      * SDK登陆接口
      */
-    public void login(final Activity activity, HDSdkCallback mCallback,String url) {
+    public void login(final Activity activity, HDSdkCallback mCallback) {
         HDSdkLog.d("进入sdk登录流程");
         Starter.mCallback = mCallback;
         Starter.mActivity = activity;

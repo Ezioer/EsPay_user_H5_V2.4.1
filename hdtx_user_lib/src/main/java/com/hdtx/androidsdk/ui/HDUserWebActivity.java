@@ -18,8 +18,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.RequiresApi;
-import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -40,7 +38,13 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
+
 import com.hdtx.androidsdk.HDPlatform;
+import com.hdtx.androidsdk.Starter;
 import com.hdtx.androidsdk.data.Constant;
 import com.hdtx.androidsdk.data.ErrorResult;
 import com.hdtx.androidsdk.data.HDConstant;
@@ -63,7 +67,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class HDUserWebActivity extends Activity {
+public class HDUserWebActivity extends AppCompatActivity {
 
     /**
      * 网页加载提示
@@ -92,8 +96,8 @@ public class HDUserWebActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        hideBottomUIMenu();
+        EdgeToEdge.enable(this);
+//        hideBottomUIMenu();
         setContentView(getApplication().getResources().getIdentifier("hd_web_user", "layout",
                 getApplication().getPackageName()));
         HDSdkLog.d("进入sdk登录界面");
@@ -154,7 +158,7 @@ public class HDUserWebActivity extends Activity {
                 }*/
                 super.onPageFinished(view, url);
                 HDPayLog.d("finishUrl:" + url);
-                if (url.contains("https://login.szzkxkj.com/static/sdk/common/pay_callback.html")) {
+             /*   if (url.contains("https://login.szzkxkj.com/static/sdk/common/pay_callback.html")) {
                     String status = Tools.getParam(url, "status");
                     HDPayLog.d("status:" + status);
                     if (back_num == 0) {
@@ -167,7 +171,7 @@ public class HDUserWebActivity extends Activity {
                         back_num = 1;
                     }
                     return;
-                }
+                }*/
                 hideDialog();
             }
 
@@ -191,11 +195,12 @@ public class HDUserWebActivity extends Activity {
                         StartHDUserPlugin.startRequestHost(mActivity, true, new ReplaceCallBack() {
                             @Override
                             public void replaceSuccess() {
-                                if (Constant.SSO_URL.startsWith("https")) {
+                                mWebView.loadUrl(Constant.GAME_URL + mParams);
+                               /* if (Constant.SSO_URL.startsWith("https")) {
                                     view.loadUrl(Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + mParams);
                                 } else {
                                     view.loadUrl(Constant.SSO_URL + mParams);
-                                }
+                                }*/
                             }
 
                             @Override
@@ -247,7 +252,7 @@ public class HDUserWebActivity extends Activity {
                                 return true;
                             }
                         }
-                        HDPayCenterActivity.onFailedCallBack(ErrorResult.ESPAY_FEE_ERROR, "支付失败");
+//                        HDPayCenterActivity.onFailedCallBack(ErrorResult.ESPAY_FEE_ERROR, "支付失败");
                     }
                     return true;
                 }
@@ -312,11 +317,12 @@ public class HDUserWebActivity extends Activity {
         if (!TextUtils.isEmpty(CommonUtils.getIsReplaceSso(mActivity))) {
             Constant.URL_BACKUP = url_backup;
         }
-        if (Constant.SSO_URL.startsWith("https")) {
+        mWebView.loadUrl(Constant.GAME_URL + mParams);
+       /* if (Constant.SSO_URL.startsWith("https")) {
             mWebView.loadUrl(Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + mParams);
         } else {
             mWebView.loadUrl(Constant.SSO_URL + mParams);
-        }
+        }*/
     }
 
     public static boolean checkAliPayInstalled(Context context) {
@@ -552,9 +558,9 @@ public class HDUserWebActivity extends Activity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
+        /*if (keyCode == KeyEvent.KEYCODE_BACK) {
             return true;
-        }
+        }*/
         return super.onKeyDown(keyCode, event);
     }
 
@@ -917,10 +923,15 @@ public class HDUserWebActivity extends Activity {
         return Uri.fromFile(file);
     }
 
+    private long mLastTime = 0;
     @Override
     public void onBackPressed() {
-        if (mWebView.canGoBack()) {
-            mWebView.goBack();
+        long current = System.currentTimeMillis();
+        if (current - mLastTime  <= 2000) {
+            Starter.getInstance().onGismExitApp();
+            System.exit(0);
+        } else {
+            mLastTime = current;
         }
     }
 }
