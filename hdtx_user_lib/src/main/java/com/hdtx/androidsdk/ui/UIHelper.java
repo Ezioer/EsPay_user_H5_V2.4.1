@@ -62,7 +62,7 @@ public class UIHelper {
 
     private static View moreLayout, wxLayout, ylLayout, aliLayout, webLayout, jfLayout,xsollaLayout;
     private static ImageView moreImageViewid, wxImageViewid, ylImageViewid, aliImageViewid, webImageViewid,
-            moreLineImageView, weixinLineImageView, unipayLineImageView, jfImageViewId,
+            moreLineImageView, weixinLineImageView, unipayLineImageView, jfImageViewId,xsollaImageViewid,
             alipayLineImageView;
 
     private static Button button, tradeHistory;
@@ -616,6 +616,10 @@ public class UIHelper {
         }
         wxImageViewid = (ImageView) convertView.findViewById(
                 context.getResources().getIdentifier("hd_id_wxChannelid", "id", context.getPackageName()));
+
+        xsollaImageViewid = (ImageView) convertView.findViewById(
+                context.getResources().getIdentifier("easou_id_xsollaChannelid", "id", context.getPackageName()));
+
         ylImageViewid = (ImageView) convertView.findViewById(
                 context.getResources().getIdentifier("hd_id_ylChannelid", "id", context.getPackageName()));
         aliImageViewid = (ImageView) convertView.findViewById(
@@ -666,7 +670,8 @@ public class UIHelper {
             webImageViewid.setVisibility(View.VISIBLE);
             moreLayout.setVisibility(View.GONE);
             moreImageViewid.setVisibility(View.GONE);
-
+            xsollaLayout.setVisibility(View.VISIBLE);
+            xsollaImageViewid.setVisibility(View.VISIBLE);
             weixinLineImageView.setVisibility(View.VISIBLE);
             unipayLineImageView.setVisibility(View.VISIBLE);
             alipayLineImageView.setVisibility(View.VISIBLE);
@@ -680,6 +685,10 @@ public class UIHelper {
             if (needChannels.contains("ALIPAY2")) {
                 aliLayout.setVisibility(View.VISIBLE);
                 aliImageViewid.setVisibility(View.VISIBLE);
+            }
+            if (needChannels.contains("XSOLLA")) {
+                xsollaLayout.setVisibility(View.VISIBLE);
+                xsollaImageViewid.setVisibility(View.VISIBLE);
             }
             if (needChannels.contains("UNIONPAY2")) {
 //				ylLayout.setVisibility(View.VISIBLE);

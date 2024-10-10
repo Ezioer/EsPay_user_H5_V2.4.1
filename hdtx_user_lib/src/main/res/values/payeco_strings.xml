@@ -61,4 +61,18 @@
     <string name="permission_location">定位</string>
     <string name="permission_audio">录音</string>
 
+
+    <string name="es_ok">确定</string>
+    <string name="es_go">去设置</string>
+    <string name="es_nomorenotice">不再提示</string>
+    <string name="es_cancel">取消</string>
+    <string name="es_notice">提示</string>
+    <string name="es_openpicuse">需要开启媒体访问权限才能使用该功能</string>
+    <string name="es_opencamerause">需要开启相机权限才能使用该功能</string>
+
+    <string name="es_gotopic">请到[设置-权限管理]中开启媒体访问权限</string>
+    <string name="es_gotocamera">请到[设置-权限管理]中开启相机权限</string>
+    <string name="es_chooseopera">请选择操作</string>
+    <string name="es_pic">相册</string>
+    <string name="es_camera">拍照</string>
 </resources>

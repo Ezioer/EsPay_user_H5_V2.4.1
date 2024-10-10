@@ -106,9 +106,9 @@ public class HDPlatform {
         new Handler().postDelayed(new Runnable() {
             public void run() {
                 mActivity.moveTaskToBack(false);
-//                RomHelper.checkFloatWindowPermission(Starter.mActivity);
+                RomHelper.checkFloatWindowPermission(Starter.mActivity);
                 //纯h5去掉悬浮窗
-//                Starter.getInstance().showFloatView();
+                Starter.getInstance().showFloatView();
             }
         }, 300);
     }

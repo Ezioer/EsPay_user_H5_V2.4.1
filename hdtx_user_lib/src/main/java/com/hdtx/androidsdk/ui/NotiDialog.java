@@ -53,9 +53,9 @@ public class NotiDialog extends Dialog {
     private TextView mKnow;
     private ImageView mBack;
     private boolean isShowBack = false;
-//    private String mUserService = "http://www.chenglonghuyu.com/prot_hnqz_user.html";
-private String mUserService = "http://www.chenglonghuyu.com/prot_hnqz_user.html";
-    private String mPrivate = "http://www.chenglonghuyu.com/prot_hnqz.html";
+    //    private String mUserService = "http://www.chenglonghuyu.com/prot_hnqz_user.html";
+    private String mUserService = "https://egamec.ssov2.szzkxkj.com/pro_user.html";
+    private String mPrivate = "https://egamec.ssov2.szzkxkj.com/prot.html";
 
     @Override
     protected void onStart() {

@@ -43,7 +43,7 @@ public class StartOtherPlugin {
     /**
      * 初始化今日头条SDK
      */
-    public static void initTTSDK(Context context) {
+    public static void initTTSDK(Context context,Activity activity) {
 
         if (TextUtils.equals(CommonUtils.readPropertiesValue(context, "use_TT"), "0")) {
 
@@ -73,9 +73,12 @@ public class StartOtherPlugin {
             config.setEnablePlay(true);
             config.setAutoStart(true);
             config.setAbEnable(true);
+            config.setIccIdEnabled(false);
+            config.setSerialNumberEnable(false);
+            config.setOperatorInfoEnabled(false);
             config.setMacEnable(false);
             config.setAndroidIdEnabled(false);
-            AppLog.init(context, config);
+            AppLog.init(context, config,activity);
         }
     }
 

@@ -11,6 +11,8 @@ import android.os.StrictMode;
 //import com.baidu.mobads.action.BaiduAction;
 import com.baidu.mobads.action.BaiduAction;
 import com.baidu.mobads.action.PrivacyStatus;
+import com.bytedance.ads.convert.BDConvert;
+import com.bytedance.applog.AppLog;
 import com.bytedance.hume.readapk.HumeSDK;
 import com.hdtx.androidsdk.callback.AppTimeWatcher;
 import com.hdtx.androidsdk.callback.HDPrivateCallback;
@@ -87,7 +89,8 @@ public class Starter {
         StartOtherPlugin.initGism(activity, false);
         /** 广点通SDK初始化 */
         StartOtherPlugin.initGDTAction(activity);
-        StartOtherPlugin.initTTSDK(activity);
+        StartOtherPlugin.initTTSDK(activity,activity);
+        BDConvert.getInstance().init(activity, AppLog.getInstance());
         if (Constant.isTTVersion == 1) {
             Constant.qnChannel = HumeSDK.getChannel(activity);
         }

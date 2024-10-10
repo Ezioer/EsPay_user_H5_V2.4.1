@@ -230,7 +230,7 @@ public class StartHDUserPlugin {
         if (Constant.IS_LOGINED) {
             HDSdkLog.d("resume---->logined");
             //纯H5隐藏悬浮窗
-//            FloatView.show(Starter.mActivity);
+            FloatView.show(Starter.mActivity);
         } else {
             if (Constant.IS_ENTERED_SDK) {
                 // 未登陆显示用户中心
@@ -258,7 +258,7 @@ public class StartHDUserPlugin {
      * 请求host信息
      */
     public static void startRequestHost(final Activity activity, boolean isReplaceSso, ReplaceCallBack callBack) {
-       /* try {
+        try {
             // 读取存储的host信息
             String jsonData = FileHelper.readFile(Constant.getHostInfoFile(activity));
             if (jsonData == null) {
@@ -271,8 +271,7 @@ public class StartHDUserPlugin {
                 HostRequestUtils.requestHostInfo(activity, true, isReplaceSso, callBack);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-        }*/
+        }
     }
 
     /**

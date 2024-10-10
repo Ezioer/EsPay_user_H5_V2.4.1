@@ -18,7 +18,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.Log;
@@ -83,11 +85,12 @@ public class HDUserWebActivity extends Activity {
     private static final int REQUEST_CODE_PICK_IMAGE = 11;
     private static final int REQUEST_CODE_IMAGE_CAPTURE = 99;
     private static final int P_CODE_PERMISSIONS = 101;
+
+    private static final int P_CODE_PICKIMAGE = 101;
+    private static final int P_CODE_CAMERA = 102;
     private Uri mImageUri;
     private Uri mCropUri;
     private static String mParams;
-    private static int mStepToHome;
-    private static int back_num;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +102,6 @@ public class HDUserWebActivity extends Activity {
         HDSdkLog.d("进入sdk登录界面");
         mActivity = this;
         Constant.IS_ENTERED_SDK = true;
-        back_num = 0;
         HDPlatform.init(mActivity);
         initView();
     }
@@ -149,25 +151,7 @@ public class HDUserWebActivity extends Activity {
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                mStepToHome = mWebView.copyBackForwardList().getCurrentIndex();
-             /*   if (url.contains("https://login.szzkxkj.com/static/sdk/common/pay_callback.html")) {
-                }*/
                 super.onPageFinished(view, url);
-                HDPayLog.d("finishUrl:" + url);
-                if (url.contains("https://login.szzkxkj.com/static/sdk/common/pay_callback.html")) {
-                    String status = Tools.getParam(url, "status");
-                    HDPayLog.d("status:" + status);
-                    if (back_num == 0) {
-                        if ("success".equals(status)) {
-                            HDPayCenterActivity.onSuccCallBack();
-                        } else if ("fail".equals(status)) {
-                            HDToast.getInstance().ToastShow(mActivity, "支付失败");
-                            HDPayCenterActivity.onFailedCallBack(ErrorResult.ESPAY_FEE_ERROR, "支付失败");
-                        }
-                        back_num = 1;
-                    }
-                    return;
-                }
                 hideDialog();
             }
 
@@ -212,96 +196,17 @@ public class HDUserWebActivity extends Activity {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                CookieManager cookieManager = CookieManager.getInstance();
-                cookieManager.setAcceptCookie(true);
-//			    cookieManager.removeSessionCookie();//移除
-//                cookieManager.setCookie(url, Constant.TGC + "=" + token);//cookies是在HttpClient中获得的cookie
-                CookieSyncManager.getInstance().sync();
-                String url = request.getUrl().toString();
-                HDPayLog.d("url:" + url);
-                if (url.startsWith("http:") || url.startsWith("https:")) {
-                    return super.shouldOverrideUrlLoading(view, url);
-                } else {
-                    try {
-                        if (url.contains("alipays")) {
-                            if (checkAliPayInstalled(mActivity)) {
-                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                                startActivity(intent);
-                            } else {
-                                return super.shouldOverrideUrlLoading(view, url);
-                            }
-                        } else {
-                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                            startActivity(intent);
-                        }
-                    } catch (Exception e) {
-                        // TODO Auto-generated catch block
-                        if (isShowedMsg == false) {
-                            if (url.contains("weixin")) {
-                                Toast.makeText(mActivity, "请安装微信客户端", Toast.LENGTH_SHORT).show();
-                                isShowedMsg = true;
-                                return true;
-                            } else if (url.contains("mqqapi")) {
-                                Toast.makeText(mActivity, "请安装QQ客户端", Toast.LENGTH_SHORT).show();
-                                isShowedMsg = true;
-                                return true;
-                            }
-                        }
-                        HDPayCenterActivity.onFailedCallBack(ErrorResult.ESPAY_FEE_ERROR, "支付失败");
-                    }
-                    return true;
-                }
-               /* view.loadUrl(request.getUrl().toString());
-                return true;*/
+                view.loadUrl(request.getUrl().toString());
+                return true;
             }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                CookieManager cookieManager = CookieManager.getInstance();
-                cookieManager.setAcceptCookie(true);
-//			    cookieManager.removeSessionCookie();//移除
-//                cookieManager.setCookie(url, Constant.TGC + "=" + token);//cookies是在HttpClient中获得的cookie
-                CookieSyncManager.getInstance().sync();
-
-                HDPayLog.d("url:" + url);
-                if (url.startsWith("http:") || url.startsWith("https:")) {
-                    return super.shouldOverrideUrlLoading(view, url);
-                } else {
-                    try {
-                        if (url.contains("alipays")) {
-                            if (checkAliPayInstalled(mActivity)) {
-                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                                startActivity(intent);
-                            } else {
-                                return super.shouldOverrideUrlLoading(view, url);
-                            }
-                        } else {
-                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                            startActivity(intent);
-                        }
-                    } catch (Exception e) {
-                        // TODO Auto-generated catch block
-                        if (isShowedMsg == false) {
-                            if (url.contains("weixin")) {
-                                Toast.makeText(mActivity, "请安装微信客户端", Toast.LENGTH_SHORT).show();
-                                isShowedMsg = true;
-                                return true;
-                            } else if (url.contains("mqqapi")) {
-                                Toast.makeText(mActivity, "请安装QQ客户端", Toast.LENGTH_SHORT).show();
-                                isShowedMsg = true;
-                                return true;
-                            }
-                        }
-
-                        HDPayCenterActivity.onFailedCallBack(ErrorResult.ESPAY_FEE_ERROR, "支付失败");
-                    }
-                    return true;
-                }
-             /*   if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                     view.loadUrl(url);
                     return true;
                 }
-                return super.shouldOverrideUrlLoading(view, url);*/
+                return super.shouldOverrideUrlLoading(view, url);
             }
         };
 
@@ -317,13 +222,6 @@ public class HDUserWebActivity extends Activity {
         } else {
             mWebView.loadUrl(Constant.SSO_URL + mParams);
         }
-    }
-
-    public static boolean checkAliPayInstalled(Context context) {
-        Uri uri = Uri.parse("alipays://platformapi/startApp");
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        ComponentName componentName = intent.resolveActivity(context.getPackageManager());
-        return componentName != null;
     }
 
     public static void clientToJS(int type, final Map<String, String> params) {
@@ -484,18 +382,6 @@ public class HDUserWebActivity extends Activity {
                 }
                 break;
             case Constant.YSTOJS_BACK:
-                if (mWebView != null) {
-                    mWebView.post(new Runnable() {
-                        @Override
-                        public void run() {
-//                            mWebView.goBackOrForward(-2);
-                          /*  if (mWebView.canGoBack()) {
-                                mWebView.goBack();
-                            }*/
-                            mWebView.loadUrl(Constant.SSO_URL + Constant.URL_BACKUP + Constant.SSO_REST + mParams);
-                        }
-                    });
-                }
                 break;
             default:
                 break;
@@ -558,7 +444,7 @@ public class HDUserWebActivity extends Activity {
         return super.onKeyDown(keyCode, event);
     }
 
-    public void showOptions() {
+    /*public void showOptions() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
         alertDialog.setOnCancelListener(new DialogOnCancelListener());
         alertDialog.setTitle("请选择操作");
@@ -842,9 +728,9 @@ public class HDUserWebActivity extends Activity {
         }
     }
 
-    /**
+    *//**
      * 打开本地相册
-     */
+     *//*
     private void openImageChooserActivity() {
         Constant.IS_LOGINED = true;
         showOptions();
@@ -864,7 +750,7 @@ public class HDUserWebActivity extends Activity {
                 mUploadMessage = null;
             }
         } else if (requestCode == REQUEST_CODE_IMAGE_CAPTURE) {
-           /* Log.d("takephoto", "resultdata--->" + data);
+           *//* Log.d("takephoto", "resultdata--->" + data);
             if (resultCode == RESULT_OK) {
                 //拍照上传先裁剪
                 Intent intent1;
@@ -874,7 +760,7 @@ public class HDUserWebActivity extends Activity {
                     intent1 = FileUtil.startPhotoZoom(mImageUri, filePath, 40);
                 }
                 startActivityForResult(intent1, 10);
-            }*/
+            }*//*
             if (mImageUri != null && mCropUri != null && resultCode == Activity.RESULT_OK) {
                 if (Build.VERSION.SDK_INT >= 30) {
                     uploadMessageAboveL.onReceiveValue(new Uri[]{mCropUri});
@@ -909,6 +795,328 @@ public class HDUserWebActivity extends Activity {
             uploadMessageAboveL.onReceiveValue(results);
             uploadMessageAboveL = null;
         }
+    }*/
+    public void showOptions() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setOnCancelListener(new DialogOnCancelListener());
+        alertDialog.setTitle(mActivity.getApplication().getResources()
+                .getIdentifier("es_chooseopera", "string", getApplication().getPackageName()));
+        alertDialog.setItems(mActivity.getApplication().getResources()
+                        .getIdentifier("chooseopera", "array", getApplication().getPackageName()), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == 0) {
+                            if (PermissionUtil.isOverMarshmallow()) {
+                                if (!PermissionUtil.isPermissionValid(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                                    if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                                        goToSettingPre(P_CODE_PICKIMAGE);
+                                    } else {
+                                        requestPre(P_CODE_PICKIMAGE, true);
+                                    }
+                                    return;
+                                }
+                            }
+                            choosePic();
+                        } else {
+                            if (PermissionUtil.isOverMarshmallow()) {
+                                if (!PermissionUtil.isPermissionValid(mActivity, Manifest.permission.CAMERA)) {
+                                    if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, Manifest.permission.CAMERA)) {
+                                        goToSettingPre(P_CODE_CAMERA);
+                                    } else {
+                                        requestPre(P_CODE_CAMERA, true);
+                                    }
+                                    return;
+                                }
+                            }
+                            takePhoto();
+                        }
+                    }
+                }
+        ).show();
+    }
+
+    private String filePath = "";
+
+    private File saveFileName() {
+        String folder = this.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath() + File.separator;
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+        Date date = new Date(System.currentTimeMillis());
+        String name = format.format(date) + ".jpg";
+        File file = null;
+        try {
+            file = new File(folder + name);
+            file.createNewFile();
+            filePath = file.getAbsolutePath();
+        } catch (Exception e) {
+        }
+        return file;
+    }
+
+    private void fixDirPath() {
+        String path = ImageUtil.getDirPath();
+        File file = new File(path);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+    }
+
+    private class DialogOnCancelListener implements DialogInterface.OnCancelListener {
+        @Override
+        public void onCancel(DialogInterface dialogInterface) {
+            restoreUploadMsg();
+        }
+    }
+
+    private void restoreUploadMsg() {
+        if (mUploadMessage != null) {
+            mUploadMessage.onReceiveValue(null);
+            mUploadMessage = null;
+
+        } else if (uploadMessageAboveL != null) {
+            uploadMessageAboveL.onReceiveValue(null);
+            uploadMessageAboveL = null;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case P_CODE_PICKIMAGE:
+                requestResult(permissions, grantResults, P_CODE_PICKIMAGE);
+                break;
+            case P_CODE_CAMERA:
+                requestResult(permissions, grantResults, P_CODE_CAMERA);
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    private void requestPermissionsAndroidM(int type) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            List<String> needPermissionList = new ArrayList<>();
+            if (type == P_CODE_PICKIMAGE) {
+                needPermissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                needPermissionList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+                PermissionUtil.requestPermissions(mActivity, P_CODE_PICKIMAGE, needPermissionList);
+            } else {
+                needPermissionList.add(Manifest.permission.CAMERA);
+                PermissionUtil.requestPermissions(mActivity, P_CODE_CAMERA, needPermissionList);
+            }
+        } else {
+            return;
+        }
+    }
+
+    public void requestResult(String[] permissions, int[] grantResults, int type) {
+        boolean isAllGet = true;
+        for (int result : grantResults) {
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                isAllGet = false;
+            }
+        }
+        if (type == P_CODE_PICKIMAGE) {
+            //读取相册
+            if (isAllGet) {
+                choosePic();
+            } else {
+                restoreUploadMsg();
+                requestPre(P_CODE_PICKIMAGE, false);
+            }
+        } else {
+            //拍照
+            if (isAllGet) {
+                takePhoto();
+            } else {
+                restoreUploadMsg();
+                requestPre(P_CODE_CAMERA, false);
+            }
+        }
+    }
+
+    private void choosePic() {
+        try {
+            Intent mSourceIntent = ImageUtil.choosePicture();
+            startActivityForResult(mSourceIntent, REQUEST_CODE_PICK_IMAGE);
+        } catch (Exception e) {
+            e.printStackTrace();
+            restoreUploadMsg();
+        }
+    }
+
+    private void takePhoto() {
+        try {
+            File photoFile = saveFileName();
+            if (photoFile != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    mImageUri = FileProvider.getUriForFile(HDUserWebActivity.this, HDUserWebActivity.this.getPackageName() + ".fileprovider", photoFile);
+                } else {
+                    mImageUri = getDesUri();
+                }
+                mCropUri = Uri.fromFile(saveFileName());
+                Log.d("takephoto", "imageuri-->" + mImageUri);
+                Intent mSourceIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                mSourceIntent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+                mSourceIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+                startActivityForResult(mSourceIntent, REQUEST_CODE_IMAGE_CAPTURE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            restoreUploadMsg();
+        }
+    }
+
+    private void requestPre(int type, boolean isContinue) {
+        if (isContinue) {
+            requestPermissionsAndroidM(type);
+        }
+    }
+
+    private ValueCallback<Uri> mUploadMessage;
+    private ValueCallback<Uri[]> uploadMessageAboveL;
+
+    private class MyWebChromClient extends WebChromeClient {
+        @Override
+        public void onProgressChanged(WebView view, int newProgress) {
+            super.onProgressChanged(view, newProgress);
+        }
+
+        // For Android 3.0+
+        public void openFileChooser(ValueCallback<Uri> uploadMsg) {
+            mUploadMessage = uploadMsg;
+            openImageChooserActivity();
+        }
+
+        // For Android 3.0+
+        public void openFileChooser(ValueCallback uploadMsg, String acceptType) {
+            mUploadMessage = uploadMsg;
+            openImageChooserActivity();
+        }
+
+        // For Android 4.1
+        public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
+            mUploadMessage = uploadMsg;
+            openImageChooserActivity();
+        }
+
+        // For Android >= 5.0
+        @Override
+        public boolean onShowFileChooser(WebView webView,
+                                         ValueCallback<Uri[]> filePathCallback,
+                                         WebChromeClient.FileChooserParams fileChooserParams) {
+            uploadMessageAboveL = filePathCallback;
+            openImageChooserActivity();
+            return true;
+        }
+
+        @Override
+        public void onReceivedTitle(final WebView view, String title) {
+            super.onReceivedTitle(view, title);
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                if (title.contains("404") || title.contains("500") || title.contains("Error")
+                        || title.contains("找不到网页") || title.contains("网页无法打开")) {
+                }
+            }
+        }
+
+        @Override
+        public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
+            AlertDialog.Builder b2 = new AlertDialog.Builder(mActivity, AlertDialog.THEME_HOLO_LIGHT)
+                    .setTitle(mActivity.getApplication().getResources()
+                            .getIdentifier("es_notice", "string", getApplication().getPackageName())).setMessage(message)
+                    .setPositiveButton(mActivity.getApplication().getResources()
+                            .getIdentifier("es_ok", "string", getApplication().getPackageName()), new AlertDialog.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            result.confirm();
+                        }
+                    });
+
+            b2.setCancelable(false);
+            b2.create();
+            b2.show();
+            return true;
+        }
+    }
+
+    /**
+     * 打开本地相册
+     */
+    private void openImageChooserActivity() {
+        Constant.IS_LOGINED = true;
+        showOptions();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.i("uploadfileresultcode", "resultCode" + resultCode);
+        if (requestCode == REQUEST_CODE_PICK_IMAGE) {
+            //从相册选取图片
+            if (null == mUploadMessage && null == uploadMessageAboveL) return;
+            Uri result = data == null || resultCode != RESULT_OK ? null : data.getData();
+            if (uploadMessageAboveL != null) {
+                onActivityResultAboveL(requestCode, resultCode, data);
+            } else if (mUploadMessage != null) {
+                mUploadMessage.onReceiveValue(result);
+                mUploadMessage = null;
+            }
+        } else if (requestCode == REQUEST_CODE_IMAGE_CAPTURE) {
+           /* Log.d("takephoto", "resultdata--->" + data);
+            if (resultCode == RESULT_OK) {
+                //拍照上传先裁剪
+                Intent intent1;
+                if (Build.VERSION.SDK_INT >= 29) {
+                    intent1 = FileUtil.startPhotoZoom(mImageUri, mCropUri, 40);
+                } else {
+                    intent1 = FileUtil.startPhotoZoom(mImageUri, filePath, 40);
+                }
+                startActivityForResult(intent1, 10);
+            }*/
+            if (mImageUri != null && mCropUri != null && resultCode == Activity.RESULT_OK) {
+                try {
+                    if (Build.VERSION.SDK_INT >= 30) {
+                        uploadMessageAboveL.onReceiveValue(new Uri[]{mCropUri});
+                        uploadMessageAboveL = null;
+                    } else {
+                        uploadMessageAboveL.onReceiveValue(new Uri[]{mImageUri});
+                        uploadMessageAboveL = null;
+                    }
+                } catch (Exception e) {
+                    Log.i("ESUserWeb", e.getMessage());
+                }
+            }
+        }
+        if (resultCode == RESULT_CANCELED) {
+            restoreUploadMsg();
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void onActivityResultAboveL(int requestCode, int resultCode, Intent intent) {
+        Log.i("uploadfileresultcode", "resultCode" + resultCode);
+        if ((requestCode == REQUEST_CODE_PICK_IMAGE || requestCode == REQUEST_CODE_IMAGE_CAPTURE) && uploadMessageAboveL != null) {
+            Uri[] results = null;
+            if (resultCode == Activity.RESULT_OK) {
+                if (intent != null) {
+                    String dataString = intent.getDataString();
+                    ClipData clipData = intent.getClipData();
+                    if (clipData != null) {
+                        results = new Uri[clipData.getItemCount()];
+                        for (int i = 0; i < clipData.getItemCount(); i++) {
+                            ClipData.Item item = clipData.getItemAt(i);
+                            results[i] = item.getUri();
+                        }
+                    }
+                    if (dataString != null)
+                        results = new Uri[]{Uri.parse(dataString)};
+                }
+            }
+            uploadMessageAboveL.onReceiveValue(results);
+            uploadMessageAboveL = null;
+        }
+        if (resultCode == RESULT_CANCELED) {
+            restoreUploadMsg();
+        }
     }
 
     private Uri getDesUri() {
@@ -916,6 +1124,53 @@ public class HDUserWebActivity extends Activity {
         File file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
         return Uri.fromFile(file);
     }
+
+    private void goToSettingPre(int type) {
+        restoreUploadMsg();
+        int res;
+        final int errorRes;
+        if (type == P_CODE_PICKIMAGE) {
+            res = mActivity.getApplication().getResources()
+                    .getIdentifier("es_openpicuse", "string", getApplication().getPackageName());
+            errorRes = mActivity.getApplication().getResources()
+                    .getIdentifier("es_gotopic", "string", getApplication().getPackageName());
+        } else {
+            res = mActivity.getApplication().getResources()
+                    .getIdentifier("es_opencamerause", "string", getApplication().getPackageName());
+            errorRes = mActivity.getApplication().getResources()
+                    .getIdentifier("es_gotocamera", "string", getApplication().getPackageName());
+        }
+        new AlertDialog.Builder(mActivity)
+                .setMessage(res)
+                .setNegativeButton(mActivity.getApplication().getResources()
+                        .getIdentifier("es_cancel", "string", getApplication().getPackageName()), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton(mActivity.getApplication().getResources()
+                        .getIdentifier("es_ok", "string", getApplication().getPackageName()), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            Uri uri = Uri.fromParts("package", getPackageName(), null);
+                            intent.setData(uri);
+                            startActivity(intent);
+                        } catch (Exception e) {
+                            Toast.makeText(mActivity, errorRes, Toast.LENGTH_SHORT).show();
+                        }
+                        dialog.dismiss();
+                    }
+                }).create().show();
+
+    }
+   /* private Uri getDesUri() {
+        String fileName = System.currentTimeMillis() + ".jpg";
+        File file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
+        return Uri.fromFile(file);
+    }*/
 
     @Override
     public void onBackPressed() {

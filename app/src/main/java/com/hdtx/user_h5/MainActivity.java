@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     /* =================================== 测试参数 =================================== */
     private static String tradeId = System.currentTimeMillis() + ""; // 游戏订单号
-    private static String needChannels = "ALIPAY2,WECHAT,UNIONPAY2,WEB,XSOLLA"; // 支付方式
+    private static String needChannels = "ALIPAY2,WECHAT,UNIONPAY2,WEB"; // 支付方式
 
     private static final int PERMISSIONCODE = 1;
     private Map<String, String> payInfo; // 支付参数map
@@ -116,7 +116,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         });
-
     }
 
     private void checkRunTimePermission() {

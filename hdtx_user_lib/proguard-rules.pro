@@ -484,7 +484,7 @@ native <methods>;
 #-renamesourcefileattribute SourceFile
 
 -dontwarn com.tencent.smtt.**
-
+-keep class com.bytedance.ads.convert.broadcast.common.EncryptionTools {*;}
 -keep class com.bytedance.applog.picker.DomSender { public *; }
 -keep class com.bytedance.applog.tracker.WebViewUtil { public *; }
 -keep class com.bytedance.applog.convert.ClickIdProvider {public *; }
