@@ -707,10 +707,10 @@ public class Starter {
             ADJUSTKEY = "wr31h0sikr28";
         }*/
         AdjustConfig config = new AdjustConfig(mContext, ADJUSTKEY, environment);
-        config.setLogLevel(LogLevel.VERBOSE);
-        config.setSendInBackground(true);
+        config.setLogLevel(LogLevel.WARN);
+//        config.setSendInBackground(true);
         config.setFbAppId(fbAppId);
-        Adjust.onCreate(config);
+        Adjust.initSdk(config);
         ((Application) mContext).registerActivityLifecycleCallbacks(new ActivityLifecycleWrapper());
     }
 
@@ -1040,7 +1040,7 @@ public class Starter {
         }
         event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
-        event.addCallbackParameter("easou_hk_game_name", "龙珠2（賽亞之神）");
+        event.addCallbackParameter("easou_hk_game_name", "大乱斗");
         if (mActivity != null) {
             event.addCallbackParameter("easou_hk_app_id", getPropertiesValue(mActivity, "appId"));
         }
