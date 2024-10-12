@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 case HDConstant.ESPAY_BACK:
                     //从支付页面返回
-                    HDSdkLog.d("支付页面点击了返回或右上角的关闭按钮");
+                    System.out.println("用户在支付页面点击了返回按钮");
                     break;
             }
             super.handleMessage(msg);
