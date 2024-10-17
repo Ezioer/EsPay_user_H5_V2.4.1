@@ -1040,7 +1040,7 @@ public class Starter {
         }
         event.addCallbackParameter("easou_hk_device_id", Constant.IMEI);
         event.addCallbackParameter("easou_hk_user_id", Constant.ESDK_USERID);
-        event.addCallbackParameter("easou_hk_game_name", "大乱斗");
+        event.addCallbackParameter("easou_hk_game_name", "次元亂鬥");
         if (mActivity != null) {
             event.addCallbackParameter("easou_hk_app_id", getPropertiesValue(mActivity, "appId"));
         }

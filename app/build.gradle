@@ -9,8 +9,8 @@ android {
 //        applicationId "com.zqhy.hyxm"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 10016
-        versionName "1.0.1"
+        versionCode 1
+        versionName "1.0"
         multiDexEnabled = true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'

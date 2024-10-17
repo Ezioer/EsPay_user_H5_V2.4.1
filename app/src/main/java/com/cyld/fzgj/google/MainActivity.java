@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final int PERMISSIONCODE = 1;
     private static String tradeId; // 游戏订单号
-    private static String productId = "yisou_6";
+    private static String productId = "cydjld_google_1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -359,9 +359,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         tradeId = System.currentTimeMillis() + "";
                         JSONObject payInfo = new JSONObject();
                         try {
-                            payInfo.put(ESConstant.PRODUCT_ID, "hudong_6");
+                            payInfo.put(ESConstant.PRODUCT_ID, productId);
 //                            payInfo.put(ESConstant.PRODUCT_ID, "yisou_6");
-                            payInfo.put(ESConstant.APP_ID, "2899");
+                            payInfo.put(ESConstant.APP_ID, "4034");
                             payInfo.put(ESConstant.TRADE_ID, tradeId);
                             payInfo.put(ESConstant.ACCOUNT_ID, "es_6");
                             payInfo.put(ESConstant.PLAYER_SERVER_ID, "1");

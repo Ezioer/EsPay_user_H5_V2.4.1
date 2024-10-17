@@ -75,7 +75,7 @@ public class EAPayInter {
             data.put("area", "");
             data.put("ip", Constant.NET_IP);
             //线上
-            data.put("payType", 4);
+            data.put("payType", 1);
             //测试
 //            data.put("payType", 4);
             data.put("redirectUrl", map.get("redirectUrl"));
