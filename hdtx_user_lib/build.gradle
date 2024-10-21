@@ -49,7 +49,7 @@ dependencies {
     implementation files('libs/locSDK_4.2.jar')
     implementation files('libs/payecoplugin_standard_baidu_3-2.1.12.jar')
     implementation files('libs/ulo5sdk-1.5.2.jar')
-    implementation files('libs/oaid_sdk_2.1.0.jar')
+    implementation files('libs/oaid_sdk_2.5.1.jar')
 //    compile files('libs/RangersAppLog-Lite-cn-6.14.3.jar')
 //    compile files('libs/RangersAppLog-All-convert-6.14.3.jar')
 //    compile files('libs/RangersAppLog-Log-1.0.5.jar')

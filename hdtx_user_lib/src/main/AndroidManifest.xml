@@ -24,6 +24,35 @@
     <uses-permission android:name="com.asus.msa.SupplementaryDID.ACCESS" />
     <uses-permission android:name="android.permission.REORDER_TASKS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- asus -->
+    <uses-permission android:name="com.asus.msa.SupplementaryDID.ACCESS" />
+    <!-- freeme -->
+    <uses-permission android:name="freemme.permission.msa" />
+    <uses-permission android:name="freemme.permission.msa.SECURITY_ACCESS" />
+
+    <!-- oppo -->
+    <uses-permission android:name="oplus.permission.settings.LAUNCH_FOR_EXPORT" />
+    <!-- vivo -->
+    <uses-permission android:name="com.vivo.identifier.permission.OAID_STATE_DIALOG" />
+
+    <queries>
+
+        <!-- freeme -->
+        <package android:name="com.android.creator" />
+        <package android:name="com.zhuoyi.security.lite" />
+        <package android:name="com.freeme.secureguard" />
+        <package android:name="com.android.secureguard" />
+        <!-- zte -->
+        <package android:name="com.mdid.msa" />
+        <!-- samsung -->
+        <package android:name="com.samsung.android.deviceidservice" />
+        <!-- coolpad -->
+        <package android:name="com.coolpad.deviceidsupport" />
+        <!-- oppo -->
+        <package android:name="com.heytap.openid" />
+        <!-- 360 -->
+        <package android:name="com.qiku.id" />
+    </queries>
 
     <permission
         android:name="${applicationId}.gdt.qq.SEND_PERMISSION"
@@ -90,6 +119,13 @@
             android:name="com.qq.gdt.action.GDTInitProvider"
             android:authorities="${applicationId}.GDTInitProvider"
             android:exported="false"></provider>
+        <activity
+            android:name="com.bun.miitmdid.utilsforrequestpermission.PermissionTransparentActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <meta-data
+            android:name="com.huawei.hms.client.service.name:ads-identifier"
+            android:value="ads-identifier:3.4.62.300" />
 
         <!-- 银联的 -->
         <!-- 插件入口界面 -->
